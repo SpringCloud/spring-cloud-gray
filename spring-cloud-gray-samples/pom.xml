@@ -10,6 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-cloud-gray-samples</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+    </modules>
 
 
 </project>

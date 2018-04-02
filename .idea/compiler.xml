@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="spring-cloud-bamboo" />
+        <module name="spring-cloud-bamboo-erueka-sample" />
+        <module name="spring-cloud-bamboo-eureka-samples" />
+        <module name="spring-cloud-bamboo-service-a-samples" />
+        <module name="spring-cloud-bamboo-service-b-samples" />
+        <module name="spring-cloud-bamboo-zuul-samples" />
+        <module name="spring-cloud-gray-core" />
+        <module name="spring-cloud-start-gray" />
+        <module name="spring-cloud-starter-gray-server" />
+        <module name="spring-cloud-starter-multi-version" />
+      </profile>
+    </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="spring-cloud-gray" target="1.6" />
+      <module name="spring-cloud-bamboo" target="1.8" />
+      <module name="spring-cloud-bamboo-erueka-sample" target="1.8" />
+      <module name="spring-cloud-bamboo-eureka-samples" target="1.8" />
+      <module name="spring-cloud-bamboo-service-a-samples" target="1.8" />
+      <module name="spring-cloud-bamboo-service-b-samples" target="1.8" />
+      <module name="spring-cloud-bamboo-zuul-samples" target="1.8" />
+      <module name="spring-cloud-gray" target="1.8" />
+      <module name="spring-cloud-gray-core" target="1.8" />
       <module name="spring-cloud-gray-dependencies" target="1.6" />
+      <module name="spring-cloud-gray-multi-version" target="1.6" />
+      <module name="spring-cloud-gray-samples" target="1.8" />
+      <module name="spring-cloud-mult-version-samples" target="1.8" />
+      <module name="spring-cloud-start-gray" target="1.8" />
+      <module name="spring-cloud-start-gray-release" target="1.6" />
+      <module name="spring-cloud-starter-gray-server" target="1.8" />
+      <module name="spring-cloud-starter-multi-version" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
