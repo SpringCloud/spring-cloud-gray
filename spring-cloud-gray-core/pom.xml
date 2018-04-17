@@ -11,5 +11,13 @@
 
     <artifactId>spring-cloud-gray-core</artifactId>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-bamboo</artifactId>
+        </dependency>
+
+    </dependencies>
 
 </project>

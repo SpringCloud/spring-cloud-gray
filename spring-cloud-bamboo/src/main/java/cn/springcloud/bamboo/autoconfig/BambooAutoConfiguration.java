@@ -4,15 +4,13 @@ import cn.springcloud.bamboo.*;
 import cn.springcloud.bamboo.feign.config.BambooFeignConfiguration;
 import cn.springcloud.bamboo.ribbon.BambooClientHttpRequestIntercptor;
 import cn.springcloud.bamboo.ribbon.EurekaServerExtractor;
-import cn.springcloud.bamboo.ribbon.loadbalancer.BambooZoneAvoidanceRule;
 import cn.springcloud.bamboo.zuul.config.BambooZuulConfiguration;
-import com.netflix.client.config.IClientConfig;
-import com.netflix.loadbalancer.IRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.netflix.ribbon.RibbonClients;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +29,7 @@ import java.util.List;
 @AutoConfigureBefore({BambooFeignConfiguration.class, BambooZuulConfiguration.class})
 @Import(BambooWebConfiguration.class)
 //@RibbonClients(defaultConfiguration = {BambooExtConfigration.class})
+@RibbonClients(defaultConfiguration = BambooRibbonClientsConfiguration.class)
 public class BambooAutoConfiguration {
 
 
@@ -39,8 +38,8 @@ public class BambooAutoConfiguration {
     }
 
 
-    @Autowired(required = false)
-    private IClientConfig config;
+//    @Autowired(required = false)
+//    private IClientConfig config;
 
     @Autowired
     private SpringClientFactory springClientFactory;
@@ -61,13 +60,13 @@ public class BambooAutoConfiguration {
     }
 
 
-    @Bean
-    @ConditionalOnMissingBean(value = {BambooAutoConfiguration.UnUseBambooIRule.class})
-    public IRule ribbonRule() {
-        BambooZoneAvoidanceRule rule = new BambooZoneAvoidanceRule();
-        rule.initWithNiwsConfig(config);
-        return rule;
-    }
+//    @Bean
+//    @ConditionalOnMissingBean(value = {BambooAutoConfiguration.UnUseBambooIRule.class})
+//    public IRule ribbonRule() {
+//        BambooZoneAvoidanceRule rule = new BambooZoneAvoidanceRule();
+//        rule.initWithNiwsConfig(config);
+//        return rule;
+//    }
 
     @Bean
     @ConditionalOnMissingBean

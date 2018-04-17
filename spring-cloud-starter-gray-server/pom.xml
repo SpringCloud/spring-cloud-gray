@@ -11,5 +11,11 @@
 
     <artifactId>spring-cloud-starter-gray-server</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-server</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

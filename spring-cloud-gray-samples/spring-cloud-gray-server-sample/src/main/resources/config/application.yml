@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: gray-server
+server:
+  port: 20202
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:20001/eureka/

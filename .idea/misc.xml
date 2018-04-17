@@ -9,9 +9,11 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/spring-cloud-gray-multi-version/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-cloud-gray-samples/pom.xml" />
         <option value="$PROJECT_DIR$/spring-cloud-gray-samples/spring-cloud-bamboo-samples/pom.xml" />
         <option value="$PROJECT_DIR$/spring-cloud-mult-version-samples/pom.xml" />
         <option value="$PROJECT_DIR$/spring-cloud-start-gray-release/pom.xml" />
+        <option value="$PROJECT_DIR$/spring-cloud-start-gray/pom.xml" />
       </set>
     </option>
   </component>

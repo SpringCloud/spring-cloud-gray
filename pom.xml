@@ -16,13 +16,17 @@
     <modules>
 
         <module>spring-cloud-gray-dependencies</module>
-        <module>spring-cloud-gray-samples</module>
-        <module>spring-cloud-gray-core</module>
-        <module>spring-cloud-starter-multi-version</module>
-        <module>spring-cloud-starter-gray-server</module>
+
         <module>spring-cloud-bamboo</module>
-        <module>spring-cloud-start-gray</module>
+        <module>spring-cloud-starter-multi-version</module>
         <module>spring-cloud-mult-version-samples</module>
+
+        <module>spring-cloud-gray-core</module>
+        <module>spring-cloud-gray-server</module>
+        <module>spring-cloud-gray-client</module>
+        <module>spring-cloud-starter-gray</module>
+        <module>spring-cloud-starter-gray-server</module>
+        <module>spring-cloud-gray-samples</module>
     </modules>
 
 
@@ -31,7 +35,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <java.version>1.8</java.version>
         <spring-cloud.version>Dalston.SR5</spring-cloud.version>
-        <springfox.version>2.6.1</springfox.version>
+        <springfox.version>2.7.0</springfox.version>
     </properties>
 
 
@@ -85,9 +89,7 @@
         </dependencies>
 
 
-
     </dependencyManagement>
-
 
 
 </project>

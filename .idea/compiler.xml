@@ -12,8 +12,15 @@
         <module name="spring-cloud-bamboo-service-a-samples" />
         <module name="spring-cloud-bamboo-service-b-samples" />
         <module name="spring-cloud-bamboo-zuul-samples" />
+        <module name="spring-cloud-gray-client" />
         <module name="spring-cloud-gray-core" />
-        <module name="spring-cloud-start-gray" />
+        <module name="spring-cloud-gray-eureka-sample" />
+        <module name="spring-cloud-gray-server" />
+        <module name="spring-cloud-gray-server-sample" />
+        <module name="spring-cloud-gray-service-a-sample" />
+        <module name="spring-cloud-gray-service-b-sample" />
+        <module name="spring-cloud-gray-zuul-sample" />
+        <module name="spring-cloud-starter-gray" />
         <module name="spring-cloud-starter-gray-server" />
         <module name="spring-cloud-starter-multi-version" />
       </profile>
@@ -26,15 +33,25 @@
       <module name="spring-cloud-bamboo-service-b-samples" target="1.8" />
       <module name="spring-cloud-bamboo-zuul-samples" target="1.8" />
       <module name="spring-cloud-gray" target="1.8" />
+      <module name="spring-cloud-gray-client" target="1.8" />
       <module name="spring-cloud-gray-core" target="1.8" />
       <module name="spring-cloud-gray-dependencies" target="1.6" />
+      <module name="spring-cloud-gray-euraka-sample" target="1.8" />
+      <module name="spring-cloud-gray-eureka-sample" target="1.8" />
       <module name="spring-cloud-gray-multi-version" target="1.6" />
       <module name="spring-cloud-gray-samples" target="1.8" />
+      <module name="spring-cloud-gray-server" target="1.8" />
+      <module name="spring-cloud-gray-server-sample" target="1.8" />
+      <module name="spring-cloud-gray-service-a-sample" target="1.8" />
+      <module name="spring-cloud-gray-service-b-sample" target="1.8" />
+      <module name="spring-cloud-gray-zuul-sample" target="1.8" />
       <module name="spring-cloud-mult-version-samples" target="1.8" />
       <module name="spring-cloud-start-gray" target="1.8" />
       <module name="spring-cloud-start-gray-release" target="1.6" />
+      <module name="spring-cloud-starter-gray" target="1.8" />
       <module name="spring-cloud-starter-gray-server" target="1.8" />
       <module name="spring-cloud-starter-multi-version" target="1.8" />
+      <module name="springcloudgrayservicebsample" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

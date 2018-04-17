@@ -12,6 +12,11 @@
     <artifactId>spring-cloud-gray-samples</artifactId>
     <packaging>pom</packaging>
     <modules>
+        <module>spring-cloud-gray-eureka-sample</module>
+        <module>spring-cloud-gray-zuul-sample</module>
+        <module>spring-cloud-gray-service-a-sample</module>
+        <module>spring-cloud-gray-service-b-sample</module>
+        <module>spring-cloud-gray-server-sample</module>
     </modules>
 
 

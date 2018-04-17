@@ -3,6 +3,7 @@ package cn.springcloud.bamboo.zuul;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.core.env.Environment;
 
@@ -14,6 +15,7 @@ import java.net.UnknownHostException;
  */
 @SpringCloudApplication
 @EnableZuulProxy
+@EnableDiscoveryClient
 public class BambooZuulApplication {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(BambooZuulApplication.class);
 
