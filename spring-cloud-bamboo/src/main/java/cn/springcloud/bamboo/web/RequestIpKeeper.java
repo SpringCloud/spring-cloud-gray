@@ -10,34 +10,33 @@ public final class RequestIpKeeper {
 
     private static RequestIpKeeper INSTANCE = new RequestIpKeeper();
 
-    private RequestIpKeeper(){
+    private RequestIpKeeper() {
 
     }
 
-    public static RequestIpKeeper instance(){
+    public static RequestIpKeeper instance() {
         return INSTANCE;
     }
 
 
-    public void setIp(String ip){
+    void setIp(String ip) {
         ipLocal.set(ip);
     }
 
 
-    public String getIp(){
+    public String getIp() {
         return ipLocal.get();
     }
 
 
-    public void clear(){
+    public void clear() {
         ipLocal.remove();
     }
 
 
-
-    public static String getRequestIp(){
+    public static String getRequestIp() {
         String ip = instance().getIp();
-        if(StringUtils.isEmpty(ip)){
+        if (StringUtils.isEmpty(ip)) {
             ip = BambooAppContext.getLocalIp();
         }
         return ip;
