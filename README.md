@@ -7,7 +7,7 @@
 
 
 
-#### 金版本控制
+#### 多版本控制
 * [spring-cloud-bamboo](spring-cloud-bamboo/README.md)
 * spring-cloud-start-multi-version
 * [spring-cloud-mult-version-samples](spring-cloud-mult-version-samples/README.md)
