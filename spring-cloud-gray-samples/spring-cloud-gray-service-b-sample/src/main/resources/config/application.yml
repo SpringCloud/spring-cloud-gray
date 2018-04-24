@@ -11,6 +11,10 @@ eureka:
       defaultZone: http://localhost:20001/eureka/
   instance:
     instanceId: ${spring.application.name}:${server.port}
+feign:
+  hystrix:
+    enabled: true
+
 gray:
   client:
     instance:

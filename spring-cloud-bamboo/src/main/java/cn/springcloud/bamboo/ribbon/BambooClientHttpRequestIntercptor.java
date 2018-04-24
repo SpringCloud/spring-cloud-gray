@@ -12,8 +12,6 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URLDecoder;
-import java.util.*;
 
 
 /**
@@ -36,13 +34,8 @@ public class BambooClientHttpRequestIntercptor implements ClientHttpRequestInter
         try {
             BambooAppContext.getBambooRibbonConnectionPoint().executeConnectPoint(connectPointContext);
             return execution.execute(request, body);
-        }finally {
+        } finally {
             BambooAppContext.getBambooRibbonConnectionPoint().shutdownconnectPoint();
         }
     }
-
-
-
-
-
 }
