@@ -56,7 +56,7 @@ public class GrayServerApplication {
 }
 ```
 
-启动后，可以访问http://localhost:20202/swagger-ui.html查看接口列表，也可以调用其中的接口。
+启动后，可以访问 http://localhost:20202/swagger-ui.html 查看接口列表，也可以调用其中的接口。
 
 ![灰度服务端swagger api list](../doc/img/web-api-gray-server.png)
 
