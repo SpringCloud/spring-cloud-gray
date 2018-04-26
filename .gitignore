@@ -2,6 +2,7 @@
 # Project Specific
 ######################
 /target/www/**
+target/
 /notes/**
 
 ######################
@@ -28,6 +29,7 @@
 *.tmp
 *.bak
 *.swp
+*.swo
 *~.nib
 local.properties
 .classpath
@@ -50,6 +52,7 @@ local.properties
 ######################
 # Intellij
 ######################
+.idea
 .idea/**
 *.iml
 *.iws
@@ -139,3 +142,4 @@ node/
 ######################
 application-dev.yml
 bootstrap-dev.yml
+
