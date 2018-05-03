@@ -15,9 +15,10 @@ public class WebUtils {
     private static final Logger log = LoggerFactory.getLogger(WebUtils.class);
 
     /**
+     * url query 转换成map
      *
-     * @param urlQuery
-     * @return
+     * @param urlQuery url query信息,如"a=1&amp;b=2&amp;c=3"
+     * @return 转换后的map
      */
     public static Map<String, List<String>> getQueryParams(String urlQuery) {
         Map<String, List<String>> qp = new HashMap<String, List<String>>();
@@ -71,7 +72,6 @@ public class WebUtils {
     }
 
 
-
     /**
      * <p>
      * 获取客户端的IP地址的方法是：request.getRemoteAddr()，这种方法在大部分情况下都是有效的。
@@ -82,8 +82,8 @@ public class WebUtils {
      * 192.168.1.100 用户真实IP为： 192.168.1.110
      * </p>
      *
-     * @param request
-     * @return
+     * @param request HttpServletRequest
+     * @return 请求方的ip
      */
     public static String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");

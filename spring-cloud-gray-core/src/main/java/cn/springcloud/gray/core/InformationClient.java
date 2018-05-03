@@ -13,15 +13,15 @@ public interface InformationClient {
     /**
      * 返回在灰度中注册的所有实例(包括非灰度实例)
      *
-     * @return
+     * @return 类度服务列表
      */
     List<GrayService> listGrayService();
 
     /**
      * 根据serviceId返回灰度服务对象
      *
-     * @param serviceId
-     * @return
+     * @param serviceId 服务id
+     * @return 灰度服务
      */
     GrayService grayService(String serviceId);
 
@@ -29,9 +29,9 @@ public interface InformationClient {
     /**
      * 返回注册的实例对象
      *
-     * @param serviceId
-     * @param instanceId
-     * @return
+     * @param serviceId 服务id
+     * @param instanceId 实例id
+     * @return 灰度实例
      */
     GrayInstance grayInstance(String serviceId, String instanceId);
 
@@ -39,8 +39,8 @@ public interface InformationClient {
     /**
      * 注册灰度实例
      *
-     * @param serviceId
-     * @param instanceId
+     * @param serviceId 服务id
+     * @param instanceId 实例id
      */
     void addGrayInstance(String serviceId, String instanceId);
 
@@ -54,8 +54,8 @@ public interface InformationClient {
     /**
      * 灰度实例下线
      *
-     * @param serviceId
-     * @param instanceId
+     * @param serviceId 服务id
+     * @param instanceId 实例id
      */
     void serviceDownline(String serviceId, String instanceId);
 

@@ -30,10 +30,10 @@ public interface GrayServiceManager {
     /**
      * 更新实例实例灰度状态
      *
-     * @param serviceId
-     * @param instanceId
+     * @param serviceId 服务id
+     * @param instanceId 实例id
      * @param status     0:关闭, 1:启用
-     * @return
+     * @return boolean
      */
     boolean updateInstanceStatus(String serviceId, String instanceId, int status);
 
@@ -41,9 +41,9 @@ public interface GrayServiceManager {
     /**
      * 更新实例策略组启用状态
      *
-     * @param serviceId
-     * @param instanceId
-     * @param groupId
+     * @param serviceId 服务id
+     * @param instanceId 实例id
+     * @param groupId 灰度策略组id
      * @param enable     0:关闭, 1:启用
      */
     boolean updatePolicyGroupStatus(String serviceId, String instanceId, String groupId, int enable);

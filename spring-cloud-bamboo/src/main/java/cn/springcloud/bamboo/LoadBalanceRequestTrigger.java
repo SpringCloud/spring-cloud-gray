@@ -9,7 +9,7 @@ public interface LoadBalanceRequestTrigger {
     /**
      * 判断是否需要执行的方法
      *
-     * @return
+     * @return boolean
      */
     boolean shouldExecute();
 
@@ -17,7 +17,7 @@ public interface LoadBalanceRequestTrigger {
     /**
      * 请求之前执行
      *
-     * @param connectPointContext
+     * @param connectPointContext 连接点上下文
      */
     void before(ConnectPointContext connectPointContext);
 
@@ -26,7 +26,7 @@ public interface LoadBalanceRequestTrigger {
      * 请求完成之后执行
      * 如果出现异常，该方法依然会被执行
      *
-     * @param connectPointContext
+     * @param connectPointContext 连接点上下文
      */
     void after(ConnectPointContext connectPointContext);
 }

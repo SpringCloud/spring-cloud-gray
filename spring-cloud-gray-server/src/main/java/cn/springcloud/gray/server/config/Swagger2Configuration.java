@@ -41,12 +41,16 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
 
     /**
      * 这个地方要重新注入一下资源文件，不然不会注入资源的，也没有注入requestHandlerMappping,相当于xml配置的
+     * <pre>
+     * {@code
      * <!--swagger资源配置-->
      * <mvc:resources location="classpath:/META-INF/resources/" mapping="swagger-ui.html"/>
      * <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**"/>
+     * }
+     * </pre>
      * 不知道为什么，这也是spring boot的一个缺点（菜鸟觉得的）
      *
-     * @param registry
+     * @param registry ResourceHandlerRegistry
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -114,10 +118,10 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Spring Boot中使用Swagger2构建RESTful APIs")
-                .description("相关文章请关注：http://www.baidu.com/")
-                .termsOfServiceUrl("http://www.baidu.com")
-                .version("1.0")
+                .title("spring cloud gray server接口列表")
+                .description("相关信息请关注：https://github.com/SpringCloud/spring-cloud-gray")
+                .termsOfServiceUrl("https://github.com/SpringCloud/spring-cloud-gray")
+//                .version("1.0.0")
                 .build();
     }
 
@@ -163,8 +167,7 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
     /**
      * 自定义返回信息
      *
-     * @param
-     * @return
+     * @return 返回消息列表
      */
     private List<ResponseMessage> customerResponseMessage() {
 

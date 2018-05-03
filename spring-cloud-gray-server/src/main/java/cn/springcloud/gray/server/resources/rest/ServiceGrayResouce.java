@@ -39,7 +39,7 @@ public class ServiceGrayResouce {
     /**
      * 返回所有服务
      *
-     * @return
+     * @return 灰度服务VO集合
      */
     @RequestMapping(value = "/services", method = RequestMethod.GET)
     public ResponseEntity<List<GrayServiceVO>> services() {
@@ -66,8 +66,8 @@ public class ServiceGrayResouce {
     /**
      * 返回服务实例列表
      *
-     * @param serviceId
-     * @return
+     * @param serviceId 服务id
+     * @return 灰度服务实例VO列表
      */
     @RequestMapping(value = "/services/{serviceId}/instances", method = RequestMethod.GET)
     public ResponseEntity<List<GrayInstanceVO>> instances(@PathVariable("serviceId") String serviceId) {
@@ -107,9 +107,9 @@ public class ServiceGrayResouce {
     /**
      * 服务实例的所有灰度策略组
      *
-     * @param serviceId
-     * @param instanceId
-     * @return
+     * @param serviceId 服务id
+     * @param instanceId 实例id
+     * @return 灰策略组VO列表
      */
     @RequestMapping(value = "/services/{serviceId}/instance/policyGroups", method = RequestMethod.GET)
     public ResponseEntity<List<GrayPolicyGroupVO>> policyGroups(@PathVariable("serviceId") String serviceId,
@@ -133,10 +133,10 @@ public class ServiceGrayResouce {
     /**
      * 灰度策略组
      *
-     * @param serviceId
-     * @param instanceId
-     * @param groupId
-     * @return
+     * @param serviceId 服务id
+     * @param instanceId 实例id
+     * @param groupId 灰度策略组id
+     * @return 灰度策略组VO
      */
     @RequestMapping(value = "/services/{serviceId}/instance/policyGroup/{groupId}", method = RequestMethod.GET)
     public ResponseEntity<GrayPolicyGroupVO> policyGroup(@PathVariable("serviceId") String serviceId,
@@ -171,9 +171,9 @@ public class ServiceGrayResouce {
     /**
      * 添加策略组
      *
-     * @param serviceId
-     * @param policyGroupFO
-     * @return
+     * @param serviceId 服务id
+     * @param policyGroupFO 灰度策略组FO
+     * @return Void
      */
     @RequestMapping(value = "/services/{serviceId}/instance/policyGroup", method = RequestMethod.POST)
     public ResponseEntity<Void> policyGroup(
@@ -197,10 +197,10 @@ public class ServiceGrayResouce {
     /**
      * 删除策略组
      *
-     * @param serviceId
-     * @param instanceId
-     * @param policyGroupId
-     * @return
+     * @param serviceId 服务id
+     * @param instanceId 实例id
+     * @param policyGroupId 灰度策略组id
+     * @return Void
      */
     @ApiOperation("删除策略组")
     @RequestMapping(value = "/services/{serviceId}/instance/policyGroup", method = RequestMethod.DELETE)
