@@ -13,6 +13,7 @@
 * [spring-cloud-mult-version-samples](spring-cloud-mult-version-samples/README.md)
 
 
+
 #### 灰度发布
 * [spring-cloud-gray-core](spring-cloud-gray-core/README.md)
 * spring-cloud-gray-client
@@ -21,6 +22,30 @@
 * spring-cloud-start-gray-server
 * [spring-cloud-gray-samples](spring-cloud-gray-samples/README.md)
 
+#### maven 依赖
+jar包已经上传到maven中央库，可以通过maven直接从中央库下载
+```xml
+<!-- 版本控制 -->
+<dependency>
+  <groupId>cn.springcloud.gray</groupId>
+  <artifactId>spring-cloud-starter-multi-version</artifactId>
+  <version>{version}</version>
+</dependency>
+
+<!-- gray-client -->
+<dependency>
+  <groupId>cn.springcloud.gray</groupId>
+  <artifactId>spring-cloud-starter-gray</artifactId>
+  <version>{version}</version>
+</dependency>
+
+<!-- gray-server -->
+<dependency>
+  <groupId>cn.springcloud.gray</groupId>
+  <artifactId>spring-cloud-starter-gray-server</artifactId>
+  <version>{version}</version>
+</dependency>
+```
 
 
 #### 不足

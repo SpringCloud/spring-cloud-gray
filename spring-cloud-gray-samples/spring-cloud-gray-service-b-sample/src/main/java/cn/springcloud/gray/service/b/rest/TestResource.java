@@ -32,8 +32,8 @@ public class TestResource {
     /**
      * test rest template invoke service-a
      *
-     * @param request
-     * @return
+     * @param request HttpServletRequest
+     * @return 内容
      */
     @RequestMapping(value = "/restTemplateGet", method = RequestMethod.GET)
     @ResponseBody
@@ -52,8 +52,8 @@ public class TestResource {
     /**
      * test feign invoke service-a
      *
-     * @param version
-     * @return
+     * @param version 请求的版本
+     * @return 内容
      */
     @RequestMapping(value = "/feignGet", method = RequestMethod.GET)
     @ResponseBody
