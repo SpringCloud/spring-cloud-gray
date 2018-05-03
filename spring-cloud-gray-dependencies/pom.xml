@@ -20,6 +20,26 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <tag>master</tag>
+        <url>https://github.com/SpringCloud/spring-cloud-gray</url>
+        <connection>git@github.com:SpringCloud/spring-cloud-gray.git</connection>
+        <developerConnection>scm:git:git@github.com:SpringCloud/spring-cloud-gray.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <name>saleson</name>
+            <email>qlichunyu@163.com</email>
+            <organization>Spring Cloud中国社区</organization>
+        </developer>
+    </developers>
 
     <properties>
         <spring-cloud.version>Dalston.SR5</spring-cloud.version>
@@ -35,8 +55,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-bamboo</artifactId>
@@ -76,5 +94,73 @@
         </dependencies>
 
     </dependencyManagement>
+
+
+    <profiles>
+        <profile>
+            <id>sonatype-oss-release</id>
+            <build>
+                <plugins>
+                    <!-- Source -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- GPG -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>sonatype-nexus-snapshots</id>
+                    <url>
+                        https://oss.sonatype.org/content/repositories/snapshots
+                    </url>
+                </snapshotRepository>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <url>
+                        https://oss.sonatype.org/service/local/staging/deploy/maven2
+                    </url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 
 </project>

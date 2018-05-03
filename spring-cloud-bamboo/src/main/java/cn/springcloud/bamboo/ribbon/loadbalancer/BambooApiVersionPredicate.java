@@ -4,7 +4,7 @@ import cn.springcloud.bamboo.BambooRequestContext;
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.PredicateKey;
 import org.apache.commons.lang.ArrayUtils;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
