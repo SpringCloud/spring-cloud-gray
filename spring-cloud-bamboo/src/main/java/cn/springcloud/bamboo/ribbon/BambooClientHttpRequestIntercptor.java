@@ -28,6 +28,7 @@ public class BambooClientHttpRequestIntercptor implements ClientHttpRequestInter
                 .ip(RequestIpKeeper.getRequestIp())
                 .addMultiHeaders(request.getHeaders())
                 .addMultiParams(WebUtils.getQueryParams(uri.getQuery()))
+                .requestBody(body)
                 .build();
 
         ConnectPointContext connectPointContext = ConnectPointContext.builder().bambooRequest(bambooRequest).build();

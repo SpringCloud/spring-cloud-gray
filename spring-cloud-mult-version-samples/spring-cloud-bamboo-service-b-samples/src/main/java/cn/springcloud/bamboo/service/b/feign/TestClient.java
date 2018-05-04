@@ -1,9 +1,7 @@
 package cn.springcloud.bamboo.service.b.feign;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -15,5 +13,10 @@ public interface TestClient {
 
     @RequestMapping(path = "/api/test/get", method = RequestMethod.GET)
     Map<String, String> testGet(@RequestParam(value = "version", required = false) String version);
+
+
+
+    @RequestMapping(value = "/api/test/post", method = RequestMethod.POST)
+    Map<String, String> testPost(@RequestParam(value = "version") String version, @RequestBody String body);
 
 }

@@ -47,6 +47,35 @@ public class TestResource {
      * @param version 请求版本
      * @return 消息体
      */
+    @RequestMapping(value = "/feignPost", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> feignPost(@RequestParam(value = "version", required = false) String version, @RequestBody String body) {
+        Map map = testClient.testPost(version, body);
+        return ImmutableMap.of("feignPost", "success.", "service-a-result", map);
+    }
+
+
+    /**
+     * test feign invoke service-a
+     *
+     * @param version 请求版本
+     * @return 消息体
+     */
+    @RequestMapping(value = "/restTemplatePost", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> restTemplatePost(@RequestParam(value = "version", required = false) String version, @RequestBody String body) {
+        String url = "http://service-a/api/test/post?version="+version;
+        Map map = restTemplate.postForObject(url, body, Map.class);
+        return ImmutableMap.of("restTemplatePost", "success.", "service-a-result", map);
+    }
+
+
+    /**
+     * test feign invoke service-a
+     *
+     * @param version 请求版本
+     * @return 消息体
+     */
     @RequestMapping(value = "/feignGet", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> feignGet(@RequestParam(value = "version", required = false) String version) {

@@ -12,14 +12,18 @@ public class BambooRequest {
     private final String ip;
     private final MultiValueMap<String, String> params;
     private final MultiValueMap<String, String> headers;
+    private final RequestBody requestBody;
 
 
-    private BambooRequest(String uri, String serviceId, String ip, MultiValueMap<String, String> params, MultiValueMap<String, String> headers) {
+    private BambooRequest(
+            String uri, String serviceId, String ip, MultiValueMap<String, String> params,
+            MultiValueMap<String, String> headers, RequestBody requestBody) {
         this.uri = uri;
         this.serviceId = serviceId;
         this.params = params;
         this.headers = headers;
         this.ip = ip;
+        this.requestBody = requestBody;
 
     }
 
@@ -34,6 +38,7 @@ public class BambooRequest {
         private String ip;
         private MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         private MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        private RequestBody requestBody;
         private Builder(){
 
         }
@@ -107,9 +112,19 @@ public class BambooRequest {
             return this;
         }
 
+        public Builder requestBody(RequestBody requestBody){
+            this.requestBody = requestBody;
+            return this;
+        }
+
+        public Builder requestBody(byte[] body){
+            this.requestBody = new BytesRequestBody(body);
+            return this;
+        }
+
 
         public BambooRequest build() {
-            return new BambooRequest(uri, serviceId, ip, params, headers);
+            return new BambooRequest(uri, serviceId, ip, params, headers, requestBody);
         }
     }
 
@@ -136,5 +151,9 @@ public class BambooRequest {
 
     public String getIp() {
         return ip;
+    }
+
+    public RequestBody getRequestBody() {
+        return requestBody;
     }
 }

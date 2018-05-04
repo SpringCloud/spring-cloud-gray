@@ -31,7 +31,8 @@ public class BambooFeignClient implements Client {
                 .serviceId(uri.getHost())
                 .uri(uri.getPath())
                 .ip(RequestIpKeeper.getRequestIp())
-                .addMultiParams(WebUtils.getQueryParams(uri.getQuery()));
+                .addMultiParams(WebUtils.getQueryParams(uri.getQuery()))
+                .requestBody(request.body());
 
         request.headers().entrySet().forEach(entry ->{
             for (String v : entry.getValue()) {
