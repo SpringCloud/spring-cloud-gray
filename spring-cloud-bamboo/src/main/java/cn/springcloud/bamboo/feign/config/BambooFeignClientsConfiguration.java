@@ -1,5 +1,6 @@
 package cn.springcloud.bamboo.feign.config;
 
+import cn.springcloud.bamboo.autoconfig.properties.BambooProperties;
 import cn.springcloud.bamboo.feign.BambooFeignClient;
 import feign.Client;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,12 @@ public class BambooFeignClientsConfiguration {
 
     @Autowired
     private Client feignClient;
+    @Autowired
+    private BambooProperties bambooProperties;
 
     @Bean
     public Client bambooFeignClient() {
-        return new BambooFeignClient(feignClient);
+        return new BambooFeignClient(bambooProperties, feignClient);
     }
 
 }
