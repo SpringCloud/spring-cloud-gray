@@ -21,9 +21,9 @@ public class BambooFeignClient implements Client {
     private Client delegate;
     private BambooProperties bambooProperties;
 
-
-    public BambooFeignClient(Client delegate) {
+    public BambooFeignClient(BambooProperties bambooProperties, Client delegate) {
         this.delegate = delegate;
+        this.bambooProperties = bambooProperties;
     }
 
     @Override
