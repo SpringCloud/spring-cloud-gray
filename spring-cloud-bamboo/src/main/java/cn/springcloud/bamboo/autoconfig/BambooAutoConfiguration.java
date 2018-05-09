@@ -1,6 +1,7 @@
 package cn.springcloud.bamboo.autoconfig;
 
 import cn.springcloud.bamboo.*;
+import cn.springcloud.bamboo.autoconfig.properties.BambooProperties;
 import cn.springcloud.bamboo.feign.config.BambooFeignConfiguration;
 import cn.springcloud.bamboo.ribbon.BambooClientHttpRequestIntercptor;
 import cn.springcloud.bamboo.ribbon.EurekaServerExtractor;
@@ -25,7 +26,7 @@ import java.util.List;
  * Created by saleson on 2017/11/9.
  */
 @Configuration
-@EnableConfigurationProperties
+@EnableConfigurationProperties({BambooProperties.class})
 @AutoConfigureBefore({BambooFeignConfiguration.class, BambooZuulConfiguration.class})
 @Import(BambooWebConfiguration.class)
 //@RibbonClients(defaultConfiguration = {BambooExtConfigration.class})
@@ -43,13 +44,15 @@ public class BambooAutoConfiguration {
 
     @Autowired
     private SpringClientFactory springClientFactory;
+    @Autowired
+    private BambooProperties bambooProperties;
 
 
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add(new BambooClientHttpRequestIntercptor());
+        restTemplate.getInterceptors().add(new BambooClientHttpRequestIntercptor(bambooProperties));
         return restTemplate;
     }
 

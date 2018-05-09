@@ -3,6 +3,7 @@ package cn.springcloud.bamboo.feign;
 import cn.springcloud.bamboo.BambooAppContext;
 import cn.springcloud.bamboo.BambooRequest;
 import cn.springcloud.bamboo.ConnectPointContext;
+import cn.springcloud.bamboo.autoconfig.properties.BambooProperties;
 import cn.springcloud.bamboo.utils.WebUtils;
 import cn.springcloud.bamboo.web.RequestIpKeeper;
 import feign.Client;
@@ -18,6 +19,7 @@ import java.net.URI;
 public class BambooFeignClient implements Client {
 
     private Client delegate;
+    private BambooProperties bambooProperties;
 
 
     public BambooFeignClient(Client delegate) {
@@ -31,8 +33,11 @@ public class BambooFeignClient implements Client {
                 .serviceId(uri.getHost())
                 .uri(uri.getPath())
                 .ip(RequestIpKeeper.getRequestIp())
-                .addMultiParams(WebUtils.getQueryParams(uri.getQuery()))
-                .requestBody(request.body());
+                .addMultiParams(WebUtils.getQueryParams(uri.getQuery()));
+        if(bambooProperties.getBambooRequest().isLoadBody()){
+            builder.requestBody(request.body());
+        }
+
 
         request.headers().entrySet().forEach(entry ->{
             for (String v : entry.getValue()) {

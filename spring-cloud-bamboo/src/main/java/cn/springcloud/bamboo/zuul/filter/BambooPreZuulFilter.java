@@ -3,6 +3,7 @@ package cn.springcloud.bamboo.zuul.filter;
 import cn.springcloud.bamboo.BambooAppContext;
 import cn.springcloud.bamboo.BambooRequest;
 import cn.springcloud.bamboo.ConnectPointContext;
+import cn.springcloud.bamboo.autoconfig.properties.BambooProperties;
 import com.netflix.util.Pair;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -22,6 +23,12 @@ import java.util.stream.Collectors;
 public class BambooPreZuulFilter extends ZuulFilter {
 
     private static final Logger log = LoggerFactory.getLogger(BambooPreZuulFilter.class);
+
+    private BambooProperties bambooProperties;
+
+    public BambooPreZuulFilter(BambooProperties bambooProperties) {
+        this.bambooProperties = bambooProperties;
+    }
 
     @Override
     public String filterType() {
@@ -50,14 +57,16 @@ public class BambooPreZuulFilter extends ZuulFilter {
                 .addHeaders(context.getOriginResponseHeaders().stream().collect(Collectors.toMap(Pair::first, Pair::second)));
         context.getOriginResponseHeaders().forEach(pair-> builder.addHeader(pair.first(), pair.second()));
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(context.getRequest().getInputStream()));
-            byte[] reqBody = IOUtils.toByteArray(reader);
-            builder.requestBody(reqBody);
-        }catch (IOException e){
-            String errorMsg = "获取request body出现异常";
-            log.error(errorMsg, e);
-            throw new RuntimeException(errorMsg, e);
+        if(bambooProperties.getBambooRequest().isLoadBody()) {
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(context.getRequest().getInputStream()));
+                byte[] reqBody = IOUtils.toByteArray(reader);
+                builder.requestBody(reqBody);
+            } catch (IOException e) {
+                String errorMsg = "获取request body出现异常";
+                log.error(errorMsg, e);
+                throw new RuntimeException(errorMsg, e);
+            }
         }
 
         ConnectPointContext connectPointContext = ConnectPointContext.builder().bambooRequest(builder.build()).build();
