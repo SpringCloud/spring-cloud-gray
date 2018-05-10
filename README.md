@@ -53,5 +53,5 @@ gray目前只有灰度管理的基本功能， 像数据持久化，高可用，
 
 
 #### 扩展思考
-gray目前仅仅只支持spring cloud eureka， 但是在spring cloud中，eureka只是做为其中一个注册中心， 如果要做spring cloud的灰度管理， 就还需要兼容其中的注册中心， 比如zookeeper, consul等。
+gray目前仅仅只支持spring cloud eureka， 但是在spring cloud中，eureka只是做为其中一个注册中心， 如果要做spring cloud的灰度管理， 就还需要兼容其他的注册中心， 比如zookeeper, consul等。
 
