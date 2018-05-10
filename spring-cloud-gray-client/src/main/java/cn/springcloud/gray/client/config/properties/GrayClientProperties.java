@@ -88,6 +88,7 @@ public class GrayClientProperties implements GrayClientConfig {
 
         private boolean grayEnroll;
         private int grayEnrollDealyTimeInMs = 40000;
+        private boolean useMultiVersion = false;
 
         public boolean isGrayEnroll() {
             return grayEnroll;
@@ -103,6 +104,19 @@ public class GrayClientProperties implements GrayClientConfig {
 
         public void setGrayEnrollDealyTimeInMs(int grayEnrollDealyTimeInMs) {
             this.grayEnrollDealyTimeInMs = grayEnrollDealyTimeInMs;
+        }
+
+        /**
+         * 是否使用多版本,默认不使用
+         *
+         * @return
+         */
+        public boolean isUseMultiVersion() {
+            return useMultiVersion;
+        }
+
+        public void setUseMultiVersion(boolean useMultiVersion) {
+            this.useMultiVersion = useMultiVersion;
         }
     }
 }

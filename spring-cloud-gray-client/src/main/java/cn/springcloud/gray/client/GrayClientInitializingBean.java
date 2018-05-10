@@ -1,6 +1,7 @@
 package cn.springcloud.gray.client;
 
 import cn.springcloud.gray.InstanceLocalInfo;
+import cn.springcloud.gray.client.config.properties.GrayClientProperties;
 import cn.springcloud.gray.core.GrayManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -16,6 +17,7 @@ public class GrayClientInitializingBean implements InitializingBean, Application
     public void afterPropertiesSet() throws Exception {
         GrayClientAppContext.setGrayManager(cxt.getBean(GrayManager.class));
         GrayClientAppContext.setInstanceLocalInfo(cxt.getBean(InstanceLocalInfo.class));
+        GrayClientAppContext.setGrayClientProperties(cxt.getBean(GrayClientProperties.class));
 
         startForWork();
 
