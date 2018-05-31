@@ -1,6 +1,6 @@
-package cn.springcloud.bamboo.service.b.rest;
+package cn.springcloud.bamboo.service.d.rest;
 
-import cn.springcloud.bamboo.service.b.feign.TestClient;
+import cn.springcloud.bamboo.service.d.feign.TestClient;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -22,7 +22,7 @@ public class TestResource {
     private TestClient testClient;
 
     /**
-     * test rest template invoke service-a
+     * test rest template invoke service-c
      *
      * @param request HttpServletRequest
      * @return 消息体
@@ -30,19 +30,19 @@ public class TestResource {
     @RequestMapping(value = "/restTemplateGet", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> restTemplateGet(HttpServletRequest request) {
-        String url = "http://service-a/api/test/get";
+        String url = "http://service-c/api/test/get";
         String query = request.getQueryString();
         if (!StringUtils.isEmpty(query)) {
             url = url + "?" + query;
         }
 
         Map map = restTemplate.getForObject(url, Map.class);
-        return ImmutableMap.of("restTemplateGet", "success.", "service-a-result", map);
+        return ImmutableMap.of("restTemplateGet", "success.", "service-c-result", map);
     }
 
 
     /**
-     * test feign invoke service-a
+     * test feign invoke service-c
      *
      * @param version 请求版本
      * @return 消息体
@@ -51,12 +51,12 @@ public class TestResource {
     @ResponseBody
     public Map<String, Object> feignPost(@RequestParam(value = "version", required = false) String version, @RequestBody String body) {
         Map map = testClient.testPost(version, body);
-        return ImmutableMap.of("feignPost", "success.", "service-a-result", map);
+        return ImmutableMap.of("feignPost", "success.", "service-c-result", map);
     }
 
 
     /**
-     * test feign invoke service-a
+     * test feign invoke service-c
      *
      * @param version 请求版本
      * @return 消息体
@@ -64,14 +64,14 @@ public class TestResource {
     @RequestMapping(value = "/restTemplatePost", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> restTemplatePost(@RequestParam(value = "version", required = false) String version, @RequestBody String body) {
-        String url = "http://service-a/api/test/post?version="+version;
+        String url = "http://service-c/api/test/post?version="+version;
         Map map = restTemplate.postForObject(url, body, Map.class);
-        return ImmutableMap.of("restTemplatePost", "success.", "service-a-result", map);
+        return ImmutableMap.of("restTemplatePost", "success.", "service-c-result", map);
     }
 
 
     /**
-     * test feign invoke service-a
+     * test feign invoke service-c
      *
      * @param version 请求版本
      * @return 消息体
@@ -80,6 +80,6 @@ public class TestResource {
     @ResponseBody
     public Map<String, Object> feignGet(@RequestParam(value = "version", required = false) String version) {
         Map map = testClient.testGet(version);
-        return ImmutableMap.of("feignGet", "success.", "service-a-result", map);
+        return ImmutableMap.of("feignGet", "success.", "service-c-result", map);
     }
 }

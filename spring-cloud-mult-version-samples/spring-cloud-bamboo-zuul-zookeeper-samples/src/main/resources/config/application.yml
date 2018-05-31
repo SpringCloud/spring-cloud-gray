@@ -1,18 +1,20 @@
 spring:
   application:
     name: api-gateway
+  cloud:
+    zookeeper:
+      connect-string: 127.0.0.1:2181
+      discovery:
+        register: true
+        root: dev
 server:
   port: 10301
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:10001/eureka/
 
-ribbon:
+#ribbon:
 #    ReadTimeout: 30000
 #    ConnectTimeout: 30000
-    eureka:
-        enabled: true
+#    eureka:
+#        enabled: true
 zuul:
   prefix: /gateway #为zuul设置一个公共的前缀
 #  routes:

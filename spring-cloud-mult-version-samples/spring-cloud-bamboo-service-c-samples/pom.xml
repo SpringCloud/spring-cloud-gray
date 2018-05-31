@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>spring-cloud-bamboo-service-a-samples</artifactId>
+    <artifactId>spring-cloud-bamboo-service-c-samples</artifactId>
 
     <dependencies>
         <dependency>
@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka</artifactId>
+            <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
         </dependency>
     </dependencies>
 

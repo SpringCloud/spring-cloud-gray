@@ -1,16 +1,14 @@
 spring:
   application:
-    name: service-b
+    name: service-d
+  cloud:
+    zookeeper:
+      connect-string: 127.0.0.1:2181
+      discovery:
+        register: true
+        root: dev
 server:
   port: 10102
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    serviceUrl:
-      defaultZone: http://localhost:10001/eureka/
-  instance:
-    instanceId: ${spring.application.name}:${server.port}
 
 feign:
   hystrix:

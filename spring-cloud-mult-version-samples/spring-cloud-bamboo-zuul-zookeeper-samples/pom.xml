@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>spring-cloud-bamboo-zuul-samples</artifactId>
+    <artifactId>spring-cloud-bamboo-zuul-zookeeper-samples</artifactId>
 
 
     <dependencies>
@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka</artifactId>
+            <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>

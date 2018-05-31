@@ -14,8 +14,11 @@
     <modules>
         <module>spring-cloud-bamboo-eureka-samples</module>
         <module>spring-cloud-bamboo-zuul-samples</module>
+        <module>spring-cloud-bamboo-zuul-zookeeper-samples</module>
         <module>spring-cloud-bamboo-service-a-samples</module>
         <module>spring-cloud-bamboo-service-b-samples</module>
+        <module>spring-cloud-bamboo-service-c-samples</module>
+        <module>spring-cloud-bamboo-service-d-samples</module>
     </modules>
 
     <build>

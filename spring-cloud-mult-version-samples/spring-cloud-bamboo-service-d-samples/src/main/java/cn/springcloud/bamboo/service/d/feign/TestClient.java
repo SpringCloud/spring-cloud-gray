@@ -1,4 +1,4 @@
-package cn.springcloud.bamboo.service.b.feign;
+package cn.springcloud.bamboo.service.d.feign;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by saleson on 2017/11/10.
  */
-@FeignClient(name = "service-a")
+@FeignClient(name = "service-c")
 public interface TestClient {
 
     @RequestMapping(path = "/api/test/get", method = RequestMethod.GET)

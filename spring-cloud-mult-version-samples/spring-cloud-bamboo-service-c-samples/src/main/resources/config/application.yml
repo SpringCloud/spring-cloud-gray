@@ -1,15 +1,14 @@
 spring:
   application:
-    name: service-a
+    name: service-c
+  cloud:
+    zookeeper:
+      connect-string: 127.0.0.1:2181
+      discovery:
+        register: true
+        root: dev
+        metadata:
+          versions: 1,2
+
 server:
   port: 10101
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    serviceUrl:
-      defaultZone: http://localhost:10001/eureka/
-  instance:
-    instanceId: ${spring.application.name}:${server.port}
-    metadata-map:
-      versions: 1,2

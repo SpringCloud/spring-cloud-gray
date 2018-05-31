@@ -1,4 +1,4 @@
-package cn.springcloud.bamboo.service.b;
+package cn.springcloud.bamboo.service.d;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
