@@ -3,6 +3,7 @@
 在使用多版本控制时，需要修改服务提供方和服务消费方，分别是application.yaml和pom.xml。
 
 1、在服务提供方的application.yaml中添加versions属性，标明服务支持哪些版本。
+* eureka
 ```yaml
 spring:
   application:
@@ -20,8 +21,24 @@ eureka:
     metadata-map:
       versions: 1,2
 ```
+* zookeeper
+```yaml
+spring:
+  application:
+    name: service-c
+  cloud:
+    zookeeper:
+      connect-string: 127.0.0.1:2181
+      discovery:
+        register: true
+        root: dev
+        metadata:
+          versions: 1,2
+server:
+  port: 10101
+```
 
-2、在服务消费方，只需要在pom.xml添加spring-cloud-starter-multi-version到pom.xml依赖中即可
+2、在服务消费方，只需要在pom.xml添加spring-cloud-starter-multi-version到pom.xml依赖中即可，eureka和zookeeper的依赖二选一。
 ```xml
     <dependencies>
         <dependency>
@@ -32,9 +49,15 @@ eureka:
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
+        <!-- eureka作为注册中心时使用 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+        <!-- zookeeper作为注册中心时使用 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
