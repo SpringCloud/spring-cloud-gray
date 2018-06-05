@@ -6,16 +6,13 @@ import cn.springcloud.gray.client.GrayClientAppContext;
 import cn.springcloud.gray.client.config.properties.GrayClientProperties;
 import cn.springcloud.gray.core.GrayManager;
 import cn.springcloud.gray.core.GrayService;
+import cn.springcloud.gray.utils.ServiceUtil;
 import com.google.common.base.Optional;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.*;
-import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static cn.springcloud.gray.client.GrayClientAppContext.getGrayClientProperties;
-
 
 /**
  * 灰度发布的负载规则
@@ -55,8 +52,8 @@ public class GrayLoadBalanceRule extends ZoneAvoidanceRule {
             List<Server> grayServers = new ArrayList<>(grayService.getGrayInstances().size());
             List<Server> normalServers = new ArrayList<>(servers.size() - grayService.getGrayInstances().size());
             for (Server server : servers) {
-                DiscoveryEnabledServer disServer = (DiscoveryEnabledServer) server;
-                if (grayService.getGrayInstance(disServer.getInstanceInfo().getInstanceId()) != null) {
+                String instanceId = ServiceUtil.getInstanceId(server);
+                if (grayService.getGrayInstance(instanceId) != null) {
                     grayServers.add(server);
                 } else {
                     normalServers.add(server);

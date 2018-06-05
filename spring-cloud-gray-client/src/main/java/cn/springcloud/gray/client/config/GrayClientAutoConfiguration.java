@@ -13,14 +13,15 @@ import cn.springcloud.gray.core.GrayDecisionFactory;
 import cn.springcloud.gray.core.GrayManager;
 import cn.springcloud.gray.core.InformationClient;
 import cn.springcloud.gray.decision.DefaultGrayDecisionFactory;
-import com.netflix.appinfo.EurekaInstanceConfig;
-import com.netflix.discovery.EurekaClient;
+import cn.springcloud.gray.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.cloud.netflix.ribbon.RibbonClients;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -54,15 +55,20 @@ public class GrayClientAutoConfiguration {
 
 
     @Bean
-    public InstanceLocalInfo instanceLocalInfo(@Autowired EurekaClient eurekaClient) {
-        EurekaInstanceConfig instanceConfig = eurekaClient.getApplicationInfoManager().getEurekaInstanceConfig();
+    @ConditionalOnMissingBean
+    public InstanceLocalInfo instanceLocalInfo(@Autowired ApplicationContext context,
+                                               @Autowired Registration registration) {
+        String instanceId = ServiceUtil.getInstanceId(registration);
+        if(null == instanceId){
+            context.getId();
+        }
+
         InstanceLocalInfo localInfo = new InstanceLocalInfo();
-        localInfo.setInstanceId(instanceConfig.getInstanceId());
-        localInfo.setServiceId(instanceConfig.getAppname());
+        localInfo.setInstanceId(instanceId);
+        localInfo.setServiceId(registration.getServiceId());
         localInfo.setGray(false);
         return localInfo;
     }
-
 
     @Bean
     @ConditionalOnMissingBean
@@ -72,14 +78,16 @@ public class GrayClientAutoConfiguration {
 
 
     @Configuration
-    @ConditionalOnProperty(prefix = "gray.client", value = "information-client", havingValue = "http", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "gray.client", value = "information-client", havingValue = "http", matchIfMissing
+            = true)
     public static class HttpGrayManagerClientConfiguration {
         @Autowired
         private GrayClientProperties grayClientProperties;
 
         @Bean
         public InformationClient informationClient() {
-            InformationClient client = new HttpInformationClient(grayClientProperties.getServerUrl(), new RestTemplate());
+            InformationClient client = new HttpInformationClient(grayClientProperties.getServerUrl(), new
+                    RestTemplate());
             if (!grayClientProperties.isRetryable()) {
                 return client;
             }

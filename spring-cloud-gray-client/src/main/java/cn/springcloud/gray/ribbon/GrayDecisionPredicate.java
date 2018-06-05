@@ -3,9 +3,10 @@ package cn.springcloud.gray.ribbon;
 import cn.springcloud.bamboo.BambooRequest;
 import cn.springcloud.bamboo.BambooRequestContext;
 import cn.springcloud.gray.core.GrayDecision;
+import cn.springcloud.gray.utils.ServiceUtil;
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.PredicateKey;
-import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
+import com.netflix.loadbalancer.Server;
 
 import java.util.List;
 
@@ -21,10 +22,12 @@ public class GrayDecisionPredicate extends AbstractServerPredicate {
         if (bambooRequestContext == null || bambooRequestContext.getBambooRequest() == null) {
             return false;
         }
-        DiscoveryEnabledServer server = (DiscoveryEnabledServer) input.getServer();
+        Server server = input.getServer();
+        String instanceId = ServiceUtil.getInstanceId(server);
+
         BambooRequest bambooRequest = bambooRequestContext.getBambooRequest();
         List<GrayDecision> grayDecisions =
-                getIRule().getGrayManager().grayDecision(bambooRequest.getServiceId(), server.getInstanceInfo().getInstanceId());
+                getIRule().getGrayManager().grayDecision(bambooRequest.getServiceId(), instanceId);
         for (GrayDecision grayDecision : grayDecisions) {
             if (grayDecision.test(bambooRequest)) {
                 return true;
