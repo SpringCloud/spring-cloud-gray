@@ -7,9 +7,8 @@ spring:
       discovery:
         register: true
         root: dev
-        instance-port: ${server.port}
-
-
+        metadata:
+          instanceId: ${spring.application.name}:${java.rmi.server.hostname}:${server.port}
 
 server:
   port: 20301

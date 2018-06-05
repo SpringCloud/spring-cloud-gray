@@ -1,5 +1,6 @@
 package cn.springcloud.gray.ribbon;
 
+import cn.springcloud.bamboo.BambooAppContext;
 import cn.springcloud.bamboo.BambooRequestContext;
 import cn.springcloud.bamboo.ribbon.loadbalancer.BambooZoneAvoidanceRule;
 import cn.springcloud.gray.client.GrayClientAppContext;
@@ -13,6 +14,7 @@ import com.netflix.loadbalancer.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 灰度发布的负载规则
@@ -46,13 +48,15 @@ public class GrayLoadBalanceRule extends ZoneAvoidanceRule {
     public Server choose(Object key) {
         ILoadBalancer lb = getLoadBalancer();
         BambooRequestContext requestContext = BambooRequestContext.currentRequestCentxt();
-        if (requestContext != null && getGrayManager().isOpen(requestContext.getServiceId())) {
-            GrayService grayService = getGrayManager().grayService(requestContext.getServiceId());
+        String serviceId = requestContext.getServiceId();
+        if (requestContext != null && getGrayManager().isOpen(serviceId)) {
+            GrayService grayService = getGrayManager().grayService(serviceId);
             List<Server> servers = lb.getAllServers();
             List<Server> grayServers = new ArrayList<>(grayService.getGrayInstances().size());
             List<Server> normalServers = new ArrayList<>(servers.size() - grayService.getGrayInstances().size());
             for (Server server : servers) {
-                String instanceId = ServiceUtil.getInstanceId(server);
+                Map<String, String> serverMetadata = getServerMetadata(serviceId, server);
+                String instanceId = ServiceUtil.getInstanceId(server, serverMetadata);
                 if (grayService.getGrayInstance(instanceId) != null) {
                     grayServers.add(server);
                 } else {
@@ -98,8 +102,11 @@ public class GrayLoadBalanceRule extends ZoneAvoidanceRule {
         }
     }
 
-
     public GrayManager getGrayManager() {
         return GrayClientAppContext.getGrayManager();
+    }
+
+    public static Map<String, String> getServerMetadata(String serviceId, Server server) {
+        return BambooAppContext.getEurekaServerExtractor().getServerMetadata(serviceId, server);
     }
 }

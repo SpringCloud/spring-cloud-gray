@@ -86,9 +86,10 @@ public class GrayClientProperties implements GrayClientConfig {
      */
     public class InstanceConfig {
 
-        private boolean grayEnroll;
+        private boolean grayEnroll = false;
         private int grayEnrollDealyTimeInMs = 40000;
         private boolean useMultiVersion = false;
+        private String instanceId;
 
         public boolean isGrayEnroll() {
             return grayEnroll;
@@ -117,6 +118,14 @@ public class GrayClientProperties implements GrayClientConfig {
 
         public void setUseMultiVersion(boolean useMultiVersion) {
             this.useMultiVersion = useMultiVersion;
+        }
+
+        public String getInstanceId() {
+            return instanceId;
+        }
+
+        public void setInstanceId(String instanceId) {
+            this.instanceId = instanceId;
         }
     }
 }

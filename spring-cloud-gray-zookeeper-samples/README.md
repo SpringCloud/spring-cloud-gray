@@ -16,7 +16,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka</artifactId>
+            <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
         </dependency>
         
         <dependency>
@@ -78,7 +78,7 @@ public class GrayServerApplication {
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-eureka</artifactId>
+                <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -100,6 +100,22 @@ public class GrayServerApplication {
 
 2、在application.yaml中加入灰度配置。
 ```yaml
+spring:
+  application:
+    name: service-b
+  cloud:
+    zookeeper:
+      connect-string: 127.0.0.1:2181
+      discovery:
+        register: true
+        root: dev
+        metadata:
+          # 因zookeeper作为注册中心生成的instanceId不规则且不易获取，所以必须配置instanceId，取值值只要能区分不同的实例即可
+          instanceId: ${spring.application.name}:${java.rmi.server.hostname}:${server.port} 
+          
+server:
+  port: 20101
+  
 gray:
   client:
     instance:

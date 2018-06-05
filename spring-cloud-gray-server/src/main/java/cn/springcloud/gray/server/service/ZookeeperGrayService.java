@@ -2,11 +2,9 @@ package cn.springcloud.gray.server.service;
 
 import cn.springcloud.gray.core.GrayInstance;
 import cn.springcloud.gray.core.GrayPolicyGroup;
-import cn.springcloud.gray.core.GrayService;
 import cn.springcloud.gray.core.GrayServiceManager;
 import cn.springcloud.gray.server.resources.domain.vo.GrayInstanceVO;
 import cn.springcloud.gray.server.resources.domain.vo.GrayPolicyGroupVO;
-import cn.springcloud.gray.server.resources.domain.vo.GrayServiceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.cloud.client.ServiceInstance;
@@ -22,46 +20,17 @@ import java.util.List;
 @Service
 @ConditionalOnBean(ZookeeperRegistration.class)
 public class ZookeeperGrayService extends AbstractGrayService {
+    private static final String METADATA_KEY_INSTANCE_ID = "instanceId";
 
     private final DiscoveryClient discoveryClient;
     private final GrayServiceManager grayServiceManager;
 
     @Autowired
     public ZookeeperGrayService(DiscoveryClient discoveryClient, GrayServiceManager grayServiceManager) {
-        super(grayServiceManager);
+        super(grayServiceManager, discoveryClient);
         this.discoveryClient = discoveryClient;
         this.grayServiceManager = grayServiceManager;
     }
-
-
-    /**
-     * 返回所有服务
-     *
-     * @return 灰度服务VO集合
-     */
-    @Override
-    public ResponseEntity<List<GrayServiceVO>> services() {
-        List<String> serviceIds = discoveryClient.getServices();
-        List<GrayServiceVO> services = new ArrayList<>(serviceIds.size());
-        for (String serviceId : serviceIds) {
-            List<ServiceInstance> instances = discoveryClient.getInstances(serviceId);
-            if (null == instances || instances.isEmpty()) {
-                continue;
-            }
-            GrayServiceVO vo = new GrayServiceVO();
-            vo.setServiceId(serviceId);
-            vo.setAppName(serviceId);
-            vo.setInstanceSize(instances.size());
-            GrayService grayService = grayServiceManager.getGrayService(serviceId);
-            if (grayService != null) {
-                vo.setHasGrayInstances(grayService.isOpenGray());
-                vo.setHasGrayPolicies(grayService.hasGrayPolicy());
-            }
-            services.add(vo);
-        }
-        return ResponseEntity.ok(services);
-    }
-
 
     /**
      * 返回服务实例列表
@@ -75,7 +44,7 @@ public class ZookeeperGrayService extends AbstractGrayService {
         List<ServiceInstance> instances = discoveryClient.getInstances(serviceId);
         if (null != instances && !instances.isEmpty()) {
             instances.forEach(instance -> {
-                String instanceId = instance.getHost() + ":" + instance.getPort();
+                String instanceId = getInstanceId(instance);
                 GrayInstanceVO vo = new GrayInstanceVO();
                 vo.setAppName(serviceId);
                 vo.setServiceId(serviceId);
@@ -93,7 +62,6 @@ public class ZookeeperGrayService extends AbstractGrayService {
         return ResponseEntity.ok(list);
     }
 
-
     /**
      * 服务实例的所有灰度策略组
      *
@@ -109,7 +77,7 @@ public class ZookeeperGrayService extends AbstractGrayService {
         }
 
         ServiceInstance serviceInstance = instances.stream()
-                .filter(instance -> instanceId.equals(instance.getHost() + ":" + instance.getPort()))
+                .filter(instance -> instanceId.equals(getInstanceId(instance)))
                 .findFirst().orElse(null);
 
         GrayInstance grayInstance = grayServiceManager.getGrayInstane(serviceId, instanceId);
@@ -142,7 +110,7 @@ public class ZookeeperGrayService extends AbstractGrayService {
         }
 
         ServiceInstance serviceInstance = instances.stream()
-                .filter(instance -> instanceId.equals(instance.getHost() + ":" + instance.getPort()))
+                .filter(instance -> instanceId.equals(getInstanceId(instance)))
                 .findFirst().orElse(null);
 
         GrayInstance grayInstance = grayServiceManager.getGrayInstane(serviceId, instanceId);
@@ -154,5 +122,12 @@ public class ZookeeperGrayService extends AbstractGrayService {
             }
         }
         return ResponseEntity.ok().build();
+    }
+
+    private String getInstanceId(ServiceInstance instance) {
+        if (instance.getMetadata().containsKey(METADATA_KEY_INSTANCE_ID)) {
+            return instance.getMetadata().get(METADATA_KEY_INSTANCE_ID);
+        }
+        throw new IllegalStateException("Unable to find config spring.cloud.zookeeper.discovery.metadata.instanceId!");
     }
 }

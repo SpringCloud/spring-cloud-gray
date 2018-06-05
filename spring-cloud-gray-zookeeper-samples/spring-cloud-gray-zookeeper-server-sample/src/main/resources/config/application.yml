@@ -7,7 +7,6 @@ spring:
       discovery:
         register: true
         root: dev
-        instance-port: ${server.port}
 
 server:
   port: 20202

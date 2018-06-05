@@ -2,11 +2,9 @@ package cn.springcloud.gray.server.service;
 
 import cn.springcloud.gray.core.GrayInstance;
 import cn.springcloud.gray.core.GrayPolicyGroup;
-import cn.springcloud.gray.core.GrayService;
 import cn.springcloud.gray.core.GrayServiceManager;
 import cn.springcloud.gray.server.resources.domain.vo.GrayInstanceVO;
 import cn.springcloud.gray.server.resources.domain.vo.GrayPolicyGroupVO;
-import cn.springcloud.gray.server.resources.domain.vo.GrayServiceVO;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 import com.netflix.discovery.shared.Application;
@@ -31,39 +29,11 @@ public class EurekaGrayService extends AbstractGrayService {
     @Autowired
     public EurekaGrayService(EurekaClient eurekaClient, DiscoveryClient discoveryClient, GrayServiceManager
             grayServiceManager) {
-        super(grayServiceManager);
+        super(grayServiceManager, discoveryClient);
         this.eurekaClient = eurekaClient;
         this.discoveryClient = discoveryClient;
         this.grayServiceManager = grayServiceManager;
     }
-
-
-    /**
-     * 返回所有服务
-     *
-     * @return 灰度服务VO集合
-     */
-    @Override
-    public ResponseEntity<List<GrayServiceVO>> services() {
-        List<String> serviceIds = discoveryClient.getServices();
-//        List<Application> apps = eurekaClient.getApplications().getRegisteredApplications();
-        List<GrayServiceVO> services = new ArrayList<>(serviceIds.size());
-        for (String serviceId : serviceIds) {
-            GrayServiceVO vo = new GrayServiceVO();
-            vo.setServiceId(serviceId);
-            Application app = eurekaClient.getApplication(serviceId);
-            vo.setAppName(app.getName());
-            vo.setInstanceSize(app.getInstances().size());
-            GrayService grayService = grayServiceManager.getGrayService(serviceId);
-            if (grayService != null) {
-                vo.setHasGrayInstances(grayService.isOpenGray());
-                vo.setHasGrayPolicies(grayService.hasGrayPolicy());
-            }
-            services.add(vo);
-        }
-        return ResponseEntity.ok(services);
-    }
-
 
     /**
      * 返回服务实例列表

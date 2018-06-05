@@ -4,7 +4,6 @@ import cn.springcloud.bamboo.BambooConstants;
 import cn.springcloud.bamboo.autoconfig.BambooAutoConfiguration;
 import cn.springcloud.gray.DefaultGrayManager;
 import cn.springcloud.gray.HttpInformationClient;
-import cn.springcloud.gray.InstanceLocalInfo;
 import cn.springcloud.gray.RetryableInformationClient;
 import cn.springcloud.gray.client.GrayClientInitializingBean;
 import cn.springcloud.gray.client.GrayOptionalArgs;
@@ -13,15 +12,12 @@ import cn.springcloud.gray.core.GrayDecisionFactory;
 import cn.springcloud.gray.core.GrayManager;
 import cn.springcloud.gray.core.InformationClient;
 import cn.springcloud.gray.decision.DefaultGrayDecisionFactory;
-import cn.springcloud.gray.utils.ServiceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.cloud.netflix.ribbon.RibbonClients;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -51,23 +47,6 @@ public class GrayClientAutoConfiguration {
     @Order(value = BambooConstants.INITIALIZING_ORDER + 1)
     public GrayClientInitializingBean grayClientInitializingBean() {
         return new GrayClientInitializingBean();
-    }
-
-
-    @Bean
-    @ConditionalOnMissingBean
-    public InstanceLocalInfo instanceLocalInfo(@Autowired ApplicationContext context,
-                                               @Autowired Registration registration) {
-        String instanceId = ServiceUtil.getInstanceId(registration);
-        if(null == instanceId){
-            context.getId();
-        }
-
-        InstanceLocalInfo localInfo = new InstanceLocalInfo();
-        localInfo.setInstanceId(instanceId);
-        localInfo.setServiceId(registration.getServiceId());
-        localInfo.setGray(false);
-        return localInfo;
     }
 
     @Bean
