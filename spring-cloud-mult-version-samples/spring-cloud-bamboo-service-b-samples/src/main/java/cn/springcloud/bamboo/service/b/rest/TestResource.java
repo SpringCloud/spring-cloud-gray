@@ -1,6 +1,6 @@
-package cn.springcloud.bamboo.service.d.rest;
+package cn.springcloud.bamboo.service.b.rest;
 
-import cn.springcloud.bamboo.service.d.feign.TestClient;
+import cn.springcloud.bamboo.service.b.feign.TestClient;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;

@@ -1,4 +1,4 @@
-package cn.springcloud.bamboo.service.c.web.rest;
+package cn.springcloud.bamboo.service.a.web.rest;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.StringUtils;
