@@ -21,6 +21,7 @@
 * spring-cloud-start-gray
 * spring-cloud-start-gray-server
 * [spring-cloud-gray-samples](spring-cloud-gray-samples/README.md)
+* [spring-cloud-gray-zookeeper-samples](spring-cloud-gray-zookeeper-samples/README.md)
 
 #### maven 依赖
 jar包已经上传到maven中央库，可以通过maven直接从中央库下载
@@ -53,5 +54,5 @@ gray目前只有灰度管理的基本功能， 像数据持久化，高可用，
 
 
 #### 扩展思考
-gray目前仅仅只支持spring cloud eureka， 但是在spring cloud中，eureka只是做为其中一个注册中心， 如果要做spring cloud的灰度管理， 就还需要兼容其中的注册中心， 比如zookeeper, consul等。
+gray目前仅仅只支持spring cloud eureka， 但是在spring cloud中，eureka只是做为其中一个注册中心， 如果要做spring cloud的灰度管理， 就还需要兼容其他的注册中心， 比如zookeeper, consul等。
 

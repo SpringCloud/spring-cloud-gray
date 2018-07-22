@@ -22,3 +22,5 @@ zuul:
 gray:
   client:
     server-url: http://localhost:20202 #灰度服务端的url
+    instance:
+      use-multi-version: false

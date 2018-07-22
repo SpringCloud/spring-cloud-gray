@@ -27,6 +27,7 @@ public class DefaultGrayServiceManager implements GrayServiceManager {
 
     @Override
     public void addGrayInstance(GrayInstance instance) {
+
         GrayService grayService = grayServiceMap.get(instance.getServiceId());
         lock.lock();
         try {
