@@ -15,6 +15,7 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.stream.Collectors;
 
 /**
@@ -60,7 +61,7 @@ public class BambooPreZuulFilter extends ZuulFilter {
         if(bambooProperties.getBambooRequest().isLoadBody()) {
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(context.getRequest().getInputStream()));
-                byte[] reqBody = IOUtils.toByteArray(reader);
+                byte[] reqBody = IOUtils.toByteArray(reader, Charset.forName("UTF-8"));
                 builder.requestBody(reqBody);
             } catch (IOException e) {
                 String errorMsg = "获取request body出现异常";

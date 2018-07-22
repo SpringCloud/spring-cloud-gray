@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -43,20 +43,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-feign</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.2.2</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.cloud</groupId>-->
-        <!--<artifactId>spring-cloud-starter-zuul</artifactId>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
 
         <!--<dependency>-->
         <!--<groupId>org.springframework.cloud</groupId>-->

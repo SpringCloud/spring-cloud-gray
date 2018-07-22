@@ -7,6 +7,7 @@ import cn.springcloud.gray.server.resources.domain.vo.GrayInstanceVO;
 import cn.springcloud.gray.server.resources.domain.vo.GrayPolicyGroupVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperRegistration;
@@ -18,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@ConditionalOnBean(ZookeeperRegistration.class)
+@ConditionalOnClass(name = "org.springframework.cloud.zookeeper.serviceregistry.ServiceInstanceRegistration")
 public class ZookeeperGrayService extends AbstractGrayService {
     private static final String METADATA_KEY_INSTANCE_ID = "instanceId";
 

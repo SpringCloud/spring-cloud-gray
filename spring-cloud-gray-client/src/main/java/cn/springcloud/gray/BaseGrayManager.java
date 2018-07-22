@@ -87,7 +87,7 @@ public class BaseGrayManager extends AbstractGrayManager {
 
         Map<String, GrayService> grayMap = new HashMap<>();
         grayServices.forEach(grayService -> grayMap.put(grayService.getServiceId(), grayService));
-        grayServiceMap = new ConcurrentHashMap(grayMap);
+        grayServiceMap = new ConcurrentHashMap<>(grayMap);
         checkLocalGray();
     }
 

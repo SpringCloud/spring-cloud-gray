@@ -12,7 +12,7 @@ public class DefaultRibbonConnectionPoint implements BambooRibbonConnectionPoint
 
     private RequestVersionExtractor versionExtractor;
     private ApplicationContext ctx;
-    private static ThreadLocal<List<LoadBalanceRequestTrigger>> curRequestTriggers = new ThreadLocal();
+    private static ThreadLocal<List<LoadBalanceRequestTrigger>> curRequestTriggers = new ThreadLocal<>();
     private List<LoadBalanceRequestTrigger> requestTriggerList;
 
     public DefaultRibbonConnectionPoint(RequestVersionExtractor versionExtractor) {

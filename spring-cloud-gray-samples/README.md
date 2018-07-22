@@ -16,7 +16,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-eureka</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
         
         <dependency>
@@ -78,11 +78,7 @@ public class GrayServerApplication {
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-eureka</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-feign</artifactId>
+                <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>

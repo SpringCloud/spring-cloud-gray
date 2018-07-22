@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
@@ -30,7 +30,7 @@ import java.util.List;
 @ConfigurationProperties
 //@Import(springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class)
 @ComponentScan({"cn.springcloud.gray.server.resources"})
-public class Swagger2Configuration extends WebMvcConfigurerAdapter {
+public class Swagger2Configuration implements WebMvcConfigurer {
 
 
     @Override

@@ -20,7 +20,7 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new CORSFilter());
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean<>(new CORSFilter());
         filterRegistrationBean.addUrlPatterns("/*");
         return filterRegistrationBean;
     }

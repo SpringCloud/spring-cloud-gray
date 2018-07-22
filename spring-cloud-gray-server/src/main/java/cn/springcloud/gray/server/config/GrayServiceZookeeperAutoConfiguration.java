@@ -7,6 +7,7 @@ import cn.springcloud.gray.server.service.AbstractGrayService;
 import cn.springcloud.gray.server.service.ZookeeperGrayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperRegistration;
@@ -18,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
  * @Date: 2018/6/4 18:59
  */
 @Configuration
-@ConditionalOnBean(ZookeeperRegistration.class)
+@ConditionalOnClass(name = "org.springframework.cloud.zookeeper.serviceregistry.ServiceInstanceRegistration")
 public class GrayServiceZookeeperAutoConfiguration {
 
     private final DiscoveryClient discoveryClient;

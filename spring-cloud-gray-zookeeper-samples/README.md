@@ -81,10 +81,6 @@ public class GrayServerApplication {
                 <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
             </dependency>
             <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-feign</artifactId>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
             </dependency>

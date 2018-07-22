@@ -2,6 +2,7 @@ package cn.springcloud.gray.zuul;
 
 import cn.springcloud.gray.client.EnableGrayClient;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -23,7 +24,7 @@ public class GrayZuulApplication {
 
 
     public static void main(String[] args) throws UnknownHostException {
-        Environment env = new SpringApplicationBuilder(GrayZuulApplication.class).web(true).run(args).getEnvironment();
+        Environment env = new SpringApplicationBuilder(GrayZuulApplication.class).web(WebApplicationType.SERVLET).run(args).getEnvironment();
         log.info(
                 "\n----------------------------------------------------------\n\t"
                         + "Application '{}' is running! Access URLs:\n\t" + "Local: \t\thttp://127.0.0.1:{}\n\t"
