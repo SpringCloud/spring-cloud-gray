@@ -83,6 +83,4 @@ public class GrayClientAutoConfiguration {
             return new DefaultGrayManager(args);
         }
     }
-
-
 }

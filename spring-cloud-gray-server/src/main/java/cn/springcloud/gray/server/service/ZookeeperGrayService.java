@@ -6,11 +6,11 @@ import cn.springcloud.gray.core.GrayServiceManager;
 import cn.springcloud.gray.server.resources.domain.vo.GrayInstanceVO;
 import cn.springcloud.gray.server.resources.domain.vo.GrayPolicyGroupVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperRegistration;
+import org.springframework.cloud.zookeeper.discovery.ZookeeperInstance;
+import org.springframework.cloud.zookeeper.discovery.ZookeeperServiceInstance;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -127,8 +127,12 @@ public class ZookeeperGrayService extends AbstractGrayService {
 
     private String getInstanceId(ServiceInstance instance) {
         if (instance.getMetadata().containsKey(METADATA_KEY_INSTANCE_ID)) {
+            // 自定义instanceId
             return instance.getMetadata().get(METADATA_KEY_INSTANCE_ID);
+        } else {
+            org.apache.curator.x.discovery.ServiceInstance<ZookeeperInstance> serviceInstance =
+                    ((ZookeeperServiceInstance) instance).getServiceInstance();
+            return serviceInstance.getId();
         }
-        throw new IllegalStateException("Unable to find config spring.cloud.zookeeper.discovery.metadata.instanceId!");
     }
 }
