@@ -23,13 +23,12 @@ public class GrayClientInitializingBean implements InitializingBean, Application
     }
 
     @EventListener(InstanceRegisteredEvent.class)
-    public void bind(InstanceRegisteredEvent event) throws ConfigurationException {
+    public void initializingBean(InstanceRegisteredEvent event) throws ConfigurationException {
         GrayClientAppContext.setGrayManager(cxt.getBean(GrayManager.class));
         GrayClientAppContext.setInstanceLocalInfo(instanceLocalInfo());
         GrayClientAppContext.setGrayClientProperties(cxt.getBean(GrayClientProperties.class));
 
         startForWork();
-
     }
 
     @Override
