@@ -21,6 +21,7 @@
 * spring-cloud-start-gray
 * spring-cloud-start-gray-server
 * [spring-cloud-gray-samples](spring-cloud-gray-samples/README.md)
+* [spring-cloud-gray-zookeeper-samples](spring-cloud-gray-zookeeper-samples/README.md)
 
 #### maven 依赖
 jar包已经上传到maven中央库，可以通过maven直接从中央库下载
