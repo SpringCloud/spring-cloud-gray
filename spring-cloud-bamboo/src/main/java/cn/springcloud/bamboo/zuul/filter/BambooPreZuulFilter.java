@@ -12,9 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Enumeration;
 import java.util.stream.Collectors;
 
 /**
@@ -53,9 +55,15 @@ public class BambooPreZuulFilter extends ZuulFilter {
                 .uri((String)context.get(FilterConstants.REQUEST_URI_KEY))
                 .ip(context.getZuulRequestHeaders().get(FilterConstants.X_FORWARDED_FOR_HEADER.toLowerCase()))
                 .addMultiParams(context.getRequestQueryParams())
-                .addHeaders(context.getZuulRequestHeaders())
-                .addHeaders(context.getOriginResponseHeaders().stream().collect(Collectors.toMap(Pair::first, Pair::second)));
-        context.getOriginResponseHeaders().forEach(pair-> builder.addHeader(pair.first(), pair.second()));
+                .addHeaders(context.getZuulRequestHeaders());
+
+        // add http server request header
+        HttpServletRequest servletRequest = context.getRequest();
+        Enumeration<String> headerNames = servletRequest.getHeaderNames();
+        while(headerNames.hasMoreElements()){
+            String headerName = headerNames.nextElement();
+            builder.addHeader(headerName, servletRequest.getHeader(headerName));
+        }
 
         if(bambooProperties.getBambooRequest().isLoadBody()) {
             try {
