@@ -66,25 +66,25 @@ public class GrayServiceResource implements GrayServiceApi {
 
 
     @Override
-    public List<GrayPolicyGroup> policyGroups(@PathVariable("serviceId") String serviceId, String instanceId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroups();
+    public List<PolicyDefinition> policyGroups(@PathVariable("serviceId") String serviceId, String instanceId) {
+        return grayServiceManager.getGrayInstane(serviceId, instanceId).getPolicyDefinitions();
     }
 
     @Override
-    public GrayPolicyGroup policyGroup(@PathVariable("serviceId") String serviceId, String instanceId,
-                                       @PathVariable("groupId") String groupId) {
+    public PolicyDefinition policyGroup(@PathVariable("serviceId") String serviceId, String instanceId,
+                                        @PathVariable("groupId") String groupId) {
         return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroup(groupId);
     }
 
     @Override
-    public List<GrayPolicy> policies(@PathVariable("serviceId") String serviceId, String instanceId,
-                                     @PathVariable("groupId") String groupId) {
+    public List<DecisionDefinition> policies(@PathVariable("serviceId") String serviceId, String instanceId,
+                                             @PathVariable("groupId") String groupId) {
         return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroup(groupId).getList();
     }
 
     @Override
-    public GrayPolicy policy(@PathVariable("serviceId") String serviceId, String instanceId,
-                             @PathVariable("groupId") String groupId, @PathVariable("policyId") String policyId) {
+    public DecisionDefinition policy(@PathVariable("serviceId") String serviceId, String instanceId,
+                                     @PathVariable("groupId") String groupId, @PathVariable("policyId") String policyId) {
         return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroup(groupId).getGrayPolicy(policyId);
     }
 }

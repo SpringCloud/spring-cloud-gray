@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.config.properties;
 
-import cn.springcloud.gray.RetryableInformationClient;
-import cn.springcloud.gray.client.GrayClientConfig;
+import cn.springcloud.gray.communication.RetryableInformationClient;
+import cn.springcloud.gray.GrayClientConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("gray.client")

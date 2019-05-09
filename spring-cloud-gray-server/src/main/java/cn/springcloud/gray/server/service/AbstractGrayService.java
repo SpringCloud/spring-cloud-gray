@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.service;
 
 import cn.springcloud.gray.core.GrayInstance;
-import cn.springcloud.gray.core.GrayPolicyGroup;
+import cn.springcloud.gray.core.PolicyDefinition;
 import cn.springcloud.gray.core.GrayService;
 import cn.springcloud.gray.core.GrayServiceManager;
 import cn.springcloud.gray.server.resources.domain.fo.GrayPolicyGroupFO;
@@ -130,7 +130,7 @@ public abstract class AbstractGrayService {
     public ResponseEntity<Void> delPolicyGroup(String serviceId, String instanceId, String policyGroupId) {
         GrayInstance grayInstance = grayServiceManager.getGrayInstane(serviceId, instanceId);
         if (grayInstance != null) {
-            if (grayInstance.removeGrayPolicyGroup(policyGroupId) != null && grayInstance.getGrayPolicyGroups()
+            if (grayInstance.removeGrayPolicyGroup(policyGroupId) != null && grayInstance.getPolicyDefinitions()
                     .isEmpty()) {
                 grayServiceManager.deleteGrayInstance(serviceId, instanceId);
             }
@@ -141,7 +141,7 @@ public abstract class AbstractGrayService {
 
 
     protected GrayPolicyGroupVO getPolicyGroup(String serviceId, String appName, String instanceId, String homePageUrl,
-                                               GrayPolicyGroup policyGroup) {
+                                               PolicyDefinition policyGroup) {
         GrayPolicyGroupVO vo = new GrayPolicyGroupVO();
         vo.setAppName(appName);
         vo.setInstanceId(instanceId);

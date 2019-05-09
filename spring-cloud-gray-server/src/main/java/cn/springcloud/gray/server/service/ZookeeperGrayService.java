@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.service;
 
 import cn.springcloud.gray.core.GrayInstance;
-import cn.springcloud.gray.core.GrayPolicyGroup;
+import cn.springcloud.gray.core.PolicyDefinition;
 import cn.springcloud.gray.core.GrayServiceManager;
 import cn.springcloud.gray.server.resources.domain.vo.GrayInstanceVO;
 import cn.springcloud.gray.server.resources.domain.vo.GrayPolicyGroupVO;
@@ -81,11 +81,11 @@ public class ZookeeperGrayService extends AbstractGrayService {
                 .findFirst().orElse(null);
 
         GrayInstance grayInstance = grayServiceManager.getGrayInstane(serviceId, instanceId);
-        if (null != serviceInstance && grayInstance != null && grayInstance.getGrayPolicyGroups() != null) {
+        if (null != serviceInstance && grayInstance != null && grayInstance.getPolicyDefinitions() != null) {
             String homePageUrl = serviceInstance.getUri().toString();
-            List<GrayPolicyGroup> policyGroups = grayInstance.getGrayPolicyGroups();
+            List<PolicyDefinition> policyGroups = grayInstance.getPolicyDefinitions();
             List<GrayPolicyGroupVO> vos = new ArrayList<>(policyGroups.size());
-            for (GrayPolicyGroup policyGroup : policyGroups) {
+            for (PolicyDefinition policyGroup : policyGroups) {
                 vos.add(getPolicyGroup(serviceId, serviceId, instanceId, homePageUrl, policyGroup));
             }
             return ResponseEntity.ok(vos);
@@ -115,7 +115,7 @@ public class ZookeeperGrayService extends AbstractGrayService {
 
         GrayInstance grayInstance = grayServiceManager.getGrayInstane(serviceId, instanceId);
         if (null != serviceInstance && grayInstance != null) {
-            GrayPolicyGroup policyGroup = grayInstance.getGrayPolicyGroup(groupId);
+            PolicyDefinition policyGroup = grayInstance.getGrayPolicyGroup(groupId);
             if (policyGroup != null) {
                 String homePageUrl = serviceInstance.getUri().toString();
                 return ResponseEntity.ok(getPolicyGroup(serviceId, serviceId, instanceId, homePageUrl, policyGroup));

@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.resources.domain.fo;
 
-import cn.springcloud.gray.core.GrayPolicy;
-import cn.springcloud.gray.core.GrayPolicyGroup;
+import cn.springcloud.gray.core.DecisionDefinition;
+import cn.springcloud.gray.core.PolicyDefinition;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,7 +12,7 @@ public class GrayPolicyGroupFO {
     private String instanceId;
     private String policyGroupId;
     private String alias;
-    private List<GrayPolicy> policies;
+    private List<DecisionDefinition> policies;
     @ApiModelProperty("0:关闭, 1:启用")
     private boolean enable;
 
@@ -40,11 +40,11 @@ public class GrayPolicyGroupFO {
         this.policyGroupId = policyGroupId;
     }
 
-    public List<GrayPolicy> getPolicies() {
+    public List<DecisionDefinition> getPolicies() {
         return policies;
     }
 
-    public void setPolicies(List<GrayPolicy> policies) {
+    public void setPolicies(List<DecisionDefinition> policies) {
         this.policies = policies;
     }
 
@@ -56,8 +56,8 @@ public class GrayPolicyGroupFO {
         this.enable = enable;
     }
 
-    public GrayPolicyGroup toGrayPolicyGroup() {
-        GrayPolicyGroup policyGroup = new GrayPolicyGroup();
+    public PolicyDefinition toGrayPolicyGroup() {
+        PolicyDefinition policyGroup = new PolicyDefinition();
         policyGroup.setAlias(this.getAlias());
         policyGroup.setList(this.getPolicies());
         policyGroup.setEnable(this.isEnable());

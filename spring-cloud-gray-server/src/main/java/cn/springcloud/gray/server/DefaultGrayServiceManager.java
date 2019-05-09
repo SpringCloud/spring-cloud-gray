@@ -61,7 +61,7 @@ public class DefaultGrayServiceManager implements GrayServiceManager {
     }
 
     @Override
-    public void addGrayPolicy(String serviceId, String instanceId, String policyGroupId, GrayPolicy policy) {
+    public void addGrayPolicy(String serviceId, String instanceId, String policyGroupId, DecisionDefinition policy) {
         GrayInstance grayInstance = getGrayInstane(serviceId, instanceId);
         if (grayInstance != null) {
             grayInstance.addGrayPolicy(policyGroupId, policy);
@@ -77,7 +77,7 @@ public class DefaultGrayServiceManager implements GrayServiceManager {
     }
 
     @Override
-    public void addGrayPolicyGroup(String serviceId, String instanceId, GrayPolicyGroup policyGroup) {
+    public void addGrayPolicyGroup(String serviceId, String instanceId, PolicyDefinition policyGroup) {
         GrayInstance grayInstance = getGrayInstane(serviceId, instanceId);
         if (grayInstance != null) {
             grayInstance.addGrayPolicyGroup(policyGroup);
@@ -130,7 +130,7 @@ public class DefaultGrayServiceManager implements GrayServiceManager {
     public boolean updatePolicyGroupStatus(String serviceId, String instanceId, String groupId, int enable) {
         GrayInstance grayInstance = getGrayInstane(serviceId, instanceId);
         if (grayInstance != null) {
-            GrayPolicyGroup policyGroup = grayInstance.getGrayPolicyGroup(groupId);
+            PolicyDefinition policyGroup = grayInstance.getGrayPolicyGroup(groupId);
             if (policyGroup != null) {
                 policyGroup.setEnable(enable == 1);
                 return true;

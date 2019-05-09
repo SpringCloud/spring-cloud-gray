@@ -1,12 +1,16 @@
 package cn.springcloud.gray;
 
 
-import cn.springcloud.gray.client.GrayOptionalArgs;
+import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
 
-public class DefaultGrayManager extends BaseGrayManager {
+import java.util.List;
 
-    public DefaultGrayManager(GrayOptionalArgs grayOptionalArgs) {
-        super(grayOptionalArgs);
+public class DefaultGrayManager extends CommunicableGrayManager {
+
+
+    public DefaultGrayManager(GrayClientConfig grayClientConfig, List<GrayDecisionFactory> decisionFactories, List<RequestInterceptor> requestInterceptors) {
+        super(grayClientConfig, decisionFactories, requestInterceptors);
     }
+
 
 }

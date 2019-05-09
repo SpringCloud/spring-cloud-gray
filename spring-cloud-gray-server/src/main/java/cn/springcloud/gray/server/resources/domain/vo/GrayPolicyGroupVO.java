@@ -1,6 +1,6 @@
 package cn.springcloud.gray.server.resources.domain.vo;
 
-import cn.springcloud.gray.core.GrayPolicy;
+import cn.springcloud.gray.core.DecisionDefinition;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public class GrayPolicyGroupVO {
     private String url;
     private String policyGroupId;
     private String alias;
-    private List<GrayPolicy> policies;
+    private List<DecisionDefinition> policies;
     private boolean enable;
 
 
@@ -47,11 +47,11 @@ public class GrayPolicyGroupVO {
         this.url = url;
     }
 
-    public List<GrayPolicy> getPolicies() {
+    public List<DecisionDefinition> getPolicies() {
         return policies;
     }
 
-    public void setPolicies(List<GrayPolicy> policies) {
+    public void setPolicies(List<DecisionDefinition> policies) {
         this.policies = policies;
     }
 

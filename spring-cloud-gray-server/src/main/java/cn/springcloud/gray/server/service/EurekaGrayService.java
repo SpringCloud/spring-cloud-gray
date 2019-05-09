@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.service;
 
 import cn.springcloud.gray.core.GrayInstance;
-import cn.springcloud.gray.core.GrayPolicyGroup;
+import cn.springcloud.gray.core.PolicyDefinition;
 import cn.springcloud.gray.core.GrayServiceManager;
 import cn.springcloud.gray.server.resources.domain.vo.GrayInstanceVO;
 import cn.springcloud.gray.server.resources.domain.vo.GrayPolicyGroupVO;
@@ -79,10 +79,10 @@ public class EurekaGrayService extends AbstractGrayService {
         GrayInstance grayInstance = grayServiceManager.getGrayInstane(serviceId, instanceId);
         String appName = instanceInfo.getAppName();
         String homePageUrl = instanceInfo.getHomePageUrl();
-        if (grayInstance != null && grayInstance.getGrayPolicyGroups() != null) {
-            List<GrayPolicyGroup> policyGroups = grayInstance.getGrayPolicyGroups();
+        if (grayInstance != null && grayInstance.getPolicyDefinitions() != null) {
+            List<PolicyDefinition> policyGroups = grayInstance.getPolicyDefinitions();
             List<GrayPolicyGroupVO> vos = new ArrayList<>(policyGroups.size());
-            for (GrayPolicyGroup policyGroup : policyGroups) {
+            for (PolicyDefinition policyGroup : policyGroups) {
                 vos.add(getPolicyGroup(serviceId, appName, instanceId, homePageUrl, policyGroup));
             }
             return ResponseEntity.ok(vos);
@@ -107,7 +107,7 @@ public class EurekaGrayService extends AbstractGrayService {
         String appName = instanceInfo.getAppName();
         String homePageUrl = instanceInfo.getHomePageUrl();
         if (grayInstance != null) {
-            GrayPolicyGroup policyGroup = grayInstance.getGrayPolicyGroup(groupId);
+            PolicyDefinition policyGroup = grayInstance.getGrayPolicyGroup(groupId);
             if (policyGroup != null) {
                 return ResponseEntity.ok(getPolicyGroup(serviceId, appName, instanceId, homePageUrl, policyGroup));
             }
