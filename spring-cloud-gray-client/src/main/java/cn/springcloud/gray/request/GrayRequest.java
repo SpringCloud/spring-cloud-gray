@@ -10,11 +10,6 @@ import java.util.Map;
 
 public class GrayRequest {
 
-    public static final String ATTRIBUTE_NAME_HTTP_METHOD = "HTTP_METHOD";
-    public static final String ATTRIBUTE_NAME_HTTP_HEADER = "HTTP_HEADER";
-    public static final String ATTRIBUTE_NAME_HTTP_BODY = "HTTP_BODY";
-
-
     @Setter
     @Getter
     private String serviceId;
@@ -34,7 +29,7 @@ public class GrayRequest {
         return attributes.get(name);
     }
 
-    public void setAttribute(String name, String value) {
+    public void setAttribute(String name, Object value) {
         attributes.put(name, value);
     }
 

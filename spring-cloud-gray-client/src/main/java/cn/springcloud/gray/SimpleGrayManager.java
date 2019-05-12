@@ -1,6 +1,7 @@
 package cn.springcloud.gray;
 
 import cn.springcloud.gray.communication.InformationClient;
+import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
@@ -15,10 +16,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SimpleGrayManager extends AbstractGrayManager {
 
 
-    private Map<String, GrayService> grayServices = new ConcurrentHashMap<>();
+    protected Map<String, GrayService> grayServices = new ConcurrentHashMap<>();
 
-    public SimpleGrayManager(List<GrayDecisionFactory> decisionFactories, List<RequestInterceptor> requestInterceptors) {
-        super(decisionFactories, requestInterceptors);
+    public SimpleGrayManager(GrayDecisionFactoryKeeper grayDecisionFactoryKeeper, List<RequestInterceptor> requestInterceptors) {
+        super(grayDecisionFactoryKeeper, requestInterceptors);
     }
 
 
@@ -47,6 +48,13 @@ public class SimpleGrayManager extends AbstractGrayManager {
 
     @Override
     public void updateGrayInstance(GrayInstance instance) {
+        if (instance == null || !instance.isGray()) {
+            return;
+        }
+        updateGrayInstance(grayServices, instance);
+    }
+
+    protected void updateGrayInstance(Map<String, GrayService> grayServices, GrayInstance instance) {
         GrayService service = getGrayService(instance.getServiceId());
         if (service == null) {
             synchronized (this) {

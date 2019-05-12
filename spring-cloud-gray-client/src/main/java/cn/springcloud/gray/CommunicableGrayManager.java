@@ -3,6 +3,7 @@ package cn.springcloud.gray;
 import cn.springcloud.gray.communication.HttpInformationClient;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.communication.RetryableInformationClient;
+import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
 
 import java.util.List;
@@ -12,8 +13,8 @@ public abstract class CommunicableGrayManager extends SimpleGrayManager {
     private GrayClientConfig grayClientConfig;
     private InformationClient informationClient;
 
-    public CommunicableGrayManager(GrayClientConfig grayClientConfig, List<GrayDecisionFactory> decisionFactories, List<RequestInterceptor> requestInterceptors) {
-        super(decisionFactories, requestInterceptors);
+    public CommunicableGrayManager(GrayClientConfig grayClientConfig, GrayDecisionFactoryKeeper grayDecisionFactoryKeeper, List<RequestInterceptor> requestInterceptors) {
+        super(grayDecisionFactoryKeeper, requestInterceptors);
         this.grayClientConfig = grayClientConfig;
         createInformationClient();
     }

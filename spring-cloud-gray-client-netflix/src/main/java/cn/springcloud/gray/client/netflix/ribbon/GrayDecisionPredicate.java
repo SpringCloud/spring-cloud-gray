@@ -1,16 +1,14 @@
 package cn.springcloud.gray.client.netflix.ribbon;
 
-import cn.springcloud.bamboo.BambooAppContext;
-import cn.springcloud.bamboo.BambooRequest;
-import cn.springcloud.bamboo.BambooRequestContext;
-import cn.springcloud.gray.core.GrayDecision;
-import cn.springcloud.gray.utils.ServiceUtil;
+import cn.springcloud.gray.decision.GrayDecision;
+import cn.springcloud.gray.decision.GrayDecisionInputArgs;
+import cn.springcloud.gray.node.ServerSpec;
+import cn.springcloud.gray.request.GrayRequest;
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.PredicateKey;
 import com.netflix.loadbalancer.Server;
 
 import java.util.List;
-import java.util.Map;
 
 public class GrayDecisionPredicate extends AbstractServerPredicate {
 
@@ -20,20 +18,19 @@ public class GrayDecisionPredicate extends AbstractServerPredicate {
 
     @Override
     public boolean apply(PredicateKey input) {
-        BambooRequestContext bambooRequestContext = BambooRequestContext.currentRequestCentxt();
-        if (bambooRequestContext == null || bambooRequestContext.getBambooRequest() == null) {
-            return false;
-        }
-        BambooRequest bambooRequest = bambooRequestContext.getBambooRequest();
-        Server server = input.getServer();
-        String serviceId = bambooRequest.getServiceId();
-        Map<String, String> serverMetadata = getServerMetadata(serviceId, server);
-        String instanceId = ServiceUtil.getInstanceId(server, serverMetadata);
 
-        List<GrayDecision> grayDecisions =
-                getIRule().getGrayManager().grayDecision(serviceId, instanceId);
+        GrayLoadBalanceRule grayRule = getIRule();
+        GrayRequest grayRequest = grayRule.getRequestLocalStorage().getGrayRequest();
+
+        Server server = input.getServer();
+        String serviceId = grayRequest.getServiceId();
+        String instanceId = server.getMetaInfo().getInstanceId();
+        List<GrayDecision> grayDecisions = grayRule.getGrayManager().getGrayDecision(serviceId, instanceId);
+
+        ServerSpec serverSpec = grayRule.getServerExplainer().apply(server);
+
         for (GrayDecision grayDecision : grayDecisions) {
-            if (grayDecision.test(bambooRequest)) {
+            if (grayDecision.test(GrayDecisionInputArgs.builder().grayRequest(grayRequest).server(serverSpec).build())) {
                 return true;
             }
         }
@@ -45,7 +42,4 @@ public class GrayDecisionPredicate extends AbstractServerPredicate {
         return (GrayLoadBalanceRule) this.rule;
     }
 
-    public Map<String, String> getServerMetadata(String serviceId, Server server) {
-        return BambooAppContext.getEurekaServerExtractor().getServerMetadata(serviceId, server);
-    }
 }

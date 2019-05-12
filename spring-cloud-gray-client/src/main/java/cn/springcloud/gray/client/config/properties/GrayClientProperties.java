@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("gray.client")
 public class GrayClientProperties implements GrayClientConfig {
 
+    private String runenv = "web";
 
     private int serviceUpdateIntervalTimerInMs = 60000;
 
@@ -26,6 +27,11 @@ public class GrayClientProperties implements GrayClientConfig {
 
     public void setInformationClient(String informationClient) {
         this.informationClient = informationClient;
+    }
+
+    @Override
+    public String runenv() {
+        return runenv;
     }
 
     @Override

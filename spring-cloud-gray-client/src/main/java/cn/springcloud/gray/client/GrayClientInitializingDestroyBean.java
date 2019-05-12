@@ -3,11 +3,11 @@ package cn.springcloud.gray.client;
 import cn.springcloud.gray.CommunicableGrayManager;
 import cn.springcloud.gray.GrayClientConfig;
 import cn.springcloud.gray.InstanceLocalInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
-import java.util.Timer;
 
-
+@Slf4j
 public class GrayClientInitializingDestroyBean implements InitializingBean {
 
     private CommunicableGrayManager grayManager;
@@ -23,12 +23,17 @@ public class GrayClientInitializingDestroyBean implements InitializingBean {
         GrayClientConfig clientConfig = grayManager.getGrayClientConfig();
         if (clientConfig.isGrayEnroll()) {
             if (clientConfig.grayEnrollDealyTimeInMs() > 0) {
-
-                //todo
+                Thread t = new Thread(() -> {
+                    try {
+                        Thread.sleep(clientConfig.grayEnrollDealyTimeInMs());
+                    } catch (InterruptedException e) {
+                    }
+                    log.info("灰度注册自身实例...");
+                    grayRegister();
+                }, "GrayEnroll");
+                t.start();
             } else {
-                grayManager.getGrayInformationClient().addGrayInstance(
-                        instanceLocalInfo.getServiceId(), instanceLocalInfo.getInstanceId());
-                instanceLocalInfo.setGray(true);
+                grayRegister();
             }
         }
     }
@@ -38,5 +43,11 @@ public class GrayClientInitializingDestroyBean implements InitializingBean {
             grayManager.getGrayInformationClient().serviceDownline(
                     instanceLocalInfo.getServiceId(), instanceLocalInfo.getInstanceId());
         }
+    }
+
+    private void grayRegister() {
+        grayManager.getGrayInformationClient().addGrayInstance(
+                instanceLocalInfo.getServiceId(), instanceLocalInfo.getInstanceId());
+        instanceLocalInfo.setGray(true);
     }
 }

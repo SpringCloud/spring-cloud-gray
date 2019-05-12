@@ -1,9 +1,6 @@
 package cn.springcloud.gray.decision;
 
 
-import cn.springcloud.gray.GrayDecisionContext;
-
-
 /**
  * 组合从个灰度策略
  */
@@ -24,8 +21,8 @@ public class MultiGrayDecision implements GrayDecision {
     }
 
     @Override
-    public boolean test(GrayDecisionContext exchange) {
-        return decision.test(exchange);
+    public boolean test(GrayDecisionInputArgs args) {
+        return decision.test(args);
     }
 
 

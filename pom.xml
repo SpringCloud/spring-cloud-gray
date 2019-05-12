@@ -4,27 +4,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.springcloud.gray</groupId>
-    <artifactId>spring-cloud-gray</artifactId>
-    <packaging>pom</packaging>
-    <version>2.0.0</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.5.4.RELEASE</version>
     </parent>
+    <groupId>cn.springcloud.gray</groupId>
+    <artifactId>spring-cloud-gray</artifactId>
+    <packaging>pom</packaging>
+    <version>2.0.0</version>
     <modules>
 
         <module>spring-cloud-gray-dependencies</module>
 
-        <module>spring-cloud-bamboo</module>
         <module>spring-cloud-gray-core</module>
         <module>spring-cloud-gray-server</module>
         <module>spring-cloud-gray-client</module>
-        <module>spring-cloud-starter-gray</module>
+        <module>spring-cloud-starter-gray-client</module>
         <module>spring-cloud-starter-gray-server</module>
         <module>spring-cloud-gray-samples</module>
         <module>spring-cloud-gray-client-netflix</module>
+        <module>spring-cloud-gray-utils</module>
     </modules>
 
 
@@ -57,6 +57,8 @@
         <springfox.version>2.7.0</springfox.version>
         <lombok.version>1.16.22</lombok.version>
         <slf4j.version>1.7.26</slf4j.version>
+        <commons-lang3.version>3.5</commons-lang3.version>
+        <guava.version>27.0.1-jre</guava.version>
     </properties>
 
 
@@ -70,13 +72,13 @@
                 <scope>import</scope>
             </dependency>
 
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-dependencies</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>cn.springcloud.gray</groupId>-->
+            <!--                <artifactId>spring-cloud-gray-dependencies</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--                <type>pom</type>-->
+            <!--                <scope>import</scope>-->
+            <!--            </dependency>-->
 
 
             <dependency>
@@ -90,6 +92,44 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-client-netflix</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-utils</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-starter-gray-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-starter-gray-server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
             <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
             <dependency>
                 <groupId>io.springfox</groupId>
@@ -116,6 +156,17 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
 
             <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
             <!--            <dependency>-->
@@ -125,6 +176,12 @@
             <!--                <scope>provided</scope>-->
             <!--            </dependency>-->
 
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.4</version>
+            </dependency>
 
         </dependencies>
 

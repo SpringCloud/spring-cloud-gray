@@ -15,7 +15,7 @@ import java.util.Map;
 @Getter
 public class DecisionDefinition implements Serializable {
 
-    private String policyId;
+    private String id;
     private String name;
     private Map<String, String> infos = new HashMap<>();
 

@@ -2,6 +2,13 @@ package cn.springcloud.gray;
 
 public interface GrayClientConfig {
 
+    /**
+     * 运行类型：web
+     *
+     * @return
+     */
+    String runenv();
+
 
     /**
      * 启动时是否灰度注册

@@ -1,0 +1,177 @@
+/*
+ * Copyright 2012-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package cn.springcloud.gray.bean.properties;
+
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.Predicate;
+
+import cn.springcloud.gray.bean.convert.ApplicationConversionService;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.AutowireCandidateQualifier;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.GenericConverter;
+
+/**
+ * Utility to deduce the {@link ConversionService} to use for configuration properties
+ * binding.
+ *
+ * @author Phillip Webb
+ */
+class ConversionServiceDeducer {
+
+    private final ApplicationContext applicationContext;
+
+    ConversionServiceDeducer(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    public ConversionService getConversionService() {
+        try {
+            return this.applicationContext.getBean(
+                    ConfigurableApplicationContext.CONVERSION_SERVICE_BEAN_NAME,
+                    ConversionService.class);
+        } catch (NoSuchBeanDefinitionException ex) {
+            return new Factory(this.applicationContext.getAutowireCapableBeanFactory())
+                    .create();
+        }
+    }
+
+    private static class Factory {
+
+        @SuppressWarnings("rawtypes")
+        private final List<Converter> converters;
+
+        private final List<GenericConverter> genericConverters;
+
+        Factory(BeanFactory beanFactory) {
+            this.converters = beans(beanFactory, Converter.class,
+                    ConfigurationPropertiesBinding.VALUE);
+            this.genericConverters = beans(beanFactory, GenericConverter.class,
+                    ConfigurationPropertiesBinding.VALUE);
+        }
+
+        private <T> List<T> beans(BeanFactory beanFactory, Class<T> type,
+                                  String qualifier) {
+            if (beanFactory instanceof ListableBeanFactory) {
+                return beans(type, qualifier, (ListableBeanFactory) beanFactory);
+            }
+            return Collections.emptyList();
+        }
+
+        private <T> List<T> beans(Class<T> type, String qualifier,
+                                  ListableBeanFactory beanFactory) {
+            return new ArrayList<T>(qualifiedBeansOfType(beanFactory, type, qualifier).values());
+        }
+
+        public ConversionService create() {
+            if (this.converters.isEmpty() && this.genericConverters.isEmpty()) {
+                return ApplicationConversionService.getSharedInstance();
+            }
+            ApplicationConversionService conversionService = new ApplicationConversionService();
+            for (Converter<?, ?> converter : this.converters) {
+                conversionService.addConverter(converter);
+            }
+            for (GenericConverter genericConverter : this.genericConverters) {
+                conversionService.addConverter(genericConverter);
+            }
+            return conversionService;
+        }
+
+    }
+
+
+    public static <T> Map<String, T> qualifiedBeansOfType(
+            ListableBeanFactory beanFactory, Class<T> beanType, String qualifier) throws BeansException {
+
+        String[] candidateBeans = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory, beanType);
+        Map<String, T> result = new LinkedHashMap<>(4);
+        for (String beanName : candidateBeans) {
+            if (isQualifierMatch(qualifier::equals, beanName, beanFactory)) {
+                result.put(beanName, beanFactory.getBean(beanName, beanType));
+            }
+        }
+        return result;
+    }
+
+
+    public static boolean isQualifierMatch(
+            Predicate<String> qualifier, String beanName, BeanFactory beanFactory) {
+
+        // Try quick bean name or alias match first...
+        if (qualifier.test(beanName)) {
+            return true;
+        }
+        if (beanFactory != null) {
+            for (String alias : beanFactory.getAliases(beanName)) {
+                if (qualifier.test(alias)) {
+                    return true;
+                }
+            }
+            try {
+                Class<?> beanType = beanFactory.getType(beanName);
+                if (beanFactory instanceof ConfigurableBeanFactory) {
+                    BeanDefinition bd = ((ConfigurableBeanFactory) beanFactory).getMergedBeanDefinition(beanName);
+                    // Explicit qualifier metadata on bean definition? (typically in XML definition)
+                    if (bd instanceof AbstractBeanDefinition) {
+                        AbstractBeanDefinition abd = (AbstractBeanDefinition) bd;
+                        AutowireCandidateQualifier candidate = abd.getQualifier(Qualifier.class.getName());
+                        if (candidate != null) {
+                            Object value = candidate.getAttribute(AutowireCandidateQualifier.VALUE_KEY);
+                            if (value != null && qualifier.test(value.toString())) {
+                                return true;
+                            }
+                        }
+                    }
+                    // Corresponding qualifier on factory method? (typically in configuration class)
+                    if (bd instanceof RootBeanDefinition) {
+                        Method factoryMethod = ((RootBeanDefinition) bd).getResolvedFactoryMethod();
+                        if (factoryMethod != null) {
+                            Qualifier targetAnnotation = AnnotationUtils.getAnnotation(factoryMethod, Qualifier.class);
+                            if (targetAnnotation != null) {
+                                return qualifier.test(targetAnnotation.value());
+                            }
+                        }
+                    }
+                }
+                // Corresponding qualifier on bean implementation class? (for custom user types)
+                if (beanType != null) {
+                    Qualifier targetAnnotation = AnnotationUtils.getAnnotation(beanType, Qualifier.class);
+                    if (targetAnnotation != null) {
+                        return qualifier.test(targetAnnotation.value());
+                    }
+                }
+            } catch (NoSuchBeanDefinitionException ex) {
+                // Ignore - can't compare qualifiers for a manually registered singleton object
+            }
+        }
+        return false;
+    }
+}
