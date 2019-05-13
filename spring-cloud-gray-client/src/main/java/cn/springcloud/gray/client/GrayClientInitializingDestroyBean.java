@@ -3,6 +3,8 @@ package cn.springcloud.gray.client;
 import cn.springcloud.gray.CommunicableGrayManager;
 import cn.springcloud.gray.GrayClientConfig;
 import cn.springcloud.gray.InstanceLocalInfo;
+import cn.springcloud.gray.model.GrayInstance;
+import cn.springcloud.gray.model.GrayStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -41,13 +43,19 @@ public class GrayClientInitializingDestroyBean implements InitializingBean {
     public void shutdown() {
         if (instanceLocalInfo.isGray()) {
             grayManager.getGrayInformationClient().serviceDownline(
-                    instanceLocalInfo.getServiceId(), instanceLocalInfo.getInstanceId());
+                    instanceLocalInfo.getInstanceId());
         }
     }
 
     private void grayRegister() {
-        grayManager.getGrayInformationClient().addGrayInstance(
-                instanceLocalInfo.getServiceId(), instanceLocalInfo.getInstanceId());
+        GrayInstance grayInstance = new GrayInstance();
+        grayInstance.setHost(instanceLocalInfo.getHost());
+        grayInstance.setGrayStatus(GrayStatus.OPEN);
+        grayInstance.setInstanceId(instanceLocalInfo.getInstanceId());
+        grayInstance.setServiceId(instanceLocalInfo.getServiceId());
+        grayInstance.setPort(instanceLocalInfo.getPort());
+
+        grayManager.getGrayInformationClient().addGrayInstance(grayInstance);
         instanceLocalInfo.setGray(true);
     }
 }

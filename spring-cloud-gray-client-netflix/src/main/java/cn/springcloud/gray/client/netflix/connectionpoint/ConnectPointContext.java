@@ -1,13 +1,13 @@
 package cn.springcloud.gray.client.netflix.connectionpoint;
 
 import cn.springcloud.gray.request.GrayRequest;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ConnectPointContext {
 
     private static final ThreadLocal<ConnectPointContext> contextLocal = new ThreadLocal<>();

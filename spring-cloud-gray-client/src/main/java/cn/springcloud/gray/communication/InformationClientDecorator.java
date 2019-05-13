@@ -45,12 +45,12 @@ public abstract class InformationClientDecorator implements InformationClient {
 
 
     @Override
-    public void addGrayInstance(String serviceId, String instanceId) {
+    public void addGrayInstance(GrayInstance grayInstance) {
 
         execute(new RequestExecutor<Object>() {
             @Override
             public Object execute(InformationClient delegate) {
-                delegate.addGrayInstance(serviceId, instanceId);
+                delegate.addGrayInstance(grayInstance);
                 return null;
             }
 
@@ -63,11 +63,11 @@ public abstract class InformationClientDecorator implements InformationClient {
 
 
     @Override
-    public void serviceDownline(String serviceId, String instanceId) {
+    public void serviceDownline(String instanceId) {
         execute(new RequestExecutor<Object>() {
             @Override
             public Object execute(InformationClient delegate) {
-                delegate.serviceDownline(serviceId, instanceId);
+                delegate.serviceDownline(instanceId);
                 return null;
             }
 

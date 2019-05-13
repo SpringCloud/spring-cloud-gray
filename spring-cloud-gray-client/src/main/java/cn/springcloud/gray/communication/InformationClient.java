@@ -23,18 +23,16 @@ public interface InformationClient {
     /**
      * 注册灰度实例
      *
-     * @param serviceId  服务id
-     * @param instanceId 实例id
+     * @param grayInstance 服务实例id
      */
-    void addGrayInstance(String serviceId, String instanceId);
+    void addGrayInstance(GrayInstance grayInstance);
 
 
     /**
      * 灰度实例下线
      *
-     * @param serviceId  服务id
      * @param instanceId 实例id
      */
-    void serviceDownline(String serviceId, String instanceId);
+    void serviceDownline(String instanceId);
 
 }

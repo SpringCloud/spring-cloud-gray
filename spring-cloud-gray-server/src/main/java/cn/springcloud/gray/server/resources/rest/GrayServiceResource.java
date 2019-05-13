@@ -1,90 +1,36 @@
 package cn.springcloud.gray.server.resources.rest;
 
-import cn.springcloud.gray.core.*;
-import cn.springcloud.gray.server.api.GrayServiceApi;
+import cn.springcloud.gray.server.dao.mapper.GrayServiceMapper;
+import cn.springcloud.gray.server.module.GrayModule;
+import cn.springcloud.gray.server.module.domain.GrayService;
+import cn.springcloud.gray.server.service.GrayServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
-public class GrayServiceResource implements GrayServiceApi {
+@RequestMapping("/grayservice")
+public class GrayServiceResource {
+
     @Autowired
-    private GrayServiceManager grayServiceManager;
+    private GrayServiceService grayServiceService;
 
+    @Autowired
+    private GrayModule grayModule;
 
-    @Override
-    public List<GrayService> services() {
-        return new ArrayList<>(grayServiceManager.allGrayService());
+    @RequestMapping(value = "all", method = RequestMethod.GET)
+    public List<GrayService> all() {
+        return grayServiceService.findAllModel();
     }
 
-    @Override
-    public List<GrayService> enableServices() {
-        Collection<GrayService> grayServices = grayServiceManager.allGrayService();
-        List<GrayService> serviceList = new ArrayList<>(grayServices.size());
-        for (GrayService grayService : grayServices) {
-            if (grayService.isOpenGray()) {
-                serviceList.add(grayService.takeNewOpenGrayService());
-            }
-        }
-
-        return serviceList;
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") String id) {
+        grayModule.deleteGrayService(id);
     }
 
-    @Override
-    public GrayService service(@PathVariable("serviceId") String serviceId) {
-        return grayServiceManager.getGrayService(serviceId);
-    }
-
-    @Override
-    public List<GrayInstance> instances(@PathVariable("serviceId") String serviceId) {
-        return grayServiceManager.getGrayService(serviceId).getGrayInstances();
-    }
-
-    @Override
-    public GrayInstance getInstance(@PathVariable("serviceId") String serviceId, String instanceId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId);
-    }
-
-    @Override
-    public ResponseEntity<Void> delInstance(@PathVariable("serviceId") String serviceId, String instanceId) {
-        grayServiceManager.deleteGrayInstance(serviceId, instanceId);
-        return ResponseEntity.ok().build();
-    }
-
-    @Override
-    public ResponseEntity<Void> instance(@PathVariable("serviceId") String serviceId, @RequestBody GrayInstance instance) {
-        instance.setServiceId(serviceId);
-        grayServiceManager.addGrayInstance(instance);
-        return ResponseEntity.ok().build();
-    }
-
-
-    @Override
-    public List<PolicyDefinition> policyGroups(@PathVariable("serviceId") String serviceId, String instanceId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId).getPolicyDefinitions();
-    }
-
-    @Override
-    public PolicyDefinition policyGroup(@PathVariable("serviceId") String serviceId, String instanceId,
-                                        @PathVariable("groupId") String groupId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroup(groupId);
-    }
-
-    @Override
-    public List<DecisionDefinition> policies(@PathVariable("serviceId") String serviceId, String instanceId,
-                                             @PathVariable("groupId") String groupId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroup(groupId).getList();
-    }
-
-    @Override
-    public DecisionDefinition policy(@PathVariable("serviceId") String serviceId, String instanceId,
-                                     @PathVariable("groupId") String groupId, @PathVariable("policyId") String policyId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroup(groupId).getGrayPolicy(policyId);
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    public void update(GrayService grayPolicy) {
+        grayServiceService.saveModel(grayPolicy);
     }
 }

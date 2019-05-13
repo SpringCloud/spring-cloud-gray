@@ -1,11 +1,27 @@
+server:
+  port: 20202
 spring:
   application:
     name: gray-server
-server:
-  port: 20202
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/gray_server01?charset=utf8mb4&useSSL=false
+    username: root
+    password: xiaoyu
+    # Hikari 数据源专用配置
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+  # JPA 相关配置
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
       defaultZone: http://localhost:20001/eureka/
+

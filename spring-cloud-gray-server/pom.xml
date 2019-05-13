@@ -60,7 +60,39 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-bean-validators</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-jdk8</artifactId>
+        </dependency>
 
     </dependencies>
+
+    <!--    <build>-->
+    <!--        <defaultGoal>spring-boot:run</defaultGoal>-->
+    <!--        <plugins>-->
+    <!--            <plugin>-->
+    <!--                <groupId>org.apache.maven.plugins</groupId>-->
+    <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+    <!--                <version>3.6.0</version>-->
+    <!--                <configuration>-->
+    <!--                    <annotationProcessorPaths>-->
+    <!--                        <path>-->
+    <!--                            <groupId>org.mapstruct</groupId>-->
+    <!--                            <artifactId>mapstruct-processor</artifactId>-->
+    <!--                            <version>${mapstruct.version}</version>-->
+    <!--                        </path>-->
+    <!--                    </annotationProcessorPaths>-->
+    <!--                </configuration>-->
+    <!--            </plugin>-->
+    <!--        </plugins>-->
+    <!--    </build>-->
 
 </project>

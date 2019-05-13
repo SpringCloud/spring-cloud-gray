@@ -28,7 +28,7 @@ public class HttpInformationClient implements InformationClient {
 
     @Override
     public List<GrayInstance> allGrayInstances() {
-        String url = this.baseUrl + "/gray/services/enable";
+        String url = this.baseUrl + "/gray/instance/enable";
         ParameterizedTypeReference<List<GrayInstance>> typeRef = new ParameterizedTypeReference<List<GrayInstance>>() {
         };
 
@@ -43,14 +43,10 @@ public class HttpInformationClient implements InformationClient {
 
 
     @Override
-    public void addGrayInstance(String serviceId, String instanceId) {
-        GrayInstance grayInstance = new GrayInstance();
-        grayInstance.setInstanceId(instanceId);
-        grayInstance.setServiceId(serviceId);
-
-        String url = this.baseUrl + "/gray/instance";
+    public void addGrayInstance(GrayInstance grayInstance) {
+        String url = this.baseUrl + "/grayinstance/";
         try {
-            rest.postForEntity(url, grayInstance, null, serviceId);
+            rest.postForEntity(url, grayInstance, null);
         } catch (RuntimeException e) {
             log.error("灰度服务实例下线失败", e);
             throw e;
@@ -58,10 +54,9 @@ public class HttpInformationClient implements InformationClient {
     }
 
     @Override
-    public void serviceDownline(String serviceId, String instanceId) {
-        String url = this.baseUrl + "/gray/services/{serviceId}/instance/{instanceId}";
+    public void serviceDownline(String instanceId) {
+        String url = this.baseUrl + "/grayinstance/{id}/switchStatus?switch=0";
         Map<String, String> params = new HashMap<>();
-        params.put("serviceId", serviceId);
         params.put("instanceId", instanceId);
         try {
             rest.delete(url, params);

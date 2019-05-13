@@ -17,6 +17,8 @@ public class GrayInstance implements Serializable {
 
     private String serviceId;
     private String instanceId;
+    private String host;
+    private Integer port;
 
     /**
      * 类度策略组
@@ -26,7 +28,7 @@ public class GrayInstance implements Serializable {
     private GrayStatus grayStatus;
 
 
-    public boolean isGray(){
+    public boolean isGray() {
         return grayStatus == GrayStatus.OPEN;
     }
 

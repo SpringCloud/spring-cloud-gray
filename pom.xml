@@ -55,10 +55,11 @@
         <java.version>1.8</java.version>
         <spring-cloud.version>Edgware.SR5</spring-cloud.version>
         <springfox.version>2.7.0</springfox.version>
-        <lombok.version>1.16.22</lombok.version>
+        <lombok.version>1.18.8</lombok.version>
         <slf4j.version>1.7.26</slf4j.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <guava.version>27.0.1-jre</guava.version>
+        <mapstruct.version>1.1.0.Final</mapstruct.version>
     </properties>
 
 
@@ -183,11 +184,47 @@
                 <version>2.4</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-jdk8</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
         </dependencies>
 
 
     </dependencyManagement>
 
+    <build>
+        <defaultGoal>spring-boot:run</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>
