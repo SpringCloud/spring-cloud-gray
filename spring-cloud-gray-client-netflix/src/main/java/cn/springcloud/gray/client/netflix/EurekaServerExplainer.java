@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.netflix;
 
-import cn.springcloud.gray.node.ServerExplainer;
-import cn.springcloud.gray.node.ServerSpec;
+import cn.springcloud.gray.servernode.ServerExplainer;
+import cn.springcloud.gray.servernode.ServerSpec;
 import com.netflix.loadbalancer.Server;
 import org.springframework.cloud.netflix.ribbon.DefaultServerIntrospector;
 import org.springframework.cloud.netflix.ribbon.ServerIntrospector;

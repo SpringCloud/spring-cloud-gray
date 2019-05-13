@@ -3,7 +3,7 @@ package cn.springcloud.gray.client.netflix.ribbon.configuration;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.client.netflix.GrayClientHolder;
 import cn.springcloud.gray.client.netflix.ribbon.GrayLoadBalanceRule;
-import cn.springcloud.gray.node.ServerExplainer;
+import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.IRule;
@@ -12,8 +12,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.PostConstruct;
 
 @Configuration
 public class GrayRibbonClientsConfiguration implements InitializingBean {

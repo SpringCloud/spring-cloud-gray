@@ -2,7 +2,7 @@ package cn.springcloud.gray.client.netflix.ribbon;
 
 import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.GrayDecisionInputArgs;
-import cn.springcloud.gray.node.ServerSpec;
+import cn.springcloud.gray.servernode.ServerSpec;
 import cn.springcloud.gray.request.GrayRequest;
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.PredicateKey;
