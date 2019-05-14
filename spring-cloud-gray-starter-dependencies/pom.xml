@@ -39,14 +39,11 @@
 
 
     <dependencyManagement>
-
-
-
         <dependencies>
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
+                <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -61,7 +58,6 @@
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
-
     </dependencyManagement>
 
 

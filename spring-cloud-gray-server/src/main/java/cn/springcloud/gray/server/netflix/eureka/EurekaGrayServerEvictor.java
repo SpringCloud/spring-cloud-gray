@@ -45,9 +45,11 @@ public class EurekaGrayServerEvictor implements GrayServerEvictor {
     public void evict(GrayServerModule grayServerModule) {
         grayServerModule.allGrayServices().forEach(grayService -> {
             Application app = eurekaClient.getApplication(grayService.getServiceId());
-            grayServerModule.listGrayInstancesBySerivceId(grayService.getServiceId()).forEach(instance -> {
-                evict(grayServerModule, app.getByInstanceId(instance.getInstanceId()), instance);
-            });
+            if (app != null) {
+                grayServerModule.listGrayInstancesBySerivceId(grayService.getServiceId()).forEach(instance -> {
+                    evict(grayServerModule, app.getByInstanceId(instance.getInstanceId()), instance);
+                });
+            }
         });
     }
 }

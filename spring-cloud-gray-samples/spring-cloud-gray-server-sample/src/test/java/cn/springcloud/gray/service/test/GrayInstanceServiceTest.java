@@ -2,7 +2,7 @@ package cn.springcloud.gray.service.test;
 
 
 import cn.springcloud.gray.model.GrayStatus;
-import cn.springcloud.gray.server.GrayServerApplication;
+import cn.springcloud.gray.server.app.GrayServerApplication;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
 import cn.springcloud.gray.server.module.domain.InstanceStatus;
 import cn.springcloud.gray.server.service.GrayInstanceService;

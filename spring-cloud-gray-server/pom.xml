@@ -60,9 +60,27 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-bean-validators</artifactId>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
+        <!--        </dependency>-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-jta_1.1_spec</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>javax.transaction-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -74,25 +92,5 @@
         </dependency>
 
     </dependencies>
-
-    <!--    <build>-->
-    <!--        <defaultGoal>spring-boot:run</defaultGoal>-->
-    <!--        <plugins>-->
-    <!--            <plugin>-->
-    <!--                <groupId>org.apache.maven.plugins</groupId>-->
-    <!--                <artifactId>maven-compiler-plugin</artifactId>-->
-    <!--                <version>3.6.0</version>-->
-    <!--                <configuration>-->
-    <!--                    <annotationProcessorPaths>-->
-    <!--                        <path>-->
-    <!--                            <groupId>org.mapstruct</groupId>-->
-    <!--                            <artifactId>mapstruct-processor</artifactId>-->
-    <!--                            <version>${mapstruct.version}</version>-->
-    <!--                        </path>-->
-    <!--                    </annotationProcessorPaths>-->
-    <!--                </configuration>-->
-    <!--            </plugin>-->
-    <!--        </plugins>-->
-    <!--    </build>-->
 
 </project>
