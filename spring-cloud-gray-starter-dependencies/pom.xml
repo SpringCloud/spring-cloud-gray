@@ -7,17 +7,9 @@
         <groupId>cn.springcloud.gray</groupId>
         <version>2.0.0</version>
     </parent>
-    <!--    <parent>-->
-    <!--        <groupId>org.springframework.boot</groupId>-->
-    <!--        <artifactId>spring-boot-starter-parent</artifactId>-->
-    <!--        <version>1.5.4.RELEASE</version>-->
-    <!--    </parent>-->
-
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.springcloud.gray</groupId>
-    <artifactId>spring-cloud-gray-dependencies</artifactId>
-    <version>2.0.0</version>
+    <artifactId>spring-cloud-gray-starter-dependencies</artifactId>
     <packaging>pom</packaging>
 
     <licenses>
@@ -47,30 +39,25 @@
 
 
     <dependencyManagement>
+
+
+
         <dependencies>
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-utils</artifactId>
+                <artifactId>spring-cloud-gray-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-starter-gray-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-client</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-client-netflix</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-server</artifactId>
+                <artifactId>spring-cloud-starter-gray-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
@@ -144,5 +131,6 @@
             </distributionManagement>
         </profile>
     </profiles>
+
 
 </project>
