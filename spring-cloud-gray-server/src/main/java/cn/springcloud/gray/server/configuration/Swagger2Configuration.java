@@ -1,9 +1,14 @@
 package cn.springcloud.gray.server.configuration;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import com.fasterxml.classmate.TypeResolver;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -11,6 +16,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.schema.AlternateTypeRule;
+import springfox.documentation.schema.AlternateTypeRuleConvention;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
@@ -19,6 +26,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,11 +35,38 @@ import java.util.List;
  */
 @Configuration
 @EnableSwagger2
-@ConfigurationProperties
 //@Import(springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class)
 @ComponentScan({"cn.springcloud.gray.server.resources"})
 public class Swagger2Configuration extends WebMvcConfigurerAdapter {
 
+
+    @Bean
+    public AlternateTypeRuleConvention pageableConvention(final TypeResolver resolver) {
+        return new AlternateTypeRuleConvention() {
+            @Override
+            public int getOrder() {
+                return Ordered.LOWEST_PRECEDENCE;
+            }
+
+            @Override
+            public List<AlternateTypeRule> rules() {
+                return new ArrayList(Arrays.asList(new AlternateTypeRule(resolver.resolve(Pageable.class), resolver.resolve(Page.class))));
+            }
+        };
+    }
+
+    @ApiModel
+    @Data
+    public static class Page {
+        @ApiModelProperty("第page页,从0开始计数")
+        private Integer page;
+
+        @ApiModelProperty("每页数据数量")
+        private Integer size;
+
+        @ApiModelProperty("按属性排序,格式:属性(,asc|desc)")
+        private List<String> sort;
+    }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {

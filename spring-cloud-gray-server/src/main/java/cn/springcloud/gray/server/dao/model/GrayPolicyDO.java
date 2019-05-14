@@ -2,10 +2,7 @@ package cn.springcloud.gray.server.dao.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Setter
 @Getter
@@ -13,7 +10,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gray_instance")
+@Table(name = "gray_policy", indexes = {@Index(columnList = "instanceId")})
 public class GrayPolicyDO {
 
     @Id
@@ -21,6 +18,6 @@ public class GrayPolicyDO {
     private Long id;
     @Column(length = 64)
     private String instanceId;
-    @Column(length = 256)
+    @Column(length = 256, name = "alias_name")
     private String alias;
 }

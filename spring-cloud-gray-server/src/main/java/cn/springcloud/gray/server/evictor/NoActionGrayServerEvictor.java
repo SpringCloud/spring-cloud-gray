@@ -1,6 +1,6 @@
 package cn.springcloud.gray.server.evictor;
 
-import cn.springcloud.gray.server.module.GrayModule;
+import cn.springcloud.gray.server.module.GrayServerModule;
 
 public class NoActionGrayServerEvictor implements GrayServerEvictor {
 
@@ -13,7 +13,7 @@ public class NoActionGrayServerEvictor implements GrayServerEvictor {
     }
 
     @Override
-    public void evict(GrayModule grayModule) {
+    public void evict(GrayServerModule grayServerModule) {
 
     }
 }

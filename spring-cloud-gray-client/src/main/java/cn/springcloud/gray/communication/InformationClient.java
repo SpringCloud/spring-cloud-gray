@@ -27,6 +27,15 @@ public interface InformationClient {
      */
     void addGrayInstance(GrayInstance grayInstance);
 
+    /**
+     * 获取灰度实例的信息
+     *
+     * @param serviceId  服务id
+     * @param instanceId 实例id
+     * @return
+     */
+    GrayInstance getGrayInstance(String serviceId, String instanceId);
+
 
     /**
      * 灰度实例下线

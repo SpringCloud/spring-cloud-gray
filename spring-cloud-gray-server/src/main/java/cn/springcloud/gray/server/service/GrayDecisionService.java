@@ -5,7 +5,10 @@ import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.model.GrayDecisionDO;
 import cn.springcloud.gray.server.dao.repository.GrayDecisionRepository;
 import cn.springcloud.gray.server.module.domain.GrayDecision;
+import cn.springcloud.gray.server.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,5 +38,10 @@ public class GrayDecisionService extends AbstraceCRUDService<GrayDecision, GrayD
 
     public void deleteAllByPolicyId(Long policyId) {
         repository.deleteAllByPolicyId(policyId);
+    }
+
+    public Page<GrayDecision> listGrayDecisionsByPolicyId(Long policyId, Pageable pageable) {
+        Page<GrayDecisionDO> entities = repository.findAllByPolicyId(policyId, pageable);
+        return PaginationUtils.convert(pageable, entities, grayDecisionMapper);
     }
 }

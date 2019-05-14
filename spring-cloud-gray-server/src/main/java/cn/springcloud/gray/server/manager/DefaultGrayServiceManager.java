@@ -2,7 +2,7 @@ package cn.springcloud.gray.server.manager;
 
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.evictor.GrayServerEvictor;
-import cn.springcloud.gray.server.module.GrayModule;
+import cn.springcloud.gray.server.module.GrayServerModule;
 
 import java.util.*;
 
@@ -16,19 +16,19 @@ public class DefaultGrayServiceManager implements GrayServiceManager {
 
     private GrayServerProperties grayServerProperties;
     private Timer evictionTimer = new Timer("Gray-EvictionTimer", true);
-    private GrayModule grayModule;
+    private GrayServerModule grayServerModule;
     private GrayServerEvictor grayServerEvictor;
 
 
-    public DefaultGrayServiceManager(GrayServerProperties grayServerProperties, GrayModule grayModule, GrayServerEvictor grayServerEvictor) {
+    public DefaultGrayServiceManager(GrayServerProperties grayServerProperties, GrayServerModule grayServerModule, GrayServerEvictor grayServerEvictor) {
         this.grayServerProperties = grayServerProperties;
-        this.grayModule = grayModule;
+        this.grayServerModule = grayServerModule;
         this.grayServerEvictor = grayServerEvictor;
     }
 
     @Override
-    public GrayModule getGrayModule() {
-        return grayModule;
+    public GrayServerModule getGrayServerModule() {
+        return grayServerModule;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DefaultGrayServiceManager implements GrayServiceManager {
 
 
     protected void evict() {
-        grayServerEvictor.evict(getGrayModule());
+        grayServerEvictor.evict(getGrayServerModule());
     }
 
 

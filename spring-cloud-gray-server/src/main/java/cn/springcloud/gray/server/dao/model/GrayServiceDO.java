@@ -24,7 +24,9 @@ public class GrayServiceDO {
     private String serviceName;
     @Column(length = 4)
     private Integer instanceNumber;
-    @Column(length = 256)
+    @Column(length = 4)
+    private Integer grayInstanceNumber;
+    @Column(length = 256, name = "des")
     private String describe;
 
 }

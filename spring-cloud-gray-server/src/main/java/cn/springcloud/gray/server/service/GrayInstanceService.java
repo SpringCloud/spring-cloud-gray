@@ -6,7 +6,11 @@ import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.model.GrayInstanceDO;
 import cn.springcloud.gray.server.dao.repository.GrayInstanceRepository;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
+import cn.springcloud.gray.server.module.domain.InstanceStatus;
+import cn.springcloud.gray.server.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -46,6 +50,7 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
     }
 
 
+    @Transactional
     public void deleteReactById(String id) {
         delete(id);
         grayPolicyService.findByInstanceId(id).forEach(entity -> {
@@ -53,7 +58,13 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
         });
     }
 
-    public List<GrayInstance> findAllByGrayStatus(GrayStatus grayStatus) {
-        return repository.findAllByGrayStatus(grayStatus.name());
+    public List<GrayInstance> findAllByStatus(GrayStatus grayStatus, InstanceStatus instanceStatus) {
+        return grayInstanceMapper.dos2models(
+                repository.findAllByGrayStatusAndInstanceStatus(grayStatus.name(), instanceStatus.name()));
+    }
+
+    public Page<GrayInstance> listGrayInstancesByServiceId(String serviceId, Pageable pageable) {
+        Page<GrayInstanceDO> entities = repository.findAllByServiceId(serviceId, pageable);
+        return PaginationUtils.convert(pageable, entities, grayInstanceMapper);
     }
 }

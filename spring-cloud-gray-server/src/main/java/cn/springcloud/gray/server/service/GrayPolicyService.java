@@ -5,9 +5,13 @@ import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.model.GrayPolicyDO;
 import cn.springcloud.gray.server.dao.repository.GrayPolicyRepository;
 import cn.springcloud.gray.server.module.domain.GrayPolicy;
+import cn.springcloud.gray.server.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -40,8 +44,14 @@ public class GrayPolicyService extends AbstraceCRUDService<GrayPolicy, GrayPolic
         });
     }
 
+    @Transactional
     public void deleteReactById(Long id) {
         delete(id);
         grayDecisionService.deleteAllByPolicyId(id);
+    }
+
+    public Page<GrayPolicy> listGrayPoliciesByInstanceId(String instanceId, Pageable pageable) {
+        Page<GrayPolicyDO> entities = repository.findAllByInstanceId(instanceId, pageable);
+        return PaginationUtils.convert(pageable, entities, grayPolicyMapper);
     }
 }

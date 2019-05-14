@@ -12,6 +12,8 @@ import lombok.*;
 public class GrayDecision {
 
     private Long id;
+    @ApiModelProperty("实例id")
+    private String instanceId;
     @ApiModelProperty("策略id")
     private Long policyId;
     @ApiModelProperty("灰度决策名称")

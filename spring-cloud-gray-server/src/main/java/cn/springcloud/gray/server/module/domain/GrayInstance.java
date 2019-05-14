@@ -1,10 +1,12 @@
 package cn.springcloud.gray.server.module.domain;
 
 import cn.springcloud.gray.model.GrayStatus;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 
+@ApiModel("实例的灰度信息")
 @Setter
 @Getter
 @Builder

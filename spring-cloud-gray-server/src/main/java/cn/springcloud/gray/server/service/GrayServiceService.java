@@ -5,7 +5,10 @@ import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.model.GrayServiceDO;
 import cn.springcloud.gray.server.dao.repository.GrayServiceRepository;
 import cn.springcloud.gray.server.module.domain.GrayService;
+import cn.springcloud.gray.server.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,4 +45,8 @@ public class GrayServiceService extends AbstraceCRUDService<GrayService, GraySer
     }
 
 
+    public Page<GrayService> listAllGrayServices(Pageable pageable) {
+        Page<GrayServiceDO> entities = repository.findAll(pageable);
+        return PaginationUtils.convert(pageable, entities, grayServiceMapper);
+    }
 }

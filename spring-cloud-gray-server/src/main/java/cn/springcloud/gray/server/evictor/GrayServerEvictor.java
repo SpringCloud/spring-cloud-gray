@@ -1,14 +1,14 @@
 package cn.springcloud.gray.server.evictor;
 
 
-import cn.springcloud.gray.server.module.GrayModule;
+import cn.springcloud.gray.server.module.GrayServerModule;
 
 /**
  *
  */
 public interface GrayServerEvictor {
 
-    void evict(GrayModule grayModule);
+    void evict(GrayServerModule grayServerModule);
 
 
 }

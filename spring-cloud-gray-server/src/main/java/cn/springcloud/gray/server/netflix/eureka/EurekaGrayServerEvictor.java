@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.netflix.eureka;
 
 import cn.springcloud.gray.server.evictor.GrayServerEvictor;
-import cn.springcloud.gray.server.module.GrayModule;
+import cn.springcloud.gray.server.module.GrayServerModule;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
 import cn.springcloud.gray.server.module.domain.InstanceStatus;
 import com.netflix.appinfo.InstanceInfo;
@@ -21,10 +21,10 @@ public class EurekaGrayServerEvictor implements GrayServerEvictor {
         this.eurekaClient = eurekaClient;
     }
 
-    private void evict(GrayModule grayModule, InstanceInfo instanceInfo, GrayInstance grayInstance) {
+    private void evict(GrayServerModule grayServerModule, InstanceInfo instanceInfo, GrayInstance grayInstance) {
         InstanceStatus instanceStatus = getInstanceStatus(instanceInfo);
         if (grayInstance.getInstanceStatus() != instanceStatus) {
-            grayModule.updateInstanceStatus(grayInstance.getInstanceId(), instanceStatus);
+            grayServerModule.updateInstanceStatus(grayInstance.getInstanceId(), instanceStatus);
         }
     }
 
@@ -33,18 +33,21 @@ public class EurekaGrayServerEvictor implements GrayServerEvictor {
         if (instanceInfo == null) {
             return InstanceStatus.DOWN;
         }
-        return null;
+        InstanceInfo.InstanceStatus status = instanceInfo.getStatus();
+        if (status == InstanceInfo.InstanceStatus.UP) {
+            return InstanceStatus.UP;
+        }
+        return InstanceStatus.UNKNOWN;
     }
 
 
     @Override
-    public void evict(GrayModule grayModule) {
-        grayModule.allGrayService().forEach(grayService -> {
+    public void evict(GrayServerModule grayServerModule) {
+        grayServerModule.allGrayServices().forEach(grayService -> {
             Application app = eurekaClient.getApplication(grayService.getServiceId());
-            grayModule.listGrayInstanceBySerivceId(grayService.getServiceId()).forEach(instance -> {
-                evict(grayModule, app.getByInstanceId(instance.getInstanceId()), instance);
+            grayServerModule.listGrayInstancesBySerivceId(grayService.getServiceId()).forEach(instance -> {
+                evict(grayServerModule, app.getByInstanceId(instance.getInstanceId()), instance);
             });
-
         });
     }
 }

@@ -3,11 +3,12 @@ server:
 spring:
   application:
     name: gray-server
+  #通用数据源配置
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/gray_server01?charset=utf8mb4&useSSL=false
     username: root
-    password: xiaoyu
+    password: root
     # Hikari 数据源专用配置
     hikari:
       maximum-pool-size: 20
@@ -16,8 +17,9 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: true
+    generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
 eureka:
   client:
     register-with-eureka: true

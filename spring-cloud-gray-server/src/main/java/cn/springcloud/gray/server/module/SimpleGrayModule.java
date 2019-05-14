@@ -1,18 +1,15 @@
 package cn.springcloud.gray.server.module;
 
 import cn.springcloud.gray.model.DecisionDefinition;
+import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.PolicyDefinition;
-import cn.springcloud.gray.server.module.domain.*;
-import cn.springcloud.gray.server.service.GrayDecisionService;
-import cn.springcloud.gray.server.service.GrayInstanceService;
-import cn.springcloud.gray.server.service.GrayPolicyService;
-import cn.springcloud.gray.server.service.GrayServiceService;
+import cn.springcloud.gray.server.module.domain.GrayDecision;
+import cn.springcloud.gray.server.module.domain.GrayPolicy;
+import cn.springcloud.gray.server.module.domain.InstanceStatus;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,108 +17,34 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Component
-public class SimpleGrayModule implements GrayModule {
+public class SimpleGrayModule implements GrayModle {
 
-    @Autowired
+    private GrayServerModule grayServerModule;
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private GrayServiceService grayServiceService;
-    @Autowired
-    private GrayInstanceService grayInstanceService;
-    @Autowired
-    private GrayDecisionService grayDecisionService;
-    @Autowired
-    private GrayPolicyService grayPolicyService;
-
-    @Override
-    public List<GrayService> allGrayService() {
-        return grayServiceService.findAllModel();
+    public SimpleGrayModule(GrayServerModule grayServerModule, ObjectMapper objectMapper) {
+        this.grayServerModule = grayServerModule;
+        this.objectMapper = objectMapper;
     }
 
     @Override
-    public List<GrayInstance> listGrayInstanceBySerivceId(String serviceId) {
-        return grayInstanceService.findByServiceId(serviceId);
+    public GrayServerModule getGrayServerModule() {
+        return grayServerModule;
     }
 
     @Override
-    public void deleteGrayService(String serviceId) {
-        grayServiceService.deleteById(serviceId);
-    }
-
-
-    @Override
-    public void updateGrayStatus(String instanceId, GrayStatus grayStatus) {
-        GrayInstance instance = grayInstanceService.findOneModel(instanceId);
-        if (instance != null) {
-            instance.setGrayStatus(grayStatus);
-            grayInstanceService.saveModel(instance);
+    public GrayInstance getGrayInstance(String serviceId, String instanceId) {
+        cn.springcloud.gray.server.module.domain.GrayInstance grayInstance = grayServerModule.getGrayInstance(instanceId);
+        if (grayInstance == null) {
+            return null;
         }
+        return ofGrayInstance(grayInstance);
     }
 
-    @Override
-    public void addGrayService(GrayService service) {
-        grayServiceService.saveModel(service);
-    }
-
-    @Override
-    public void addGrayInstance(GrayInstance instance) {
-        grayInstanceService.saveModel(instance);
-    }
-
-    @Override
-    public void updateGrayInstance(GrayInstance instance) {
-        grayInstanceService.saveModel(instance);
-    }
-
-    @Override
-    public void updateInstanceStatus(String instanceId, InstanceStatus instanceStatus) {
-        GrayInstance instance = grayInstanceService.findOneModel(instanceId);
-        if (instance != null) {
-            instance.setInstanceStatus(instanceStatus);
-            grayInstanceService.saveModel(instance);
-        }
-    }
-
-    @Override
-    public void deleteGrayInstance(String intanceId) {
-        grayInstanceService.deleteReactById(intanceId);
-    }
-
-    @Override
-    public void addGrayPolicy(GrayPolicy grayPolicy) {
-        grayPolicyService.saveModel(grayPolicy);
-    }
-
-    @Override
-    public void updateGrayPolicy(GrayPolicy grayPolicy) {
-        grayPolicyService.saveModel(grayPolicy);
-    }
-
-    @Override
-    public void deleteGrayPolicy(Long policyId) {
-        grayPolicyService.deleteReactById(policyId);
-    }
-
-    @Override
-    public void addGrayDecision(GrayDecision grayDecision) {
-        grayDecisionService.saveModel(grayDecision);
-    }
-
-    @Override
-    public void updateGrayDecision(GrayDecision grayDecision) {
-        grayDecisionService.saveModel(grayDecision);
-    }
-
-    @Override
-    public void deleteGrayDecision(Long decisionId) {
-        grayDecisionService.delete(decisionId);
-    }
 
     @Override
     public List<cn.springcloud.gray.model.GrayInstance> allOpenInstances() {
-        List<GrayInstance> instances = grayInstanceService.findAllByGrayStatus(GrayStatus.OPEN);
+        List<cn.springcloud.gray.server.module.domain.GrayInstance> instances = grayServerModule.listGrayInstancesByStatus(GrayStatus.OPEN, InstanceStatus.UP);
 
         List<cn.springcloud.gray.model.GrayInstance> grayInstances = new ArrayList<>(instances.size());
         instances.forEach(instance -> {
@@ -132,7 +55,8 @@ public class SimpleGrayModule implements GrayModule {
         return grayInstances;
     }
 
-    private cn.springcloud.gray.model.GrayInstance ofGrayInstance(GrayInstance instance) {
+
+    private cn.springcloud.gray.model.GrayInstance ofGrayInstance(cn.springcloud.gray.server.module.domain.GrayInstance instance) {
         cn.springcloud.gray.model.GrayInstance grayInstance = new cn.springcloud.gray.model.GrayInstance();
         grayInstance.setPort(instance.getPort());
         grayInstance.setServiceId(instance.getServiceId());
@@ -143,7 +67,7 @@ public class SimpleGrayModule implements GrayModule {
     }
 
     private List<PolicyDefinition> ofGrayPoliciesByInstanceId(String instanceId) {
-        List<GrayPolicy> grayPolicies = grayPolicyService.findByInstanceId(instanceId);
+        List<GrayPolicy> grayPolicies = grayServerModule.listGrayPoliciesByInstanceId(instanceId);
         List<PolicyDefinition> policyDefinitions = new ArrayList<>(grayPolicies.size());
         grayPolicies.forEach(grayPolicy -> {
             PolicyDefinition policyDefinition = ofGrayPolicy(grayPolicy);
@@ -161,7 +85,7 @@ public class SimpleGrayModule implements GrayModule {
     }
 
     private List<DecisionDefinition> ofGrayDecisionByPolicyId(Long policyId) {
-        List<GrayDecision> grayDecisions = grayDecisionService.findByPolicyId(policyId);
+        List<GrayDecision> grayDecisions = grayServerModule.listGrayDecisionsByPolicyId(policyId);
         List<DecisionDefinition> decisionDefinitions = new ArrayList<>(grayDecisions.size());
         grayDecisions.forEach(grayDecision -> {
             try {

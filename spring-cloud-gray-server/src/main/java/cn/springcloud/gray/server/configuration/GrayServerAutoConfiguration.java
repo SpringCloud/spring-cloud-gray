@@ -1,12 +1,17 @@
 package cn.springcloud.gray.server.configuration;
 
+import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.server.*;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
+import cn.springcloud.gray.server.event.DefaultGrayEventPublisher;
 import cn.springcloud.gray.server.evictor.GrayServerEvictor;
 import cn.springcloud.gray.server.evictor.NoActionGrayServerEvictor;
 import cn.springcloud.gray.server.manager.DefaultGrayServiceManager;
 import cn.springcloud.gray.server.manager.GrayServiceManager;
-import cn.springcloud.gray.server.module.GrayModule;
+import cn.springcloud.gray.server.module.GrayModle;
+import cn.springcloud.gray.server.module.GrayServerModule;
+import cn.springcloud.gray.server.module.SimpleGrayModule;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -25,13 +30,13 @@ public class GrayServerAutoConfiguration {
     private GrayServerProperties grayServerConfig;
 
     @Autowired
-    private GrayModule grayModule;
+    private GrayServerModule grayServerModule;
 
 
     @Bean
     @ConditionalOnMissingBean
     public DefaultGrayServiceManager defaultGrayServiceManager(GrayServerEvictor grayServerEvictor) {
-        return new DefaultGrayServiceManager(grayServerConfig, grayModule, grayServerEvictor);
+        return new DefaultGrayServiceManager(grayServerConfig, grayServerModule, grayServerEvictor);
     }
 
 
@@ -41,15 +46,29 @@ public class GrayServerAutoConfiguration {
     }
 
 
-    @Bean
-    @ConditionalOnMissingBean
-    public GrayServerEvictor grayServerEvictor() {
-        return NoActionGrayServerEvictor.INSTANCE;
+    @Configuration
+    public static class DefaultConfiguration {
+        @Bean
+        @ConditionalOnMissingBean
+        public GrayServerEvictor grayServerEvictor() {
+            return NoActionGrayServerEvictor.INSTANCE;
+        }
+
+
+        @Bean
+        @ConditionalOnMissingBean
+        public GrayModle grayModle(GrayServerModule grayServerModule, @Autowired(required = false) ObjectMapper objectMapper) {
+            if (objectMapper == null) {
+                objectMapper = new ObjectMapper();
+            }
+            return new SimpleGrayModule(grayServerModule, objectMapper);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public GrayEventPublisher grayEventPublisher() {
+            return new DefaultGrayEventPublisher();
+        }
     }
 
-//    @Bean
-//    @ConditionalOnMissingBean
-//    public GrayServerEvictor grayServerEvictor(@Autowired(required = false) EurekaClient eurekaClient) {
-//        return eurekaClient == null ? NoActionGrayServerEvictor.INSTANCE : new EurekaGrayServerEvictor(eurekaClient);
-//    }
 }
