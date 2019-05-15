@@ -1,10 +1,6 @@
 package cn.springcloud.gray.decision;
 
 
-import cn.springcloud.bamboo.BambooRequest;
-import cn.springcloud.gray.core.GrayDecision;
-
-
 /**
  * 组合从个灰度策略
  */
@@ -25,8 +21,8 @@ public class MultiGrayDecision implements GrayDecision {
     }
 
     @Override
-    public boolean test(BambooRequest bambooRequest) {
-        return decision.test(bambooRequest);
+    public boolean test(GrayDecisionInputArgs args) {
+        return decision.test(args);
     }
 
 

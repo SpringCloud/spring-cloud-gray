@@ -1,90 +1,61 @@
 package cn.springcloud.gray.server.resources.rest;
 
-import cn.springcloud.gray.core.*;
-import cn.springcloud.gray.server.api.GrayServiceApi;
+import cn.springcloud.gray.server.module.GrayServerModule;
+import cn.springcloud.gray.server.module.domain.GrayService;
+import cn.springcloud.gray.server.utils.PaginationUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+@Api
 @RestController
-public class GrayServiceResource implements GrayServiceApi {
+@RequestMapping("/gray/service")
+public class GrayServiceResource {
+
+
     @Autowired
-    private GrayServiceManager grayServiceManager;
+    private GrayServerModule grayServerModule;
 
-
-    @Override
-    public List<GrayService> services() {
-        return new ArrayList<>(grayServiceManager.allGrayService());
-    }
-
-    @Override
-    public List<GrayService> enableServices() {
-        Collection<GrayService> grayServices = grayServiceManager.allGrayService();
-        List<GrayService> serviceList = new ArrayList<>(grayServices.size());
-        for (GrayService grayService : grayServices) {
-            if (grayService.isOpenGray()) {
-                serviceList.add(grayService.takeNewOpenGrayService());
-            }
-        }
-
-        return serviceList;
-    }
-
-    @Override
-    public GrayService service(@PathVariable("serviceId") String serviceId) {
-        return grayServiceManager.getGrayService(serviceId);
-    }
-
-    @Override
-    public List<GrayInstance> instances(@PathVariable("serviceId") String serviceId) {
-        return grayServiceManager.getGrayService(serviceId).getGrayInstances();
-    }
-
-    @Override
-    public GrayInstance getInstance(@PathVariable("serviceId") String serviceId, String instanceId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId);
-    }
-
-    @Override
-    public ResponseEntity<Void> delInstance(@PathVariable("serviceId") String serviceId, String instanceId) {
-        grayServiceManager.deleteGrayInstance(serviceId, instanceId);
-        return ResponseEntity.ok().build();
-    }
-
-    @Override
-    public ResponseEntity<Void> instance(@PathVariable("serviceId") String serviceId, @RequestBody GrayInstance instance) {
-        instance.setServiceId(serviceId);
-        grayServiceManager.addGrayInstance(instance);
-        return ResponseEntity.ok().build();
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public List<GrayService> list() {
+        return grayServerModule.listAllGrayServices();
     }
 
 
-    @Override
-    public List<GrayPolicyGroup> policyGroups(@PathVariable("serviceId") String serviceId, String instanceId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroups();
+    @GetMapping(value = "/page")
+    public ResponseEntity<List<GrayService>> list(
+            @ApiParam @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<GrayService> page = grayServerModule.listAllGrayServices(pageable);
+        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
+        return new ResponseEntity<List<GrayService>>(
+                page.getContent(),
+                headers,
+                HttpStatus.OK);
     }
 
-    @Override
-    public GrayPolicyGroup policyGroup(@PathVariable("serviceId") String serviceId, String instanceId,
-                                       @PathVariable("groupId") String groupId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroup(groupId);
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public GrayService info(@PathVariable("id") String id) {
+        return grayServerModule.getGrayService(id);
     }
 
-    @Override
-    public List<GrayPolicy> policies(@PathVariable("serviceId") String serviceId, String instanceId,
-                                     @PathVariable("groupId") String groupId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroup(groupId).getList();
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") String id) {
+        grayServerModule.deleteGrayService(id);
     }
 
-    @Override
-    public GrayPolicy policy(@PathVariable("serviceId") String serviceId, String instanceId,
-                             @PathVariable("groupId") String groupId, @PathVariable("policyId") String policyId) {
-        return grayServiceManager.getGrayInstane(serviceId, instanceId).getGrayPolicyGroup(groupId).getGrayPolicy(policyId);
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public void save(@RequestBody GrayService grayPolicy) {
+        grayServerModule.saveGrayService(grayPolicy);
     }
 }

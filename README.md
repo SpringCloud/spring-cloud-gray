@@ -7,52 +7,11 @@
 
 
 
-#### 多版本控制
-* [spring-cloud-bamboo](spring-cloud-bamboo/README.md)
-* spring-cloud-start-multi-version
-* [spring-cloud-mult-version-samples](spring-cloud-mult-version-samples/README.md)
-
-
-
-#### 灰度发布
-* [spring-cloud-gray-core](spring-cloud-gray-core/README.md)
-* spring-cloud-gray-client
-* spring-cloud-gray-server
-* spring-cloud-start-gray
-* spring-cloud-start-gray-server
-* [spring-cloud-gray-samples](spring-cloud-gray-samples/README.md)
-* [spring-cloud-gray-zookeeper-samples](spring-cloud-gray-zookeeper-samples/README.md)
-
-#### maven 依赖
-jar包已经上传到maven中央库，可以通过maven直接从中央库下载
-```xml
-<!-- 版本控制 -->
-<dependency>
-  <groupId>cn.springcloud.gray</groupId>
-  <artifactId>spring-cloud-starter-multi-version</artifactId>
-  <version>{version}</version>
-</dependency>
-
-<!-- gray-client -->
-<dependency>
-  <groupId>cn.springcloud.gray</groupId>
-  <artifactId>spring-cloud-starter-gray</artifactId>
-  <version>{version}</version>
-</dependency>
-
-<!-- gray-server -->
-<dependency>
-  <groupId>cn.springcloud.gray</groupId>
-  <artifactId>spring-cloud-starter-gray-server</artifactId>
-  <version>{version}</version>
-</dependency>
-```
-
 
 #### 不足
-gray目前只有灰度管理的基本功能， 像数据持久化，高可用，推送灰度调整消息等， 都没有实现。 也没有界面化， 仅仅只有接口列表。
+没有界面化， 仅仅只有接口列表。
 
 
 #### 扩展思考
-gray目前仅仅只支持spring cloud eureka， 但是在spring cloud中，eureka只是做为其中一个注册中心， 如果要做spring cloud的灰度管理， 就还需要兼容其他的注册中心， 比如zookeeper, consul等。
+gray目前仅仅只支持spring cloud eureka， 但是在spring cloud中，eureka只是做为其中一个注册中心， 如果要做spring cloud的灰度管理， 就还需要兼容其他的注册中心， 比如zookeeper, consul, nacos等。
 

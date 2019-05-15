@@ -1,0 +1,30 @@
+server:
+  port: 8889
+spring:
+  application:
+    name: mq-rabbit
+  rabbitmq:
+    addresses: 127.0.0.1:5672
+    username: admin
+    password: admin
+  cloud:
+    stream:
+      bindings:
+        TestInput:
+          group: service-a
+          destination: test
+          consumer:
+            concurrency: 1 #并发数
+        #            max-attempts: 1
+        TestOutput:
+          destination: test
+      rabbit:
+        bindings:
+          TestInput:
+            consumer:
+              maxConcurrency: 1 #并发数
+              #              prefetch: 1 #从mq一次获取消息的数量
+              #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
+              #              auto-bind-dlq: true
+              #              acknowledgeMode: AUTO
+#              acknowledgeMode: MANUAL

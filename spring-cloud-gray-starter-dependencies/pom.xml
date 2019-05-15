@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>spring-cloud-gray</artifactId>
+        <groupId>cn.springcloud.gray</groupId>
+        <version>2.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>spring-cloud-gray-starter-dependencies</artifactId>
+    <packaging>pom</packaging>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <tag>master</tag>
+        <url>https://github.com/SpringCloud/spring-cloud-gray</url>
+        <connection>git@github.com:SpringCloud/spring-cloud-gray.git</connection>
+        <developerConnection>scm:git:git@github.com:SpringCloud/spring-cloud-gray.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <name>saleson</name>
+            <email>qlichunyu@163.com</email>
+            <organization>Spring Cloud中国社区</organization>
+        </developer>
+    </developers>
+
+    <properties>
+        <!--        <spring-cloud.version>Dalston.SR5</spring-cloud.version>-->
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-dependencies</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-starter-gray-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-starter-gray-server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <profiles>
+        <profile>
+            <id>sonatype-oss-release</id>
+            <build>
+                <plugins>
+                    <!-- Source -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- GPG -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>sonatype-nexus-snapshots</id>
+                    <url>
+                        https://oss.sonatype.org/content/repositories/snapshots
+                    </url>
+                </snapshotRepository>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <url>
+                        https://oss.sonatype.org/service/local/staging/deploy/maven2
+                    </url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+
+</project>

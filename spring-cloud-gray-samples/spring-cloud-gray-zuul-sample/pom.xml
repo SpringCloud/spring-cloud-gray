@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray-samples</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>1.1.0</version>
+        <version>2.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,10 +28,14 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
-            <artifactId>spring-cloud-starter-gray</artifactId>
+            <artifactId>spring-cloud-starter-gray-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
         </dependency>
     </dependencies>
 

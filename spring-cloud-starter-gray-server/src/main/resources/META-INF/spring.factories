@@ -1,5 +1,6 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-	cn.springcloud.gray.server.config.GrayServerAutoConfiguration,\
-    cn.springcloud.gray.server.config.GrayServiceEurekaAutoConfiguration,\
-    cn.springcloud.gray.server.config.GrayServiceZookeeperAutoConfiguration
+	cn.springcloud.gray.server.configuration.GrayServerAutoConfiguration,\
+  cn.springcloud.gray.server.configuration.DBStorageConfiguration,\
+    cn.springcloud.gray.server.netflix.eureka.configuration.GrayServiceEurekaAutoConfiguration,\
+  cn.springcloud.gray.server.configuration.GrayServerEventAutoConfiguration

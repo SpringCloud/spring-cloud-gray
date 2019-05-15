@@ -12,6 +12,6 @@ public class GrayClientMarkerConfiguration {
         return new GrayClientMarker();
     }
 
-    class GrayClientMarker {
+    public class GrayClientMarker {
     }
 }

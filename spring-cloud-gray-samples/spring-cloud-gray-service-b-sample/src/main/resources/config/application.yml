@@ -1,6 +1,31 @@
 spring:
   application:
     name: service-b
+  rabbitmq:
+    addresses: 127.0.0.1:5672
+    username: admin
+    password: admin
+  cloud:
+    stream:
+      bindings:
+        GrayEventInput:
+          group: service-a
+          destination: gray_event
+          consumer:
+            concurrency: 1 #并发数
+        #            max-attempts: 1
+      #        GrayEventOutput:
+      #          destination: gray-event
+      rabbit:
+        bindings:
+          GrayEventInput:
+            consumer:
+              maxConcurrency: 1 #并发数
+              #              prefetch: 1 #从mq一次获取消息的数量
+              #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
+              #              auto-bind-dlq: true
+              acknowledgeMode: AUTO
+#              acknowledgeMode: MANUAL
 server:
   port: 20102
 eureka:
@@ -17,6 +42,33 @@ feign:
 
 gray:
   client:
-    instance:
-      grayEnroll: false #是否在启动后自动注册成灰度实例
-    serverUrl: http://localhost:20202 #灰度服务端的url
+    server-url: http://localhost:20202
+  request:
+    track:
+      web:
+        need:
+          uri: enable
+          ip: enable
+          method: enable
+          headers: test,test-mm
+          parameters: version,test
+        path-patterns: /*
+  load:
+    enabled: false
+    gray-instances:
+      - serviceId: service-a
+        instance-id: service-a:20104
+        policy-definitions:
+          - policyId: policy-1
+            alias: policy-1
+            list:
+              - id: decision-1
+                name: HttpHeader
+                infos:
+                  compare-mode: EQUAL
+                  header: _graytrack_header__test
+                  values: true
+#  client:
+#    instance:
+#      grayEnroll: false #是否在启动后自动注册成灰度实例
+#    serverUrl: http://localhost:20202 #灰度服务端的url

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>spring-cloud-gray</artifactId>
+        <groupId>cn.springcloud.gray</groupId>
+        <version>2.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>spring-cloud-starter-gray-client</artifactId>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-client-netflix</artifactId>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>-->
+        <!--        </dependency>-->
+    </dependencies>
+
+</project>

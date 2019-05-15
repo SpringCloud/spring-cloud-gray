@@ -1,14 +1,20 @@
 package cn.springcloud.gray;
 
-import cn.springcloud.gray.client.GrayClientAppContext;
-import cn.springcloud.gray.core.*;
+import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.MultiGrayDecision;
+import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
+import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
+import cn.springcloud.gray.model.DecisionDefinition;
+import cn.springcloud.gray.model.GrayInstance;
+import cn.springcloud.gray.model.PolicyDefinition;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.OrderComparator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -17,89 +23,89 @@ import java.util.List;
 public abstract class AbstractGrayManager implements GrayManager {
     private static final Logger log = LoggerFactory.getLogger(AbstractGrayManager.class);
 
-    protected GrayDecisionFactory decisionFactory;
-    protected InformationClient client;
+
+    private GrayDecisionFactoryKeeper grayDecisionFactoryKeeper;
+    private Map<String, List<RequestInterceptor>> requestInterceptors = new HashMap<>();
 
 
-    public AbstractGrayManager(InformationClient client, GrayDecisionFactory decisionFactory) {
-        this.decisionFactory = decisionFactory;
-        this.client = client;
+    public AbstractGrayManager(
+            GrayDecisionFactoryKeeper grayDecisionFactoryKeeper, List<RequestInterceptor> requestInterceptors) {
+        initRequestInterceptors(requestInterceptors);
+        this.grayDecisionFactoryKeeper = grayDecisionFactoryKeeper;
     }
 
 
     @Override
-    public boolean isOpen(String serviceId) {
-        GrayService grayService = grayService(serviceId);
-        return grayService != null
-                && grayService.isOpenGray();
-    }
-
-    @Override
-    public List<GrayService> listGrayService() {
-        return client.listGrayService();
-    }
-
-    @Override
-    public GrayService grayService(String serviceId) {
-        return client.grayService(serviceId);
-    }
-
-    @Override
-    public GrayInstance grayInstance(String serviceId, String instanceId) {
-        return client.grayInstance(serviceId, instanceId);
-    }
-
-    @Override
-    public List<GrayDecision> grayDecision(GrayInstance instance) {
-        return grayDecision(instance.getServiceId(), instance.getInstanceId());
-    }
-
-    @Override
-    public List<GrayDecision> grayDecision(String serviceId, String instanceId) {
-        GrayInstance grayInstance = grayInstance(serviceId, instanceId);
-        if (grayInstance == null || !grayInstance.isOpenGray()
-                || grayInstance.getGrayPolicyGroups() == null
-                || grayInstance.getGrayPolicyGroups().isEmpty()) {
-            return Collections.emptyList();
+    public List<RequestInterceptor> getRequeestInterceptors(String interceptroType) {
+        List<RequestInterceptor> list = requestInterceptors.get(interceptroType);
+        if (list == null) {
+            return ListUtils.EMPTY_LIST;
         }
-        List<GrayPolicyGroup> policyGroups = grayInstance.getGrayPolicyGroups();
-        List<GrayDecision> decisions = new ArrayList<>(policyGroups.size());
-        for (GrayPolicyGroup policyGroup : policyGroups) {
-            if (!policyGroup.isEnable()) {
+        return list;
+    }
+
+
+    @Override
+    public List<GrayDecision> getGrayDecision(GrayInstance instance) {
+        List<PolicyDefinition> policyDefinitions = instance.getPolicyDefinitions();
+        List<GrayDecision> grayDecisions = new ArrayList<>(policyDefinitions.size());
+
+        for (PolicyDefinition policyDefinition : policyDefinitions) {
+            if (CollectionUtils.isEmpty(policyDefinition.getList())) {
                 continue;
             }
-            GrayDecision grayDecision = toGrayDecision(policyGroup);
-            if (grayDecision != GrayDecision.refuse()) {
-                decisions.add(grayDecision);
+            GrayDecision decision = createGrayDecision(policyDefinition);
+            if (decision != null) {
+                grayDecisions.add(decision);
             }
         }
-        return decisions;
+
+        return grayDecisions;
     }
 
     @Override
-    public void serviceDownline() {
-        InstanceLocalInfo localInfo = GrayClientAppContext.getInstanceLocalInfo();
-        if (localInfo.isGray()) {
-            log.debug("灰度服务下线...");
-            client.serviceDownline();
-            log.debug("灰度服务下线完成");
-        }
-        serviceShutdown();
+    public List<GrayDecision> getGrayDecision(String serviceId, String instanceId) {
+        return getGrayDecision(getGrayInstance(serviceId, instanceId));
     }
 
 
-    protected abstract void serviceShutdown();
-
-
-    private GrayDecision toGrayDecision(GrayPolicyGroup policyGroup) {
-        List<GrayPolicy> policies = policyGroup.getList();
-        if (policies == null || policies.isEmpty()) {
-            return GrayDecision.refuse();
-        }
+    private GrayDecision createGrayDecision(PolicyDefinition policyDefinition) {
         MultiGrayDecision decision = new MultiGrayDecision(GrayDecision.allow());
-        policies.forEach(policy -> decision.and(decisionFactory.getDecision(policy)));
+        for (DecisionDefinition decisionDefinition : policyDefinition.getList()) {
+            decision = decision.and(grayDecisionFactoryKeeper.getGrayDecision(decisionDefinition));
+        }
         return decision;
     }
 
+
+    private void initRequestInterceptors(List<RequestInterceptor> requestInterceptors) {
+        if (requestInterceptors == null || requestInterceptors.isEmpty()) {
+            return;
+        }
+        List<RequestInterceptor> all = new ArrayList<>();
+        for (RequestInterceptor interceptor : requestInterceptors) {
+            if (StringUtils.equals(interceptor.interceptroType(), "all")) {
+                all.add(interceptor);
+            } else {
+                List<RequestInterceptor> interceptors = this.requestInterceptors.get(interceptor.interceptroType());
+                if (interceptors == null) {
+                    interceptors = new ArrayList<>();
+                    this.requestInterceptors.put(interceptor.interceptroType(), interceptors);
+                }
+                interceptors.add(interceptor);
+            }
+        }
+        putTypeAllTo(all);
+    }
+
+    private void putTypeAllTo(List<RequestInterceptor> all) {
+        if (all.isEmpty()) {
+            return;
+        }
+        requestInterceptors.values().forEach(list -> {
+            list.addAll(all);
+            OrderComparator.sort(list);
+        });
+    }
 
 }
