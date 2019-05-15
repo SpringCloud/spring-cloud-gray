@@ -3,6 +3,7 @@ package cn.springcloud.gray.client.config;
 import cn.springcloud.gray.*;
 import cn.springcloud.gray.client.GrayClientInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.GrayClientProperties;
+import cn.springcloud.gray.client.config.properties.GrayLoadProperties;
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.request.RequestLocalStorage;
@@ -30,9 +31,9 @@ public class GrayClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public GrayManager grayManager(GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
+    public GrayManager grayManager(GrayLoadProperties grayLoadProperties, GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
                                    @Autowired(required = false) List<RequestInterceptor> requestInterceptors) {
-        return new DefaultGrayManager(grayClientProperties, grayDecisionFactoryKeeper, requestInterceptors);
+        return new DefaultGrayManager(grayClientProperties, grayLoadProperties, grayDecisionFactoryKeeper, requestInterceptors);
     }
 
 
