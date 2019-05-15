@@ -5,7 +5,6 @@ import cn.springcloud.gray.client.GrayClientInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.GrayClientProperties;
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
-import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ public class GrayClientAutoConfiguration {
     @ConditionalOnBean({CommunicableGrayManager.class, InstanceLocalInfo.class})
     public GrayClientInitializingDestroyBean grayClientInitializingDestroyBean(
             CommunicableGrayManager grayManager, InstanceLocalInfo instanceLocalInfo) {
-        return new GrayClientInitializingDestroyBean(grayManager, instanceLocalInfo);
+        return new GrayClientInitializingDestroyBean(grayManager, grayClientProperties, instanceLocalInfo);
     }
 
 

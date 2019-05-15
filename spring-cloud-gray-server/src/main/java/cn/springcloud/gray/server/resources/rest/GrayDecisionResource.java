@@ -52,7 +52,7 @@ public class GrayDecisionResource {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public void save(GrayDecision grayDecision) {
+    public void save(@RequestBody GrayDecision grayDecision) {
         grayServerModule.saveGrayDecision(grayDecision);
     }
 

@@ -1,8 +1,6 @@
 package cn.springcloud.gray;
 
-import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
-import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +63,8 @@ public class SimpleGrayManager extends AbstractGrayManager {
                     grayServices.put(service.getServiceId(), service);
                 }
             }
+        } else if (grayServices != this.grayServices) {
+            grayServices.put(service.getServiceId(), service);
         }
         log.debug("添加灰度实例, serviceId:{}, instanceId:{}", instance.getServiceId(), instance.getInstanceId());
         service.setGrayInstance(instance);
@@ -79,6 +79,17 @@ public class SimpleGrayManager extends AbstractGrayManager {
         }
         log.debug("关闭实例的在灰度状态, serviceId:{}, instanceId:{}", instance.getServiceId(), instance.getInstanceId());
         service.removeGrayInstance(instance.getInstanceId());
+    }
+
+    @Override
+    public void closeGray(String serviceId, String instanceId) {
+        GrayService service = getGrayService(serviceId);
+        if (service == null) {
+            log.debug("没有找到灰度服务:{}, 所以无需删除实例:{} 的灰度状态", serviceId, instanceId);
+            return;
+        }
+        log.debug("关闭实例的在灰度状态, serviceId:{}, instanceId:{}", serviceId, instanceId);
+        service.removeGrayInstance(instanceId);
     }
 
 

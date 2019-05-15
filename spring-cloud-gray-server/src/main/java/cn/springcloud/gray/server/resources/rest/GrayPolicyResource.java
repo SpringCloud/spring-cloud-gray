@@ -47,7 +47,7 @@ public class GrayPolicyResource {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public void save(GrayPolicy grayPolicy) {
+    public void save(@RequestBody GrayPolicy grayPolicy) {
         grayServerModule.saveGrayPolicy(grayPolicy);
     }
 }

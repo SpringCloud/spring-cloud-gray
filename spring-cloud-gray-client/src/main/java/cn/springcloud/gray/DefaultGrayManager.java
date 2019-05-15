@@ -2,7 +2,6 @@ package cn.springcloud.gray;
 
 
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
-import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class DefaultGrayManager extends CommunicableGrayManager {
+public class DefaultGrayManager extends AbstractCommunicableGrayManager {
 
     private Timer updateTimer = new Timer("Gray-Update-Timer", true);
 

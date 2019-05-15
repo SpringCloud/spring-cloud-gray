@@ -18,6 +18,7 @@
         <module>spring-cloud-gray-service-b-sample</module>
         <module>spring-cloud-gray-server-sample</module>
         <module>spring-cloud-gray-service-a1-sample</module>
+        <module>spring-cloud-gray-stream-sample</module>
     </modules>
 
     <build>

@@ -10,6 +10,7 @@ import cn.springcloud.gray.server.module.domain.InstanceStatus;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class SimpleGrayModule implements GrayModle {
         if (grayInstance == null) {
             return null;
         }
-        return ofGrayInstance(grayInstance);
+        return ofGrayInstanceInfo(grayInstance);
     }
 
 
@@ -48,11 +49,16 @@ public class SimpleGrayModule implements GrayModle {
 
         List<cn.springcloud.gray.model.GrayInstance> grayInstances = new ArrayList<>(instances.size());
         instances.forEach(instance -> {
-            cn.springcloud.gray.model.GrayInstance grayInstance = ofGrayInstance(instance);
-            grayInstance.setPolicyDefinitions(ofGrayPoliciesByInstanceId(instance.getInstanceId()));
+            cn.springcloud.gray.model.GrayInstance grayInstance = ofGrayInstanceInfo(instance);
             grayInstances.add(grayInstance);
         });
         return grayInstances;
+    }
+
+    private cn.springcloud.gray.model.GrayInstance ofGrayInstanceInfo(cn.springcloud.gray.server.module.domain.GrayInstance instance) {
+        cn.springcloud.gray.model.GrayInstance grayInstance = ofGrayInstance(instance);
+        grayInstance.setPolicyDefinitions(ofGrayPoliciesByInstanceId(instance.getInstanceId()));
+        return grayInstance;
     }
 
 
@@ -72,6 +78,7 @@ public class SimpleGrayModule implements GrayModle {
         grayPolicies.forEach(grayPolicy -> {
             PolicyDefinition policyDefinition = ofGrayPolicy(grayPolicy);
             policyDefinition.setList(ofGrayDecisionByPolicyId(grayPolicy.getId()));
+            policyDefinitions.add(policyDefinition);
         });
 
         return policyDefinitions;
@@ -89,7 +96,10 @@ public class SimpleGrayModule implements GrayModle {
         List<DecisionDefinition> decisionDefinitions = new ArrayList<>(grayDecisions.size());
         grayDecisions.forEach(grayDecision -> {
             try {
-                decisionDefinitions.add(ofGrayDecision(grayDecision));
+                DecisionDefinition definition = ofGrayDecision(grayDecision);
+                if (definition != null) {
+                    decisionDefinitions.add(definition);
+                }
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
@@ -102,6 +112,9 @@ public class SimpleGrayModule implements GrayModle {
         DecisionDefinition decisionDefinition = new DecisionDefinition();
         decisionDefinition.setId(String.valueOf(grayDecision.getId()));
         decisionDefinition.setName(grayDecision.getName());
+        if (StringUtils.isEmpty(grayDecision.getInfos())) {
+            return null;
+        }
         decisionDefinition.setInfos(objectMapper.readValue(grayDecision.getInfos(), new TypeReference<Map<String, String>>() {
         }));
         return decisionDefinition;

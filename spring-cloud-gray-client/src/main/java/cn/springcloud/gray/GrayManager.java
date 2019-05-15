@@ -1,9 +1,8 @@
 package cn.springcloud.gray;
 
-import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.GrayDecision;
-import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.model.GrayInstance;
+import cn.springcloud.gray.model.GrayService;
 
 import java.util.Collection;
 import java.util.List;
@@ -38,6 +37,8 @@ public interface GrayManager {
     void updateGrayInstance(GrayInstance instance);
 
     void closeGray(GrayInstance instance);
+
+    void closeGray(String serviceId, String instanceId);
 
     List<RequestInterceptor> getRequeestInterceptors(String interceptroType);
 

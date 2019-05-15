@@ -52,7 +52,7 @@ public class GrayInstanceResource {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public void save(GrayInstance grayInstance) {
+    public void save(@RequestBody GrayInstance grayInstance) {
         grayServerModule.saveGrayInstance(grayInstance);
     }
 

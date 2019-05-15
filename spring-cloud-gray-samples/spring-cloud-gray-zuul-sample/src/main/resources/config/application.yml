@@ -1,6 +1,30 @@
 spring:
   application:
     name: api-gateway
+  rabbitmq:
+    addresses: 127.0.0.1:5672
+    username: admin
+    password: admin
+  cloud:
+    stream:
+      bindings:
+        GrayEventInput:
+          group: zuul
+          destination: gray_event
+          consumer:
+            concurrency: 1 #并发数
+        #            max-attempts: 1
+      #        GrayEventOutput:
+      #          destination: gray-event
+      rabbit:
+        bindings:
+          GrayEventInput:
+            consumer:
+              maxConcurrency: 1 #并发数
+              #              prefetch: 1 #从mq一次获取消息的数量
+              #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
+              #              auto-bind-dlq: true
+              acknowledgeMode: AUTO
 server:
   port: 20301
 eureka:
@@ -21,6 +45,8 @@ zuul:
 #      path: /client/** #匹配/techouse/usersystem/** 均路由到cloud-client
 #      serviceId: eureka-client #指定路由到的serviceId
 gray:
+  client:
+    server-url: http://localhost:20202
   request:
     track:
       web:
@@ -32,7 +58,7 @@ gray:
           parameters: version,test
         path-patterns: /*
   load:
-    enabled: true
+    enabled: false
     gray-instances:
       - serviceId: service-a
         instance-id: service-a:20104

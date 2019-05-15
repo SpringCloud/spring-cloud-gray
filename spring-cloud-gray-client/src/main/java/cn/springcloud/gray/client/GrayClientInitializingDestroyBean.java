@@ -14,15 +14,17 @@ public class GrayClientInitializingDestroyBean implements InitializingBean {
 
     private CommunicableGrayManager grayManager;
     private InstanceLocalInfo instanceLocalInfo;
+    private GrayClientConfig clientConfig;
 
-    public GrayClientInitializingDestroyBean(CommunicableGrayManager grayManager, InstanceLocalInfo instanceLocalInfo) {
+    public GrayClientInitializingDestroyBean(
+            CommunicableGrayManager grayManager, GrayClientConfig clientConfig, InstanceLocalInfo instanceLocalInfo) {
         this.grayManager = grayManager;
+        this.clientConfig = clientConfig;
         this.instanceLocalInfo = instanceLocalInfo;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        GrayClientConfig clientConfig = grayManager.getGrayClientConfig();
         if (clientConfig.isGrayEnroll()) {
             if (clientConfig.grayEnrollDealyTimeInMs() > 0) {
                 Thread t = new Thread(() -> {
