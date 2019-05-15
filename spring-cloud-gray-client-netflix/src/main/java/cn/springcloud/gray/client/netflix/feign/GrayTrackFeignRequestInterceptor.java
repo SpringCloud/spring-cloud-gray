@@ -1,6 +1,8 @@
 package cn.springcloud.gray.client.netflix.feign;
 
-import cn.springcloud.gray.request.*;
+import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.request.GrayTrackInfo;
+import cn.springcloud.gray.request.RequestLocalStorage;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +32,7 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
             }
             if (grayTrack.getParameters() != null && !grayTrack.getParameters().isEmpty()) {
                 grayTrack.getParameters().entrySet().forEach(entry -> {
-                    String name = new StringBuffer().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     template.header(name, entry.getValue());
@@ -38,7 +40,7 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
             }
             if (grayTrack.getHeaders() != null && !grayTrack.getHeaders().isEmpty()) {
                 grayTrack.getHeaders().entrySet().forEach(entry -> {
-                    String name = new StringBuffer().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     template.header(name, entry.getValue());

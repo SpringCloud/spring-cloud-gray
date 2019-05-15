@@ -1,6 +1,5 @@
 package cn.springcloud.gray.communication;
 
-import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.model.GrayInstance;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public interface InformationClient {
      *
      * @param serviceId  服务id
      * @param instanceId 实例id
-     * @return
+     * @return gray instance info
      */
     GrayInstance getGrayInstance(String serviceId, String instanceId);
 

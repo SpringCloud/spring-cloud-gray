@@ -9,8 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 
-import java.util.Arrays;
-
 public class RestTemplateRequestInterceptor implements RequestInterceptor {
     @Override
     public String interceptroType() {
@@ -40,7 +38,7 @@ public class RestTemplateRequestInterceptor implements RequestInterceptor {
             }
             if (grayTrack.getParameters() != null && !grayTrack.getParameters().isEmpty()) {
                 grayTrack.getParameters().entrySet().forEach(entry -> {
-                    String name = new StringBuffer().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     httpHeaders.put(name, entry.getValue());
@@ -48,7 +46,7 @@ public class RestTemplateRequestInterceptor implements RequestInterceptor {
             }
             if (grayTrack.getHeaders() != null && !grayTrack.getHeaders().isEmpty()) {
                 grayTrack.getHeaders().entrySet().forEach(entry -> {
-                    String name = new StringBuffer().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     httpHeaders.put(name, entry.getValue());

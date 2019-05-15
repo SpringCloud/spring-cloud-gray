@@ -16,7 +16,5 @@
 
 /**
  * Sources for external configuration properties.
- *
- * @see org.springframework.boot.context.properties.source.ConfigurationPropertySource
  */
 package cn.springcloud.gray.bean.properties.source;

@@ -16,7 +16,5 @@
 
 /**
  * Support for item origin tracking.
- *
- * @see org.springframework.boot.origin.Origin
  */
 package cn.springcloud.gray.bean.origin;

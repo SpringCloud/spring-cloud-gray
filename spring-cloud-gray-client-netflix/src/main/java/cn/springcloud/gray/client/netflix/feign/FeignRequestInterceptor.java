@@ -8,7 +8,6 @@ import cn.springcloud.gray.request.GrayTrackInfo;
 import feign.Request;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
 public class FeignRequestInterceptor implements RequestInterceptor {
@@ -38,7 +37,7 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             }
             if (grayTrack.getParameters() != null && !grayTrack.getParameters().isEmpty()) {
                 grayTrack.getParameters().entrySet().forEach(entry -> {
-                    String name = new StringBuffer().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     feignRequest.headers().put(name, entry.getValue());
@@ -46,7 +45,7 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             }
             if (grayTrack.getHeaders() != null && !grayTrack.getHeaders().isEmpty()) {
                 grayTrack.getHeaders().entrySet().forEach(entry -> {
-                    String name = new StringBuffer().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     feignRequest.headers().put(name, entry.getValue());

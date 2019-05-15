@@ -81,7 +81,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
             if (StringUtils.isNotEmpty(grayHttpTrackInfo.getUri())) {
                 Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
                 grayHttpTrackInfo.getHeaders().entrySet().forEach(entry -> {
-                    String name = new StringBuffer().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     h.put(name, entry.getValue());
@@ -94,7 +94,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
             if (StringUtils.isNotEmpty(grayHttpTrackInfo.getUri())) {
                 Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
                 grayHttpTrackInfo.getParameters().entrySet().forEach(entry -> {
-                    String name = new StringBuffer().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     h.put(name, entry.getValue());

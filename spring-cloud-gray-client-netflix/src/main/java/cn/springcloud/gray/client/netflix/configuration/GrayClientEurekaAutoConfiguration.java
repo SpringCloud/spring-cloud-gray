@@ -11,37 +11,28 @@ import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * @Author: duozl
- * @Date: 2018/6/5 18:18
- */
 @Configuration
 @ConditionalOnBean(EurekaClient.class)
 public class GrayClientEurekaAutoConfiguration {
 
+  @Autowired private SpringClientFactory springClientFactory;
 
-    @Autowired
-    private SpringClientFactory springClientFactory;
+  @Bean
+  @ConditionalOnMissingBean
+  public InstanceLocalInfo instanceLocalInfo(@Autowired EurekaRegistration registration) {
+    String instanceId = registration.getInstanceConfig().getInstanceId();
 
-    @Bean
-    @ConditionalOnMissingBean
-    public InstanceLocalInfo instanceLocalInfo(@Autowired EurekaRegistration registration) {
-        String instanceId = registration.getInstanceConfig().getInstanceId();
+    return InstanceLocalInfo.builder()
+        .instanceId(instanceId)
+        .serviceId(registration.getServiceId())
+        .host(registration.getHost())
+        .port(registration.getPort())
+        .build();
+  }
 
-        return InstanceLocalInfo.builder()
-                .instanceId(instanceId)
-                .serviceId(registration.getServiceId())
-                .host(registration.getHost())
-                .port(registration.getPort())
-                .build();
-    }
-
-
-    @Bean
-    @ConditionalOnMissingBean
-    public EurekaServerExplainer eurekaServerExplainer() {
-        return new EurekaServerExplainer(springClientFactory);
-    }
-
-
+  @Bean
+  @ConditionalOnMissingBean
+  public EurekaServerExplainer eurekaServerExplainer() {
+    return new EurekaServerExplainer(springClientFactory);
+  }
 }

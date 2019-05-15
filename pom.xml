@@ -13,6 +13,19 @@
     <artifactId>spring-cloud-gray</artifactId>
     <packaging>pom</packaging>
     <version>2.0.0</version>
+    <url>https://github.com/SpringCloud/spring-cloud-gray</url>
+    <organization>
+        <name>Spring Cloud中国社区</name>
+        <url>http://springcloud.cn/</url>
+    </organization>
+    <developers>
+        <developer>
+            <name>saleson</name>
+            <email>qlichunyu@163.com</email>
+            <organization>Spring Cloud中国社区</organization>
+            <url>https://github.com/saleson</url>
+        </developer>
+    </developers>
     <modules>
 
         <module>spring-cloud-gray-dependencies</module>
@@ -43,13 +56,7 @@
         <connection>scm:git:git@github.com:SpringCloud/spring-cloud-gray.git</connection>
         <developerConnection>scm:git:git@github.com:SpringCloud/spring-cloud-gray.git</developerConnection>
     </scm>
-    <developers>
-        <developer>
-            <name>saleson</name>
-            <email>qlichunyu@163.com</email>
-            <organization>Spring Cloud中国社区</organization>
-        </developer>
-    </developers>
+
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -199,6 +206,11 @@
                 <scope>provided</scope>
             </dependency>
 
+            <dependency>
+                <groupId>javax.interceptor</groupId>
+                <artifactId>javax.interceptor-api</artifactId>
+                <version>1.2.2</version>
+            </dependency>
         </dependencies>
 
 

@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.config.properties;
 
-import cn.springcloud.gray.communication.RetryableInformationClient;
 import cn.springcloud.gray.GrayClientConfig;
+import cn.springcloud.gray.communication.RetryableInformationClient;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("gray.client")
@@ -116,7 +116,7 @@ public class GrayClientProperties implements GrayClientConfig {
         /**
          * 是否使用多版本,默认不使用
          *
-         * @return
+         * @return ture to use service multi version control
          */
         public boolean isUseMultiVersion() {
             return useMultiVersion;

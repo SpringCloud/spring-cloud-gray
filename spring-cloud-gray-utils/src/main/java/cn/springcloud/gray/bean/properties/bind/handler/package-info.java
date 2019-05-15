@@ -15,7 +15,6 @@
  */
 
 /**
- * General {@link org.springframework.boot.context.properties.bind.BindHandler
  * BindHandler} implementations.
  */
 package cn.springcloud.gray.bean.properties.bind.handler;

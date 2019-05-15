@@ -5,7 +5,7 @@ public interface GrayClientConfig {
     /**
      * 运行类型：web
      *
-     * @return
+     * @return run env
      */
     String runenv();
 
@@ -13,7 +13,7 @@ public interface GrayClientConfig {
     /**
      * 启动时是否灰度注册
      *
-     * @return boolean
+     * @return boolean true to register gray after started
      */
     boolean isGrayEnroll();
 

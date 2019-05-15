@@ -36,7 +36,7 @@ public class ZuulRequestInterceptor implements RequestInterceptor {
             }
             if (grayTrack.getParameters() != null && !grayTrack.getParameters().isEmpty()) {
                 grayTrack.getParameters().entrySet().forEach(entry -> {
-                    String name = new StringBuffer().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     context.addOriginResponseHeader(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
@@ -48,7 +48,7 @@ public class ZuulRequestInterceptor implements RequestInterceptor {
             }
             if (grayTrack.getHeaders() != null && !grayTrack.getHeaders().isEmpty()) {
                 grayTrack.getHeaders().entrySet().forEach(entry -> {
-                    String name = new StringBuffer().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     entry.getValue().forEach(v -> {
