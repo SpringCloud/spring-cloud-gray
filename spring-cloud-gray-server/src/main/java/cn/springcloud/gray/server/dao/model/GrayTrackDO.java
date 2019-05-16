@@ -10,15 +10,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gray_decision", indexes = {@Index(columnList = "policyId"), @Index(columnList = "instanceId")})
-public class GrayDecisionDO {
+@Table(name = "gray_track", indexes = {@Index(columnList = "serviceId"), @Index(columnList = "instanceId")})
+public class GrayTrackDO {
 
     @Id
-    @Column(length = 20)
+//    @Column(length = 20)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 20)
-    private Long policyId;
+    @Column(length = 32)
+    private String serviceId;
     @Column(length = 64)
     private String instanceId;
     @Column(length = 64)

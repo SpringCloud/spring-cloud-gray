@@ -27,6 +27,10 @@ public class PaginationUtils {
         return new PageImpl<MODEL>(list, pageable, p.getTotalElements());
     }
 
+    public static <MODEL, T> Page<MODEL> convert(Pageable pageable, Page<T> p, List<MODEL> models) {
+        return new PageImpl<MODEL>(models, pageable, p.getTotalElements());
+    }
+
 
     public static HttpHeaders generatePaginationHttpHeaders(Page<?> page) {
         return generatePaginationHttpHeaders(page, null);

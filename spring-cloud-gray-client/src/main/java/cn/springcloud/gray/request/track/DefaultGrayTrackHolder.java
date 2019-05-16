@@ -16,7 +16,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class DefaultGrayTrackHolder extends AbstractCommunicableTrayTrackHolder implements InstanceLocalInfoAware {
+public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder implements InstanceLocalInfoAware {
 
     private Timer updateTimer = new Timer("Gray-Track-Update-Timer", true);
     private GrayTrackProperties grayTrackProperties;

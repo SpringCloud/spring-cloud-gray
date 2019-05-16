@@ -7,12 +7,12 @@ import cn.springcloud.gray.request.GrayTrackInfo;
 
 import java.util.List;
 
-public abstract class AbstractCommunicableTrayTrackHolder extends SimpleGrayTrackHolder implements CommunicableTrayTrackHolder {
+public abstract class AbstractCommunicableGrayTrackHolder extends SimpleGrayTrackHolder implements CommunicableGrayTrackHolder {
 
 
     private InformationClient informationClient;
 
-    public AbstractCommunicableTrayTrackHolder(
+    public AbstractCommunicableGrayTrackHolder(
             InformationClient informationClient,
             List<GrayInfoTracker<? extends GrayTrackInfo, ?>> trackers,
             List<GrayTrackDefinition> trackDefinitions) {
