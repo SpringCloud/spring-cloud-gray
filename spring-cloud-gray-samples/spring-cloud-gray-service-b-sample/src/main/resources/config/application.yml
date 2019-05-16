@@ -57,7 +57,7 @@ gray:
             value: version,test
         path-patterns: /*
   load:
-    enabled: false
+    enabled: true
     gray-instances:
       - serviceId: service-a
         instance-id: service-a:20104
