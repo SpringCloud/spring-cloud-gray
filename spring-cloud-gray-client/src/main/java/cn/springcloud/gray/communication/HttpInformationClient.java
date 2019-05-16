@@ -1,6 +1,7 @@
 package cn.springcloud.gray.communication;
 
 import cn.springcloud.gray.model.GrayInstance;
+import cn.springcloud.gray.model.GrayTrackDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -75,6 +76,21 @@ public class HttpInformationClient implements InformationClient {
             rest.delete(url, params);
         } catch (Exception e) {
             log.error("灰度服务实例下线失败", e);
+            throw e;
+        }
+    }
+
+    @Override
+    public List<GrayTrackDefinition> getTrackDefinitions(String serviceId, String instanceId) {
+        String url = this.baseUrl + "/gray/trackDefinitions?serviceId={serviceId}&instanceId={instanceId}";
+        ParameterizedTypeReference<List<GrayTrackDefinition>> typeRef = new ParameterizedTypeReference<List<GrayTrackDefinition>>() {
+        };
+        try {
+            ResponseEntity<List<GrayTrackDefinition>> responseEntity =
+                    rest.exchange(url, HttpMethod.GET, null, typeRef, serviceId, instanceId);
+            return responseEntity.getBody();
+        } catch (RuntimeException e) {
+            log.error("获取灰度追踪信息", e);
             throw e;
         }
     }

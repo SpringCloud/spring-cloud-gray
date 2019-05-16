@@ -1,9 +1,7 @@
 package cn.springcloud.gray;
 
-import cn.springcloud.gray.communication.InformationClient;
 
-public interface CommunicableGrayManager extends GrayManager {
+public interface CommunicableGrayManager extends GrayManager, GrayServerCommunicable {
 
-    InformationClient getGrayInformationClient();
 
 }

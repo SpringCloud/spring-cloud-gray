@@ -3,6 +3,7 @@ package cn.springcloud.gray.server.module;
 import cn.springcloud.gray.event.EventType;
 import cn.springcloud.gray.event.GrayEventMsg;
 import cn.springcloud.gray.event.GrayEventPublisher;
+import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.server.module.domain.*;
 import cn.springcloud.gray.server.service.GrayDecisionService;
@@ -225,6 +226,7 @@ public class SimpleGrayServerModule implements GrayServerModule {
         eventMsg.setInstanceId(instanceId);
         eventMsg.setServiceId(serviceId);
         eventMsg.setEventType(eventType);
+        eventMsg.setSourceType(SourceType.GRAY_INSTANCE);
         publishGrayEvent(eventMsg);
     }
 

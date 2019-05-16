@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 public class GrayInstance implements Serializable {
 
+    private static final long serialVersionUID = 1604426811546120884L;
     private String serviceId;
     private String instanceId;
     private String host;
@@ -31,5 +32,6 @@ public class GrayInstance implements Serializable {
     public boolean isGray() {
         return grayStatus == GrayStatus.OPEN;
     }
+
 
 }

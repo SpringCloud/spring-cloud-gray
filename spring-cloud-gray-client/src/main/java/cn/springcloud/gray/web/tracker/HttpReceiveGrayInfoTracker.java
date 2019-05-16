@@ -2,6 +2,7 @@ package cn.springcloud.gray.web.tracker;
 
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayTrackInfo;
+import cn.springcloud.gray.request.TrackArgs;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -11,18 +12,17 @@ import java.util.*;
 import java.util.function.Consumer;
 
 @Slf4j
-public class HttpReceiveGrayTracker implements HttpGrayTracker {
+public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
 
 
     private Map<String, Consumer<LoadSpec>> loaders = new HashMap<>();
 
 
-    public HttpReceiveGrayTracker() {
+    public HttpReceiveGrayInfoTracker() {
         init();
     }
 
 
-    @Override
     public void call(GrayHttpTrackInfo trackInfo, HttpServletRequest request) {
         Enumeration<String> headerNames = request.getHeaderNames();
         if (headerNames.hasMoreElements()) {
@@ -34,6 +34,11 @@ public class HttpReceiveGrayTracker implements HttpGrayTracker {
         }
     }
 
+
+    @Override
+    public void call(TrackArgs<GrayHttpTrackInfo, HttpServletRequest> args) {
+        call(args.getTrackInfo(), args.getRequest());
+    }
 
     @Override
     public int getOrder() {

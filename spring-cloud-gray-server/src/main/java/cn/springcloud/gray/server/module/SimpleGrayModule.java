@@ -1,11 +1,9 @@
 package cn.springcloud.gray.server.module;
 
-import cn.springcloud.gray.model.DecisionDefinition;
-import cn.springcloud.gray.model.GrayInstance;
-import cn.springcloud.gray.model.GrayStatus;
-import cn.springcloud.gray.model.PolicyDefinition;
+import cn.springcloud.gray.model.*;
 import cn.springcloud.gray.server.module.domain.GrayDecision;
 import cn.springcloud.gray.server.module.domain.GrayPolicy;
+import cn.springcloud.gray.server.module.domain.GrayTrack;
 import cn.springcloud.gray.server.module.domain.InstanceStatus;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,13 +16,18 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class SimpleGrayModule implements GrayModle {
+public class SimpleGrayModule implements GrayModule {
 
     private GrayServerModule grayServerModule;
+    private GrayServerTrackModule grayServerTrackModule;
     private ObjectMapper objectMapper;
 
-    public SimpleGrayModule(GrayServerModule grayServerModule, ObjectMapper objectMapper) {
+    public SimpleGrayModule(
+            GrayServerModule grayServerModule,
+            GrayServerTrackModule grayServerTrackModule,
+            ObjectMapper objectMapper) {
         this.grayServerModule = grayServerModule;
+        this.grayServerTrackModule = grayServerTrackModule;
         this.objectMapper = objectMapper;
     }
 
@@ -40,6 +43,29 @@ public class SimpleGrayModule implements GrayModle {
             return null;
         }
         return ofGrayInstanceInfo(grayInstance);
+    }
+
+    @Override
+    public List<GrayTrackDefinition> getTrackDefinitions(String serviceId, String instanceId) {
+        List<GrayTrack> grayTracks = grayServerTrackModule.listGrayTracksEmptyInstanceByServiceId(serviceId);
+        List<GrayTrackDefinition> trackDefinitions = new ArrayList<>(grayTracks.size());
+        addGrayTrackDefinitions(trackDefinitions, grayTracks);
+        addGrayTrackDefinitions(trackDefinitions, grayServerTrackModule.listGrayTracksByInstanceId(instanceId));
+        return trackDefinitions;
+    }
+
+    private void addGrayTrackDefinitions(List<GrayTrackDefinition> trackDefinitions, List<GrayTrack> grayTracks) {
+        grayTracks.forEach(track -> {
+            trackDefinitions.add(ofGrayTrack(track));
+        });
+    }
+
+
+    private GrayTrackDefinition ofGrayTrack(GrayTrack grayTrack) {
+        GrayTrackDefinition definition = new GrayTrackDefinition();
+        definition.setName(grayTrack.getName());
+        definition.setValue(grayTrack.getInfos());
+        return definition;
     }
 
 

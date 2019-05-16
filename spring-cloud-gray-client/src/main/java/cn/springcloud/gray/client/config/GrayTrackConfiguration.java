@@ -2,13 +2,16 @@ package cn.springcloud.gray.client.config;
 
 
 import cn.springcloud.gray.client.config.properties.GrayTrackProperties;
+import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayInfoTracker;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
+import cn.springcloud.gray.request.track.DefaultGrayTrackHolder;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.web.GrayTrackFilter;
 import cn.springcloud.gray.web.GrayTrackRequestInterceptor;
 import cn.springcloud.gray.web.tracker.*;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -16,8 +19,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,16 @@ import java.util.List;
 @ConditionalOnProperty(value = "gray.request.track.enabled", matchIfMissing = true)
 @EnableConfigurationProperties(GrayTrackProperties.class)
 public class GrayTrackConfiguration {
+
+
+    @Bean(initMethod = "openForWork")
+    @ConditionalOnMissingBean
+    public GrayTrackHolder grayTrackHolder(
+            GrayTrackProperties grayTrackProperties,
+            @Autowired(required = false) InformationClient informationClient,
+            List<GrayInfoTracker<? extends GrayTrackInfo, ?>> trackers) {
+        return new DefaultGrayTrackHolder(grayTrackProperties, informationClient, trackers);
+    }
 
 
     @ConditionalOnProperty(value = "gray.client.runenv", havingValue = "web", matchIfMissing = true)
@@ -42,29 +53,10 @@ public class GrayTrackConfiguration {
         @Autowired
         private RequestLocalStorage requestLocalStorage;
 
-//        @Bean
-//        @ConditionalOnMissingBean
-//        public GrayTrackInterceptor grayTrackInterceptor() {
-//            return new GrayTrackInterceptor(requestLocalStorage, trackors);
-//        }
-
-//        @Override
-//        public void addInterceptors(InterceptorRegistry registry) {
-//            InterceptorRegistration grayTrackRegistor = registry.addInterceptor(grayTrackInterceptor());
-//            GrayTrackProperties.Web webProperties = grayTrackProperties.getWeb();
-//
-//            for (String pattern : webProperties.getPathPatterns()) {
-//                grayTrackRegistor.addPathPatterns(pattern);
-//            }
-//            for (String pattern : webProperties.getExcludePathPatterns()) {
-//                grayTrackRegistor.excludePathPatterns(pattern);
-//            }
-//        }
-
         @Bean
         @ConditionalOnMissingBean
-        public GrayTrackFilter grayTrackFilter() {
-            return new GrayTrackFilter(requestLocalStorage, trackors);
+        public GrayTrackFilter grayTrackFilter(GrayTrackHolder grayTrackHolder) {
+            return new GrayTrackFilter(grayTrackHolder, requestLocalStorage);
         }
 
 
@@ -87,48 +79,39 @@ public class GrayTrackConfiguration {
 
 
         @Bean
-        public HttpReceiveGrayTracker httpReceiveGrayTracker() {
-            return new HttpReceiveGrayTracker();
+        public HttpReceiveGrayInfoTracker httpReceiveGrayTracker() {
+            return new HttpReceiveGrayInfoTracker();
         }
 
         @Bean
-        @ConditionalOnProperty(value = "gray.request.track.web.need.headers")
-        public HttpHeaderGrayTracker httpHeaderGrayTracker() {
-            String header = grayTrackProperties.getWeb().getNeed().get(GrayTrackProperties.Web.NEED_HEADERS);
-            String[] headers = StringUtils.isEmpty(header) ? new String[]{} : header.split(",");
-            return new HttpHeaderGrayTracker(headers);
+        public HttpHeaderGrayInfoTracker httpHeaderGrayTracker() {
+            return new HttpHeaderGrayInfoTracker();
         }
 
         @Bean
-        @ConditionalOnProperty(value = "gray.request.track.web.need.method", havingValue = "enable")
-        public HttpMethodGrayTracker httpMethodGrayTracker() {
-            return new HttpMethodGrayTracker();
+        public HttpMethodGrayInfoTracker httpMethodGrayTracker() {
+            return new HttpMethodGrayInfoTracker();
         }
 
         @Bean
-        @ConditionalOnProperty(value = "gray.request.track.web.need.uri", havingValue = "enable")
-        public HttpURIGrayTracker httpURIGrayTracker() {
-            return new HttpURIGrayTracker();
+        public HttpURIGrayInfoTracker httpURIGrayTracker() {
+            return new HttpURIGrayInfoTracker();
         }
 
         @Bean
-        @ConditionalOnProperty(value = "gray.request.track.web.need.ip", havingValue = "enable")
-        public HttpIPGrayTracker httpIPGrayTracker() {
-            return new HttpIPGrayTracker();
+        public HttpIPGrayInfoTracker httpIPGrayTracker() {
+            return new HttpIPGrayInfoTracker();
         }
 
         @Bean
-        @ConditionalOnProperty(value = "gray.request.track.web.need.parameters", havingValue = "enable")
-        public HttpParameterGrayTracker httpParameterGrayTracker() {
-            String name = grayTrackProperties.getWeb().getNeed().get(GrayTrackProperties.Web.NEED_PARAMETERS);
-            String[] names = StringUtils.isEmpty(name) ? new String[]{} : name.split(",");
-            return new HttpParameterGrayTracker(names);
+        public HttpParameterGrayInfoTracker httpParameterGrayTracker() {
+            return new HttpParameterGrayInfoTracker();
         }
 
 
         @Bean
         public GrayTrackRequestInterceptor grayTrackRequestInterceptor() {
-            return new GrayTrackRequestInterceptor(grayTrackProperties);
+            return new GrayTrackRequestInterceptor();
         }
 
     }

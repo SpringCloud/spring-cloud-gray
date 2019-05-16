@@ -2,11 +2,10 @@ package cn.springcloud.gray.server.configuration;
 
 import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.server.module.GrayServerModule;
+import cn.springcloud.gray.server.module.GrayServerTrackModule;
 import cn.springcloud.gray.server.module.SimpleGrayServerModule;
-import cn.springcloud.gray.server.service.GrayDecisionService;
-import cn.springcloud.gray.server.service.GrayInstanceService;
-import cn.springcloud.gray.server.service.GrayPolicyService;
-import cn.springcloud.gray.server.service.GrayServiceService;
+import cn.springcloud.gray.server.module.SimpleGrayServerTrackModule;
+import cn.springcloud.gray.server.service.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +37,13 @@ public class DBStorageConfiguration {
                 GrayDecisionService grayDecisionService, GrayPolicyService grayPolicyService) {
             return new SimpleGrayServerModule(grayEventPublisher, grayServiceService, grayInstanceService, grayDecisionService, grayPolicyService);
         }
+
+
+        @Bean
+        public GrayServerTrackModule grayServerTrackModule(GrayEventPublisher grayEventPublisher, GrayTrackService grayTrackService) {
+            return new SimpleGrayServerTrackModule(grayEventPublisher, grayTrackService);
+        }
+
     }
 
     @Bean

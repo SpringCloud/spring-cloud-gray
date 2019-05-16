@@ -14,5 +14,8 @@ public class GrayEventMsg implements Serializable {
     private String serviceId;
     private String instanceId;
     private EventType eventType;
+    private SourceType sourceType;
+
+    private Object extra;
 
 }

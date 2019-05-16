@@ -2,10 +2,7 @@ package cn.springcloud.gray.server.dao.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 @Setter
@@ -19,6 +16,7 @@ public class GrayServiceDO {
 
     @Id
     @Column(length = 32)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String serviceId;
     @Column(length = 64)
     private String serviceName;

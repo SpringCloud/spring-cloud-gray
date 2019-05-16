@@ -1,17 +1,23 @@
 package cn.springcloud.gray.web.tracker;
 
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.request.TrackArgs;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
-public class HttpURIGrayTracker implements HttpGrayTracker {
+public class HttpURIGrayInfoTracker implements HttpGrayInfoTracker {
 
 
-    @Override
     public void call(GrayHttpTrackInfo trackInfo, HttpServletRequest request) {
         trackInfo.setUri(request.getRequestURI());
         log.debug("记录下uri:{}", trackInfo.getUri());
+    }
+
+
+    @Override
+    public void call(TrackArgs<GrayHttpTrackInfo, HttpServletRequest> args) {
+        call(args.getTrackInfo(), args.getRequest());
     }
 }

@@ -15,6 +15,7 @@ public class GrayPolicyDO {
 
     @Id
     @Column(length = 20)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(length = 64)
     private String instanceId;

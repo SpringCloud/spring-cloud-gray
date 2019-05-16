@@ -1,8 +1,6 @@
 package cn.springcloud.gray;
 
-import cn.springcloud.gray.communication.HttpInformationClient;
 import cn.springcloud.gray.communication.InformationClient;
-import cn.springcloud.gray.communication.RetryableInformationClient;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 
 import java.util.List;
@@ -12,9 +10,12 @@ public abstract class AbstractCommunicableGrayManager extends SimpleGrayManager 
     private GrayClientConfig grayClientConfig;
     private InformationClient informationClient;
 
-    public AbstractCommunicableGrayManager(GrayClientConfig grayClientConfig, GrayDecisionFactoryKeeper grayDecisionFactoryKeeper, List<RequestInterceptor> requestInterceptors) {
+    public AbstractCommunicableGrayManager(
+            GrayClientConfig grayClientConfig, GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
+            List<RequestInterceptor> requestInterceptors, InformationClient informationClient) {
         super(grayDecisionFactoryKeeper, requestInterceptors);
         this.grayClientConfig = grayClientConfig;
+        this.informationClient = informationClient;
         createInformationClient();
     }
 
@@ -29,13 +30,6 @@ public abstract class AbstractCommunicableGrayManager extends SimpleGrayManager 
 
     protected void createInformationClient() {
 
-        GrayClientConfig clientConfig = getGrayClientConfig();
-        InformationClient httpClient = new HttpInformationClient(clientConfig.getServerUrl());
-        if (clientConfig.isRetryable()) {
-            informationClient = new RetryableInformationClient(Math.max(3, clientConfig.getRetryNumberOfRetries()), httpClient);
-        } else {
-            informationClient = httpClient;
-        }
 
     }
 

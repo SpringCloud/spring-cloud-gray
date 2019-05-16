@@ -1,15 +1,16 @@
 package cn.springcloud.gray.server.configuration;
 
 import cn.springcloud.gray.event.GrayEventPublisher;
-import cn.springcloud.gray.server.*;
+import cn.springcloud.gray.server.GrayServerInitializingDestroyBean;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.event.DefaultGrayEventPublisher;
 import cn.springcloud.gray.server.evictor.GrayServerEvictor;
 import cn.springcloud.gray.server.evictor.NoActionGrayServerEvictor;
 import cn.springcloud.gray.server.manager.DefaultGrayServiceManager;
 import cn.springcloud.gray.server.manager.GrayServiceManager;
-import cn.springcloud.gray.server.module.GrayModle;
+import cn.springcloud.gray.server.module.GrayModule;
 import cn.springcloud.gray.server.module.GrayServerModule;
+import cn.springcloud.gray.server.module.GrayServerTrackModule;
 import cn.springcloud.gray.server.module.SimpleGrayModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +58,13 @@ public class GrayServerAutoConfiguration {
 
         @Bean
         @ConditionalOnMissingBean
-        public GrayModle grayModle(GrayServerModule grayServerModule, @Autowired(required = false) ObjectMapper objectMapper) {
+        public GrayModule grayModule(
+                GrayServerModule grayServerModule, GrayServerTrackModule grayServerTrackModule,
+                @Autowired(required = false) ObjectMapper objectMapper) {
             if (objectMapper == null) {
                 objectMapper = new ObjectMapper();
             }
-            return new SimpleGrayModule(grayServerModule, objectMapper);
+            return new SimpleGrayModule(grayServerModule, grayServerTrackModule, objectMapper);
         }
 
         @Bean

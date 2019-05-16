@@ -15,6 +15,7 @@ public class GrayDecisionDO {
 
     @Id
     @Column(length = 20)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(length = 20)
     private Long policyId;

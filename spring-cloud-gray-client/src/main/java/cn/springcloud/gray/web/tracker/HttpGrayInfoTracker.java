@@ -5,5 +5,5 @@ import cn.springcloud.gray.request.GrayInfoTracker;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface HttpGrayTracker extends GrayInfoTracker<GrayHttpTrackInfo, HttpServletRequest> {
+public interface HttpGrayInfoTracker extends GrayInfoTracker<GrayHttpTrackInfo, HttpServletRequest> {
 }

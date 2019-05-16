@@ -1,16 +1,22 @@
 package cn.springcloud.gray.request;
 
+import cn.springcloud.gray.utils.NameUtils;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 
 public interface GrayInfoTracker<TRACK extends GrayTrackInfo, REQ> extends Ordered {
 
-    void call(TRACK trackInfo, REQ request);
+    void call(TrackArgs<TRACK, REQ> args);
+
 
     @Override
     default int getOrder() {
         return Ordered.LOWEST_PRECEDENCE;
     }
 
+    default String name() {
+        return NameUtils.normalizeName(getClass(), GrayInfoTracker.class);
+    }
+
+    ;
 
 }
