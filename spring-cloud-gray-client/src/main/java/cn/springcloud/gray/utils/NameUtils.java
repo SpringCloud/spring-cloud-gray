@@ -19,10 +19,16 @@ public class NameUtils {
     }
 
 
-    public static String normalizeFilterFactoryName(
+    public static String normalizeDecisionFactoryName(
             Class<? extends GrayDecisionFactory> clazz) {
         return removeGarbage(clazz.getSimpleName()
                 .replace(GrayDecisionFactory.class.getSimpleName(), ""));
+    }
+
+    public static <T> String normalizeName(
+            Class<? extends T> clazz, Class<T> cls) {
+        return removeGarbage(clazz.getSimpleName()
+                .replace(cls.getSimpleName(), ""));
     }
 
     private static String removeGarbage(String s) {

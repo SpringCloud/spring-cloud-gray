@@ -1,6 +1,7 @@
 package cn.springcloud.gray;
 
 import cn.springcloud.gray.client.config.properties.GrayLoadProperties;
+import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
@@ -22,24 +23,25 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
             GrayClientConfig grayClientConfig,
             GrayLoadProperties grayLoadProperties,
             GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
-            List<RequestInterceptor> requestInterceptors) {
-        super(grayClientConfig, grayDecisionFactoryKeeper, requestInterceptors);
+            List<RequestInterceptor> requestInterceptors,
+            InformationClient informationClient) {
+        super(grayClientConfig, grayDecisionFactoryKeeper, requestInterceptors, informationClient);
         this.grayLoadProperties = grayLoadProperties;
-
-
         openForWork();
     }
 
     public void openForWork() {
         log.info("拉取灰度列表");
-        doUpdate();
-        int timerMs = getGrayClientConfig().getServiceUpdateIntervalTimerInMs();
-        if (timerMs > 0) {
-            updateTimer.schedule(
-                    new UpdateTask(),
-                    getGrayClientConfig().getServiceUpdateIntervalTimerInMs(),
-                    getGrayClientConfig().getServiceUpdateIntervalTimerInMs());
+        if (getGrayInformationClient() != null) {
+            doUpdate();
+            int timerMs = getGrayClientConfig().getServiceUpdateIntervalTimerInMs();
+            if (timerMs > 0) {
+                updateTimer.schedule(new UpdateTask(), timerMs, timerMs);
+            }
+        } else {
+            loadPropertiesGrays();
         }
+
     }
 
     private void doUpdate() {
@@ -56,6 +58,13 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
         } catch (Exception e) {
             log.error("更新灰度服务列表失败", e);
         }
+    }
+
+
+    private void loadPropertiesGrays() {
+        Map<String, GrayService> grayServices = new ConcurrentHashMap<>();
+        joinLoadedGrays(grayServices);
+        this.grayServices = grayServices;
     }
 
 

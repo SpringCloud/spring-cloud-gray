@@ -1,9 +1,7 @@
 package cn.springcloud.gray.decision.factory;
 
 import cn.springcloud.gray.decision.GrayDecision;
-import cn.springcloud.gray.model.DecisionDefinition;
 import cn.springcloud.gray.utils.NameUtils;
-import org.springframework.beans.BeanUtils;
 
 import java.util.function.Consumer;
 
@@ -14,7 +12,7 @@ public interface GrayDecisionFactory<C> {
 
 
     default String name() {
-        return NameUtils.normalizeFilterFactoryName(getClass());
+        return NameUtils.normalizeDecisionFactoryName(getClass());
     }
 
     default C newConfig() {

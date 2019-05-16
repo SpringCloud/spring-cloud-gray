@@ -1,6 +1,7 @@
 package cn.springcloud.gray.communication;
 
 import cn.springcloud.gray.model.GrayInstance;
+import cn.springcloud.gray.model.GrayTrackDefinition;
 
 import java.util.List;
 
@@ -43,4 +44,5 @@ public interface InformationClient {
      */
     void serviceDownline(String instanceId);
 
+    List<GrayTrackDefinition> getTrackDefinitions(String serviceId, String instanceId);
 }

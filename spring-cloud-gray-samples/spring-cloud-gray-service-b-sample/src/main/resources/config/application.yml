@@ -46,12 +46,15 @@ gray:
   request:
     track:
       web:
-        need:
-          uri: enable
-          ip: enable
-          method: enable
-          headers: test,test-mm
-          parameters: version,test
+        track-definitions:
+          - name: HttpIP
+          - name: HttpMethod
+          - name: HttpURI
+          - name: HttpReceive
+          - name: HttpHeader
+            value: test,test-mm
+          - name: HttpParameter
+            value: version,test
         path-patterns: /*
   load:
     enabled: false

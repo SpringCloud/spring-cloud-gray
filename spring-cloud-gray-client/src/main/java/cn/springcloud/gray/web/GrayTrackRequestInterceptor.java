@@ -1,24 +1,24 @@
 package cn.springcloud.gray.web;
 
 import cn.springcloud.gray.RequestInterceptor;
-import cn.springcloud.gray.client.config.properties.GrayTrackProperties;
 import cn.springcloud.gray.request.GrayHttpRequest;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class GrayTrackRequestInterceptor implements RequestInterceptor {
 
-    private GrayTrackProperties grayTrackProperties;
-    private Map<String, Consumer<GrayHttpRequest>> handlers = new HashMap<>();
+    private List<Consumer<GrayHttpRequest>> handlers = new ArrayList<>();
 
 
-    public GrayTrackRequestInterceptor(GrayTrackProperties grayTrackProperties) {
-        this.grayTrackProperties = grayTrackProperties;
+    public GrayTrackRequestInterceptor() {
         initHandlers();
     }
 
@@ -34,9 +34,13 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
 
     @Override
     public boolean pre(GrayRequest request) {
-        grayTrackProperties.getWeb().getNeed().keySet().forEach(k -> {
-            Optional.ofNullable(handlers.get(k)).ifPresent(h -> h.accept((GrayHttpRequest) request));
-        });
+        GrayHttpRequest grayHttpRequest = (GrayHttpRequest) request;
+        GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
+        if (grayHttpTrackInfo != null) {
+            handlers.forEach(h -> {
+                h.accept(grayHttpRequest);
+            });
+        }
         return true;
     }
 
@@ -51,7 +55,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
     }
 
     private void initHandlers() {
-        handlers.put(GrayTrackProperties.Web.NEED_IP, request -> {
+        handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
             if (StringUtils.isNotEmpty(grayHttpTrackInfo.getTraceIp())) {
                 Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
@@ -59,7 +63,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
             }
         });
 
-        handlers.put(GrayTrackProperties.Web.NEED_URI, request -> {
+        handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
             if (StringUtils.isNotEmpty(grayHttpTrackInfo.getUri())) {
                 Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
@@ -68,7 +72,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
         });
 
 
-        handlers.put(GrayTrackProperties.Web.NEED_METHOD, request -> {
+        handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
             if (StringUtils.isNotEmpty(grayHttpTrackInfo.getUri())) {
                 Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
@@ -76,7 +80,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
             }
         });
 
-        handlers.put(GrayTrackProperties.Web.NEED_HEADERS, request -> {
+        handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
             if (StringUtils.isNotEmpty(grayHttpTrackInfo.getUri())) {
                 Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
@@ -89,7 +93,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
             }
         });
 
-        handlers.put(GrayTrackProperties.Web.NEED_PARAMETERS, request -> {
+        handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
             if (StringUtils.isNotEmpty(grayHttpTrackInfo.getUri())) {
                 Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();

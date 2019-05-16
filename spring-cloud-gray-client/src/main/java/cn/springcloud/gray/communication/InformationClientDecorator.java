@@ -1,6 +1,7 @@
 package cn.springcloud.gray.communication;
 
 import cn.springcloud.gray.model.GrayInstance;
+import cn.springcloud.gray.model.GrayTrackDefinition;
 
 import java.util.List;
 
@@ -12,10 +13,11 @@ public abstract class InformationClientDecorator implements InformationClient {
 
 
     public enum RequestType {
-        AddGrayInstance,
-        ServiceDownline,
-        AllGrayInstances,
-        GetGrayInstance
+        ADD_GRAY_INSTANCE,
+        SERVICE_DOWNLINE,
+        ALL_GRAY_INSTANCES,
+        GET_GRAY_INSTANCE,
+        GET_TRACK_DEFINITIONS,
     }
 
 
@@ -38,7 +40,7 @@ public abstract class InformationClientDecorator implements InformationClient {
 
             @Override
             public RequestType getRequestType() {
-                return RequestType.GetGrayInstance;
+                return RequestType.GET_GRAY_INSTANCE;
             }
         });
     }
@@ -53,7 +55,7 @@ public abstract class InformationClientDecorator implements InformationClient {
 
             @Override
             public RequestType getRequestType() {
-                return RequestType.AllGrayInstances;
+                return RequestType.ALL_GRAY_INSTANCES;
             }
         });
     }
@@ -71,7 +73,7 @@ public abstract class InformationClientDecorator implements InformationClient {
 
             @Override
             public RequestType getRequestType() {
-                return RequestType.AddGrayInstance;
+                return RequestType.ADD_GRAY_INSTANCE;
             }
         });
     }
@@ -88,7 +90,22 @@ public abstract class InformationClientDecorator implements InformationClient {
 
             @Override
             public RequestType getRequestType() {
-                return RequestType.ServiceDownline;
+                return RequestType.SERVICE_DOWNLINE;
+            }
+        });
+    }
+
+    @Override
+    public List<GrayTrackDefinition> getTrackDefinitions(String serviceId, String instanceId) {
+        return execute(new RequestExecutor<List<GrayTrackDefinition>>() {
+            @Override
+            public List<GrayTrackDefinition> execute(InformationClient delegate) {
+                return delegate.getTrackDefinitions(serviceId, instanceId);
+            }
+
+            @Override
+            public RequestType getRequestType() {
+                return RequestType.GET_TRACK_DEFINITIONS;
             }
         });
     }

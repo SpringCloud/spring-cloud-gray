@@ -1,10 +1,11 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-	cn.springcloud.gray.client.config.GrayClientAutoConfiguration,\
-  cn.springcloud.gray.client.config.GrayLoadAutoConfigration,\
+cn.springcloud.gray.client.config.GrayClientAutoConfiguration,\
+ cn.springcloud.gray.client.config.GrayLoadAutoConfigration,\
     cn.springcloud.gray.client.netflix.configuration.NetflixGrayAutoConfiguration,\
     cn.springcloud.gray.client.netflix.configuration.GrayClientEurekaAutoConfiguration,\
   cn.springcloud.gray.client.netflix.feign.configuration.GrayFeignAutoConfiguration,\
   cn.springcloud.gray.client.netflix.zuul.configuration.GrayZuulAutoConfiguration,\
   cn.springcloud.gray.client.netflix.resttemplate.configuration.GrayRestTemplateAutoConfiguration,\
-  cn.springcloud.gray.client.config.GrayEventAutoConfiguration
+  cn.springcloud.gray.client.config.GrayEventAutoConfiguration,\
+cn.springcloud.gray.client.config.GrayClientBeanPostProcessorConfiguration
