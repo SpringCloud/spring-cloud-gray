@@ -5,15 +5,14 @@ package cn.springcloud.gray.server.netflix.eureka.configuration;
  * @Date: 2018/6/4 18:59
  */
 
-import cn.springcloud.gray.server.evictor.GrayServerEvictor;
-import cn.springcloud.gray.server.netflix.eureka.EurekaGrayServerEvictor;
+import cn.springcloud.gray.server.discovery.ServiceDiscover;
+import cn.springcloud.gray.server.netflix.eureka.EurekaServiceDiscover;
 import com.netflix.discovery.EurekaClient;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-//import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+//import org.springframework.cloud.client.discovery.DiscoveryClient;
 
 @Configuration
 @ConditionalOnBean(EurekaClient.class)
@@ -25,8 +24,13 @@ public class GrayServiceEurekaAutoConfiguration {
 //    private DiscoveryClient discoveryClient;
 
 
+//    @Bean
+//    public GrayServerEvictor grayServerEvictor(EurekaClient eurekaClient) {
+//        return new EurekaGrayServerEvictor(eurekaClient);
+//    }
+
     @Bean
-    public GrayServerEvictor grayServerEvictor(EurekaClient eurekaClient) {
-        return new EurekaGrayServerEvictor(eurekaClient);
+    public ServiceDiscover serviceDiscover(EurekaClient eurekaClient) {
+        return new EurekaServiceDiscover(eurekaClient);
     }
 }

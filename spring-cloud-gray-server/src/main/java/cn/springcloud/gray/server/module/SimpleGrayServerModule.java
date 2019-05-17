@@ -41,11 +41,6 @@ public class SimpleGrayServerModule implements GrayServerModule {
     }
 
     @Override
-    public List<GrayInstance> listGrayInstancesBySerivceId(String serviceId) {
-        return grayInstanceService.findByServiceId(serviceId);
-    }
-
-    @Override
     public List<GrayInstance> listGrayInstancesByStatus(GrayStatus grayStatus, InstanceStatus instanceStatus) {
         return grayInstanceService.findAllByStatus(grayStatus, instanceStatus);
     }
@@ -146,6 +141,11 @@ public class SimpleGrayServerModule implements GrayServerModule {
     @Override
     public List<GrayInstance> listGrayInstancesByServiceId(String serviceId) {
         return grayInstanceService.findByServiceId(serviceId);
+    }
+
+    @Override
+    public List<GrayInstance> listGrayInstancesByServiceId(String serviceId, InstanceStatus instanceStatus) {
+        return grayInstanceService.findByServiceId(serviceId, instanceStatus);
     }
 
     @Override

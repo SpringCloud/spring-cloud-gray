@@ -31,6 +31,9 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:20001/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
 
 ribbon:
   #    ReadTimeout: 30000

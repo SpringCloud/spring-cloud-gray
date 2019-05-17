@@ -67,4 +67,9 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
         Page<GrayInstanceDO> entities = repository.findAllByServiceId(serviceId, pageable);
         return PaginationUtils.convert(pageable, entities, grayInstanceMapper);
     }
+
+    public List<GrayInstance> findByServiceId(String serviceId, InstanceStatus instanceStatus) {
+        return dos2models(repository.findAllByServiceIdAndInstanceStatus(serviceId, instanceStatus.name()));
+
+    }
 }

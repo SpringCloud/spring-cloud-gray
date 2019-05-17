@@ -1,6 +1,5 @@
 package cn.springcloud.gray.server.module;
 
-import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.server.module.domain.*;
 import org.springframework.data.domain.Page;
@@ -12,7 +11,9 @@ public interface GrayServerModule {
 
     List<GrayService> allGrayServices();
 
-    List<GrayInstance> listGrayInstancesBySerivceId(String serviceId);
+    List<GrayInstance> listGrayInstancesByServiceId(String serviceId);
+
+    List<GrayInstance> listGrayInstancesByServiceId(String serviceId, InstanceStatus instanceStatus);
 
     List<GrayInstance> listGrayInstancesByStatus(GrayStatus grayStatus, InstanceStatus instanceStatus);
 
@@ -50,7 +51,6 @@ public interface GrayServerModule {
 
     List<GrayDecision> listGrayDecisionsByPolicyId(Long policyId);
 
-    List<GrayInstance> listGrayInstancesByServiceId(String serviceId);
 
     GrayInstance getGrayInstance(String id);
 

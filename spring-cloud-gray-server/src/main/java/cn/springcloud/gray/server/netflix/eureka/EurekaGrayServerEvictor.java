@@ -10,7 +10,7 @@ import com.netflix.discovery.shared.Application;
 
 
 /**
- * 依赖EurekaClient来检查服务实例是否下线
+ * 依赖EurekaClient来检查服务实例是否下线,建议使用DefaultGrayServiceEvictor
  */
 public class EurekaGrayServerEvictor implements GrayServerEvictor {
 
@@ -46,7 +46,7 @@ public class EurekaGrayServerEvictor implements GrayServerEvictor {
         grayServerModule.allGrayServices().forEach(grayService -> {
             Application app = eurekaClient.getApplication(grayService.getServiceId());
             if (app != null) {
-                grayServerModule.listGrayInstancesBySerivceId(grayService.getServiceId()).forEach(instance -> {
+                grayServerModule.listGrayInstancesByServiceId(grayService.getServiceId()).forEach(instance -> {
                     evict(grayServerModule, app.getByInstanceId(instance.getInstanceId()), instance);
                 });
             }
