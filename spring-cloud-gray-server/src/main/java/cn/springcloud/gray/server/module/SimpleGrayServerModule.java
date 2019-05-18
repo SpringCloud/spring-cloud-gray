@@ -5,7 +5,11 @@ import cn.springcloud.gray.event.GrayEventMsg;
 import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.model.GrayStatus;
-import cn.springcloud.gray.server.module.domain.*;
+import cn.springcloud.gray.model.InstanceStatus;
+import cn.springcloud.gray.server.module.domain.GrayDecision;
+import cn.springcloud.gray.server.module.domain.GrayInstance;
+import cn.springcloud.gray.server.module.domain.GrayPolicy;
+import cn.springcloud.gray.server.module.domain.GrayService;
 import cn.springcloud.gray.server.service.GrayDecisionService;
 import cn.springcloud.gray.server.service.GrayInstanceService;
 import cn.springcloud.gray.server.service.GrayPolicyService;
@@ -15,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class SimpleGrayServerModule implements GrayServerModule {
@@ -56,7 +61,7 @@ public class SimpleGrayServerModule implements GrayServerModule {
     @Override
     public void updateGrayStatus(String instanceId, GrayStatus grayStatus) {
         GrayInstance instance = grayInstanceService.findOneModel(instanceId);
-        if (instance != null && instance.getGrayStatus() != grayStatus) {
+        if (instance != null && !Objects.equals(instance.getGrayStatus(), grayStatus)) {
             instance.setGrayStatus(grayStatus);
             grayInstanceService.saveModel(instance);
             if (grayStatus == GrayStatus.OPEN) {
@@ -76,13 +81,15 @@ public class SimpleGrayServerModule implements GrayServerModule {
     @Override
     public void updateInstanceStatus(String instanceId, InstanceStatus instanceStatus) {
         GrayInstance instance = grayInstanceService.findOneModel(instanceId);
-        if (instance != null && instance.getInstanceStatus() != instanceStatus) {
+        if (instance != null && !Objects.equals(instance.getInstanceStatus(), instanceStatus)) {
             instance.setInstanceStatus(instanceStatus);
             grayInstanceService.saveModel(instance);
-            if (instanceStatus == InstanceStatus.UP) {
-                publishUpdateIntanceEvent(instance);
-            } else {
-                publishDownIntanceEvent(instance);
+            if (instance.getGrayStatus() == GrayStatus.OPEN) {
+                if (instanceStatus == InstanceStatus.UP) {
+                    publishUpdateIntanceEvent(instance);
+                } else {
+                    publishDownIntanceEvent(instance);
+                }
             }
         }
     }

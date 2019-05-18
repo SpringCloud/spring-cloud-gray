@@ -1,12 +1,12 @@
 package cn.springcloud.gray.server.service;
 
 import cn.springcloud.gray.model.GrayStatus;
+import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.dao.mapper.GrayInstanceMapper;
 import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.model.GrayInstanceDO;
 import cn.springcloud.gray.server.dao.repository.GrayInstanceRepository;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
-import cn.springcloud.gray.server.module.domain.InstanceStatus;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

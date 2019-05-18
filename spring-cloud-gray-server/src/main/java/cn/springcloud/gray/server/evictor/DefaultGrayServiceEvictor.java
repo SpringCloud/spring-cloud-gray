@@ -1,14 +1,15 @@
 package cn.springcloud.gray.server.evictor;
 
-import cn.springcloud.gray.server.discovery.InstanceInfo;
+import cn.springcloud.gray.model.InstanceInfo;
+import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.discovery.ServiceDiscover;
 import cn.springcloud.gray.server.discovery.ServiceInfo;
 import cn.springcloud.gray.server.module.GrayServerModule;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
 import cn.springcloud.gray.server.module.domain.GrayService;
-import cn.springcloud.gray.server.module.domain.InstanceStatus;
 
 import java.util.List;
+import java.util.Objects;
 
 public class DefaultGrayServiceEvictor implements GrayServerEvictor {
     private ServiceDiscover serviceDiscover;
@@ -37,7 +38,7 @@ public class DefaultGrayServiceEvictor implements GrayServerEvictor {
     private void updateInstanceStatus(GrayServerModule grayServerModule, GrayInstance grayInstance, InstanceInfo
             instanceInfo) {
         InstanceStatus instanceStatus = instanceInfo == null ? InstanceStatus.DOWN : instanceInfo.getInstanceStatus();
-        if (grayInstance.getInstanceStatus() != instanceStatus) {
+        if (!Objects.equals(grayInstance.getInstanceStatus(), instanceStatus)) {
             grayServerModule.updateInstanceStatus(grayInstance.getInstanceId(), instanceStatus);
         }
     }

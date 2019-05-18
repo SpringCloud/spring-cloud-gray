@@ -1,5 +1,7 @@
 package cn.springcloud.gray.server.discovery;
 
+import cn.springcloud.gray.model.InstanceInfo;
+
 import java.util.List;
 
 

@@ -1,6 +1,7 @@
 package cn.springcloud.gray.server.module.domain;
 
 import cn.springcloud.gray.model.GrayStatus;
+import cn.springcloud.gray.model.InstanceStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;

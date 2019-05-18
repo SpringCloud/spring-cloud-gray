@@ -6,7 +6,7 @@ server:
 eureka:
   server:
     enable-self-preservation: false
-    eviction-interval-timer-in-ms: 5000
+    eviction-interval-timer-in-ms: 120000
   instance:
     hostname: localhost
   client:
@@ -14,3 +14,6 @@ eureka:
     fetch-registry: false
     serviceUrl:
       defaultZone: http://localhost:${server.port}/eureka/
+gray:
+  server:
+    url: http://localhost:20202

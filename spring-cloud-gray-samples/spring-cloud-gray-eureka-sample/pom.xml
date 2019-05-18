@@ -32,6 +32,10 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-starter-gray-eureka-server</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

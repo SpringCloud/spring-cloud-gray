@@ -1,9 +1,9 @@
 package cn.springcloud.gray.server.netflix.eureka;
 
-import cn.springcloud.gray.server.discovery.InstanceInfo;
+import cn.springcloud.gray.model.InstanceInfo;
+import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.discovery.ServiceDiscover;
 import cn.springcloud.gray.server.discovery.ServiceInfo;
-import cn.springcloud.gray.server.module.domain.InstanceStatus;
 import com.netflix.discovery.EurekaClient;
 import com.netflix.discovery.shared.Application;
 import com.netflix.discovery.shared.Applications;
@@ -53,7 +53,13 @@ public class EurekaServiceDiscover implements ServiceDiscover {
 
     @Override
     public InstanceInfo getInstanceInfo(String serviceId, String instanceId) {
-
+        Application application = eurekaClient.getApplication(serviceId);
+        if (application != null) {
+            com.netflix.appinfo.InstanceInfo eurekaInstanceInfo = application.getByInstanceId(instanceId);
+            if (eurekaInstanceInfo != null) {
+                return ofInstance(eurekaInstanceInfo);
+            }
+        }
         return null;
     }
 

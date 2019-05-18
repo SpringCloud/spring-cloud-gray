@@ -1,4 +1,4 @@
-package cn.springcloud.gray.server.module.domain;
+package cn.springcloud.gray.model;
 
 public enum InstanceStatus {
 

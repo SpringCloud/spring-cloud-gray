@@ -1,7 +1,11 @@
 package cn.springcloud.gray.server.module;
 
 import cn.springcloud.gray.model.GrayStatus;
-import cn.springcloud.gray.server.module.domain.*;
+import cn.springcloud.gray.model.InstanceStatus;
+import cn.springcloud.gray.server.module.domain.GrayDecision;
+import cn.springcloud.gray.server.module.domain.GrayInstance;
+import cn.springcloud.gray.server.module.domain.GrayPolicy;
+import cn.springcloud.gray.server.module.domain.GrayService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
