@@ -2,5 +2,5 @@ package cn.springcloud.gray.model;
 
 public enum InstanceStatus {
 
-    UP, DOWN, UNKNOWN
+    STARTING, UP, OUT_OF_SERVICE, DOWN, UNKNOWN
 }

@@ -36,7 +36,7 @@ spring:
         GrayEventOutput:
           destination: gray_event
             #      rabbit:
-            #        bindings:
+          #        bindings:
           #          GrayEventInput:
           #            consumer:
           #              maxConcurrency: 1 #并发数
@@ -54,4 +54,4 @@ eureka:
 
 gray:
   server:
-    evictionIntervalTimerInMs: 0
+    evictionIntervalTimerInMs: 60000

@@ -3,8 +3,8 @@ package cn.springcloud.gray.service.test;
 
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.server.app.GrayServerApplication;
+import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
-import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.service.GrayInstanceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,11 +29,14 @@ public class GrayInstanceServiceTest {
     private GrayInstanceService grayInstanceService;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private GrayServerProperties grayServerProperties;
 
 
     @Test
     public void test() throws JsonProcessingException {
-        List<GrayInstance> grayInstances = grayInstanceService.findAllByStatus(GrayStatus.OPEN, InstanceStatus.UP);
+        List<GrayInstance> grayInstances = grayInstanceService.findAllByStatus(
+                GrayStatus.OPEN, grayServerProperties.getNormalInstanceStatus());
         log.info("{}", objectMapper.writeValueAsString(grayInstances));
 
     }

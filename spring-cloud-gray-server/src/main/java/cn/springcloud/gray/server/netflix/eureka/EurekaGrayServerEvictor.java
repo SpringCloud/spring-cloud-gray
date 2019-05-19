@@ -1,6 +1,7 @@
 package cn.springcloud.gray.server.netflix.eureka;
 
 import cn.springcloud.gray.model.InstanceStatus;
+import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.evictor.GrayServerEvictor;
 import cn.springcloud.gray.server.module.GrayServerModule;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
@@ -17,6 +18,7 @@ import java.util.Objects;
 public class EurekaGrayServerEvictor implements GrayServerEvictor {
 
     private EurekaClient eurekaClient;
+    private GrayServerProperties grayServerProperties;
 
 
     public EurekaGrayServerEvictor(EurekaClient eurekaClient) {
@@ -36,10 +38,7 @@ public class EurekaGrayServerEvictor implements GrayServerEvictor {
             return InstanceStatus.DOWN;
         }
         InstanceInfo.InstanceStatus status = instanceInfo.getStatus();
-        if (status == InstanceInfo.InstanceStatus.UP) {
-            return InstanceStatus.UP;
-        }
-        return InstanceStatus.UNKNOWN;
+        return EurekaInstatnceTransformer.toGrayInstanceStatus(status);
     }
 
 

@@ -6,6 +6,7 @@ import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceStatus;
+import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.module.domain.GrayDecision;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
 import cn.springcloud.gray.server.module.domain.GrayPolicy;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,10 +31,14 @@ public class SimpleGrayServerModule implements GrayServerModule {
     private GrayDecisionService grayDecisionService;
     private GrayPolicyService grayPolicyService;
     private GrayEventPublisher grayEventPublisher;
+    private GrayServerProperties grayServerProperties;
 
-    public SimpleGrayServerModule(GrayEventPublisher grayEventPublisher, GrayServiceService grayServiceService,
-                                  GrayInstanceService grayInstanceService,
-                                  GrayDecisionService grayDecisionService, GrayPolicyService grayPolicyService) {
+    public SimpleGrayServerModule(
+            GrayServerProperties grayServerProperties, GrayEventPublisher grayEventPublisher,
+            GrayServiceService grayServiceService,
+            GrayInstanceService grayInstanceService,
+            GrayDecisionService grayDecisionService, GrayPolicyService grayPolicyService) {
+        this.grayServerProperties = grayServerProperties;
         this.grayEventPublisher = grayEventPublisher;
         this.grayServiceService = grayServiceService;
         this.grayInstanceService = grayInstanceService;
@@ -46,9 +52,16 @@ public class SimpleGrayServerModule implements GrayServerModule {
     }
 
     @Override
-    public List<GrayInstance> listGrayInstancesByStatus(GrayStatus grayStatus, InstanceStatus instanceStatus) {
+    public List<GrayInstance> listGrayInstancesByStatus(GrayStatus grayStatus, Collection<InstanceStatus> instanceStatus) {
         return grayInstanceService.findAllByStatus(grayStatus, instanceStatus);
     }
+
+
+    @Override
+    public List<GrayInstance> listGrayInstancesByNormalInstanceStatus(Collection<InstanceStatus> instanceStatus) {
+        return grayInstanceService.listGrayInstancesByNormalInstanceStatus(instanceStatus);
+    }
+
 
     @Override
     public void deleteGrayService(String serviceId) {
@@ -85,7 +98,7 @@ public class SimpleGrayServerModule implements GrayServerModule {
             instance.setInstanceStatus(instanceStatus);
             grayInstanceService.saveModel(instance);
             if (instance.getGrayStatus() == GrayStatus.OPEN) {
-                if (instanceStatus == InstanceStatus.UP) {
+                if (grayServerProperties.getNormalInstanceStatus().contains(instanceStatus)) {
                     publishUpdateIntanceEvent(instance);
                 } else {
                     publishDownIntanceEvent(instance);
@@ -151,7 +164,7 @@ public class SimpleGrayServerModule implements GrayServerModule {
     }
 
     @Override
-    public List<GrayInstance> listGrayInstancesByServiceId(String serviceId, InstanceStatus instanceStatus) {
+    public List<GrayInstance> listGrayInstancesByServiceId(String serviceId, Collection<InstanceStatus> instanceStatus) {
         return grayInstanceService.findByServiceId(serviceId, instanceStatus);
     }
 

@@ -9,6 +9,7 @@ import cn.springcloud.gray.server.module.domain.GrayService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface GrayServerModule {
@@ -17,13 +18,15 @@ public interface GrayServerModule {
 
     List<GrayInstance> listGrayInstancesByServiceId(String serviceId);
 
-    List<GrayInstance> listGrayInstancesByServiceId(String serviceId, InstanceStatus instanceStatus);
+    List<GrayInstance> listGrayInstancesByServiceId(String serviceId, Collection<InstanceStatus> instanceStatus);
 
-    List<GrayInstance> listGrayInstancesByStatus(GrayStatus grayStatus, InstanceStatus instanceStatus);
+    List<GrayInstance> listGrayInstancesByStatus(GrayStatus grayStatus, Collection<InstanceStatus> instanceStatus);
 
     default void closeGray(String instanceId) {
         updateGrayStatus(instanceId, GrayStatus.CLOSE);
     }
+
+    List<GrayInstance> listGrayInstancesByNormalInstanceStatus(Collection<InstanceStatus> instanceStatus);
 
     void deleteGrayService(String serviceId);
 

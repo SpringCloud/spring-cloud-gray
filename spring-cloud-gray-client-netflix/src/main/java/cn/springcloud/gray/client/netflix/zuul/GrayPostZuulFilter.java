@@ -35,6 +35,7 @@ public class GrayPostZuulFilter extends ZuulFilter {
 
     @Override
     public Object run() {
+
         ribbonConnectionPoint.shutdownconnectPoint(ConnectPointContext.getContextLocal());
         return null;
     }

@@ -1,6 +1,7 @@
 package cn.springcloud.gray.eureka.server.listener;
 
 
+import cn.springcloud.gray.eureka.server.EurekaInstatnceTransformer;
 import cn.springcloud.gray.eureka.server.communicate.GrayCommunicateClient;
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.model.InstanceStatus;
@@ -12,6 +13,7 @@ import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRegis
 import org.springframework.cloud.netflix.eureka.server.event.EurekaInstanceRenewedEvent;
 import org.springframework.context.event.EventListener;
 
+
 @Slf4j
 public class EurekaInstanceListener {
 
@@ -21,6 +23,12 @@ public class EurekaInstanceListener {
         this.communicateClient = communicateClient;
     }
 
+
+    /**
+     * 监听eureka实例下线事件，并发送信息给灰度服务器
+     *
+     * @param event eureka 实例下线事件
+     */
     @EventListener
     public void listenDown(EurekaInstanceCanceledEvent event) {
         InstanceRegistry registry = (InstanceRegistry) event.getSource();
@@ -30,6 +38,11 @@ public class EurekaInstanceListener {
     }
 
 
+    /**
+     * 监听eureka实例心跳事件，并发送信息给灰度服务器
+     *
+     * @param event eureka 实例心跳事件
+     */
     @EventListener
     public void listenRenew(EurekaInstanceRenewedEvent event) {
         com.netflix.appinfo.InstanceInfo instanceInfo = event.getInstanceInfo();
@@ -37,16 +50,26 @@ public class EurekaInstanceListener {
     }
 
 
+    /**
+     * 监听eureka实例注册事件，并发送信息给灰度服务器
+     *
+     * @param event eureka 实例注册事件
+     */
     @EventListener
     public void listenRegistered(EurekaInstanceRegisteredEvent event) {
         com.netflix.appinfo.InstanceInfo instanceInfo = event.getInstanceInfo();
-        InstanceStatus instanceStatus = InstanceStatus.DOWN;
-        if (instanceInfo.getStatus() == com.netflix.appinfo.InstanceInfo.InstanceStatus.UP) {
-            instanceStatus = InstanceStatus.UP;
-        }
+        InstanceStatus instanceStatus = EurekaInstatnceTransformer.toGrayInstanceStatus(instanceInfo.getStatus());
         sendNotice(instanceInfo, instanceStatus, "REGISTERED");
     }
 
+
+    /**
+     * 发送实例信息给灰度服务器
+     *
+     * @param instanceInfo   实例信息
+     * @param instanceStatus 事件状态
+     * @param eventType      eureka事件类型
+     */
     private void sendNotice(com.netflix.appinfo.InstanceInfo instanceInfo, InstanceStatus instanceStatus, String eventType) {
         log.info(MarkerFactory.getMarker(eventType), "{}  serviceId：{}, instanceId：{} ",
                 eventType, instanceInfo.getAppName(), instanceInfo.getInstanceId());
@@ -59,6 +82,12 @@ public class EurekaInstanceListener {
     }
 
 
+    /**
+     * 发送实例信息给灰度服务器
+     *
+     * @param instanceInfo 实例信息
+     * @param eventType    事件状态
+     */
     private void sendNotice(InstanceInfo instanceInfo, String eventType) {
         try {
             communicateClient.noticeInstanceInfo(instanceInfo);

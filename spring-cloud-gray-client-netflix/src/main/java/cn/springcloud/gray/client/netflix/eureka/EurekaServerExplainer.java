@@ -1,4 +1,4 @@
-package cn.springcloud.gray.client.netflix;
+package cn.springcloud.gray.client.netflix.eureka;
 
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerSpec;

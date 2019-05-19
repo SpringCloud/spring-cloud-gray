@@ -12,11 +12,13 @@ import java.util.List;
 public interface GrayInstanceRepository extends JpaRepository<GrayInstanceDO, String> {
     List<GrayInstanceDO> findByServiceId(String serviceId);
 
-    List<GrayInstanceDO> findAllByGrayStatus(String status);
+    List<GrayInstanceDO> findAllByGrayStatus(String grayStatus);
 
-    List<GrayInstanceDO> findAllByGrayStatusAndInstanceStatus(String name, String name1);
+    List<GrayInstanceDO> findAllByGrayStatusAndInstanceStatus(String grayStatus, String instanceStatus);
 
     Page<GrayInstanceDO> findAllByServiceId(String serviceId, Pageable pageable);
 
-    List<GrayInstanceDO> findAllByServiceIdAndInstanceStatus(String serviceId, String instanceStatus);
+    List<GrayInstanceDO> findAllByServiceIdAndInstanceStatusIn(String serviceId, String[] instanceStatus);
+
+    List<GrayInstanceDO> findAllByGrayStatusAndInstanceStatusIn(String grayStatus, String[] instanceStatus);
 }

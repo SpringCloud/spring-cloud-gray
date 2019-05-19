@@ -2,6 +2,7 @@ package cn.springcloud.gray.server.evictor;
 
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.model.InstanceStatus;
+import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.discovery.ServiceDiscover;
 import cn.springcloud.gray.server.discovery.ServiceInfo;
 import cn.springcloud.gray.server.module.GrayServerModule;
@@ -13,8 +14,10 @@ import java.util.Objects;
 
 public class DefaultGrayServiceEvictor implements GrayServerEvictor {
     private ServiceDiscover serviceDiscover;
+    private GrayServerProperties grayServerProperties;
 
-    public DefaultGrayServiceEvictor(ServiceDiscover serviceDiscover) {
+    public DefaultGrayServiceEvictor(GrayServerProperties grayServerProperties, ServiceDiscover serviceDiscover) {
+        this.grayServerProperties = grayServerProperties;
         this.serviceDiscover = serviceDiscover;
     }
 
@@ -44,7 +47,9 @@ public class DefaultGrayServiceEvictor implements GrayServerEvictor {
     }
 
     private void downAllInstance(GrayServerModule grayServerModule, GrayService grayService) {
-        List<GrayInstance> grayInstances = grayServerModule.listGrayInstancesByServiceId(grayService.getServiceId(), InstanceStatus.UP);
+        List<GrayInstance> grayInstances =
+                grayServerModule.listGrayInstancesByServiceId(grayService.getServiceId(),
+                        grayServerProperties.getNormalInstanceStatus());
         grayInstances.forEach(i -> grayServerModule.instanceShutdown(i.getInstanceId()));
     }
 

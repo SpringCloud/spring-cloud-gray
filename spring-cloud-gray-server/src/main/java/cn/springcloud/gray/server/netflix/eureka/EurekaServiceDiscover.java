@@ -78,16 +78,6 @@ public class EurekaServiceDiscover implements ServiceDiscover {
     }
 
     private InstanceStatus ofEurekaInstanceStatus(com.netflix.appinfo.InstanceInfo.InstanceStatus eurekaInstanceStatus) {
-        if (eurekaInstanceStatus == null) {
-            return InstanceStatus.UNKNOWN;
-        }
-        switch (eurekaInstanceStatus) {
-            case DOWN:
-                return InstanceStatus.DOWN;
-            case UP:
-                return InstanceStatus.UP;
-            default:
-                return InstanceStatus.UNKNOWN;
-        }
+        return EurekaInstatnceTransformer.toGrayInstanceStatus(eurekaInstanceStatus);
     }
 }

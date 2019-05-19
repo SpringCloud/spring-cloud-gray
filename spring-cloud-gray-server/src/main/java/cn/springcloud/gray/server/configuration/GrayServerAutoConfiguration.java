@@ -51,6 +51,9 @@ public class GrayServerAutoConfiguration {
 
     @Configuration
     public static class DefaultConfiguration {
+        @Autowired
+        private GrayServerProperties grayServerProperties;
+
         @Bean
         @ConditionalOnMissingBean
         public GrayServerEvictor grayServerEvictor(
@@ -59,7 +62,7 @@ public class GrayServerAutoConfiguration {
             if (serviceDiscover == null) {
                 return NoActionGrayServerEvictor.INSTANCE;
             }
-            return new DefaultGrayServiceEvictor(serviceDiscover);
+            return new DefaultGrayServiceEvictor(grayServerProperties, serviceDiscover);
 
         }
 
@@ -72,7 +75,7 @@ public class GrayServerAutoConfiguration {
             if (objectMapper == null) {
                 objectMapper = new ObjectMapper();
             }
-            return new SimpleGrayModule(grayServerModule, grayServerTrackModule, objectMapper);
+            return new SimpleGrayModule(grayServerProperties, grayServerModule, grayServerTrackModule, objectMapper);
         }
 
         @Bean
