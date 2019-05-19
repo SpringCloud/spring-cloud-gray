@@ -3,8 +3,11 @@ package cn.springcloud.gray.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
@@ -15,6 +18,7 @@ public class GrayService {
     @Getter
     private String serviceId;
     private Map<String, GrayInstance> grayInstances = new ConcurrentHashMap<>();
+    private Lock lock = new ReentrantLock();
 
 
     public Collection<GrayInstance> getGrayInstances() {
@@ -27,11 +31,21 @@ public class GrayService {
     }
 
     public void setGrayInstance(GrayInstance grayInstance) {
-        grayInstances.put(grayInstance.getInstanceId(), grayInstance);
+        lock.lock();
+        try {
+            grayInstances.put(grayInstance.getInstanceId(), grayInstance);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public GrayInstance removeGrayInstance(String instanceId) {
-        return grayInstances.remove(instanceId);
+        lock.lock();
+        try {
+            return grayInstances.remove(instanceId);
+        } finally {
+            lock.unlock();
+        }
     }
 
 

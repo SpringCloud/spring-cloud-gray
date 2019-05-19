@@ -45,6 +45,7 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
     }
 
     private void doUpdate() {
+        lock.lock();
         try {
             log.debug("更新灰度服务列表...");
             List<GrayInstance> grayInstances = getGrayInformationClient().allGrayInstances();
@@ -57,6 +58,8 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
             this.grayServices = grayServices;
         } catch (Exception e) {
             log.error("更新灰度服务列表失败", e);
+        } finally {
+            lock.unlock();
         }
     }
 

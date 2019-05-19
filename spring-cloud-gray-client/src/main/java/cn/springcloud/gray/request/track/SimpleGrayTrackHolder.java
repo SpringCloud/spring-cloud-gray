@@ -7,12 +7,15 @@ import org.springframework.core.OrderComparator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class SimpleGrayTrackHolder implements GrayTrackHolder {
 
     private List<GrayInfoTracker<? extends GrayTrackInfo, ?>> trackers = new ArrayList<>();
 
     private Map<String, GrayTrackDefinition> trackDefinitions = new ConcurrentHashMap<>();
+    protected Lock lock = new ReentrantLock();
 
 
     public SimpleGrayTrackHolder(List<GrayInfoTracker<? extends GrayTrackInfo, ?>> trackers, List<GrayTrackDefinition> trackDefinitions) {
@@ -56,7 +59,12 @@ public class SimpleGrayTrackHolder implements GrayTrackHolder {
 
     @Override
     public void updateTrackDefinition(GrayTrackDefinition definition) {
-        updateTrackDefinition(trackDefinitions, definition);
+        lock.lock();
+        try {
+            updateTrackDefinition(trackDefinitions, definition);
+        } finally {
+            lock.unlock();
+        }
     }
 
     protected void updateTrackDefinition(Map<String, GrayTrackDefinition> trackDefinitions, GrayTrackDefinition definition) {
@@ -65,11 +73,21 @@ public class SimpleGrayTrackHolder implements GrayTrackHolder {
 
     @Override
     public void deleteTrackDefinition(String name) {
-        trackDefinitions.remove(name);
+        lock.lock();
+        try {
+            trackDefinitions.remove(name);
+        } finally {
+            lock.unlock();
+        }
     }
 
 
     protected void setTrackDefinitions(Map<String, GrayTrackDefinition> trackDefinitions) {
-        this.trackDefinitions = trackDefinitions;
+        lock.lock();
+        try {
+            this.trackDefinitions = trackDefinitions;
+        } finally {
+            lock.unlock();
+        }
     }
 }
