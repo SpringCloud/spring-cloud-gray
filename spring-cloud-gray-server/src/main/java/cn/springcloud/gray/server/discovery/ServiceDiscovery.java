@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 从注册中心获取服务信息
  */
-public interface ServiceDiscover {
+public interface ServiceDiscovery {
 
     List<ServiceInfo> listAllSerivceInfos();
 

@@ -5,8 +5,8 @@ package cn.springcloud.gray.server.netflix.eureka.configuration;
  * @Date: 2018/6/4 18:59
  */
 
-import cn.springcloud.gray.server.discovery.ServiceDiscover;
-import cn.springcloud.gray.server.netflix.eureka.EurekaServiceDiscover;
+import cn.springcloud.gray.server.discovery.ServiceDiscovery;
+import cn.springcloud.gray.server.netflix.eureka.EurekaServiceDiscovery;
 import com.netflix.discovery.EurekaClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +30,7 @@ public class GrayServiceEurekaAutoConfiguration {
 //    }
 
     @Bean
-    public ServiceDiscover serviceDiscover(EurekaClient eurekaClient) {
-        return new EurekaServiceDiscover(eurekaClient);
+    public ServiceDiscovery serviceDiscover(EurekaClient eurekaClient) {
+        return new EurekaServiceDiscovery(eurekaClient);
     }
 }

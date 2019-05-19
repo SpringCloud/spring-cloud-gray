@@ -3,7 +3,7 @@ package cn.springcloud.gray.server.evictor;
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
-import cn.springcloud.gray.server.discovery.ServiceDiscover;
+import cn.springcloud.gray.server.discovery.ServiceDiscovery;
 import cn.springcloud.gray.server.discovery.ServiceInfo;
 import cn.springcloud.gray.server.module.GrayServerModule;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
@@ -13,24 +13,24 @@ import java.util.List;
 import java.util.Objects;
 
 public class DefaultGrayServiceEvictor implements GrayServerEvictor {
-    private ServiceDiscover serviceDiscover;
+    private ServiceDiscovery serviceDiscovery;
     private GrayServerProperties grayServerProperties;
 
-    public DefaultGrayServiceEvictor(GrayServerProperties grayServerProperties, ServiceDiscover serviceDiscover) {
+    public DefaultGrayServiceEvictor(GrayServerProperties grayServerProperties, ServiceDiscovery serviceDiscovery) {
         this.grayServerProperties = grayServerProperties;
-        this.serviceDiscover = serviceDiscover;
+        this.serviceDiscovery = serviceDiscovery;
     }
 
     @Override
     public void evict(GrayServerModule grayServerModule) {
         grayServerModule.allGrayServices().forEach(grayService -> {
-            ServiceInfo serviceInfo = serviceDiscover.getServiceInfo(grayService.getServiceId());
+            ServiceInfo serviceInfo = serviceDiscovery.getServiceInfo(grayService.getServiceId());
             if (serviceInfo == null) {
                 downAllInstance(grayServerModule, grayService);
             } else {
                 List<GrayInstance> grayInstances = grayServerModule.listGrayInstancesByServiceId(grayService.getServiceId());
                 grayInstances.forEach(grayInstance -> {
-                    InstanceInfo instanceInfo = serviceDiscover.getInstanceInfo(grayInstance.getServiceId(), grayInstance.getInstanceId());
+                    InstanceInfo instanceInfo = serviceDiscovery.getInstanceInfo(grayInstance.getServiceId(), grayInstance.getInstanceId());
                     updateInstanceStatus(grayServerModule, grayInstance, instanceInfo);
                 });
             }

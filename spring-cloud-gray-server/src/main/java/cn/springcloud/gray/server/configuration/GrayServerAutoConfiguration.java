@@ -3,7 +3,7 @@ package cn.springcloud.gray.server.configuration;
 import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.server.GrayServerInitializingDestroyBean;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
-import cn.springcloud.gray.server.discovery.ServiceDiscover;
+import cn.springcloud.gray.server.discovery.ServiceDiscovery;
 import cn.springcloud.gray.server.event.DefaultGrayEventPublisher;
 import cn.springcloud.gray.server.evictor.DefaultGrayServiceEvictor;
 import cn.springcloud.gray.server.evictor.GrayServerEvictor;
@@ -22,6 +22,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableConfigurationProperties({GrayServerProperties.class})
@@ -35,6 +36,11 @@ public class GrayServerAutoConfiguration {
     @Autowired
     private GrayServerModule grayServerModule;
 
+    @Bean
+    @ConditionalOnMissingBean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -58,11 +64,11 @@ public class GrayServerAutoConfiguration {
         @ConditionalOnMissingBean
         public GrayServerEvictor grayServerEvictor(
                 @Autowired(required = false)
-                        ServiceDiscover serviceDiscover) {
-            if (serviceDiscover == null) {
+                        ServiceDiscovery serviceDiscovery) {
+            if (serviceDiscovery == null) {
                 return NoActionGrayServerEvictor.INSTANCE;
             }
-            return new DefaultGrayServiceEvictor(grayServerProperties, serviceDiscover);
+            return new DefaultGrayServiceEvictor(grayServerProperties, serviceDiscovery);
 
         }
 
