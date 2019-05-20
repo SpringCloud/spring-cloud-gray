@@ -1,6 +1,6 @@
 spring:
   application:
-    name: api-gateway
+    name: api-Gateway
   rabbitmq:
     addresses: 127.0.0.1:5672
     username: admin
@@ -31,6 +31,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:20001/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+    initial-status: starting
 
 ribbon:
   #    ReadTimeout: 30000
@@ -47,6 +51,7 @@ zuul:
 gray:
   client:
     server-url: http://localhost:20202
+    serviceUpdateIntervalTimerInMs: 0
   request:
     track:
       web:

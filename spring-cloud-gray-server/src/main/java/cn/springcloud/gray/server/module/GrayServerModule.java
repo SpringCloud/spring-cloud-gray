@@ -1,24 +1,32 @@
 package cn.springcloud.gray.server.module;
 
-import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.model.GrayStatus;
-import cn.springcloud.gray.server.module.domain.*;
+import cn.springcloud.gray.model.InstanceStatus;
+import cn.springcloud.gray.server.module.domain.GrayDecision;
+import cn.springcloud.gray.server.module.domain.GrayInstance;
+import cn.springcloud.gray.server.module.domain.GrayPolicy;
+import cn.springcloud.gray.server.module.domain.GrayService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface GrayServerModule {
 
     List<GrayService> allGrayServices();
 
-    List<GrayInstance> listGrayInstancesBySerivceId(String serviceId);
+    List<GrayInstance> listGrayInstancesByServiceId(String serviceId);
 
-    List<GrayInstance> listGrayInstancesByStatus(GrayStatus grayStatus, InstanceStatus instanceStatus);
+    List<GrayInstance> listGrayInstancesByServiceId(String serviceId, Collection<InstanceStatus> instanceStatus);
+
+    List<GrayInstance> listGrayInstancesByStatus(GrayStatus grayStatus, Collection<InstanceStatus> instanceStatus);
 
     default void closeGray(String instanceId) {
         updateGrayStatus(instanceId, GrayStatus.CLOSE);
     }
+
+    List<GrayInstance> listGrayInstancesByNormalInstanceStatus(Collection<InstanceStatus> instanceStatus);
 
     void deleteGrayService(String serviceId);
 
@@ -50,7 +58,6 @@ public interface GrayServerModule {
 
     List<GrayDecision> listGrayDecisionsByPolicyId(Long policyId);
 
-    List<GrayInstance> listGrayInstancesByServiceId(String serviceId);
 
     GrayInstance getGrayInstance(String id);
 

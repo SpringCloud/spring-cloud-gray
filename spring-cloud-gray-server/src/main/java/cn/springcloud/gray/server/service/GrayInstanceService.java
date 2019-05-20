@@ -1,12 +1,12 @@
 package cn.springcloud.gray.server.service;
 
 import cn.springcloud.gray.model.GrayStatus;
+import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.dao.mapper.GrayInstanceMapper;
 import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.model.GrayInstanceDO;
 import cn.springcloud.gray.server.dao.repository.GrayInstanceRepository;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
-import cn.springcloud.gray.server.module.domain.InstanceStatus;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayInstanceRepository, GrayInstanceDO, String> {
@@ -58,13 +60,34 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
         });
     }
 
-    public List<GrayInstance> findAllByStatus(GrayStatus grayStatus, InstanceStatus instanceStatus) {
+    public List<GrayInstance> findAllByStatus(GrayStatus grayStatus, Collection<InstanceStatus> instanceStatusList) {
+        String[] instanceStatusAry = toArray(instanceStatusList);
         return grayInstanceMapper.dos2models(
-                repository.findAllByGrayStatusAndInstanceStatus(grayStatus.name(), instanceStatus.name()));
+                repository.findAllByGrayStatusAndInstanceStatusIn(grayStatus.name(), instanceStatusAry));
     }
 
     public Page<GrayInstance> listGrayInstancesByServiceId(String serviceId, Pageable pageable) {
         Page<GrayInstanceDO> entities = repository.findAllByServiceId(serviceId, pageable);
         return PaginationUtils.convert(pageable, entities, grayInstanceMapper);
+    }
+
+    public List<GrayInstance> findByServiceId(String serviceId, Collection<InstanceStatus> instanceStatusList) {
+        String[] instanceStatusAry = toArray(instanceStatusList);
+
+        return dos2models(repository.findAllByServiceIdAndInstanceStatusIn(serviceId, instanceStatusAry));
+
+    }
+
+    public List<GrayInstance> listGrayInstancesByNormalInstanceStatus(Collection<InstanceStatus> instanceStatusList) {
+        String[] instanceStatusAry = toArray(instanceStatusList);
+        return dos2models(repository.findAllByGrayStatusAndInstanceStatusIn(GrayStatus.OPEN.name(), instanceStatusAry));
+    }
+
+    private String[] toArray(Collection<InstanceStatus> instanceStatusList) {
+        return instanceStatusList
+                .stream()
+                .map(InstanceStatus::name)
+                .collect(Collectors.toList())
+                .toArray(new String[instanceStatusList.size()]);
     }
 }

@@ -4,7 +4,8 @@ import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.evictor.GrayServerEvictor;
 import cn.springcloud.gray.server.module.GrayServerModule;
 
-import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -33,9 +34,10 @@ public class DefaultGrayServiceManager implements GrayServiceManager {
 
     @Override
     public void openForWork() {
-        evictionTimer.schedule(new EvictionTask(),
-                grayServerProperties.getEvictionIntervalTimerInMs(),
-                grayServerProperties.getEvictionIntervalTimerInMs());
+        int times = grayServerProperties.getEvictionIntervalTimerInMs();
+        if (times > 0) {
+            evictionTimer.schedule(new EvictionTask(), times, times);
+        }
     }
 
     @Override

@@ -5,8 +5,7 @@ import cn.springcloud.gray.model.GrayTrackDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -47,7 +46,10 @@ public class HttpInformationClient implements InformationClient {
     public void addGrayInstance(GrayInstance grayInstance) {
         String url = this.baseUrl + "/gray/instance/";
         try {
-            rest.postForEntity(url, grayInstance, null);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<GrayInstance> httpEntity = new HttpEntity<>(grayInstance, httpHeaders);
+            rest.postForEntity(url, httpEntity, null);
         } catch (RuntimeException e) {
             log.error("灰度服务实例下线失败", e);
             throw e;

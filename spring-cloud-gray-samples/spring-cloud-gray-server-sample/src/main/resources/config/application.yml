@@ -2,7 +2,7 @@ server:
   port: 20202
 spring:
   application:
-    name: gray-server
+    name: gray-Server
   #通用数据源配置
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
@@ -36,10 +36,10 @@ spring:
         GrayEventOutput:
           destination: gray_event
             #      rabbit:
-            #        bindings:
-            #          GrayEventInput:
-            #            consumer:
-            #              maxConcurrency: 1 #并发数
+          #        bindings:
+          #          GrayEventInput:
+          #            consumer:
+          #              maxConcurrency: 1 #并发数
           #              prefetch: 1 #从mq一次获取消息的数量
           #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
           #              auto-bind-dlq: true
@@ -52,3 +52,6 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:20001/eureka/
 
+gray:
+  server:
+    evictionIntervalTimerInMs: 60000

@@ -40,6 +40,7 @@
         <module>spring-cloud-gray-utils</module>
         <module>spring-cloud-gray-starter-dependencies</module>
         <module>spring-cloud-gray-webui</module>
+        <module>spring-cloud-starter-gray-eureka-server</module>
     </modules>
 
 
@@ -117,6 +118,11 @@
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-client-netflix</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-starter-gray-eureka-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

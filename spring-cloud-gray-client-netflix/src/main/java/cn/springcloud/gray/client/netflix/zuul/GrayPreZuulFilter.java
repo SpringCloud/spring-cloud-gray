@@ -5,10 +5,10 @@ import cn.springcloud.gray.client.netflix.connectionpoint.ConnectPointContext;
 import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
 import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
 import cn.springcloud.gray.request.GrayHttpRequest;
-import cn.springcloud.gray.request.GrayRequest;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
@@ -60,10 +60,16 @@ public class GrayPreZuulFilter extends ZuulFilter {
         RequestContext context = RequestContext.getCurrentContext();
         HttpServletRequest servletRequest = context.getRequest();
 
+
+        String serviceId = (String) context.get(FilterConstants.SERVICE_ID_KEY);
+        if (StringUtils.isEmpty(serviceId)) {
+            return null;
+        }
+
         GrayHttpRequest grayRequest = new GrayHttpRequest();
         URI uri = URI.create((String) context.get(FilterConstants.REQUEST_URI_KEY));
         grayRequest.setUri(uri);
-        grayRequest.setServiceId((String) context.get(FilterConstants.SERVICE_ID_KEY));
+        grayRequest.setServiceId(serviceId);
         grayRequest.addParameters(context.getRequestQueryParams());
         if (grayRequestProperties.isLoadBody()) {
             try {

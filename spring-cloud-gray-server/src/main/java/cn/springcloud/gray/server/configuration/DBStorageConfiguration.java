@@ -1,11 +1,13 @@
 package cn.springcloud.gray.server.configuration;
 
 import cn.springcloud.gray.event.GrayEventPublisher;
+import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.module.GrayServerModule;
 import cn.springcloud.gray.server.module.GrayServerTrackModule;
 import cn.springcloud.gray.server.module.SimpleGrayServerModule;
 import cn.springcloud.gray.server.module.SimpleGrayServerTrackModule;
 import cn.springcloud.gray.server.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -29,13 +31,17 @@ public class DBStorageConfiguration {
     @ComponentScan(basePackages = {"cn.springcloud.gray.server.dao.mapper", "cn.springcloud.gray.server.service"})
     @Configuration
     public class DBGrayServrConfiguration {
+        @Autowired
+        private GrayServerProperties grayServerProperties;
 
         @Bean
         public GrayServerModule grayServerModule(
                 GrayEventPublisher grayEventPublisher,
                 GrayServiceService grayServiceService, GrayInstanceService grayInstanceService,
                 GrayDecisionService grayDecisionService, GrayPolicyService grayPolicyService) {
-            return new SimpleGrayServerModule(grayEventPublisher, grayServiceService, grayInstanceService, grayDecisionService, grayPolicyService);
+            return new SimpleGrayServerModule(
+                    grayServerProperties, grayEventPublisher, grayServiceService, grayInstanceService,
+                    grayDecisionService, grayPolicyService);
         }
 
 

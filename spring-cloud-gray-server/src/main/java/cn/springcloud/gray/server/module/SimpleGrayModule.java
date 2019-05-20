@@ -1,10 +1,13 @@
 package cn.springcloud.gray.server.module;
 
-import cn.springcloud.gray.model.*;
+import cn.springcloud.gray.model.DecisionDefinition;
+import cn.springcloud.gray.model.GrayInstance;
+import cn.springcloud.gray.model.GrayTrackDefinition;
+import cn.springcloud.gray.model.PolicyDefinition;
+import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.module.domain.GrayDecision;
 import cn.springcloud.gray.server.module.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.domain.GrayTrack;
-import cn.springcloud.gray.server.module.domain.InstanceStatus;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +21,17 @@ import java.util.Map;
 @Slf4j
 public class SimpleGrayModule implements GrayModule {
 
+    private GrayServerProperties grayServerProperties;
     private GrayServerModule grayServerModule;
     private GrayServerTrackModule grayServerTrackModule;
     private ObjectMapper objectMapper;
 
     public SimpleGrayModule(
+            GrayServerProperties grayServerProperties,
             GrayServerModule grayServerModule,
             GrayServerTrackModule grayServerTrackModule,
             ObjectMapper objectMapper) {
+        this.grayServerProperties = grayServerProperties;
         this.grayServerModule = grayServerModule;
         this.grayServerTrackModule = grayServerTrackModule;
         this.objectMapper = objectMapper;
@@ -71,7 +77,8 @@ public class SimpleGrayModule implements GrayModule {
 
     @Override
     public List<cn.springcloud.gray.model.GrayInstance> allOpenInstances() {
-        List<cn.springcloud.gray.server.module.domain.GrayInstance> instances = grayServerModule.listGrayInstancesByStatus(GrayStatus.OPEN, InstanceStatus.UP);
+        List<cn.springcloud.gray.server.module.domain.GrayInstance> instances =
+                grayServerModule.listGrayInstancesByNormalInstanceStatus(grayServerProperties.getNormalInstanceStatus());
 
         List<cn.springcloud.gray.model.GrayInstance> grayInstances = new ArrayList<>(instances.size());
         instances.forEach(instance -> {

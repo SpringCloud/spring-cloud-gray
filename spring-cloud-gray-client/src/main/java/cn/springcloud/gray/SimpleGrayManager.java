@@ -9,12 +9,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 public class SimpleGrayManager extends AbstractGrayManager {
 
 
     protected Map<String, GrayService> grayServices = new ConcurrentHashMap<>();
+    protected Lock lock = new ReentrantLock();
+
 
     public SimpleGrayManager(GrayDecisionFactoryKeeper grayDecisionFactoryKeeper, List<RequestInterceptor> requestInterceptors) {
         super(grayDecisionFactoryKeeper, requestInterceptors);
@@ -49,7 +53,12 @@ public class SimpleGrayManager extends AbstractGrayManager {
         if (instance == null || !instance.isGray()) {
             return;
         }
-        updateGrayInstance(grayServices, instance);
+        lock.lock();
+        try {
+            updateGrayInstance(grayServices, instance);
+        } finally {
+            lock.unlock();
+        }
     }
 
     protected void updateGrayInstance(Map<String, GrayService> grayServices, GrayInstance instance) {
@@ -72,13 +81,7 @@ public class SimpleGrayManager extends AbstractGrayManager {
 
     @Override
     public void closeGray(GrayInstance instance) {
-        GrayService service = getGrayService(instance.getServiceId());
-        if (service == null) {
-            log.debug("没有找到灰度服务:{}, 所以无需删除实例:{} 的灰度状态", instance.getServiceId(), instance.getInstanceId());
-            return;
-        }
-        log.debug("关闭实例的在灰度状态, serviceId:{}, instanceId:{}", instance.getServiceId(), instance.getInstanceId());
-        service.removeGrayInstance(instance.getInstanceId());
+        closeGray(instance.getServiceId(), instance.getInstanceId());
     }
 
     @Override
@@ -89,7 +92,12 @@ public class SimpleGrayManager extends AbstractGrayManager {
             return;
         }
         log.debug("关闭实例的在灰度状态, serviceId:{}, instanceId:{}", serviceId, instanceId);
-        service.removeGrayInstance(instanceId);
+        lock.lock();
+        try {
+            service.removeGrayInstance(instanceId);
+        } finally {
+            lock.unlock();
+        }
     }
 
 
