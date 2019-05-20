@@ -1,6 +1,8 @@
 package cn.springcloud.gray.client.netflix.configuration;
 
 import cn.springcloud.gray.GrayManager;
+import cn.springcloud.gray.client.netflix.connectionpoint.DefaultHystrixRibbonConnectionPoint;
+import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
 import cn.springcloud.gray.client.netflix.hystrix.HystrixRequestLocalStorage;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
@@ -26,6 +28,8 @@ public class HystrixGrayAutoConfiguration {
 
     @Autowired
     private GrayManager grayManager;
+    @Autowired
+    private RequestLocalStorage requestLocalStorage;
 
 
     @Bean
@@ -53,6 +57,17 @@ public class HystrixGrayAutoConfiguration {
                 }
             }
         };
+    }
+
+
+    /**
+     * 支持hystrix使用线程隔离时依然能够进行跑线程传递GrayRequest
+     *
+     * @return DefaultHystrixRibbonConnectionPoint
+     */
+    @Bean
+    public RibbonConnectionPoint hystrixRibbonConnectionPoint() {
+        return new DefaultHystrixRibbonConnectionPoint(grayManager, requestLocalStorage);
     }
 
 }
