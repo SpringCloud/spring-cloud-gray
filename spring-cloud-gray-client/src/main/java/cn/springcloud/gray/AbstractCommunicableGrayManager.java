@@ -16,7 +16,6 @@ public abstract class AbstractCommunicableGrayManager extends SimpleGrayManager 
         super(grayDecisionFactoryKeeper, requestInterceptors);
         this.grayClientConfig = grayClientConfig;
         this.informationClient = informationClient;
-        createInformationClient();
     }
 
     public GrayClientConfig getGrayClientConfig() {
@@ -26,11 +25,6 @@ public abstract class AbstractCommunicableGrayManager extends SimpleGrayManager 
     @Override
     public InformationClient getGrayInformationClient() {
         return informationClient;
-    }
-
-    protected void createInformationClient() {
-
-
     }
 
 

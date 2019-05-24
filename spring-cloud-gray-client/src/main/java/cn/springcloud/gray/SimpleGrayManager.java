@@ -6,6 +6,7 @@ import cn.springcloud.gray.model.GrayService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +34,7 @@ public class SimpleGrayManager extends AbstractGrayManager {
 
     @Override
     public Collection<GrayService> allGrayServices() {
-        return grayServices.values();
+        return Collections.unmodifiableCollection(grayServices.values());
     }
 
     @Override
