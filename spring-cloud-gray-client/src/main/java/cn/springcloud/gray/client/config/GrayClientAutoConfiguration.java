@@ -19,6 +19,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -36,8 +37,8 @@ public class GrayClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(value = "gray.client.serverUrl")
-    public InformationClient informationClient() {
-        InformationClient httpClient = new HttpInformationClient(grayClientProperties.getServerUrl());
+    public InformationClient informationClient(@Autowired(required = false) RestTemplate restTemplate) {
+        InformationClient httpClient = new HttpInformationClient(grayClientProperties.getServerUrl(), restTemplate);
         if (grayClientProperties.isRetryable()) {
             return new RetryableInformationClient(Math.max(3, grayClientProperties.getRetryNumberOfRetries()), httpClient);
         } else {
