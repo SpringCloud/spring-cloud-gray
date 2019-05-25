@@ -5,6 +5,7 @@ import cn.springcloud.gray.client.config.properties.GrayLoadProperties;
 import cn.springcloud.gray.model.GrayStatus;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnProperty(value = "gray.load.enabled", havingValue = "true")
+@ConditionalOnBean(GrayManager.class)
 @EnableConfigurationProperties({GrayLoadProperties.class})
 public class GrayLoadAutoConfigration {
 

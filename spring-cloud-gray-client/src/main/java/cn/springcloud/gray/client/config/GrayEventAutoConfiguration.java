@@ -1,11 +1,13 @@
 package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.CommunicableGrayManager;
+import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.event.DefaultGrayEventListener;
 import cn.springcloud.gray.event.GrayEventListener;
 import cn.springcloud.gray.event.stream.StreamInput;
 import cn.springcloud.gray.event.stream.StreamMessageListener;
 import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConditionalOnBean(GrayManager.class)
 public class GrayEventAutoConfiguration {
 
 

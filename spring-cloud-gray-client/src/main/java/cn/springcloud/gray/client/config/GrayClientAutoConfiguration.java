@@ -12,7 +12,6 @@ import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -25,7 +24,8 @@ import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties({GrayClientProperties.class, GrayRequestProperties.class})
-@ConditionalOnBean(GrayClientMarkerConfiguration.GrayClientMarker.class)
+//@ConditionalOnBean(GrayClientMarkerConfiguration.GrayClientMarker.class)
+@ConditionalOnProperty(value = "gray.enabled")
 @Import({GrayDecisionFactoryConfiguration.class, GrayTrackConfiguration.class})
 public class GrayClientAutoConfiguration {
 

@@ -1,5 +1,6 @@
 package cn.springcloud.gray.client.netflix.configuration;
 
+import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.InstanceLocalInfo;
 import cn.springcloud.gray.client.netflix.eureka.EurekaInstanceDiscoveryClient;
 import cn.springcloud.gray.client.netflix.eureka.EurekaServerExplainer;
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnBean(EurekaClient.class)
+@ConditionalOnBean({GrayManager.class, EurekaClient.class})
 public class GrayClientEurekaAutoConfiguration {
 
     @Autowired

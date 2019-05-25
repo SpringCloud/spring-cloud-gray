@@ -1,13 +1,16 @@
 package cn.springcloud.gray.client.config;
 
+import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.InstanceLocalInfo;
 import cn.springcloud.gray.InstanceLocalInfoAware;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConditionalOnBean(GrayManager.class)
 public class GrayClientBeanPostProcessorConfiguration {
 
 

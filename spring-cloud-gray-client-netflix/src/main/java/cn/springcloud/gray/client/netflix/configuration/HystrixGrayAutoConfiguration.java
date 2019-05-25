@@ -11,6 +11,7 @@ import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import feign.hystrix.HystrixFeign;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ import javax.servlet.ServletResponse;
 import java.io.IOException;
 
 @Configuration
+@ConditionalOnBean(GrayManager.class)
 @ConditionalOnClass({HystrixCommand.class, HystrixFeign.class})
 public class HystrixGrayAutoConfiguration {
 

@@ -44,6 +44,7 @@ feign:
     enabled: true
 
 gray:
+  enabled: true
   client:
     server-url: http://localhost:20202
   request:

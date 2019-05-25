@@ -14,6 +14,7 @@ eureka:
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
 gray:
+  enabled: true
   client:
     instance:
       grayEnroll: false #是否在启动后自动注册成灰度实例

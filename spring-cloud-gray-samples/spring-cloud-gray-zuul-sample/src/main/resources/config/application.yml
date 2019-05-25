@@ -49,6 +49,7 @@ zuul:
 #      path: /client/** #匹配/techouse/usersystem/** 均路由到cloud-client
 #      serviceId: eureka-client #指定路由到的serviceId
 gray:
+  #  enabled: true
   client:
     server-url: http://localhost:20202
     serviceUpdateIntervalTimerInMs: 0
