@@ -35,7 +35,7 @@ spring:
         #            max-attempts: 1
         GrayEventOutput:
           destination: gray_event
-            #      rabbit:
+          #      rabbit:
           #        bindings:
           #          GrayEventInput:
           #            consumer:
@@ -54,4 +54,4 @@ eureka:
 
 gray:
   server:
-    evictionIntervalTimerInMs: 60000
+    evictionIntervalTimerInMs: 30000

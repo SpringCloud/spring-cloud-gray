@@ -34,7 +34,8 @@ public class EurekaInstanceListener {
         InstanceRegistry registry = (InstanceRegistry) event.getSource();
         com.netflix.appinfo.InstanceInfo instanceInfo =
                 registry.getApplication(event.getAppName()).getByInstanceId(event.getServerId());
-        sendNotice(instanceInfo, InstanceStatus.DOWN, "DOWN");
+        InstanceStatus instanceStatus = EurekaInstatnceTransformer.toGrayInstanceStatus(instanceInfo.getStatus());
+        sendNotice(instanceInfo, instanceStatus, "DOWN");
     }
 
 
@@ -46,7 +47,8 @@ public class EurekaInstanceListener {
     @EventListener
     public void listenRenew(EurekaInstanceRenewedEvent event) {
         com.netflix.appinfo.InstanceInfo instanceInfo = event.getInstanceInfo();
-        sendNotice(instanceInfo, InstanceStatus.UP, "REGISTERED");
+        InstanceStatus instanceStatus = EurekaInstatnceTransformer.toGrayInstanceStatus(instanceInfo.getStatus());
+        sendNotice(instanceInfo, instanceStatus, "RENEW");
     }
 
 

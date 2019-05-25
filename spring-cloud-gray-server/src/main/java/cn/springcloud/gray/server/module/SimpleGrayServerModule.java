@@ -94,6 +94,11 @@ public class SimpleGrayServerModule implements GrayServerModule {
     @Override
     public void updateInstanceStatus(String instanceId, InstanceStatus instanceStatus) {
         GrayInstance instance = grayInstanceService.findOneModel(instanceId);
+        updateInstanceStatus(instance, instanceStatus);
+    }
+
+    @Override
+    public void updateInstanceStatus(GrayInstance instance, InstanceStatus instanceStatus) {
         if (instance != null && !Objects.equals(instance.getInstanceStatus(), instanceStatus)) {
             instance.setInstanceStatus(instanceStatus);
             grayInstanceService.saveModel(instance);

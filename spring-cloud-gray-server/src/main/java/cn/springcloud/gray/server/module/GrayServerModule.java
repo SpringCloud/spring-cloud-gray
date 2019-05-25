@@ -44,6 +44,8 @@ public interface GrayServerModule {
 
     void updateInstanceStatus(String instanceId, InstanceStatus instanceStatus);
 
+    void updateInstanceStatus(GrayInstance instance, InstanceStatus instanceStatus);
+
     void deleteGrayInstance(String intanceId);
 
     void saveGrayPolicy(GrayPolicy grayPolicy);

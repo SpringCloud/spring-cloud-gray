@@ -36,8 +36,8 @@ eureka:
       defaultZone: http://localhost:20001/eureka/
   instance:
     instanceId: ${spring.application.name}:${server.port}
-    lease-renewal-interval-in-seconds: 10
-    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
 #    initial-status: starting
 feign:
   hystrix:
