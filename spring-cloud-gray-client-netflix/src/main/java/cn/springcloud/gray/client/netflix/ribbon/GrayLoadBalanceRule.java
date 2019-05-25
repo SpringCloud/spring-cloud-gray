@@ -61,7 +61,7 @@ public class GrayLoadBalanceRule extends ZoneAvoidanceRule {
             GrayService grayService = grayManager.getGrayService(serviceId);
             List<Server> servers = lb.getAllServers();
             List<Server> grayServers = new ArrayList<>(grayService.getGrayInstances().size());
-            List<Server> normalServers = new ArrayList<>(servers.size() - grayService.getGrayInstances().size());
+            List<Server> normalServers = new ArrayList<>(Math.min(servers.size(), grayService.getGrayInstances().size()));
 
             for (Server server : servers) {
 //                ServerSpec serverSpec = serverExplainer.apply(server);

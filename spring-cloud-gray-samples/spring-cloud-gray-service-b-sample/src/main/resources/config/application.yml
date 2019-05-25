@@ -38,7 +38,7 @@ eureka:
     instanceId: ${spring.application.name}:${server.port}
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
-    initial-status: starting
+#    initial-status: starting
 feign:
   hystrix:
     enabled: true
@@ -60,7 +60,7 @@ gray:
             value: version,test
         path-patterns: /*
   load:
-    enabled: true
+    enabled: false
     gray-instances:
       - serviceId: service-a
         instance-id: service-a:20104
