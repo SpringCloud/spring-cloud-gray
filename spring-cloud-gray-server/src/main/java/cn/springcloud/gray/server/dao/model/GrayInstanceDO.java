@@ -14,7 +14,6 @@ import javax.persistence.*;
 public class GrayInstanceDO {
     @Id
     @Column(length = 64)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String instanceId;
     @Column(length = 32)
     private String serviceId;
