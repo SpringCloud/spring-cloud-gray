@@ -5,9 +5,8 @@ import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.GrayClientProperties;
 import cn.springcloud.gray.client.config.properties.GrayLoadProperties;
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.communication.HttpInformationClient;
+import cn.springcloud.gray.client.config.properties.GrayServerProperties;
 import cn.springcloud.gray.communication.InformationClient;
-import cn.springcloud.gray.communication.RetryableInformationClient;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
@@ -18,15 +17,19 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 @Configuration
-@EnableConfigurationProperties({GrayClientProperties.class, GrayRequestProperties.class, GrayLoadProperties.class})
-//@ConditionalOnBean(GrayClientMarkerConfiguration.GrayClientMarker.class)
+@EnableConfigurationProperties(
+        {GrayClientProperties.class,
+                GrayServerProperties.class,
+                GrayRequestProperties.class,
+                GrayLoadProperties.class})
 @ConditionalOnProperty(value = "gray.enabled")
-@Import({GrayDecisionFactoryConfiguration.class, GrayTrackConfiguration.class})
+@Import({InformationClientConfiguration.class,
+        GrayDecisionFactoryConfiguration.class,
+        GrayTrackConfiguration.class})
 public class GrayClientAutoConfiguration {
 
 
@@ -59,33 +62,6 @@ public class GrayClientAutoConfiguration {
     @ConditionalOnMissingBean
     public RequestLocalStorage requestLocalStorage() {
         return new ThreadLocalRequestStorage();
-    }
-
-
-    @Configuration
-    public static class InformationClientConfiguration {
-
-
-        @Bean("grayInformationRestTemplate")
-        @ConditionalOnMissingBean(name = {"grayInformationRestTemplate"})
-        public RestTemplate grayInformationRestTemplate() {
-            return new RestTemplate();
-        }
-
-
-        @Bean
-        @ConditionalOnMissingBean
-        @ConditionalOnProperty(value = "gray.client.serverUrl")
-        public InformationClient informationClient(
-                @Autowired(required = false) RestTemplate grayInformationRestTemplate,
-                GrayClientProperties grayClientProperties) {
-            InformationClient httpClient = new HttpInformationClient(grayClientProperties.getServerUrl(), grayInformationRestTemplate);
-            if (grayClientProperties.isRetryable()) {
-                return new RetryableInformationClient(Math.max(3, grayClientProperties.getRetryNumberOfRetries()), httpClient);
-            } else {
-                return httpClient;
-            }
-        }
     }
 
 }

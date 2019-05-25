@@ -45,8 +45,8 @@ feign:
 
 gray:
   enabled: true
-  client:
-    server-url: http://localhost:20202
+  server:
+    url: http://localhost:20202
   request:
     track:
       web:

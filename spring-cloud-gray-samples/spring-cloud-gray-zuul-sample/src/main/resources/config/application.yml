@@ -50,8 +50,9 @@ zuul:
 #      serviceId: eureka-client #指定路由到的serviceId
 gray:
   #  enabled: true
+  server:
+    url: http://localhost:20202
   client:
-    server-url: http://localhost:20202
     serviceUpdateIntervalTimerInMs: 0
   request:
     track:
