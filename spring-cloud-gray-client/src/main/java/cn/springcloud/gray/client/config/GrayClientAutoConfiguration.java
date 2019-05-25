@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.*;
-import cn.springcloud.gray.client.GrayClientInitializingDestroyBean;
+import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.GrayClientProperties;
 import cn.springcloud.gray.client.config.properties.GrayLoadProperties;
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
@@ -48,10 +48,10 @@ public class GrayClientAutoConfiguration {
 
 
     @Bean
-    @ConditionalOnBean({CommunicableGrayManager.class, InstanceLocalInfo.class})
-    public GrayClientInitializingDestroyBean grayClientInitializingDestroyBean(
+    @ConditionalOnProperty(value = "gray.client.instance.grayEnroll")
+    public GrayClientEnrollInitializingDestroyBean grayClientEnrollInitializingDestroyBean(
             CommunicableGrayManager grayManager, InstanceLocalInfo instanceLocalInfo) {
-        return new GrayClientInitializingDestroyBean(grayManager, grayClientProperties, instanceLocalInfo);
+        return new GrayClientEnrollInitializingDestroyBean(grayManager, grayClientProperties, instanceLocalInfo);
     }
 
 
