@@ -3,7 +3,6 @@ package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.client.config.properties.GrayTrackProperties;
 import cn.springcloud.gray.communication.InformationClient;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayInfoTracker;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
@@ -20,7 +19,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Configuration
@@ -46,15 +44,10 @@ public class GrayTrackConfiguration {
         @Autowired
         private GrayTrackProperties grayTrackProperties;
 
-        @Autowired
-        private List<GrayInfoTracker<GrayHttpTrackInfo, HttpServletRequest>> trackors;
-
-        @Autowired
-        private RequestLocalStorage requestLocalStorage;
-
         @Bean
         @ConditionalOnMissingBean
-        public GrayTrackFilter grayTrackFilter(GrayTrackHolder grayTrackHolder) {
+        public GrayTrackFilter grayTrackFilter(
+                GrayTrackHolder grayTrackHolder, RequestLocalStorage requestLocalStorage) {
             return new GrayTrackFilter(grayTrackHolder, requestLocalStorage);
         }
 

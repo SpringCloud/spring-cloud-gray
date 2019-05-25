@@ -15,6 +15,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+/**
+ * 灰度事件监听器，处理灰度管控端发来的事件消息。
+ * 事件源分两种：灰度实例的，或灰度追踪的。
+ * 事件类型分两种：更新、删除
+ */
 public class DefaultGrayEventListener implements GrayEventListener, InstanceLocalInfoAware {
 
     private CommunicableGrayManager grayManager;
@@ -58,6 +63,10 @@ public class DefaultGrayEventListener implements GrayEventListener, InstanceLoca
 
 
     private void handleGrayInstance(GrayEventMsg msg) {
+        if (StringUtils.equals(msg.getServiceId(), instanceLocalInfo.getServiceId())
+                && StringUtils.equals(msg.getInstanceId(), instanceLocalInfo.getInstanceId())) {
+            return;
+        }
         switch (msg.getEventType()) {
             case DOWN:
                 grayManager.closeGray(msg.getServiceId(), msg.getInstanceId());

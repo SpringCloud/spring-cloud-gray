@@ -23,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Configuration
-@EnableConfigurationProperties({GrayClientProperties.class, GrayRequestProperties.class})
+@EnableConfigurationProperties({GrayClientProperties.class, GrayRequestProperties.class, GrayLoadProperties.class})
 //@ConditionalOnBean(GrayClientMarkerConfiguration.GrayClientMarker.class)
 @ConditionalOnProperty(value = "gray.enabled")
 @Import({GrayDecisionFactoryConfiguration.class, GrayTrackConfiguration.class})

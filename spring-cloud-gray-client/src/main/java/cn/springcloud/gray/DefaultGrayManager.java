@@ -5,6 +5,7 @@ import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
+import cn.springcloud.gray.model.GrayStatus;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -83,6 +84,9 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
                         if (grayServices.containsKey(instance.getServiceId())
                                 || grayServices.get(instance.getServiceId())
                                 .getGrayInstance(instance.getInstanceId()) != null) {
+                            if (instance.getGrayStatus() == null) {
+                                instance.setGrayStatus(GrayStatus.OPEN);
+                            }
                             updateGrayInstance(grayServices, instance);
                         }
                     });
