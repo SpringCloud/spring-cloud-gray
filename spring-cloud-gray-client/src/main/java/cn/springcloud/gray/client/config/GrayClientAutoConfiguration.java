@@ -36,19 +36,6 @@ public class GrayClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(value = "gray.client.serverUrl")
-    public InformationClient informationClient(@Autowired(required = false) RestTemplate restTemplate) {
-        InformationClient httpClient = new HttpInformationClient(grayClientProperties.getServerUrl(), restTemplate);
-        if (grayClientProperties.isRetryable()) {
-            return new RetryableInformationClient(Math.max(3, grayClientProperties.getRetryNumberOfRetries()), httpClient);
-        } else {
-            return httpClient;
-        }
-    }
-
-
-    @Bean
-    @ConditionalOnMissingBean
     public GrayManager grayManager(
             @Autowired(required = false) GrayLoadProperties grayLoadProperties,
             GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
@@ -74,5 +61,31 @@ public class GrayClientAutoConfiguration {
         return new ThreadLocalRequestStorage();
     }
 
+
+    @Configuration
+    public static class InformationClientConfiguration {
+
+
+        @Bean("grayInformationRestTemplate")
+        @ConditionalOnMissingBean(name = {"grayInformationRestTemplate"})
+        public RestTemplate grayInformationRestTemplate() {
+            return new RestTemplate();
+        }
+
+
+        @Bean
+        @ConditionalOnMissingBean
+        @ConditionalOnProperty(value = "gray.client.serverUrl")
+        public InformationClient informationClient(
+                @Autowired(required = false) RestTemplate grayInformationRestTemplate,
+                GrayClientProperties grayClientProperties) {
+            InformationClient httpClient = new HttpInformationClient(grayClientProperties.getServerUrl(), grayInformationRestTemplate);
+            if (grayClientProperties.isRetryable()) {
+                return new RetryableInformationClient(Math.max(3, grayClientProperties.getRetryNumberOfRetries()), httpClient);
+            } else {
+                return httpClient;
+            }
+        }
+    }
 
 }
