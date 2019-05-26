@@ -2,13 +2,17 @@ package cn.springcloud.gray.server.configuration;
 
 import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
+import cn.springcloud.gray.server.module.GrayInstanceRecordEvictor;
 import cn.springcloud.gray.server.module.GrayServerModule;
 import cn.springcloud.gray.server.module.GrayServerTrackModule;
-import cn.springcloud.gray.server.module.SimpleGrayServerModule;
-import cn.springcloud.gray.server.module.SimpleGrayServerTrackModule;
+import cn.springcloud.gray.server.module.jpa.JPAGrayInstanceRecordEvictor;
+import cn.springcloud.gray.server.module.jpa.JPAGrayServerModule;
+import cn.springcloud.gray.server.module.jpa.JPAGrayServerTrackModule;
 import cn.springcloud.gray.server.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -39,7 +43,7 @@ public class DBStorageConfiguration {
                 GrayEventPublisher grayEventPublisher,
                 GrayServiceService grayServiceService, GrayInstanceService grayInstanceService,
                 GrayDecisionService grayDecisionService, GrayPolicyService grayPolicyService) {
-            return new SimpleGrayServerModule(
+            return new JPAGrayServerModule(
                     grayServerProperties, grayEventPublisher, grayServiceService, grayInstanceService,
                     grayDecisionService, grayPolicyService);
         }
@@ -47,8 +51,27 @@ public class DBStorageConfiguration {
 
         @Bean
         public GrayServerTrackModule grayServerTrackModule(GrayEventPublisher grayEventPublisher, GrayTrackService grayTrackService) {
-            return new SimpleGrayServerTrackModule(grayEventPublisher, grayTrackService);
+            return new JPAGrayServerTrackModule(grayEventPublisher, grayTrackService);
         }
+
+    }
+
+
+    @Configuration
+    @ConditionalOnProperty("gray.server.instance.eviction.enabled")
+    public static class JPAGrayInstanceRecordEvictionConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean
+        public GrayInstanceRecordEvictor grayInstanceRecordEvictor(
+                GrayInstanceService grayInstanceService, GrayServerProperties grayServerProperties) {
+            GrayServerProperties.InstanceRecordEvictProperties evictProperties =
+                    grayServerProperties.getInstance().getEviction();
+            return new JPAGrayInstanceRecordEvictor(grayInstanceService,
+                    evictProperties.getEvictionInstanceStatus(),
+                    evictProperties.getLastUpdateDateExpireDays());
+        }
+
 
     }
 

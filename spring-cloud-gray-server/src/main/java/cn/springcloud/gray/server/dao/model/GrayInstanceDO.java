@@ -3,6 +3,7 @@ package cn.springcloud.gray.server.dao.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Setter
 @Getter
@@ -21,6 +22,8 @@ public class GrayInstanceDO {
     private String host;
     @Column(length = 5)
     private Integer port;
+    @Column
+    private Date lastUpdateDate;
 
     /**
      * 实例状态

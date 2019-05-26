@@ -78,7 +78,8 @@ public class SimpleGrayModule implements GrayModule {
     @Override
     public List<cn.springcloud.gray.model.GrayInstance> allOpenInstances() {
         List<cn.springcloud.gray.server.module.domain.GrayInstance> instances =
-                grayServerModule.listGrayInstancesByNormalInstanceStatus(grayServerProperties.getNormalInstanceStatus());
+                grayServerModule.listGrayInstancesByNormalInstanceStatus(
+                        grayServerProperties.getInstance().getNormalInstanceStatus());
 
         List<cn.springcloud.gray.model.GrayInstance> grayInstances = new ArrayList<>(instances.size());
         instances.forEach(instance -> {

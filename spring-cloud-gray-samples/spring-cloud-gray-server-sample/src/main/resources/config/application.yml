@@ -55,3 +55,6 @@ eureka:
 gray:
   server:
     evictionIntervalTimerInMs: 30000
+    instance:
+      eviction:
+        enabled: true

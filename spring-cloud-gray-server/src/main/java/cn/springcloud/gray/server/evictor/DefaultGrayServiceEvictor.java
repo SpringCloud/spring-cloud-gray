@@ -49,7 +49,7 @@ public class DefaultGrayServiceEvictor implements GrayServerEvictor {
     private void downAllInstance(GrayServerModule grayServerModule, GrayService grayService) {
         List<GrayInstance> grayInstances =
                 grayServerModule.listGrayInstancesByServiceId(grayService.getServiceId(),
-                        grayServerProperties.getNormalInstanceStatus());
+                        grayServerProperties.getInstance().getNormalInstanceStatus());
         grayInstances.forEach(i -> grayServerModule.instanceShutdown(i.getInstanceId()));
     }
 

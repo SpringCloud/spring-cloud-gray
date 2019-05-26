@@ -1,4 +1,4 @@
-package cn.springcloud.gray.server.module;
+package cn.springcloud.gray.server.module.jpa;
 
 import cn.springcloud.gray.event.EventType;
 import cn.springcloud.gray.event.GrayEventMsg;
@@ -7,6 +7,7 @@ import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
+import cn.springcloud.gray.server.module.GrayServerModule;
 import cn.springcloud.gray.server.module.domain.GrayDecision;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
 import cn.springcloud.gray.server.module.domain.GrayPolicy;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Slf4j
-public class SimpleGrayServerModule implements GrayServerModule {
+public class JPAGrayServerModule implements GrayServerModule {
 
     private GrayServiceService grayServiceService;
     private GrayInstanceService grayInstanceService;
@@ -33,7 +34,7 @@ public class SimpleGrayServerModule implements GrayServerModule {
     private GrayEventPublisher grayEventPublisher;
     private GrayServerProperties grayServerProperties;
 
-    public SimpleGrayServerModule(
+    public JPAGrayServerModule(
             GrayServerProperties grayServerProperties, GrayEventPublisher grayEventPublisher,
             GrayServiceService grayServiceService,
             GrayInstanceService grayInstanceService,
@@ -103,7 +104,7 @@ public class SimpleGrayServerModule implements GrayServerModule {
             instance.setInstanceStatus(instanceStatus);
             grayInstanceService.saveModel(instance);
             if (instance.getGrayStatus() == GrayStatus.OPEN) {
-                if (grayServerProperties.getNormalInstanceStatus().contains(instanceStatus)) {
+                if (grayServerProperties.getInstance().getNormalInstanceStatus().contains(instanceStatus)) {
                     publishUpdateIntanceEvent(instance);
                 } else {
                     publishDownIntanceEvent(instance);

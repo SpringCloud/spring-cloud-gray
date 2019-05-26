@@ -33,8 +33,6 @@ public class GrayServerAutoConfiguration {
     @Autowired
     private GrayServerProperties grayServerConfig;
 
-    @Autowired
-    private GrayServerModule grayServerModule;
 
     @Bean
     @ConditionalOnMissingBean
@@ -44,14 +42,15 @@ public class GrayServerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public DefaultGrayServiceManager defaultGrayServiceManager(GrayServerEvictor grayServerEvictor) {
+    public DefaultGrayServiceManager defaultGrayServiceManager(
+            GrayServerEvictor grayServerEvictor, GrayServerModule grayServerModule) {
         return new DefaultGrayServiceManager(grayServerConfig, grayServerModule, grayServerEvictor);
     }
 
 
     @Bean
     public GrayServerInitializingDestroyBean grayServerInitializingBean(GrayServiceManager grayServiceManager) {
-        return new GrayServerInitializingDestroyBean(grayServiceManager);
+        return new GrayServerInitializingDestroyBean(grayServiceManager, grayServerConfig);
     }
 
 
