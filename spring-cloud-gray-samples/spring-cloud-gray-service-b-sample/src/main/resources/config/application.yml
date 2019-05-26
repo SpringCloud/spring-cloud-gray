@@ -36,16 +36,17 @@ eureka:
       defaultZone: http://localhost:20001/eureka/
   instance:
     instanceId: ${spring.application.name}:${server.port}
-    lease-renewal-interval-in-seconds: 10
-    lease-expiration-duration-in-seconds: 30
-    initial-status: starting
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+#    initial-status: starting
 feign:
   hystrix:
     enabled: true
 
 gray:
-  client:
-    server-url: http://localhost:20202
+  enabled: true
+  server:
+    url: http://localhost:20202
   request:
     track:
       web:
@@ -60,7 +61,7 @@ gray:
             value: version,test
         path-patterns: /*
   load:
-    enabled: true
+    enabled: false
     gray-instances:
       - serviceId: service-a
         instance-id: service-a:20104

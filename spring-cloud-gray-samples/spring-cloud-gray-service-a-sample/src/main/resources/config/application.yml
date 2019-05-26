@@ -14,7 +14,9 @@ eureka:
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
 gray:
+  enabled: true
   client:
     instance:
-      grayEnroll: true #是否在启动后自动注册成灰度实例
-    serverUrl: http://localhost:20202 #灰度服务端的url
+      grayEnroll: false #是否在启动后自动注册成灰度实例
+  server:
+    url: http://localhost:20202 #灰度服务端的url

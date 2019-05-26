@@ -34,7 +34,7 @@ public class DefaultGrayServiceManager implements GrayServiceManager {
 
     @Override
     public void openForWork() {
-        int times = grayServerProperties.getEvictionIntervalTimerInMs();
+        long times = grayServerProperties.getEvictionIntervalTimerInMs();
         if (times > 0) {
             evictionTimer.schedule(new EvictionTask(), times, times);
         }

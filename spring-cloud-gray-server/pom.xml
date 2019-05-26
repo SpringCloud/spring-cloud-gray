@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>2.1.0</version>
+        <version>A.1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,6 +13,10 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-utils</artifactId>
+        </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-core</artifactId>
@@ -27,6 +31,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>

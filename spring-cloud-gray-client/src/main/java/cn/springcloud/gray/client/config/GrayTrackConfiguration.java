@@ -3,7 +3,6 @@ package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.client.config.properties.GrayTrackProperties;
 import cn.springcloud.gray.communication.InformationClient;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayInfoTracker;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
@@ -19,9 +18,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Configuration
@@ -42,26 +39,21 @@ public class GrayTrackConfiguration {
 
     @ConditionalOnProperty(value = "gray.client.runenv", havingValue = "web", matchIfMissing = true)
     @Configuration
-    public static class GrayClientWebConfiguration extends WebMvcConfigurerAdapter {
+    public static class GrayClientWebConfiguration {
 
         @Autowired
         private GrayTrackProperties grayTrackProperties;
 
-        @Autowired
-        private List<GrayInfoTracker<GrayHttpTrackInfo, HttpServletRequest>> trackors;
-
-        @Autowired
-        private RequestLocalStorage requestLocalStorage;
-
         @Bean
         @ConditionalOnMissingBean
-        public GrayTrackFilter grayTrackFilter(GrayTrackHolder grayTrackHolder) {
+        public GrayTrackFilter grayTrackFilter(
+                GrayTrackHolder grayTrackHolder, RequestLocalStorage requestLocalStorage) {
             return new GrayTrackFilter(grayTrackHolder, requestLocalStorage);
         }
 
 
         @Bean
-        public FilterRegistrationBean companyUrlFilterRegister(GrayTrackFilter filter) {
+        public FilterRegistrationBean grayTrackFilter(GrayTrackFilter filter) {
             GrayTrackProperties.Web webProperties = grayTrackProperties.getWeb();
             FilterRegistrationBean registration = new FilterRegistrationBean();
             //注入过滤器

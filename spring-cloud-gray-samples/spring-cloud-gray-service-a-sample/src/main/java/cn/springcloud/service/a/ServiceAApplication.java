@@ -1,6 +1,5 @@
 package cn.springcloud.service.a;
 
-import cn.springcloud.gray.client.EnableGrayClient;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -15,7 +14,6 @@ import java.net.UnknownHostException;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableGrayClient
 public class ServiceAApplication {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(ServiceAApplication.class);
 

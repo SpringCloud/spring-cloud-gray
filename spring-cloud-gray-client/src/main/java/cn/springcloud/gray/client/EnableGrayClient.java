@@ -1,14 +1,15 @@
 package cn.springcloud.gray.client;
 
-import cn.springcloud.gray.client.config.GrayClientMarkerConfiguration;
+import cn.springcloud.gray.client.config.GrayClientImportSelector;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
 
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(GrayClientMarkerConfiguration.class)
+@Inherited
+@Import(GrayClientImportSelector.class)
 public @interface EnableGrayClient {
 
 

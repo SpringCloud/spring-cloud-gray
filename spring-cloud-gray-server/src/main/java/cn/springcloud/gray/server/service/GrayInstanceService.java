@@ -14,7 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +63,12 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
         });
     }
 
+    @Override
+    public void saveModel(GrayInstance grayInstance) {
+        grayInstance.setLastUpdateDate(new Date());
+        super.saveModel(grayInstance);
+    }
+
     public List<GrayInstance> findAllByStatus(GrayStatus grayStatus, Collection<InstanceStatus> instanceStatusList) {
         String[] instanceStatusAry = toArray(instanceStatusList);
         return grayInstanceMapper.dos2models(
@@ -89,5 +98,17 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
                 .map(InstanceStatus::name)
                 .collect(Collectors.toList())
                 .toArray(new String[instanceStatusList.size()]);
+    }
+
+    public List<GrayInstance> findAllByEvictableRecords(
+            int lastUpdateDateExpireDays, Collection<InstanceStatus> evictionInstanceStatus) {
+        Date lastUpdateDate = Date.from(
+                LocalDateTime
+                        .now()
+                        .minusDays(lastUpdateDateExpireDays)
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant());
+        String[] instanceStatusAry = toArray(evictionInstanceStatus);
+        return dos2models(repository.findAllByLastUpdateDateBeforeAndInstanceStatusIn(lastUpdateDate, instanceStatusAry));
     }
 }

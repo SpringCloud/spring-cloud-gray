@@ -14,10 +14,10 @@ import java.net.UnknownHostException;
 /**
  * Created by saleson on 2017/10/18.
  */
+@EnableGrayClient
 @SpringCloudApplication
 @EnableZuulProxy
 @EnableDiscoveryClient
-@EnableGrayClient
 public class GrayZuulApplication {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(GrayZuulApplication.class);
 

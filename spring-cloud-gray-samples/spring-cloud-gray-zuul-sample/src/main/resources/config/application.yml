@@ -32,9 +32,9 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:20001/eureka/
   instance:
-    lease-renewal-interval-in-seconds: 10
-    lease-expiration-duration-in-seconds: 30
-    initial-status: starting
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+#    initial-status: starting
 
 ribbon:
   #    ReadTimeout: 30000
@@ -49,8 +49,10 @@ zuul:
 #      path: /client/** #匹配/techouse/usersystem/** 均路由到cloud-client
 #      serviceId: eureka-client #指定路由到的serviceId
 gray:
+  #  enabled: true
+  server:
+    url: http://localhost:20202
   client:
-    server-url: http://localhost:20202
     serviceUpdateIntervalTimerInMs: 0
   request:
     track:

@@ -3,9 +3,9 @@ package cn.springcloud.gray.client.netflix.ribbon;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.client.netflix.GrayClientHolder;
 import cn.springcloud.gray.model.GrayService;
-import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.RequestLocalStorage;
+import cn.springcloud.gray.servernode.ServerExplainer;
 import com.google.common.base.Optional;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.*;
@@ -61,7 +61,7 @@ public class GrayLoadBalanceRule extends ZoneAvoidanceRule {
             GrayService grayService = grayManager.getGrayService(serviceId);
             List<Server> servers = lb.getAllServers();
             List<Server> grayServers = new ArrayList<>(grayService.getGrayInstances().size());
-            List<Server> normalServers = new ArrayList<>(servers.size() - grayService.getGrayInstances().size());
+            List<Server> normalServers = new ArrayList<>(Math.min(servers.size(), grayService.getGrayInstances().size()));
 
             for (Server server : servers) {
 //                ServerSpec serverSpec = serverExplainer.apply(server);
@@ -93,7 +93,7 @@ public class GrayLoadBalanceRule extends ZoneAvoidanceRule {
         super.setLoadBalancer(lb);
     }
 
-    private Server choose(AbstractServerPredicate serverPredicate, List<Server> servers, Object key) {
+    protected Server choose(AbstractServerPredicate serverPredicate, List<Server> servers, Object key) {
         Optional<Server> server = serverPredicate.chooseRoundRobinAfterFiltering(servers, key);
         if (server.isPresent()) {
             return server.get();

@@ -10,13 +10,13 @@ import org.springframework.beans.factory.InitializingBean;
 
 
 @Slf4j
-public class GrayClientInitializingDestroyBean implements InitializingBean {
+public class GrayClientEnrollInitializingDestroyBean implements InitializingBean {
 
     private CommunicableGrayManager grayManager;
     private InstanceLocalInfo instanceLocalInfo;
     private GrayClientConfig clientConfig;
 
-    public GrayClientInitializingDestroyBean(
+    public GrayClientEnrollInitializingDestroyBean(
             CommunicableGrayManager grayManager, GrayClientConfig clientConfig, InstanceLocalInfo instanceLocalInfo) {
         this.grayManager = grayManager;
         this.clientConfig = clientConfig;

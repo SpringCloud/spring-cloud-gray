@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -21,4 +22,7 @@ public interface GrayInstanceRepository extends JpaRepository<GrayInstanceDO, St
     List<GrayInstanceDO> findAllByServiceIdAndInstanceStatusIn(String serviceId, String[] instanceStatus);
 
     List<GrayInstanceDO> findAllByGrayStatusAndInstanceStatusIn(String grayStatus, String[] instanceStatus);
+
+
+    List<GrayInstanceDO> findAllByLastUpdateDateBeforeAndInstanceStatusIn(Date lastUpdateDate, String[] instanceStatus);
 }

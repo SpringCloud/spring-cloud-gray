@@ -1,10 +1,11 @@
-package cn.springcloud.gray.server.module;
+package cn.springcloud.gray.server.module.jpa;
 
 import cn.springcloud.gray.event.EventType;
 import cn.springcloud.gray.event.GrayEventMsg;
 import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.model.GrayTrackDefinition;
+import cn.springcloud.gray.server.module.GrayServerTrackModule;
 import cn.springcloud.gray.server.module.domain.GrayTrack;
 import cn.springcloud.gray.server.service.GrayTrackService;
 import org.apache.commons.lang.StringUtils;
@@ -13,12 +14,12 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public class SimpleGrayServerTrackModule implements GrayServerTrackModule {
+public class JPAGrayServerTrackModule implements GrayServerTrackModule {
 
     private GrayEventPublisher grayEventPublisher;
     private GrayTrackService grayTrackService;
 
-    public SimpleGrayServerTrackModule(GrayEventPublisher grayEventPublisher, GrayTrackService grayTrackService) {
+    public JPAGrayServerTrackModule(GrayEventPublisher grayEventPublisher, GrayTrackService grayTrackService) {
         this.grayEventPublisher = grayEventPublisher;
         this.grayTrackService = grayTrackService;
     }
