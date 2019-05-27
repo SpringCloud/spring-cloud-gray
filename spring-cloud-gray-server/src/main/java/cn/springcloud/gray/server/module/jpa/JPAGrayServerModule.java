@@ -89,6 +89,12 @@ public class JPAGrayServerModule implements GrayServerModule {
 
     @Override
     public void saveGrayInstance(GrayInstance instance) {
+        GrayService grayService = grayServiceService.findOneModel(instance.getServiceId());
+        if (grayService == null) {
+            grayService = GrayService.builder().build();
+            grayService.setServiceId(instance.getServiceId());
+            grayServiceService.saveModel(grayService);
+        }
         grayInstanceService.saveModel(instance);
     }
 
