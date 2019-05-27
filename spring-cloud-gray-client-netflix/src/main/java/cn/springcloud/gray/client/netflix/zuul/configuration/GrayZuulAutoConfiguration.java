@@ -16,22 +16,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnBean(GrayManager.class)
+@ConditionalOnBean(
+        value = {GrayManager.class},
+        name = {"zuulServlet"})
 @ConditionalOnClass(value = ZuulServlet.class)
 public class GrayZuulAutoConfiguration {
 
     @Autowired
     private GrayRequestProperties grayRequestProperties;
-    @Autowired
-    private RibbonConnectionPoint ribbonConnectionPoint;
 
     @Bean
-    public GrayPreZuulFilter grayPreZuulFilter() {
+    public GrayPreZuulFilter grayPreZuulFilter(RibbonConnectionPoint ribbonConnectionPoint) {
         return new GrayPreZuulFilter(grayRequestProperties, ribbonConnectionPoint);
     }
 
     @Bean
-    public GrayPostZuulFilter grayPostZuulFilter() {
+    public GrayPostZuulFilter grayPostZuulFilter(RibbonConnectionPoint ribbonConnectionPoint) {
         return new GrayPostZuulFilter(ribbonConnectionPoint);
     }
 
