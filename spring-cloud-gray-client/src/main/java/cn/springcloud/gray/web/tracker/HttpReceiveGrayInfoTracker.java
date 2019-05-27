@@ -25,7 +25,7 @@ public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
 
     public void call(GrayHttpTrackInfo trackInfo, HttpServletRequest request) {
         Enumeration<String> headerNames = request.getHeaderNames();
-        if (headerNames.hasMoreElements()) {
+        while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             if (headerName.startsWith(GrayTrackInfo.GRAY_TRACK_PREFIX)) {
                 String[] names = headerName.split(GrayTrackInfo.GRAY_TRACK_SEPARATE);

@@ -26,23 +26,23 @@ public class ZuulRequestInterceptor implements RequestInterceptor {
             RequestContext context = (RequestContext) request.getAttribute(
                     GrayPreZuulFilter.GRAY_REQUEST_ATTRIBUTE_NAME_ZUUL_REQUEST_CONTEXT);
             if (StringUtils.isNotEmpty(grayTrack.getUri())) {
-                context.addOriginResponseHeader(GrayHttpTrackInfo.GRAY_TRACK_URI, grayTrack.getUri());
+                context.addZuulRequestHeader(GrayHttpTrackInfo.GRAY_TRACK_URI, grayTrack.getUri());
             }
             if (StringUtils.isNotEmpty(grayTrack.getTraceIp())) {
-                context.addOriginResponseHeader(GrayHttpTrackInfo.GRAY_TRACK_TRACE_IP, grayTrack.getTraceIp());
+                context.addZuulRequestHeader(GrayHttpTrackInfo.GRAY_TRACK_TRACE_IP, grayTrack.getTraceIp());
             }
             if (StringUtils.isNotEmpty(grayTrack.getMethod())) {
-                context.addOriginResponseHeader(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
+                context.addZuulRequestHeader(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
             }
             if (grayTrack.getParameters() != null && !grayTrack.getParameters().isEmpty()) {
                 grayTrack.getParameters().entrySet().forEach(entry -> {
                     String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
-                    context.addOriginResponseHeader(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
+                    context.addZuulRequestHeader(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
 
                     entry.getValue().forEach(v -> {
-                        context.addOriginResponseHeader(name, v);
+                        context.addZuulRequestHeader(name, v);
                     });
                 });
             }
@@ -52,7 +52,7 @@ public class ZuulRequestInterceptor implements RequestInterceptor {
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     entry.getValue().forEach(v -> {
-                        context.addOriginResponseHeader(name, v);
+                        context.addZuulRequestHeader(name, v);
                     });
                 });
             }
