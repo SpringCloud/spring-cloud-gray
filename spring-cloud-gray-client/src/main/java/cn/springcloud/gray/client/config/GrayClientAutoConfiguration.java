@@ -43,7 +43,7 @@ public class GrayClientAutoConfiguration {
             @Autowired(required = false) GrayLoadProperties grayLoadProperties,
             GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
             @Autowired(required = false) List<RequestInterceptor> requestInterceptors,
-            InformationClient informationClient) {
+            @Autowired(required = false) InformationClient informationClient) {
         return new DefaultGrayManager(
                 grayClientProperties, grayLoadProperties, grayDecisionFactoryKeeper,
                 requestInterceptors, informationClient);
