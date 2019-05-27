@@ -5,8 +5,10 @@ import cn.springcloud.gray.event.GrayEventMsg;
 import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.model.GrayStatus;
+import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
+import cn.springcloud.gray.server.discovery.ServiceDiscovery;
 import cn.springcloud.gray.server.module.GrayServerModule;
 import cn.springcloud.gray.server.module.domain.GrayDecision;
 import cn.springcloud.gray.server.module.domain.GrayInstance;
@@ -33,14 +35,19 @@ public class JPAGrayServerModule implements GrayServerModule {
     private GrayPolicyService grayPolicyService;
     private GrayEventPublisher grayEventPublisher;
     private GrayServerProperties grayServerProperties;
+    private ServiceDiscovery serviceDiscovery;
 
     public JPAGrayServerModule(
-            GrayServerProperties grayServerProperties, GrayEventPublisher grayEventPublisher,
+            GrayServerProperties grayServerProperties,
+            GrayEventPublisher grayEventPublisher,
+            ServiceDiscovery serviceDiscovery,
             GrayServiceService grayServiceService,
             GrayInstanceService grayInstanceService,
-            GrayDecisionService grayDecisionService, GrayPolicyService grayPolicyService) {
+            GrayDecisionService grayDecisionService,
+            GrayPolicyService grayPolicyService) {
         this.grayServerProperties = grayServerProperties;
         this.grayEventPublisher = grayEventPublisher;
+        this.serviceDiscovery = serviceDiscovery;
         this.grayServiceService = grayServiceService;
         this.grayInstanceService = grayInstanceService;
         this.grayDecisionService = grayDecisionService;
@@ -91,9 +98,19 @@ public class JPAGrayServerModule implements GrayServerModule {
     public void saveGrayInstance(GrayInstance instance) {
         GrayService grayService = grayServiceService.findOneModel(instance.getServiceId());
         if (grayService == null) {
-            grayService = GrayService.builder().build();
-            grayService.setServiceId(instance.getServiceId());
+            grayService = GrayService.builder()
+                    .serviceId(instance.getServiceId())
+                    .serviceName(instance.getServiceId())
+                    .build();
             grayServiceService.saveModel(grayService);
+        }
+        if (Objects.isNull(instance.getInstanceStatus()) && !Objects.isNull(serviceDiscovery)) {
+            InstanceInfo instanceInfo =
+                    serviceDiscovery.getInstanceInfo(instance.getServiceId(), instance.getInstanceId());
+            if (!Objects.isNull(instanceInfo)) {
+                instance.setInstanceStatus(instanceInfo.getInstanceStatus());
+            }
+
         }
         grayInstanceService.saveModel(instance);
     }

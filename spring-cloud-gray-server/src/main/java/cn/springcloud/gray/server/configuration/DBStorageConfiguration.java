@@ -2,6 +2,7 @@ package cn.springcloud.gray.server.configuration;
 
 import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
+import cn.springcloud.gray.server.discovery.ServiceDiscovery;
 import cn.springcloud.gray.server.module.GrayInstanceRecordEvictor;
 import cn.springcloud.gray.server.module.GrayServerModule;
 import cn.springcloud.gray.server.module.GrayServerTrackModule;
@@ -40,11 +41,11 @@ public class DBStorageConfiguration {
 
         @Bean
         public GrayServerModule grayServerModule(
-                GrayEventPublisher grayEventPublisher,
+                GrayEventPublisher grayEventPublisher, @Autowired(required = false) ServiceDiscovery serviceDiscovery,
                 GrayServiceService grayServiceService, GrayInstanceService grayInstanceService,
                 GrayDecisionService grayDecisionService, GrayPolicyService grayPolicyService) {
             return new JPAGrayServerModule(
-                    grayServerProperties, grayEventPublisher, grayServiceService, grayInstanceService,
+                    grayServerProperties, grayEventPublisher, serviceDiscovery, grayServiceService, grayInstanceService,
                     grayDecisionService, grayPolicyService);
         }
 
