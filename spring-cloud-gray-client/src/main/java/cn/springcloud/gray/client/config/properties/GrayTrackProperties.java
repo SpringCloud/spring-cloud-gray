@@ -17,7 +17,7 @@ public class GrayTrackProperties {
     private String trackType = "web";
     private Web web = new Web();
 
-    private int definitionsUpdateIntervalTimerInMs = 0;
+    private int definitionsUpdateIntervalTimerInMs = 60000;
 
     @Setter
     @Getter

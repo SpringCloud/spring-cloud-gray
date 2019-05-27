@@ -5,6 +5,7 @@ import cn.springcloud.gray.request.GrayHttpRequest;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
 
         handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
-            if (StringUtils.isNotEmpty(grayHttpTrackInfo.getUri())) {
+            if (StringUtils.isNotEmpty(grayHttpTrackInfo.getMethod())) {
                 Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
                 h.put(GrayHttpTrackInfo.GRAY_TRACK_METHOD, Arrays.asList(grayHttpTrackInfo.getMethod()));
             }
@@ -82,7 +83,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
 
         handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
-            if (StringUtils.isNotEmpty(grayHttpTrackInfo.getUri())) {
+            if (MapUtils.isNotEmpty(grayHttpTrackInfo.getHeaders())) {
                 Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
                 grayHttpTrackInfo.getHeaders().entrySet().forEach(entry -> {
                     String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
@@ -95,7 +96,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
 
         handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
-            if (StringUtils.isNotEmpty(grayHttpTrackInfo.getUri())) {
+            if (MapUtils.isNotEmpty(grayHttpTrackInfo.getParameters())) {
                 Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
                 grayHttpTrackInfo.getParameters().entrySet().forEach(entry -> {
                     String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
