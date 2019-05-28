@@ -24,9 +24,8 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
             GrayClientConfig grayClientConfig,
             GrayLoadProperties grayLoadProperties,
             GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
-            List<RequestInterceptor> requestInterceptors,
             InformationClient informationClient) {
-        super(grayClientConfig, grayDecisionFactoryKeeper, requestInterceptors, informationClient);
+        super(grayClientConfig, grayDecisionFactoryKeeper, informationClient);
         this.grayLoadProperties = grayLoadProperties;
         openForWork();
     }

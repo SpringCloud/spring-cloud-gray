@@ -18,8 +18,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
-
 @Configuration
 @EnableConfigurationProperties(
         {GrayClientProperties.class,
@@ -42,11 +40,9 @@ public class GrayClientAutoConfiguration {
     public GrayManager grayManager(
             @Autowired(required = false) GrayLoadProperties grayLoadProperties,
             GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
-            @Autowired(required = false) List<RequestInterceptor> requestInterceptors,
             @Autowired(required = false) InformationClient informationClient) {
         return new DefaultGrayManager(
-                grayClientProperties, grayLoadProperties, grayDecisionFactoryKeeper,
-                requestInterceptors, informationClient);
+                grayClientProperties, grayLoadProperties, grayDecisionFactoryKeeper, informationClient);
     }
 
 

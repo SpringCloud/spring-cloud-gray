@@ -8,6 +8,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.Map;
+
 @Slf4j
 public class GrayClientInitializer implements ApplicationContextAware, InitializingBean {
     private ApplicationContext cxt;
@@ -17,6 +19,9 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         GrayClientHolder.setGrayManager(getBean("grayManager", GrayManager.class));
         GrayClientHolder.setRequestLocalStorage(getBean("requestLocalStorage", RequestLocalStorage.class));
         GrayClientHolder.setServerExplainer(getBean("serverExplainer", ServerExplainer.class));
+
+        initGrayManagerRequestInterceptors();
+
     }
 
 
@@ -37,5 +42,17 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
             t = cxt.getBean(cls);
         }
         return t;
+    }
+
+
+    /**
+     * 为了解耦合，特别将GrayManger加载Sping容器中的RequestInterceptor的逻辑独立出来
+     */
+    private void initGrayManagerRequestInterceptors() {
+        Map<String, RequestInterceptor> requestInterceptors = cxt.getBeansOfType(RequestInterceptor.class);
+        GrayManager grayManager = GrayClientHolder.getGrayManager();
+        if (grayManager instanceof AbstractGrayManager) {
+            ((AbstractGrayManager) grayManager).setRequestInterceptors(requestInterceptors.values());
+        }
     }
 }

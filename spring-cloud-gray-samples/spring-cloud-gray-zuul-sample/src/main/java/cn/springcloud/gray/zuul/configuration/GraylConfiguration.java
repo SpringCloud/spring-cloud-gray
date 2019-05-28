@@ -19,7 +19,9 @@ public class GraylConfiguration {
 
     @Bean
     public GrayManager grayManager() {
-        return new SimpleGrayManager(grayDecisionFactoryKeeper, requestInterceptors);
+        SimpleGrayManager simpleGrayManager = new SimpleGrayManager(grayDecisionFactoryKeeper);
+        simpleGrayManager.setRequestInterceptors(requestInterceptors);
+        return simpleGrayManager;
     }
 
 

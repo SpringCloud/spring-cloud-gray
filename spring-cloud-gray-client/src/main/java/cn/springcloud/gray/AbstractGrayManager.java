@@ -1,9 +1,8 @@
 package cn.springcloud.gray;
 
 import cn.springcloud.gray.decision.GrayDecision;
-import cn.springcloud.gray.decision.MultiGrayDecision;
-import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
+import cn.springcloud.gray.decision.MultiGrayDecision;
 import cn.springcloud.gray.model.DecisionDefinition;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.PolicyDefinition;
@@ -29,8 +28,7 @@ public abstract class AbstractGrayManager implements GrayManager {
 
 
     public AbstractGrayManager(
-            GrayDecisionFactoryKeeper grayDecisionFactoryKeeper, List<RequestInterceptor> requestInterceptors) {
-        initRequestInterceptors(requestInterceptors);
+            GrayDecisionFactoryKeeper grayDecisionFactoryKeeper) {
         this.grayDecisionFactoryKeeper = grayDecisionFactoryKeeper;
     }
 
@@ -78,31 +76,32 @@ public abstract class AbstractGrayManager implements GrayManager {
     }
 
 
-    private void initRequestInterceptors(List<RequestInterceptor> requestInterceptors) {
-        if (requestInterceptors == null || requestInterceptors.isEmpty()) {
-            return;
-        }
-        List<RequestInterceptor> all = new ArrayList<>();
-        for (RequestInterceptor interceptor : requestInterceptors) {
-            if (StringUtils.equals(interceptor.interceptroType(), "all")) {
-                all.add(interceptor);
-            } else {
-                List<RequestInterceptor> interceptors = this.requestInterceptors.get(interceptor.interceptroType());
-                if (interceptors == null) {
-                    interceptors = new ArrayList<>();
-                    this.requestInterceptors.put(interceptor.interceptroType(), interceptors);
+    public void setRequestInterceptors(Collection<RequestInterceptor> requestInterceptors) {
+        Map<String, List<RequestInterceptor>> requestInterceptorMap = new HashMap<>();
+        if (CollectionUtils.isNotEmpty(requestInterceptors)) {
+            List<RequestInterceptor> all = new ArrayList<>();
+            for (RequestInterceptor interceptor : requestInterceptors) {
+                if (StringUtils.equals(interceptor.interceptroType(), "all")) {
+                    all.add(interceptor);
+                } else {
+                    List<RequestInterceptor> interceptors = requestInterceptorMap.get(interceptor.interceptroType());
+                    if (interceptors == null) {
+                        interceptors = new ArrayList<>();
+                        requestInterceptorMap.put(interceptor.interceptroType(), interceptors);
+                    }
+                    interceptors.add(interceptor);
                 }
-                interceptors.add(interceptor);
             }
+            putTypeAllTo(requestInterceptorMap, all);
         }
-        putTypeAllTo(all);
+        this.requestInterceptors = requestInterceptorMap;
     }
 
-    private void putTypeAllTo(List<RequestInterceptor> all) {
+    private void putTypeAllTo(Map<String, List<RequestInterceptor>> requestInterceptorMap, List<RequestInterceptor> all) {
         if (all.isEmpty()) {
             return;
         }
-        requestInterceptors.values().forEach(list -> {
+        requestInterceptorMap.values().forEach(list -> {
             list.addAll(all);
             OrderComparator.sort(list);
         });
