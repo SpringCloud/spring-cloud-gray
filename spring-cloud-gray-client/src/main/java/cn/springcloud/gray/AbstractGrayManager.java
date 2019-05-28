@@ -25,6 +25,7 @@ public abstract class AbstractGrayManager implements GrayManager {
 
     private GrayDecisionFactoryKeeper grayDecisionFactoryKeeper;
     private Map<String, List<RequestInterceptor>> requestInterceptors = new HashMap<>();
+    private List<RequestInterceptor> communalRequestInterceptors = ListUtils.EMPTY_LIST;
 
 
     public AbstractGrayManager(
@@ -37,7 +38,7 @@ public abstract class AbstractGrayManager implements GrayManager {
     public List<RequestInterceptor> getRequeestInterceptors(String interceptroType) {
         List<RequestInterceptor> list = requestInterceptors.get(interceptroType);
         if (list == null) {
-            return ListUtils.EMPTY_LIST;
+            return communalRequestInterceptors;
         }
         return list;
     }
@@ -78,8 +79,8 @@ public abstract class AbstractGrayManager implements GrayManager {
 
     public void setRequestInterceptors(Collection<RequestInterceptor> requestInterceptors) {
         Map<String, List<RequestInterceptor>> requestInterceptorMap = new HashMap<>();
+        List<RequestInterceptor> all = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(requestInterceptors)) {
-            List<RequestInterceptor> all = new ArrayList<>();
             for (RequestInterceptor interceptor : requestInterceptors) {
                 if (StringUtils.equals(interceptor.interceptroType(), "all")) {
                     all.add(interceptor);
@@ -93,8 +94,11 @@ public abstract class AbstractGrayManager implements GrayManager {
                 }
             }
             putTypeAllTo(requestInterceptorMap, all);
+            this.communalRequestInterceptors = all;
         }
+        this.communalRequestInterceptors = all;
         this.requestInterceptors = requestInterceptorMap;
+
     }
 
     private void putTypeAllTo(Map<String, List<RequestInterceptor>> requestInterceptorMap, List<RequestInterceptor> all) {
