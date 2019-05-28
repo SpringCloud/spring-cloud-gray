@@ -9,10 +9,7 @@ import cn.springcloud.gray.model.GrayTrackDefinition;
 import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -83,6 +80,9 @@ public class DefaultGrayEventListener implements GrayEventListener, InstanceLoca
         }
         if (StringUtils.isNotEmpty(msg.getInstanceId())
                 && !StringUtils.equals(msg.getInstanceId(), instanceLocalInfo.getInstanceId())) {
+            return;
+        }
+        if (Objects.isNull(grayTrackHolder)) {
             return;
         }
 
