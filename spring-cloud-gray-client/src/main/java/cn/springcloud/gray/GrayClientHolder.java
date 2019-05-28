@@ -1,15 +1,13 @@
-package cn.springcloud.gray.client.netflix;
+package cn.springcloud.gray;
 
-import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.request.RequestLocalStorage;
-import com.netflix.loadbalancer.Server;
+import cn.springcloud.gray.servernode.ServerExplainer;
 
 public class GrayClientHolder {
 
     private static GrayManager grayManager;
     private static RequestLocalStorage requestLocalStorage;
-    private static ServerExplainer<Server> serverExplainer;
+    private static ServerExplainer<?> serverExplainer;
 
     public static GrayManager getGrayManager() {
         return grayManager;
@@ -27,11 +25,11 @@ public class GrayClientHolder {
         GrayClientHolder.requestLocalStorage = requestLocalStorage;
     }
 
-    public static ServerExplainer<Server> getServerExplainer() {
-        return serverExplainer;
+    public static <SERVER> ServerExplainer<SERVER> getServerExplainer() {
+        return (ServerExplainer<SERVER>) serverExplainer;
     }
 
-    public static void setServerExplainer(ServerExplainer<Server> serverExplainer) {
+    public static void setServerExplainer(ServerExplainer<?> serverExplainer) {
         GrayClientHolder.serverExplainer = serverExplainer;
     }
 }

@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.netflix.ribbon;
 
+import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.client.netflix.GrayClientHolder;
 import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.RequestLocalStorage;

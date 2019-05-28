@@ -64,4 +64,10 @@ public class GrayClientAutoConfiguration {
         return new ThreadLocalRequestStorage();
     }
 
+
+    @Bean
+    public GrayClientInitializer grayClientInitializer() {
+        return new GrayClientInitializer();
+    }
+
 }

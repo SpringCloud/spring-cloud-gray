@@ -73,7 +73,12 @@ public class GrayServerInitializingDestroyBean
     }
 
     private <T> T getBean(String beanName, Class<T> cls) {
-        T t = appCxt.getBean(beanName, cls);
+        T t = null;
+        try {
+            t = appCxt.getBean(beanName, cls);
+        } catch (BeansException e) {
+            log.warn("没有从spring容器中找到name为'{}', class为'{}'的Bean", beanName, cls);
+        }
         if (t == null) {
             t = appCxt.getBean(cls);
         }
