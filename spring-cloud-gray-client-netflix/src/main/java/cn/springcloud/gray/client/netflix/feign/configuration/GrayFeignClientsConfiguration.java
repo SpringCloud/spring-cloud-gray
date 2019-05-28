@@ -15,12 +15,10 @@ public class GrayFeignClientsConfiguration {
     @Autowired
     private Client feignClient;
     @Autowired
-    private RibbonConnectionPoint ribbonConnectionPoint;
-    @Autowired
     private GrayRequestProperties grayRequestProperties;
 
     @Bean
-    public Client getFeignClient() {
+    public Client getFeignClient(RibbonConnectionPoint ribbonConnectionPoint) {
         return new GrayFeignClient(feignClient, ribbonConnectionPoint, grayRequestProperties);
     }
 

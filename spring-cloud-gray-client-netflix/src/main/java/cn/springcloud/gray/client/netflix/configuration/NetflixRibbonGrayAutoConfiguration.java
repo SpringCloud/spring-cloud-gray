@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnBean(GrayManager.class)
 @RibbonClients(defaultConfiguration = GrayRibbonClientsConfiguration.class)
-public class NetflixGrayAutoConfiguration {
+public class NetflixRibbonGrayAutoConfiguration {
 
 
     @Bean
