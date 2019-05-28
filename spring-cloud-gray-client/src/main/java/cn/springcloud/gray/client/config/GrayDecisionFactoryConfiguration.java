@@ -3,11 +3,9 @@ package cn.springcloud.gray.client.config;
 import cn.springcloud.gray.decision.DefaultGrayDecisionFactoryKeeper;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.decision.factory.*;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.validation.Validator;
 
@@ -41,13 +39,22 @@ public class GrayDecisionFactoryConfiguration {
         }
     }
 
+
+    /**
+     * 不可引入spring mvc中的ConversionService， 否则会导致feign 加载时，找不到ServletContext， 从而出现异常:No ServletContext set
+     *
+     * @param validator         校验器
+     * @param decisionFactories 灰度决策工厂类列表
+     * @return 灰度决策工厂管理器
+     */
     @Bean
     @ConditionalOnMissingBean
     public GrayDecisionFactoryKeeper grayDecisionFactoryKeeper(
-            List<ConversionService> conversionServices, Validator validator, List<GrayDecisionFactory> decisionFactories) {
-        if (CollectionUtils.isNotEmpty(conversionServices)) {
-            return new DefaultGrayDecisionFactoryKeeper(conversionServices.get(0), validator, decisionFactories);
-        }
+            /*List<ConversionService> conversionServices, */
+            Validator validator, List<GrayDecisionFactory> decisionFactories) {
+//        if (CollectionUtils.isNotEmpty(conversionServices)) {
+//            return new DefaultGrayDecisionFactoryKeeper(conversionServices.get(0), validator, decisionFactories);
+//        }
         return new DefaultGrayDecisionFactoryKeeper(DefaultConversionService.getSharedInstance(), validator, decisionFactories);
 
     }
