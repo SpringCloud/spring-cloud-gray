@@ -4,7 +4,6 @@ import cn.springcloud.gray.server.app.GrayServerApplication;
 import cn.springcloud.gray.server.module.domain.GrayTrack;
 import cn.springcloud.gray.server.service.GrayTrackService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +19,7 @@ public class GrayTrackServiceTest {
     @Autowired
     private GrayTrackService grayTrackService;
 
-    @Test
+    //    @Test
     public void test1() {
         GrayTrack grayTrack = GrayTrack.builder()
                 .id(1L)

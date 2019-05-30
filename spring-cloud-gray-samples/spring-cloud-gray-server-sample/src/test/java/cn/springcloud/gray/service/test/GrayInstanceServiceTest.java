@@ -35,7 +35,7 @@ public class GrayInstanceServiceTest {
     private GrayServerProperties grayServerProperties;
 
 
-    @Test
+    //    @Test
     public void test() throws JsonProcessingException {
         List<GrayInstance> grayInstances = grayInstanceService.findAllByStatus(
                 GrayStatus.OPEN, grayServerProperties.getInstance().getNormalInstanceStatus());
