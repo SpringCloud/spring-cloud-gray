@@ -32,7 +32,7 @@ public class HystrixGrayAutoConfiguration {
      * @return DefaultHystrixRibbonConnectionPoint
      */
     @Bean
-    public RibbonConnectionPoint hystrixRibbonConnectionPoint(
+    public RibbonConnectionPoint ribbonConnectionPoint(
             GrayManager grayManager, RequestLocalStorage requestLocalStorage) {
         return new DefaultHystrixRibbonConnectionPoint(grayManager, requestLocalStorage);
     }
