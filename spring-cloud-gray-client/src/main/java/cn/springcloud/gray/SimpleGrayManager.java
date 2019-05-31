@@ -100,9 +100,16 @@ public class SimpleGrayManager extends AbstractGrayManager {
         }
     }
 
+    @Override
+    public void setup() {
+
+    }
+
 
     @Override
     public void shutdown() {
 
     }
+
+
 }

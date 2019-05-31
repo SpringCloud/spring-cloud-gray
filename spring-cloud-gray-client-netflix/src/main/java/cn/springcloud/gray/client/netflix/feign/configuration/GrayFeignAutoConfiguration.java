@@ -1,7 +1,6 @@
 package cn.springcloud.gray.client.netflix.feign.configuration;
 
 import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.client.netflix.configuration.HystrixGrayAutoConfiguration;
 import cn.springcloud.gray.client.netflix.feign.GrayTrackFeignRequestInterceptor;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import com.netflix.loadbalancer.ILoadBalancer;
@@ -40,11 +39,5 @@ public class GrayFeignAutoConfiguration {
 
     }
 
-
-    @Configuration
-    @ConditionalOnProperty(value = "feign.hystrix.enabled")
-    public static class HystrixConfiguration extends HystrixGrayAutoConfiguration {
-
-    }
 
 }

@@ -27,7 +27,19 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
             InformationClient informationClient) {
         super(grayClientConfig, grayDecisionFactoryKeeper, informationClient);
         this.grayLoadProperties = grayLoadProperties;
+//        openForWork();
+    }
+
+    @Override
+    public void setup() {
+        super.setup();
         openForWork();
+    }
+
+    @Override
+    public void shutdown() {
+        super.shutdown();
+        updateTimer.cancel();
     }
 
     public void openForWork() {

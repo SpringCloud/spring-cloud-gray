@@ -54,5 +54,6 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         if (grayManager instanceof AbstractGrayManager) {
             ((AbstractGrayManager) grayManager).setRequestInterceptors(requestInterceptors.values());
         }
+        grayManager.setup();
     }
 }
