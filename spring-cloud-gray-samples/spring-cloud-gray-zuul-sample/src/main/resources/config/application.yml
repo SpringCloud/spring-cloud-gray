@@ -50,6 +50,8 @@ zuul:
 #      serviceId: eureka-client #指定路由到的serviceId
 gray:
   #  enabled: true
+  hystrix:
+    enabled: true
   server:
     url: http://localhost:20202
   client:

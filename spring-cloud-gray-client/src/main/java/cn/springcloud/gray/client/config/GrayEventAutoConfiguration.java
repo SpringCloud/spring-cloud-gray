@@ -7,6 +7,7 @@ import cn.springcloud.gray.event.GrayEventListener;
 import cn.springcloud.gray.event.stream.StreamInput;
 import cn.springcloud.gray.event.stream.StreamMessageListener;
 import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -23,7 +24,8 @@ public class GrayEventAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public GrayEventListener grayEventListener(
-            CommunicableGrayTrackHolder grayTrackHolder, CommunicableGrayManager grayManager) {
+            @Autowired(required = false) CommunicableGrayTrackHolder grayTrackHolder,
+            CommunicableGrayManager grayManager) {
         return new DefaultGrayEventListener(grayTrackHolder, grayManager);
     }
 

@@ -42,6 +42,7 @@ public interface GrayManager {
 
     List<RequestInterceptor> getRequeestInterceptors(String interceptroType);
 
+    void setup();
 
     void shutdown();
 }

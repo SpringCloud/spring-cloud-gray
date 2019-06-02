@@ -2,7 +2,6 @@ package cn.springcloud.gray.client.netflix.zuul.configuration;
 
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.netflix.configuration.HystrixGrayAutoConfiguration;
 import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
 import cn.springcloud.gray.client.netflix.zuul.GrayPostZuulFilter;
 import cn.springcloud.gray.client.netflix.zuul.GrayPreZuulFilter;
@@ -45,13 +44,6 @@ public class GrayZuulAutoConfiguration {
         public ZuulRequestInterceptor zuulRequestInterceptor() {
             return new ZuulRequestInterceptor();
         }
-
-    }
-
-
-    @Configuration
-    @ConditionalOnProperty(value = "zuul.ribbonIsolationStrategy", havingValue = "THREAD")
-    public static class HystrixConfiguration extends HystrixGrayAutoConfiguration {
 
     }
 

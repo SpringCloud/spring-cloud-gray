@@ -4,7 +4,6 @@ import cn.springcloud.gray.server.app.GrayServerApplication;
 import com.netflix.discovery.EurekaClient;
 import com.netflix.discovery.shared.Application;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +24,7 @@ public class EurekaDiscoveryTest {
     private EurekaClient eurekaClient;
 
 
-    @Test
+    //    @Test
     public void test() {
         Application application = eurekaClient.getApplication("service-a");
         application.getInstances()

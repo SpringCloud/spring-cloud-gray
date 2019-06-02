@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 @Slf4j
 public class HttpHeaderGrayInfoTracker implements HttpGrayInfoTracker {
@@ -23,11 +25,13 @@ public class HttpHeaderGrayInfoTracker implements HttpGrayInfoTracker {
 
         for (String header : defValue.split(",")) {
             Enumeration<String> headerValues = request.getHeaders(header);
+            List<String> values = new ArrayList<>();
             while (headerValues.hasMoreElements()) {
                 String value = headerValues.nextElement();
-                trackInfo.addHeader(header, value);
-                log.debug("记录下header:{} -> {}", header, value);
+                values.add(value);
             }
+            log.debug("记录下header:{} -> {}", header, values);
+            trackInfo.setHeader(header, values);
         }
     }
 }

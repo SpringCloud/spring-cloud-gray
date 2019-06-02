@@ -9,6 +9,7 @@ import com.netflix.hystrix.HystrixCommand;
 import feign.hystrix.HystrixFeign;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @ConditionalOnBean(GrayManager.class)
 @ConditionalOnClass({HystrixCommand.class, HystrixFeign.class})
+@ConditionalOnProperty(value = "gray.hystrix.enabled")
 @Import(HystrixGrayTrackWebConfiguration.class)
 public class HystrixGrayAutoConfiguration {
 
@@ -32,7 +34,7 @@ public class HystrixGrayAutoConfiguration {
      * @return DefaultHystrixRibbonConnectionPoint
      */
     @Bean
-    public RibbonConnectionPoint hystrixRibbonConnectionPoint(
+    public RibbonConnectionPoint ribbonConnectionPoint(
             GrayManager grayManager, RequestLocalStorage requestLocalStorage) {
         return new DefaultHystrixRibbonConnectionPoint(grayManager, requestLocalStorage);
     }

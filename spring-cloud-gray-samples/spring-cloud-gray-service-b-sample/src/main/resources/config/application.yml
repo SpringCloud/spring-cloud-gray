@@ -45,6 +45,8 @@ feign:
 
 gray:
   enabled: true
+  hystrix:
+    enabled: true
   server:
     url: http://localhost:20202
   request:

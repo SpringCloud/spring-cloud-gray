@@ -1,13 +1,16 @@
 package cn.springcloud.gray.service.b.rest;
 
+import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.service.b.feign.TestClient;
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.Map;
 
 /**
@@ -15,6 +18,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/test")
+@Slf4j
 public class TestResource {
     @Autowired
     private RestTemplate restTemplate;
@@ -57,7 +61,20 @@ public class TestResource {
      */
     @RequestMapping(value = "/feignGet", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, Object> feignGet(@RequestParam(value = "version", required = false) String version) {
+    public Map<String, Object> feignGet(
+            @RequestParam(value = "version", required = false) String version,
+            HttpServletRequest request) {
+        Enumeration<String> names = request.getHeaderNames();
+        while (names.hasMoreElements()) {
+            String name = names.nextElement();
+            if (org.apache.commons.lang.StringUtils.startsWith(name, GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)) {
+                log.info("{}:{}", name, request.getHeader(name));
+                Enumeration<String> values = request.getHeaders(name);
+                while (values.hasMoreElements()) {
+                    System.out.println(values.nextElement());
+                }
+            }
+        }
         Map map = testClient.testGet(version);
         return ImmutableMap.of("feignGet", "success.", "service-a-result", map);
     }
