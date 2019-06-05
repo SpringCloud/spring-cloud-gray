@@ -37,6 +37,7 @@ public class DBStorageConfiguration {
         private GrayServerProperties grayServerProperties;
 
         @Bean
+        @ConditionalOnMissingBean
         public GrayServerModule grayServerModule(
                 GrayEventPublisher grayEventPublisher, @Autowired(required = false) ServiceDiscovery serviceDiscovery,
                 GrayServiceService grayServiceService, GrayInstanceService grayInstanceService,
@@ -48,6 +49,7 @@ public class DBStorageConfiguration {
 
 
         @Bean
+        @ConditionalOnMissingBean
         public GrayServerTrackModule grayServerTrackModule(GrayEventPublisher grayEventPublisher, GrayTrackService grayTrackService) {
             return new JPAGrayServerTrackModule(grayEventPublisher, grayTrackService);
         }
