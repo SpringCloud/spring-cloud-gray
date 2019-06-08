@@ -1,6 +1,5 @@
 package cn.springcloud.gray.zuul;
 
-import cn.springcloud.gray.client.EnableGrayClient;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.SpringCloudApplication;
@@ -14,7 +13,6 @@ import java.net.UnknownHostException;
 /**
  * Created by saleson on 2017/10/18.
  */
-@EnableGrayClient
 @SpringCloudApplication
 @EnableZuulProxy
 @EnableDiscoveryClient

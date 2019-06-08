@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray-samples</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>A.1.0.3</version>
+        <version>A.1.0.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,6 +34,10 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
 
 
         <dependency>
@@ -41,10 +45,10 @@
             <artifactId>spring-cloud-starter-gray-client</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>-->
+        <!--        </dependency>-->
     </dependencies>
 
     <build>

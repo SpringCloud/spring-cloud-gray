@@ -92,9 +92,9 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
         if (grayLoadProperties != null && grayLoadProperties.isEnabled()) {
             grayLoadProperties.getGrayInstances().forEach(
                     instance -> {
-                        if (grayServices.containsKey(instance.getServiceId())
+                        if (!grayServices.containsKey(instance.getServiceId())
                                 || grayServices.get(instance.getServiceId())
-                                .getGrayInstance(instance.getInstanceId()) != null) {
+                                .getGrayInstance(instance.getInstanceId()) == null) {
                             if (instance.getGrayStatus() == null) {
                                 instance.setGrayStatus(GrayStatus.OPEN);
                             }

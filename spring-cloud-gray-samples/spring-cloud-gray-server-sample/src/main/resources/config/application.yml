@@ -56,5 +56,9 @@ gray:
   server:
     evictionIntervalTimerInMs: 30000
     instance:
+      normalInstanceStatus: STARTING,UP,OUT_OF_SERVICE
       eviction:
         enabled: true
+        evictionIntervalTimerInMs: 86400000
+        evictionInstanceStatus: DOWN,UNKNOWN
+        lastUpdateDateExpireDays: 1

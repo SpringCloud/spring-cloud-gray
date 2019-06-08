@@ -16,36 +16,42 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnBean({GrayManager.class, EurekaClient.class})
+@ConditionalOnBean({GrayManager.class})
 public class GrayClientEurekaAutoConfiguration {
 
-    @Autowired
-    private SpringClientFactory springClientFactory;
 
-    @Bean
-    @ConditionalOnMissingBean
-    public InstanceLocalInfo instanceLocalInfo(@Autowired EurekaRegistration registration) {
-        String instanceId = registration.getInstanceConfig().getInstanceId();
+    @ConditionalOnBean({EurekaClient.class})
+    public static class GrayEurekaClientConfiguraion {
+        @Autowired
+        private SpringClientFactory springClientFactory;
 
-        return InstanceLocalInfo.builder()
-                .instanceId(instanceId)
-                .serviceId(registration.getServiceId())
-                .host(registration.getHost())
-                .port(registration.getPort())
-                .build();
+        @Bean
+        @ConditionalOnBean({EurekaRegistration.class})
+        @ConditionalOnMissingBean
+        public InstanceLocalInfo instanceLocalInfo(@Autowired EurekaRegistration registration) {
+            String instanceId = registration.getInstanceConfig().getInstanceId();
+
+            return InstanceLocalInfo.builder()
+                    .instanceId(instanceId)
+                    .serviceId(registration.getServiceId())
+                    .host(registration.getHost())
+                    .port(registration.getPort())
+                    .build();
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public EurekaServerExplainer eurekaServerExplainer() {
+            return new EurekaServerExplainer(springClientFactory);
+        }
+
+
+        @Bean
+        @ConditionalOnBean({EurekaServiceRegistry.class, EurekaRegistration.class})
+        public InstanceDiscoveryClient instanceDiscoveryClient(
+                EurekaServiceRegistry eurekaServiceRegistry, EurekaRegistration eurekaRegistration) {
+            return new EurekaInstanceDiscoveryClient(eurekaServiceRegistry, eurekaRegistration);
+        }
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public EurekaServerExplainer eurekaServerExplainer() {
-        return new EurekaServerExplainer(springClientFactory);
-    }
-
-
-    @Bean
-    @ConditionalOnBean({EurekaServiceRegistry.class, EurekaRegistration.class})
-    public InstanceDiscoveryClient instanceDiscoveryClient(
-            EurekaServiceRegistry eurekaServiceRegistry, EurekaRegistration eurekaRegistration) {
-        return new EurekaInstanceDiscoveryClient(eurekaServiceRegistry, eurekaRegistration);
-    }
 }

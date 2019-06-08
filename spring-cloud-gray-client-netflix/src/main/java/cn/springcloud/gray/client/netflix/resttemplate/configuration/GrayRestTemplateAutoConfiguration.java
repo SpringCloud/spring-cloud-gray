@@ -17,36 +17,43 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Configuration
-@ConditionalOnBean({GrayManager.class, RestTemplate.class})
+@ConditionalOnBean(GrayManager.class)
 @ConditionalOnClass(value = {RestTemplate.class, LoadBalanced.class})
 public class GrayRestTemplateAutoConfiguration {
 
-    @Autowired
-    private GrayRequestProperties grayRequestProperties;
-    @Autowired
-    private RibbonConnectionPoint ribbonConnectionPoint;
-
-
-    @Bean
-    public GrayClientHttpRequestIntercptor grayClientHttpRequestIntercptor(
-            @Autowired(required = false) @LoadBalanced List<RestTemplate> restTemplates) {
-        GrayClientHttpRequestIntercptor intercptor = new GrayClientHttpRequestIntercptor(
-                grayRequestProperties, ribbonConnectionPoint);
-        if (restTemplates != null) {
-            restTemplates.forEach(restTemplate -> restTemplate.getInterceptors().add(intercptor));
-        }
-        return intercptor;
-    }
-
 
     @Configuration
-    @ConditionalOnProperty(value = "gray.request.track.enabled", matchIfMissing = true)
-    public static class GrayTrackRestTemplateConfiguration {
+    @ConditionalOnBean(RestTemplate.class)
+    public static class LoadBalanceRestTemplateConfiguration {
+        @Autowired
+        private GrayRequestProperties grayRequestProperties;
+        @Autowired
+        private RibbonConnectionPoint ribbonConnectionPoint;
+
 
         @Bean
-        public RestTemplateRequestInterceptor restTemplateRequestInterceptor() {
-            return new RestTemplateRequestInterceptor();
+        public GrayClientHttpRequestIntercptor grayClientHttpRequestIntercptor(
+                @Autowired(required = false) @LoadBalanced List<RestTemplate> restTemplates) {
+            GrayClientHttpRequestIntercptor intercptor = new GrayClientHttpRequestIntercptor(
+                    grayRequestProperties, ribbonConnectionPoint);
+            if (restTemplates != null) {
+                restTemplates.forEach(restTemplate -> restTemplate.getInterceptors().add(intercptor));
+            }
+            return intercptor;
         }
 
+
+        @Configuration
+        @ConditionalOnProperty(value = "gray.request.track.enabled", matchIfMissing = true)
+        public static class GrayTrackRestTemplateConfiguration {
+
+            @Bean
+            public RestTemplateRequestInterceptor restTemplateRequestInterceptor() {
+                return new RestTemplateRequestInterceptor();
+            }
+
+        }
     }
+
+
 }
