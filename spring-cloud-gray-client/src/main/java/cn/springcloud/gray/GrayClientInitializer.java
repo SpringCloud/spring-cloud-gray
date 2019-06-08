@@ -51,8 +51,8 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
     private void initGrayManagerRequestInterceptors() {
         Map<String, RequestInterceptor> requestInterceptors = cxt.getBeansOfType(RequestInterceptor.class);
         GrayManager grayManager = GrayClientHolder.getGrayManager();
-        if (grayManager instanceof AbstractGrayManager) {
-            ((AbstractGrayManager) grayManager).setRequestInterceptors(requestInterceptors.values());
+        if (grayManager instanceof UpdateableGrayManager) {
+            ((UpdateableGrayManager) grayManager).setRequestInterceptors(requestInterceptors.values());
         }
         grayManager.setup();
     }

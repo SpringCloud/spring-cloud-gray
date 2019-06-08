@@ -1,15 +1,15 @@
 package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.*;
+import cn.springcloud.gray.cache.CaffeineCache;
 import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
-import cn.springcloud.gray.client.config.properties.GrayClientProperties;
-import cn.springcloud.gray.client.config.properties.GrayLoadProperties;
-import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.config.properties.GrayServerProperties;
+import cn.springcloud.gray.client.config.properties.*;
 import cn.springcloud.gray.communication.InformationClient;
+import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,6 +17,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableConfigurationProperties(
@@ -41,8 +44,18 @@ public class GrayClientAutoConfiguration {
             @Autowired(required = false) GrayLoadProperties grayLoadProperties,
             GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
             @Autowired(required = false) InformationClient informationClient) {
-        return new DefaultGrayManager(
+
+        CacheProperties cacheProperties = grayClientProperties.getCacheProperties("grayDecision");
+        com.github.benmanes.caffeine.cache.Cache<String, List<GrayDecision>> cache = Caffeine.newBuilder()
+                .maximumSize(cacheProperties.getMaximumSize())
+                .expireAfterWrite(cacheProperties.getExpireSeconds(), TimeUnit.SECONDS)
+                .softValues()
+                .build();
+
+        DefaultGrayManager grayManager = new DefaultGrayManager(
                 grayClientProperties, grayLoadProperties, grayDecisionFactoryKeeper, informationClient);
+
+        return new CachedDelegateGrayManager(grayManager, new CaffeineCache<>(cache));
     }
 
 

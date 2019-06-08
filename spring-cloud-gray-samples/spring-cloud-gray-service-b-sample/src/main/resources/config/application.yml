@@ -49,7 +49,7 @@ hystrix:
 
 
 gray:
-  enabled: true
+  enabled: false
   hystrix:
     enabled: true
   server:
@@ -71,14 +71,14 @@ gray:
       definitionsUpdateIntervalTimerInMs: 0
       web:
         track-definitions:
-          - name: HttpIP
-          - name: HttpMethod
-          - name: HttpURI
+          #          - name: HttpIP
+          #          - name: HttpMethod
+          #          - name: HttpURI
           - name: HttpReceive
           - name: HttpHeader
             value: test,test-mm
-          - name: HttpParameter
-            value: version,test
+        #          - name: HttpParameter
+        #            value: version,test
         path-patterns: /*
         exclude-path-patterns: /test/*
   load:

@@ -65,14 +65,14 @@ gray:
       definitionsUpdateIntervalTimerInMs: 0
       web:
         track-definitions:
-          - name: HttpIP
-          - name: HttpMethod
-          - name: HttpURI
-          - name: HttpReceive
+          #          - name: HttpIP
+          #          - name: HttpMethod
+          #          - name: HttpURI
+          #          - name: HttpReceive
           - name: HttpHeader
             value: test,test-mm
-          - name: HttpParameter
-            value: version,test
+        #          - name: HttpParameter
+        #            value: version,test
         path-patterns: /*
   load:
     enabled: true

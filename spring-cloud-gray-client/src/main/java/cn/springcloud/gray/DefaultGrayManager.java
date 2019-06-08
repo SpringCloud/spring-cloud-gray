@@ -27,13 +27,17 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
             InformationClient informationClient) {
         super(grayClientConfig, grayDecisionFactoryKeeper, informationClient);
         this.grayLoadProperties = grayLoadProperties;
-//        openForWork();
     }
 
     @Override
     public void setup() {
         super.setup();
-        openForWork();
+        updateTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                openForWork();
+            }
+        }, getGrayClientConfig().getServiceInitializeDelayTimeInMs());
     }
 
     @Override
@@ -67,7 +71,7 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
                         updateGrayInstance(grayServices, instance);
                     });
             joinLoadedGrays(grayServices);
-            this.grayServices = grayServices;
+            setGrayServices(grayServices);
         } catch (Exception e) {
             log.error("更新灰度服务列表失败", e);
         } finally {
@@ -79,7 +83,7 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
     private void loadPropertiesGrays() {
         Map<String, GrayService> grayServices = new ConcurrentHashMap<>();
         joinLoadedGrays(grayServices);
-        this.grayServices = grayServices;
+        setGrayServices(grayServices);
     }
 
 
