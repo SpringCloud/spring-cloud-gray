@@ -53,9 +53,11 @@ public class GrayClientAutoConfiguration {
                 .build();
 
         DefaultGrayManager grayManager = new DefaultGrayManager(
-                grayClientProperties, grayLoadProperties, grayDecisionFactoryKeeper, informationClient);
+                grayClientProperties, grayLoadProperties, grayDecisionFactoryKeeper, informationClient,
+                new CaffeineCache<>(cache));
+        return grayManager;
 
-        return new CachedDelegateGrayManager(grayManager, new CaffeineCache<>(cache));
+//        return new CachedDelegateGrayManager(grayManager, new CaffeineCache<>(cache));
     }
 
 

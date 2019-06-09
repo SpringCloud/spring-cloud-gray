@@ -113,6 +113,13 @@ public class JPAGrayServerModule implements GrayServerModule {
 
         }
         grayInstanceService.saveModel(instance);
+        if (grayServerProperties.getInstance().getNormalInstanceStatus().contains(instance.getInstanceStatus())) {
+            if (Objects.equals(instance.getGrayStatus(), GrayStatus.OPEN)) {
+                publishUpdateIntanceEvent(instance);
+            } else {
+                publishDownIntanceEvent(instance);
+            }
+        }
     }
 
     @Override

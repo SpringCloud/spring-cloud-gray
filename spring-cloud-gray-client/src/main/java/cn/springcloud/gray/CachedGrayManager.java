@@ -1,30 +1,33 @@
 package cn.springcloud.gray;
 
 import cn.springcloud.gray.decision.GrayDecision;
+import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.model.GrayInstance;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public class CachedDelegateGrayManager extends GrayManagerDelegater implements CacheableGrayManager, CommunicableGrayManager {
+public class CachedGrayManager extends SimpleGrayManager implements CacheableGrayManager {
 
-    private Cache<String, List<GrayDecision>> grayDecisionCache;
+    protected Cache<String, List<GrayDecision>> grayDecisionCache;
 
 
-    public CachedDelegateGrayManager(GrayManager delegate, Cache<String, List<GrayDecision>> grayDecisionCache) {
-        super(delegate);
+    public CachedGrayManager(
+            GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
+            Cache<String, List<GrayDecision>> grayDecisionCache) {
+        super(grayDecisionFactoryKeeper);
         this.grayDecisionCache = grayDecisionCache;
     }
 
 
     @Override
     public List<GrayDecision> getGrayDecision(GrayInstance instance) {
-        return getCacheGrayDecision(instance.getInstanceId(), () -> delegate.getGrayDecision(instance));
+        return getCacheGrayDecision(instance.getInstanceId(), () -> super.getGrayDecision(instance));
     }
 
     @Override
     public List<GrayDecision> getGrayDecision(String serviceId, String instanceId) {
-        return getCacheGrayDecision(instanceId, () -> delegate.getGrayDecision(serviceId, instanceId));
+        return getCacheGrayDecision(instanceId, () -> super.getGrayDecision(getGrayInstance(serviceId, instanceId)));
     }
 
 
@@ -36,29 +39,27 @@ public class CachedDelegateGrayManager extends GrayManagerDelegater implements C
 
     @Override
     public void updateGrayInstance(GrayInstance instance) {
-        delegate.updateGrayInstance(instance);
+        super.updateGrayInstance(instance);
         invalidateCache(instance.getServiceId(), instance.getInstanceId());
     }
 
     @Override
     public void closeGray(GrayInstance instance) {
-        delegate.closeGray(instance);
+        super.closeGray(instance);
         invalidateCache(instance.getServiceId(), instance.getInstanceId());
     }
 
     @Override
     public void closeGray(String serviceId, String instanceId) {
-        delegate.closeGray(serviceId, instanceId);
+        super.closeGray(serviceId, instanceId);
         invalidateCache(serviceId, instanceId);
     }
 
 
     @Override
     public void setGrayServices(Object grayServices) {
-        if (delegate instanceof UpdateableGrayManager) {
-            ((UpdateableGrayManager) delegate).setGrayServices(grayServices);
-            grayDecisionCache.invalidateAll();
-        }
+        super.setGrayServices(grayServices);
+        grayDecisionCache.invalidateAll();
     }
 
 
@@ -69,5 +70,4 @@ public class CachedDelegateGrayManager extends GrayManagerDelegater implements C
     private void invalidateCache(String serviceId, String instanceId) {
         grayDecisionCache.invalidate(instanceId);
     }
-
 }
