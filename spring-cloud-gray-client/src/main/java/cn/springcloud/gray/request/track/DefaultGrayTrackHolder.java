@@ -38,6 +38,15 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
 //        openForWork();
     }
 
+    public void setup() {
+        updateTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                openForWork();
+            }
+        }, grayTrackProperties.getDefinitionsInitializeDelayTimeInMs());
+    }
+
 
     public void openForWork() {
         log.info("拉取灰度追踪列表");

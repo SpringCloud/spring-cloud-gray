@@ -27,7 +27,7 @@ import java.util.List;
 public class GrayTrackConfiguration {
 
 
-    @Bean(initMethod = "openForWork")
+    @Bean(initMethod = "setup")
     @ConditionalOnMissingBean
     public GrayTrackHolder grayTrackHolder(
             GrayTrackProperties grayTrackProperties,

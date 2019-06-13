@@ -2,13 +2,11 @@ package cn.springcloud.gray.request;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.apache.commons.collections.MapUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -22,6 +20,9 @@ public class GrayHttpRequest extends GrayRequest {
 
 
     public void addHeaders(Map<String, ? extends Collection<String>> headers) {
+        if (MapUtils.isEmpty(headers)) {
+            return;
+        }
         headers.forEach((k, v) -> {
             Map<String, Collection<String>> headerMap = (Map<String, Collection<String>>) this.headers;
             headerMap.put(k, v);
@@ -30,6 +31,9 @@ public class GrayHttpRequest extends GrayRequest {
 
 
     public void addParameters(Map<String, ? extends Collection<String>> parameters) {
+        if (CollectionUtils.isEmpty(parameters)) {
+            return;
+        }
         parameters.forEach((k, v) -> {
             Map<String, Collection<String>> parameterMap = (Map<String, Collection<String>>) this.parameters;
             parameterMap.put(k, v);
