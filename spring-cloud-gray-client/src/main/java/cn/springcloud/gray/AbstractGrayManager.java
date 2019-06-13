@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * GrayManager的抽象实现类实现了基础的获取灰度列表， 创建灰度决策对象的能力
  */
-public abstract class AbstractGrayManager implements GrayManager {
+public abstract class AbstractGrayManager implements UpdateableGrayManager {
     private static final Logger log = LoggerFactory.getLogger(AbstractGrayManager.class);
 
 

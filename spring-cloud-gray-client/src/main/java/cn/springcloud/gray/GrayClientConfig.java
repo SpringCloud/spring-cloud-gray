@@ -33,4 +33,5 @@ public interface GrayClientConfig {
     int getServiceUpdateIntervalTimerInMs();
 
 
+    int getServiceInitializeDelayTimeInMs();
 }

@@ -12,7 +12,7 @@
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-gray</artifactId>
     <packaging>pom</packaging>
-    <version>A.1.0.3</version>
+    <version>A.1.0.4</version>
     <url>https://github.com/SpringCloud/spring-cloud-gray</url>
     <organization>
         <name>Spring Cloud中国社区</name>
@@ -70,7 +70,7 @@
         <commons-lang3.version>3.5</commons-lang3.version>
         <guava.version>27.0.1-jre</guava.version>
         <mapstruct.version>1.1.0.Final</mapstruct.version>
-
+        <caffeine.version>2.7.0</caffeine.version>
     </properties>
 
 
@@ -92,6 +92,11 @@
             <!--                <scope>import</scope>-->
             <!--            </dependency>-->
 
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>io.springfox</groupId>

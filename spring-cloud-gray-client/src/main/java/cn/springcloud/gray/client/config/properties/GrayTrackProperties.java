@@ -18,6 +18,10 @@ public class GrayTrackProperties {
     private Web web = new Web();
 
     private int definitionsUpdateIntervalTimerInMs = 60000;
+    /**
+     * 实始追踪信息的延迟时间
+     */
+    private int definitionsInitializeDelayTimeInMs = 40000;
 
     @Setter
     @Getter

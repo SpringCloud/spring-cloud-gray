@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray-samples</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>A.1.0.3</version>
+        <version>A.1.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,11 +28,15 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.5</version>
         </dependency>
-
         <dependency>
-            <groupId>cn.springcloud.gray</groupId>
-            <artifactId>spring-cloud-starter-gray-client</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>cn.springcloud.gray</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-gray-client</artifactId>-->
+        <!--        </dependency>-->
     </dependencies>
 
 </project>

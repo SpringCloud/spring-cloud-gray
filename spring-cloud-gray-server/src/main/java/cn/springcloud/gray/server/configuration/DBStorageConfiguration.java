@@ -19,11 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.sql.DataSource;
+import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {"cn.springcloud.gray.server.dao.repository"})
@@ -40,6 +37,7 @@ public class DBStorageConfiguration {
         private GrayServerProperties grayServerProperties;
 
         @Bean
+        @ConditionalOnMissingBean
         public GrayServerModule grayServerModule(
                 GrayEventPublisher grayEventPublisher, @Autowired(required = false) ServiceDiscovery serviceDiscovery,
                 GrayServiceService grayServiceService, GrayInstanceService grayInstanceService,
@@ -51,6 +49,7 @@ public class DBStorageConfiguration {
 
 
         @Bean
+        @ConditionalOnMissingBean
         public GrayServerTrackModule grayServerTrackModule(GrayEventPublisher grayEventPublisher, GrayTrackService grayTrackService) {
             return new JPAGrayServerTrackModule(grayEventPublisher, grayTrackService);
         }
@@ -64,6 +63,7 @@ public class DBStorageConfiguration {
 
         @Bean
         @ConditionalOnMissingBean
+        @Transactional
         public GrayInstanceRecordEvictor grayInstanceRecordEvictor(
                 GrayInstanceService grayInstanceService, GrayServerProperties grayServerProperties) {
             GrayServerProperties.InstanceRecordEvictProperties evictProperties =
@@ -72,13 +72,6 @@ public class DBStorageConfiguration {
                     evictProperties.getEvictionInstanceStatus(),
                     evictProperties.getLastUpdateDateExpireDays());
         }
-
-
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager(DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
     }
 
 }

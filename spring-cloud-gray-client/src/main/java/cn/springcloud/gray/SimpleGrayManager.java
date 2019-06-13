@@ -112,4 +112,12 @@ public class SimpleGrayManager extends AbstractGrayManager {
     }
 
 
+    @Override
+    public void setGrayServices(Object grayServices) {
+        if (grayServices instanceof Map) {
+            this.grayServices = (Map<String, GrayService>) grayServices;
+        } else {
+            throw new UnsupportedOperationException("setGrayServices(grayServices) 无法支持的参数类型");
+        }
+    }
 }

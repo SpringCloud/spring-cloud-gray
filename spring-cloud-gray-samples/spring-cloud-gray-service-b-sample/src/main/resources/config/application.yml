@@ -42,6 +42,11 @@ eureka:
 feign:
   hystrix:
     enabled: true
+hystrix:
+  threadpool:
+    default:
+      coreSize: 100
+
 
 gray:
   enabled: true
@@ -49,21 +54,35 @@ gray:
     enabled: true
   server:
     url: http://localhost:20202
+    loadbalanced: false
+    retryable: true
+    retryNumberOfRetries: 3
+  client:
+    runenv: web
+    serviceUpdateIntervalTimerInMs: 30000
+    instance:
+      grayEnroll: false
+      grayEnrollDealyTimeInMs: 40000
+
   request:
     track:
+      enabled: true
+      trackType: web
+      definitionsUpdateIntervalTimerInMs: 0
       web:
         track-definitions:
-          - name: HttpIP
-          - name: HttpMethod
-          - name: HttpURI
+          #          - name: HttpIP
+          #          - name: HttpMethod
+          #          - name: HttpURI
           - name: HttpReceive
           - name: HttpHeader
             value: test,test-mm
-          - name: HttpParameter
-            value: version,test
+        #          - name: HttpParameter
+        #            value: version,test
         path-patterns: /*
+        exclude-path-patterns: /test/*
   load:
-    enabled: false
+    enabled: true
     gray-instances:
       - serviceId: service-a
         instance-id: service-a:20104

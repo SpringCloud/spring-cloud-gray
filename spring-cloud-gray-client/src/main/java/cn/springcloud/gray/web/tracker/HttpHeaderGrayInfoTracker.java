@@ -3,6 +3,7 @@ package cn.springcloud.gray.web.tracker;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.TrackArgs;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,13 +26,20 @@ public class HttpHeaderGrayInfoTracker implements HttpGrayInfoTracker {
 
         for (String header : defValue.split(",")) {
             Enumeration<String> headerValues = request.getHeaders(header);
-            List<String> values = new ArrayList<>();
-            while (headerValues.hasMoreElements()) {
-                String value = headerValues.nextElement();
-                values.add(value);
+            List<String> values = null;
+            if (headerValues instanceof List) {
+                values = (List<String>) headerValues;
+            } else {
+                values = new ArrayList<>();
+                while (headerValues.hasMoreElements()) {
+                    String value = headerValues.nextElement();
+                    values.add(value);
+                }
             }
-            log.debug("记录下header:{} -> {}", header, values);
-            trackInfo.setHeader(header, values);
+            if (!CollectionUtils.isEmpty(values)) {
+                log.debug("记录下header:{} -> {}", header, values);
+                trackInfo.setHeader(header, values);
+            }
         }
     }
 }

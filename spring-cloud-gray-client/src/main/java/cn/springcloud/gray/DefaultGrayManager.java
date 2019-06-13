@@ -2,6 +2,7 @@ package cn.springcloud.gray;
 
 import cn.springcloud.gray.client.config.properties.GrayLoadProperties;
 import cn.springcloud.gray.communication.InformationClient;
+import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
@@ -15,25 +16,34 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class DefaultGrayManager extends AbstractCommunicableGrayManager {
+public class DefaultGrayManager extends CachedGrayManager implements CommunicableGrayManager {
 
     private Timer updateTimer = new Timer("Gray-Update-Timer", true);
     private GrayLoadProperties grayLoadProperties;
+    private GrayClientConfig grayClientConfig;
+    private InformationClient informationClient;
 
     public DefaultGrayManager(
             GrayClientConfig grayClientConfig,
             GrayLoadProperties grayLoadProperties,
             GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
-            InformationClient informationClient) {
-        super(grayClientConfig, grayDecisionFactoryKeeper, informationClient);
+            InformationClient informationClient,
+            Cache<String, List<GrayDecision>> grayDecisionCache) {
+        super(grayDecisionFactoryKeeper, grayDecisionCache);
         this.grayLoadProperties = grayLoadProperties;
-//        openForWork();
+        this.grayClientConfig = grayClientConfig;
+        this.informationClient = informationClient;
     }
 
     @Override
     public void setup() {
         super.setup();
-        openForWork();
+        updateTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                openForWork();
+            }
+        }, getGrayClientConfig().getServiceInitializeDelayTimeInMs());
     }
 
     @Override
@@ -67,7 +77,7 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
                         updateGrayInstance(grayServices, instance);
                     });
             joinLoadedGrays(grayServices);
-            this.grayServices = grayServices;
+            setGrayServices(grayServices);
         } catch (Exception e) {
             log.error("更新灰度服务列表失败", e);
         } finally {
@@ -79,7 +89,7 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
     private void loadPropertiesGrays() {
         Map<String, GrayService> grayServices = new ConcurrentHashMap<>();
         joinLoadedGrays(grayServices);
-        this.grayServices = grayServices;
+        setGrayServices(grayServices);
     }
 
 
@@ -92,9 +102,9 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
         if (grayLoadProperties != null && grayLoadProperties.isEnabled()) {
             grayLoadProperties.getGrayInstances().forEach(
                     instance -> {
-                        if (grayServices.containsKey(instance.getServiceId())
+                        if (!grayServices.containsKey(instance.getServiceId())
                                 || grayServices.get(instance.getServiceId())
-                                .getGrayInstance(instance.getInstanceId()) != null) {
+                                .getGrayInstance(instance.getInstanceId()) == null) {
                             if (instance.getGrayStatus() == null) {
                                 instance.setGrayStatus(GrayStatus.OPEN);
                             }
@@ -110,5 +120,14 @@ public class DefaultGrayManager extends AbstractCommunicableGrayManager {
         public void run() {
             doUpdate();
         }
+    }
+
+    public GrayClientConfig getGrayClientConfig() {
+        return grayClientConfig;
+    }
+
+    @Override
+    public InformationClient getGrayInformationClient() {
+        return informationClient;
     }
 }
