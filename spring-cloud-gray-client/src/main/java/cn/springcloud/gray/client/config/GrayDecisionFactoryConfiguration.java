@@ -37,6 +37,21 @@ public class GrayDecisionFactoryConfiguration {
         public TraceIpGrayDecisionFactory traceIpGrayDecisionFactory() {
             return new TraceIpGrayDecisionFactory();
         }
+
+        @Bean
+        public HttpTrackParameterGrayDecisionFactory httpTrackParameterGrayDecisionFactory() {
+            return new HttpTrackParameterGrayDecisionFactory();
+        }
+
+        @Bean
+        public HttpTrackHeaderGrayDecisionFactory httpTrackHeaderGrayDecisionFactory() {
+            return new HttpTrackHeaderGrayDecisionFactory();
+        }
+
+        @Bean
+        public TrackAttributeGrayDecisionFactory trackAttributeGrayDecisionFactory() {
+            return new TrackAttributeGrayDecisionFactory();
+        }
     }
 
 

@@ -2,8 +2,8 @@ package cn.springcloud.gray.decision.factory;
 
 import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.compare.Comparators;
+import cn.springcloud.gray.decision.compare.PredicateComparator;
 import cn.springcloud.gray.request.GrayHttpRequest;
-import cn.springcloud.gray.request.GrayRequest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,9 +23,14 @@ public class HttpHeaderGrayDecisionFactory
     public GrayDecision apply(Config configBean) {
         return args -> {
             GrayHttpRequest grayRequest = (GrayHttpRequest) args.getGrayRequest();
+
+            PredicateComparator<Collection<String>> predicateComparator =
+                    Comparators.getCollectionStringComparator(configBean.getCompareMode());
+            if (predicateComparator == null) {
+                return false;
+            }
             Map<String, ? extends Collection<String>> headers = grayRequest.getHeaders();
-            return Comparators.getCollectionStringComparator(configBean.getCompareMode())
-                    .test(headers.get(configBean.getHeader()), configBean.getValues());
+            return predicateComparator.test(headers.get(configBean.getHeader()), configBean.getValues());
         };
     }
 

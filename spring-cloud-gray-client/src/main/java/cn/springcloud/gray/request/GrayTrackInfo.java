@@ -3,9 +3,9 @@ package cn.springcloud.gray.request;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 public class GrayTrackInfo {
@@ -29,6 +29,24 @@ public class GrayTrackInfo {
 
     public void setAttribute(String name, String value) {
         attributes.put(name, value);
+    }
+
+
+    /**
+     * 生成灰度追踪的名称
+     *
+     * @param keys
+     * @return
+     */
+    public static String generateGrayTrackName(String... keys) {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < keys.length; i++) {
+            str.append(keys[i]);
+            if (!Objects.equals(i + 1, keys.length)) {
+                str.append(GRAY_TRACK_SEPARATE);
+            }
+        }
+        return str.toString();
     }
 
 }
