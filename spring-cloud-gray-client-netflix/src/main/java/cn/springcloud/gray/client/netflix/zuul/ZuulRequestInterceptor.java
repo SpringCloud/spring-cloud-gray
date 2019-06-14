@@ -39,8 +39,6 @@ public class ZuulRequestInterceptor implements RequestInterceptor {
                     String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
-                    context.addZuulRequestHeader(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
-
                     entry.getValue().forEach(v -> {
                         context.addZuulRequestHeader(name, v);
                     });
