@@ -2,8 +2,8 @@ package cn.springcloud.gray.client.netflix.ribbon;
 
 import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.GrayDecisionInputArgs;
-import cn.springcloud.gray.servernode.ServerSpec;
 import cn.springcloud.gray.request.GrayRequest;
+import cn.springcloud.gray.servernode.ServerSpec;
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.PredicateKey;
 import com.netflix.loadbalancer.Server;
@@ -29,8 +29,10 @@ public class GrayDecisionPredicate extends AbstractServerPredicate {
 
         ServerSpec serverSpec = grayRule.getServerExplainer().apply(server);
 
+        GrayDecisionInputArgs decisionInputArgs = GrayDecisionInputArgs
+                .builder().grayRequest(grayRequest).server(serverSpec).build();
         for (GrayDecision grayDecision : grayDecisions) {
-            if (grayDecision.test(GrayDecisionInputArgs.builder().grayRequest(grayRequest).server(serverSpec).build())) {
+            if (grayDecision.test(decisionInputArgs)) {
                 return true;
             }
         }

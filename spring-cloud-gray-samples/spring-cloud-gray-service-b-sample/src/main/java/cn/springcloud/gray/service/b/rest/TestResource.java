@@ -1,5 +1,6 @@
 package cn.springcloud.gray.service.b.rest;
 
+import cn.springcloud.gray.service.b.feign.Test2Client;
 import cn.springcloud.gray.service.b.feign.TestClient;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,8 @@ public class TestResource {
     private RestTemplate restTemplate;
     @Autowired
     private TestClient testClient;
+    @Autowired
+    private Test2Client test2Client;
 
 
     @RequestMapping(value = "/testGet", method = RequestMethod.GET)
@@ -74,6 +77,15 @@ public class TestResource {
 ////            }
 //        }
         Map map = testClient.testGet(version);
+        return ImmutableMap.of("feignGet", "success.", "service-a-result", map);
+    }
+
+    @RequestMapping(value = "/feign2Get", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> feign2Get(
+            @RequestParam(value = "version", required = false) String version,
+            HttpServletRequest request) {
+        Map map = test2Client.testGet(version);
         return ImmutableMap.of("feignGet", "success.", "service-a-result", map);
     }
 }

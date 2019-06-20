@@ -51,7 +51,6 @@ public class DefaultRibbonConnectionPoint implements RibbonConnectionPoint {
             }
         });
         ConnectPointContext.removeContextLocal();
-        requestLocalStorage.removeGrayTrackInfo();
         requestLocalStorage.removeGrayRequest();
     }
 

@@ -59,10 +59,10 @@ gray:
     retryNumberOfRetries: 3
   client:
     runenv: web
-    serviceUpdateIntervalTimerInMs: 30000
+    serviceUpdateIntervalTimerInMs: 10000
     instance:
       grayEnroll: false
-      grayEnrollDealyTimeInMs: 40000
+      grayEnrollDealyTimeInMs: 20000
 
   request:
     track:
