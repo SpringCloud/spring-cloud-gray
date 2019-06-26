@@ -5,7 +5,10 @@ import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 
 public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
@@ -46,6 +49,20 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
                     template.header(name, entry.getValue());
                 });
             }
+
+            appendGrayTrackInfoToHeader(GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX, grayTrack.getAttributes(), template);
+        }
+    }
+
+
+    private void appendGrayTrackInfoToHeader(String grayPrefix, Map<String, String> infos, RequestTemplate template) {
+        if (MapUtils.isNotEmpty(infos)) {
+            infos.entrySet().forEach(entry -> {
+                String name = new StringBuilder().append(grayPrefix)
+                        .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
+                        .append(entry.getKey()).toString();
+                template.header(name, entry.getValue());
+            });
         }
     }
 }

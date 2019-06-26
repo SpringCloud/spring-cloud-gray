@@ -6,9 +6,11 @@ import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import feign.Request;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
+import java.util.Map;
 
 public class FeignRequestInterceptor implements RequestInterceptor {
     @Override
@@ -51,6 +53,17 @@ public class FeignRequestInterceptor implements RequestInterceptor {
                     feignRequest.headers().put(name, entry.getValue());
                 });
             }
+
+            Map<String, String> grayAttributes = grayTrack.getAttributes();
+            if (MapUtils.isNotEmpty(grayAttributes)) {
+                grayAttributes.entrySet().forEach(entry -> {
+                    String name = new StringBuilder().append(GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX)
+                            .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
+                            .append(entry.getKey()).toString();
+                    feignRequest.headers().put(name, Arrays.asList(entry.getValue()));
+                });
+            }
+
         }
         return true;
     }

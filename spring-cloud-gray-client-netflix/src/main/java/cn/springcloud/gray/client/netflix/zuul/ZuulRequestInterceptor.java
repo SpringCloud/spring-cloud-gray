@@ -6,7 +6,10 @@ import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import com.netflix.zuul.context.RequestContext;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 public class ZuulRequestInterceptor implements RequestInterceptor {
     @Override
@@ -52,6 +55,16 @@ public class ZuulRequestInterceptor implements RequestInterceptor {
                     entry.getValue().forEach(v -> {
                         context.addZuulRequestHeader(name, v);
                     });
+                });
+            }
+
+            Map<String, String> grayAttributes = grayTrack.getAttributes();
+            if (MapUtils.isNotEmpty(grayAttributes)) {
+                grayAttributes.entrySet().forEach(entry -> {
+                    String name = new StringBuilder().append(GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX)
+                            .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
+                            .append(entry.getKey()).toString();
+                    context.addZuulRequestHeader(name, entry.getValue());
                 });
             }
 

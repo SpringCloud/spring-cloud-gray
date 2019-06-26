@@ -5,9 +5,12 @@ import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
+
+import java.util.Map;
 
 public class RestTemplateRequestInterceptor implements RequestInterceptor {
     @Override
@@ -50,6 +53,16 @@ public class RestTemplateRequestInterceptor implements RequestInterceptor {
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
                             .append(entry.getKey()).toString();
                     httpHeaders.put(name, entry.getValue());
+                });
+            }
+
+            Map<String, String> grayAttributes = grayTrack.getAttributes();
+            if (MapUtils.isNotEmpty(grayAttributes)) {
+                grayAttributes.entrySet().forEach(entry -> {
+                    String name = new StringBuilder().append(GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX)
+                            .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
+                            .append(entry.getKey()).toString();
+                    httpHeaders.add(name, entry.getValue());
                 });
             }
         }
