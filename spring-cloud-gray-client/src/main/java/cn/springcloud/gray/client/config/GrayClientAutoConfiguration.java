@@ -26,7 +26,8 @@ import java.util.concurrent.TimeUnit;
         {GrayClientProperties.class,
                 GrayServerProperties.class,
                 GrayRequestProperties.class,
-                GrayLoadProperties.class})
+                GrayLoadProperties.class,
+                GrayHoldoutServerProperties.class})
 @ConditionalOnProperty(value = "gray.enabled")
 @Import({InformationClientConfiguration.class,
         GrayDecisionFactoryConfiguration.class,

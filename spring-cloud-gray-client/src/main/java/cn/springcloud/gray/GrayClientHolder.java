@@ -2,12 +2,14 @@ package cn.springcloud.gray;
 
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
+import cn.springcloud.gray.servernode.ServerListProcessor;
 
 public class GrayClientHolder {
 
     private static GrayManager grayManager;
     private static RequestLocalStorage requestLocalStorage;
     private static ServerExplainer<?> serverExplainer;
+    private static ServerListProcessor<?> serverListProcessor;
 
     public static GrayManager getGrayManager() {
         return grayManager;
@@ -31,5 +33,13 @@ public class GrayClientHolder {
 
     public static void setServerExplainer(ServerExplainer<?> serverExplainer) {
         GrayClientHolder.serverExplainer = serverExplainer;
+    }
+
+    public static void setServerListProcessor(ServerListProcessor<?> serverListProcessor) {
+        GrayClientHolder.serverListProcessor = serverListProcessor;
+    }
+
+    public static <SERVER> ServerListProcessor<SERVER> getServereListProcessor() {
+        return (ServerListProcessor<SERVER>) serverListProcessor;
     }
 }
