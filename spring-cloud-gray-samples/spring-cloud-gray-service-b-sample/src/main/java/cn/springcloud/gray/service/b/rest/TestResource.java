@@ -2,6 +2,7 @@ package cn.springcloud.gray.service.b.rest;
 
 import cn.springcloud.gray.service.b.feign.Test2Client;
 import cn.springcloud.gray.service.b.feign.TestClient;
+import cn.springcloud.gray.service.b.service.TestService;
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Created by saleson on 2017/10/18.
@@ -25,6 +28,8 @@ public class TestResource {
     private TestClient testClient;
     @Autowired
     private Test2Client test2Client;
+    @Autowired
+    private TestService testService;
 
 
     @RequestMapping(value = "/testGet", method = RequestMethod.GET)
@@ -78,6 +83,15 @@ public class TestResource {
 //        }
         Map map = testClient.testGet(version);
         return ImmutableMap.of("feignGet", "success.", "service-a-result", map);
+    }
+
+    @RequestMapping(value = "/feignGetAsync", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> feignGetAsync(
+            @RequestParam(value = "version", required = false) String version,
+            HttpServletRequest request) throws ExecutionException, InterruptedException {
+        Future<Map> map = testService.get(version);
+        return ImmutableMap.of("feignGet", "success.", "service-a-result", map.get());
     }
 
     @RequestMapping(value = "/feign2Get", method = RequestMethod.GET)
