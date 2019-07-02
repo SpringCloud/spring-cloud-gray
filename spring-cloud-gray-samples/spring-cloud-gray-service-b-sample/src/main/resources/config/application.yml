@@ -63,7 +63,10 @@ gray:
     instance:
       grayEnroll: false
       grayEnrollDealyTimeInMs: 20000
-
+  holdoutServer:
+    enabled: true
+    services:
+      service-a: starting
   request:
     track:
       enabled: true
