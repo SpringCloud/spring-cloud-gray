@@ -2,8 +2,8 @@ package cn.springcloud.gray.client.netflix.connectionpoint;
 
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.request.RequestLocalStorage;
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 
+@Deprecated
 public class DefaultHystrixRibbonConnectionPoint extends DefaultRibbonConnectionPoint {
 
     private ThreadLocal<Boolean> hystrixRequestContextInitialized = new ThreadLocal<>();
@@ -15,10 +15,10 @@ public class DefaultHystrixRibbonConnectionPoint extends DefaultRibbonConnection
 
     @Override
     public void executeConnectPoint(ConnectPointContext connectPointContext) {
-        if (!HystrixRequestContext.isCurrentThreadInitialized()) {
-            HystrixRequestContext.initializeContext();
-            hystrixRequestContextInitialized.set(true);
-        }
+//        if (!HystrixRequestContext.isCurrentThreadInitialized()) {
+//            HystrixRequestContext.initializeContext();
+//            hystrixRequestContextInitialized.set(true);
+//        }
         super.executeConnectPoint(connectPointContext);
     }
 
@@ -27,10 +27,10 @@ public class DefaultHystrixRibbonConnectionPoint extends DefaultRibbonConnection
         try {
             super.shutdownconnectPoint(connectPointContext);
         } finally {
-            Boolean hystrixReqCxtInited = hystrixRequestContextInitialized.get();
-            if (hystrixReqCxtInited != null && hystrixReqCxtInited && HystrixRequestContext.isCurrentThreadInitialized()) {
-                HystrixRequestContext.getContextForCurrentThread().shutdown();
-            }
+//            Boolean hystrixReqCxtInited = hystrixRequestContextInitialized.get();
+//            if (hystrixReqCxtInited != null && hystrixReqCxtInited && HystrixRequestContext.isCurrentThreadInitialized()) {
+//                HystrixRequestContext.getContextForCurrentThread().shutdown();
+//            }
         }
     }
 

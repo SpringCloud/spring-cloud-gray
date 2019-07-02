@@ -1,8 +1,6 @@
 package cn.springcloud.gray.client.netflix.configuration;
 
 import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.client.netflix.connectionpoint.DefaultHystrixRibbonConnectionPoint;
-import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
 import cn.springcloud.gray.client.netflix.hystrix.HystrixRequestLocalStorage;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import com.netflix.hystrix.HystrixCommand;
@@ -33,11 +31,11 @@ public class HystrixGrayAutoConfiguration {
      *
      * @return DefaultHystrixRibbonConnectionPoint
      */
-    @Bean
-    public RibbonConnectionPoint ribbonConnectionPoint(
-            GrayManager grayManager, RequestLocalStorage requestLocalStorage) {
-        return new DefaultHystrixRibbonConnectionPoint(grayManager, requestLocalStorage);
-    }
+//    @Bean
+//    public RibbonConnectionPoint ribbonConnectionPoint(
+//            GrayManager grayManager, RequestLocalStorage requestLocalStorage) {
+//        return new DefaultHystrixRibbonConnectionPoint(grayManager, requestLocalStorage);
+//    }
 
 
 //    @Bean

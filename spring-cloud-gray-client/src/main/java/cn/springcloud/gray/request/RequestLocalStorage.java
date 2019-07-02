@@ -3,6 +3,8 @@ package cn.springcloud.gray.request;
 public interface RequestLocalStorage {
 
 
+    void initContext();
+
     void setGrayTrackInfo(GrayTrackInfo grayTrackInfo);
 
     void removeGrayTrackInfo();
@@ -14,4 +16,6 @@ public interface RequestLocalStorage {
     void removeGrayRequest();
 
     GrayRequest getGrayRequest();
+
+    void closeContext();
 }

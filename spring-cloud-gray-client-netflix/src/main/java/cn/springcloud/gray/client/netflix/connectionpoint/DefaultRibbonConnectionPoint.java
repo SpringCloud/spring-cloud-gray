@@ -3,6 +3,7 @@ package cn.springcloud.gray.client.netflix.connectionpoint;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.RequestInterceptor;
 import cn.springcloud.gray.request.GrayRequest;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
 
 import java.util.List;
@@ -20,9 +21,13 @@ public class DefaultRibbonConnectionPoint implements RibbonConnectionPoint {
     @Override
     public void executeConnectPoint(ConnectPointContext connectPointContext) {
 
+        requestLocalStorage.initContext();
+
         ConnectPointContext.setContextLocal(connectPointContext);
         GrayRequest grayRequest = connectPointContext.getGrayRequest();
-        grayRequest.setGrayTrackInfo(requestLocalStorage.getGrayTrackInfo());
+        //todo 待优化，为每次请求复制一个GrayTrackInfo
+        GrayTrackInfo grayTrackInfo = requestLocalStorage.getGrayTrackInfo();
+        grayRequest.setGrayTrackInfo(grayTrackInfo);
         requestLocalStorage.setGrayRequest(grayRequest);
 
         List<RequestInterceptor> interceptors = grayManager.getRequeestInterceptors(connectPointContext.getInterceptroType());
@@ -41,17 +46,20 @@ public class DefaultRibbonConnectionPoint implements RibbonConnectionPoint {
 //        if (requestLocalStorage.getGrayRequest() == null) {
 //            return;
 //        }
-
-        List<RequestInterceptor> interceptors = grayManager.getRequeestInterceptors(connectPointContext.getInterceptroType());
-        interceptors.forEach(interceptor -> {
-            if (interceptor.shouldIntercept()) {
-                if (!interceptor.after(connectPointContext.getGrayRequest())) {
-                    return;
+        try {
+            List<RequestInterceptor> interceptors = grayManager.getRequeestInterceptors(connectPointContext.getInterceptroType());
+            interceptors.forEach(interceptor -> {
+                if (interceptor.shouldIntercept()) {
+                    if (!interceptor.after(connectPointContext.getGrayRequest())) {
+                        return;
+                    }
                 }
-            }
-        });
-        ConnectPointContext.removeContextLocal();
-        requestLocalStorage.removeGrayRequest();
+            });
+            ConnectPointContext.removeContextLocal();
+            requestLocalStorage.removeGrayRequest();
+        } finally {
+            requestLocalStorage.closeContext();
+        }
     }
 
 
