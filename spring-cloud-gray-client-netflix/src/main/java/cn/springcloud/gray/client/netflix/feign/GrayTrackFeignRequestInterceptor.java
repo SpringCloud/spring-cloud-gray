@@ -7,11 +7,15 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 
 public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
+
+    private static final Logger log = LoggerFactory.getLogger(GrayTrackFeignRequestInterceptor.class);
 
     private RequestLocalStorage requestLocalStorage;
 
@@ -22,7 +26,7 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
-        GrayHttpTrackInfo grayTrack = (GrayHttpTrackInfo) requestLocalStorage.getGrayTrackInfo();
+        GrayHttpTrackInfo grayTrack = getGrayHttpTrackInfo();
         if (grayTrack != null) {
             if (StringUtils.isNotEmpty(grayTrack.getUri())) {
                 template.header(GrayHttpTrackInfo.GRAY_TRACK_URI, grayTrack.getUri());
@@ -54,6 +58,14 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
         }
     }
 
+    private GrayHttpTrackInfo getGrayHttpTrackInfo() {
+        try {
+            return (GrayHttpTrackInfo) requestLocalStorage.getGrayTrackInfo();
+        } catch (Exception e) {
+            log.error("从requestLocalStorage中获取GrayTrackInfo对象失败.", e);
+            return null;
+        }
+    }
 
     private void appendGrayTrackInfoToHeader(String grayPrefix, Map<String, String> infos, RequestTemplate template) {
         if (MapUtils.isNotEmpty(infos)) {
