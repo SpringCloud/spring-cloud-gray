@@ -14,4 +14,8 @@ public class GrayExecutor implements Executor {
     public void execute(Runnable command) {
         delegater.execute(GrayConcurrentHelper.createDelegateRunnable(command));
     }
+
+    public Executor getDelegater() {
+        return delegater;
+    }
 }

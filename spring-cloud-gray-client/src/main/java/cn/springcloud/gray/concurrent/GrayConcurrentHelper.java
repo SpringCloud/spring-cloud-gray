@@ -61,4 +61,5 @@ public class GrayConcurrentHelper {
         RequestLocalStorage requestLocalStorage = GrayClientHolder.getRequestLocalStorage();
         return requestLocalStorage == null ? null : requestLocalStorage.getGrayTrackInfo();
     }
+
 }

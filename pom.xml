@@ -72,6 +72,7 @@
         <guava.version>27.0.1-jre</guava.version>
         <mapstruct.version>1.1.0.Final</mapstruct.version>
         <caffeine.version>2.7.0</caffeine.version>
+        <aspectj.version>1.8.13</aspectj.version>
     </properties>
 
 
@@ -161,6 +162,13 @@
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-starter-gray-server</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <version>${aspectj.version}</version>
+                <scope>compile</scope>
             </dependency>
 
 

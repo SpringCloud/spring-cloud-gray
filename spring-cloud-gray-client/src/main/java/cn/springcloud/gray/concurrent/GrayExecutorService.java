@@ -92,4 +92,7 @@ public class GrayExecutorService implements ExecutorService {
     }
 
 
+    public ExecutorService getDelegater() {
+        return delegater;
+    }
 }

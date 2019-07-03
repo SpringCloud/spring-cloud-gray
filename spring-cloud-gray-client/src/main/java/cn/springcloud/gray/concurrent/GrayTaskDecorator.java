@@ -1,12 +1,11 @@
 package cn.springcloud.gray.concurrent;
 
-import cn.springcloud.gray.request.RequestLocalStorage;
 import org.springframework.core.task.TaskDecorator;
 
 public class GrayTaskDecorator implements TaskDecorator {
 
 
-    public GrayTaskDecorator(RequestLocalStorage requestLocalStorage) {
+    public GrayTaskDecorator() {
     }
 
     @Override
