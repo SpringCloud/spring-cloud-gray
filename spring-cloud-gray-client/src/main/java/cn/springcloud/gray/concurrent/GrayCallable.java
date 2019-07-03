@@ -1,6 +1,7 @@
 package cn.springcloud.gray.concurrent;
 
 import cn.springcloud.gray.request.GrayTrackInfo;
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 
 import java.util.concurrent.Callable;
@@ -16,13 +17,14 @@ public class GrayCallable<V> implements Callable<V> {
     @Override
     public V call() throws Exception {
         GrayTrackInfo grayTrackInfo = context.getGrayTrackInfo();
+        LocalStorageLifeCycle localStorageLifeCycle = context.getLocalStorageLifeCycle();
+        localStorageLifeCycle.initContext();
         RequestLocalStorage requestLocalStorage = context.getRequestLocalStorage();
-        requestLocalStorage.initContext();
         requestLocalStorage.setGrayTrackInfo(grayTrackInfo);
         try {
             return (V) context.getTarget().call();
         } finally {
-            requestLocalStorage.closeContext();
+            localStorageLifeCycle.closeContext();
         }
     }
 }

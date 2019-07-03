@@ -1,6 +1,7 @@
 package cn.springcloud.gray.client.netflix.connectionpoint;
 
 import cn.springcloud.gray.GrayManager;
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 
 @Deprecated
@@ -8,8 +9,11 @@ public class DefaultHystrixRibbonConnectionPoint extends DefaultRibbonConnection
 
     private ThreadLocal<Boolean> hystrixRequestContextInitialized = new ThreadLocal<>();
 
-    public DefaultHystrixRibbonConnectionPoint(GrayManager grayManager, RequestLocalStorage requestLocalStorage) {
-        super(grayManager, requestLocalStorage);
+    public DefaultHystrixRibbonConnectionPoint(
+            GrayManager grayManager,
+            RequestLocalStorage requestLocalStorage,
+            LocalStorageLifeCycle localStorageLifeCycle) {
+        super(grayManager, requestLocalStorage, localStorageLifeCycle);
     }
 
 

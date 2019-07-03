@@ -1,7 +1,9 @@
 package cn.springcloud.gray.client.netflix.configuration;
 
 import cn.springcloud.gray.GrayManager;
+import cn.springcloud.gray.client.netflix.hystrix.HystrixLocalStorageCycle;
 import cn.springcloud.gray.client.netflix.hystrix.HystrixRequestLocalStorage;
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import com.netflix.hystrix.HystrixCommand;
 import feign.hystrix.HystrixFeign;
@@ -23,6 +25,11 @@ public class HystrixGrayAutoConfiguration {
     @Bean
     public RequestLocalStorage requestLocalStorage() {
         return new HystrixRequestLocalStorage();
+    }
+
+    @Bean
+    public LocalStorageLifeCycle localStorageLifeCycle() {
+        return new HystrixLocalStorageCycle();
     }
 
 

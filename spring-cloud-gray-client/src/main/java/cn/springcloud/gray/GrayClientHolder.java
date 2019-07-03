@@ -1,5 +1,6 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
@@ -8,6 +9,7 @@ public class GrayClientHolder {
 
     private static GrayManager grayManager;
     private static RequestLocalStorage requestLocalStorage;
+    private static LocalStorageLifeCycle localStorageLifeCycle;
     private static ServerExplainer<?> serverExplainer;
     private static ServerListProcessor<?> serverListProcessor;
 
@@ -25,6 +27,14 @@ public class GrayClientHolder {
 
     public static void setRequestLocalStorage(RequestLocalStorage requestLocalStorage) {
         GrayClientHolder.requestLocalStorage = requestLocalStorage;
+    }
+
+    public static void setLocalStorageLifeCycle(LocalStorageLifeCycle localStorageLifeCycle) {
+        GrayClientHolder.localStorageLifeCycle = localStorageLifeCycle;
+    }
+
+    public static LocalStorageLifeCycle getLocalStorageLifeCycle() {
+        return localStorageLifeCycle;
     }
 
     public static <SERVER> ServerExplainer<SERVER> getServerExplainer() {

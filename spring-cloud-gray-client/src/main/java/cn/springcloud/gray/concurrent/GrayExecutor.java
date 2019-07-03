@@ -12,9 +12,6 @@ public class GrayExecutor implements Executor {
 
     @Override
     public void execute(Runnable command) {
-        if (GrayConcurrentHelper.getGraTrackInfo() == null) {
-            delegater.execute(command);
-        }
         delegater.execute(GrayConcurrentHelper.createDelegateRunnable(command));
     }
 }

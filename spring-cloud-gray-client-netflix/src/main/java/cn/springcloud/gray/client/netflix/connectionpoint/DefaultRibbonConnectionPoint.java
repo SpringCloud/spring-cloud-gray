@@ -4,6 +4,7 @@ import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.RequestInterceptor;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 
 import java.util.List;
@@ -12,16 +13,21 @@ public class DefaultRibbonConnectionPoint implements RibbonConnectionPoint {
 
     private GrayManager grayManager;
     private RequestLocalStorage requestLocalStorage;
+    private LocalStorageLifeCycle localStorageLifeCycle;
 
-    public DefaultRibbonConnectionPoint(GrayManager grayManager, RequestLocalStorage requestLocalStorage) {
+    public DefaultRibbonConnectionPoint(
+            GrayManager grayManager,
+            RequestLocalStorage requestLocalStorage,
+            LocalStorageLifeCycle localStorageLifeCycle) {
         this.grayManager = grayManager;
         this.requestLocalStorage = requestLocalStorage;
+        this.localStorageLifeCycle = localStorageLifeCycle;
     }
 
     @Override
     public void executeConnectPoint(ConnectPointContext connectPointContext) {
 
-        requestLocalStorage.initContext();
+        localStorageLifeCycle.initContext();
 
         ConnectPointContext.setContextLocal(connectPointContext);
         GrayRequest grayRequest = connectPointContext.getGrayRequest();
@@ -58,7 +64,7 @@ public class DefaultRibbonConnectionPoint implements RibbonConnectionPoint {
             ConnectPointContext.removeContextLocal();
             requestLocalStorage.removeGrayRequest();
         } finally {
-            requestLocalStorage.closeContext();
+            localStorageLifeCycle.closeContext();
         }
     }
 

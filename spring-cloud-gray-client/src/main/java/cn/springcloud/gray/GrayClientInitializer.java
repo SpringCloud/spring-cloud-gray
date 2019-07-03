@@ -1,5 +1,6 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
@@ -19,6 +20,7 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
     public void afterPropertiesSet() throws Exception {
         GrayClientHolder.setGrayManager(getBean("grayManager", GrayManager.class));
         GrayClientHolder.setRequestLocalStorage(getBean("requestLocalStorage", RequestLocalStorage.class));
+        GrayClientHolder.setLocalStorageLifeCycle(getBean("localStorageLifeCycle", LocalStorageLifeCycle.class));
         GrayClientHolder.setServerExplainer(getBean("serverExplainer", ServerExplainer.class));
         GrayClientHolder.setServerListProcessor(
                 getBean("serverListProcessor", ServerListProcessor.class, new ServerListProcessor.Default()));

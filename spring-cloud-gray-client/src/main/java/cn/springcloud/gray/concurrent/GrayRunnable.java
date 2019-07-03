@@ -1,6 +1,7 @@
 package cn.springcloud.gray.concurrent;
 
 import cn.springcloud.gray.request.GrayTrackInfo;
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 
 public class GrayRunnable implements Runnable {
@@ -14,13 +15,14 @@ public class GrayRunnable implements Runnable {
     @Override
     public void run() {
         GrayTrackInfo grayTrackInfo = context.getGrayTrackInfo();
+        LocalStorageLifeCycle localStorageLifeCycle = context.getLocalStorageLifeCycle();
+        localStorageLifeCycle.initContext();
         RequestLocalStorage requestLocalStorage = context.getRequestLocalStorage();
-        requestLocalStorage.initContext();
         requestLocalStorage.setGrayTrackInfo(grayTrackInfo);
         try {
             context.getTarget().run();
         } finally {
-            requestLocalStorage.closeContext();
+            localStorageLifeCycle.closeContext();
         }
     }
 }

@@ -26,40 +26,38 @@ public class GrayConcurrentHelper {
     }
 
     public static <V> Callable<V> createDelegateCallable(Callable<V> callable) {
-        GrayCallableContext context = createGrayCallableContext(callable);
-        if (context.getGrayTrackInfo() != null) {
-            return new GrayCallable<>(context);
+        if (getGrayTrackInfo() != null) {
+            return new GrayCallable<>(createGrayCallableContext(callable));
         }
         return callable;
     }
 
     public static Runnable createDelegateRunnable(Runnable runnable) {
-        GrayRunnableContext context = createGrayRunnableContext(runnable);
-        if (context.getGrayTrackInfo() != null) {
-            return new GrayRunnable(context);
+        if (getGrayTrackInfo() != null) {
+            return new GrayRunnable(createGrayRunnableContext(runnable));
         }
         return runnable;
     }
 
     public static GrayRunnableContext createGrayRunnableContext(Runnable runnable) {
         GrayRunnableContext context = new GrayRunnableContext();
-        RequestLocalStorage requestLocalStorage = GrayClientHolder.getRequestLocalStorage();
-        context.setRequestLocalStorage(requestLocalStorage);
-        context.setGrayTrackInfo(getGraTrackInfo());
+        context.setLocalStorageLifeCycle(GrayClientHolder.getLocalStorageLifeCycle());
+        context.setRequestLocalStorage(GrayClientHolder.getRequestLocalStorage());
+        context.setGrayTrackInfo(getGrayTrackInfo());
         context.setTarget(runnable);
         return context;
     }
 
     public static <V> GrayCallableContext createGrayCallableContext(Callable<V> callable) {
         GrayCallableContext context = new GrayCallableContext();
-        RequestLocalStorage requestLocalStorage = GrayClientHolder.getRequestLocalStorage();
-        context.setRequestLocalStorage(requestLocalStorage);
-        context.setGrayTrackInfo(getGraTrackInfo());
+        context.setRequestLocalStorage(GrayClientHolder.getRequestLocalStorage());
+        context.setLocalStorageLifeCycle(GrayClientHolder.getLocalStorageLifeCycle());
+        context.setGrayTrackInfo(getGrayTrackInfo());
         context.setTarget(callable);
         return context;
     }
 
-    public static GrayTrackInfo getGraTrackInfo() {
+    public static GrayTrackInfo getGrayTrackInfo() {
         RequestLocalStorage requestLocalStorage = GrayClientHolder.getRequestLocalStorage();
         return requestLocalStorage == null ? null : requestLocalStorage.getGrayTrackInfo();
     }

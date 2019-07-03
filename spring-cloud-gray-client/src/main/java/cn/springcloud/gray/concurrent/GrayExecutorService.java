@@ -56,7 +56,7 @@ public class GrayExecutorService implements ExecutorService {
 
     @Override
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
-        if (getGraTrackInfo() != null) {
+        if (getGrayTrackInfo() != null) {
             return delegater.invokeAll(mapDelegateCallables(tasks));
         }
         return delegater.invokeAll(tasks);
@@ -64,7 +64,7 @@ public class GrayExecutorService implements ExecutorService {
 
     @Override
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
-        if (getGraTrackInfo() != null) {
+        if (getGrayTrackInfo() != null) {
             return delegater.invokeAll(mapDelegateCallables(tasks), timeout, unit);
         }
         return delegater.invokeAll(tasks);
@@ -72,7 +72,7 @@ public class GrayExecutorService implements ExecutorService {
 
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
-        if (getGraTrackInfo() != null) {
+        if (getGrayTrackInfo() != null) {
             return delegater.invokeAny(mapDelegateCallables(tasks));
         }
         return delegater.invokeAny(tasks);
@@ -80,7 +80,7 @@ public class GrayExecutorService implements ExecutorService {
 
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        if (getGraTrackInfo() != null) {
+        if (getGrayTrackInfo() != null) {
             return delegater.invokeAny(mapDelegateCallables(tasks), timeout, unit);
         }
         return delegater.invokeAny(tasks);

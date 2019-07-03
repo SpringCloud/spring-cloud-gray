@@ -7,6 +7,7 @@ import cn.springcloud.gray.client.config.properties.*;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -76,6 +77,11 @@ public class GrayClientAutoConfiguration {
         return new ThreadLocalRequestStorage();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public LocalStorageLifeCycle localStorageLifeCycle() {
+        return new LocalStorageLifeCycle.NoOpLocalStorageLifeCycle();
+    }
 
     @Bean
     public GrayClientInitializer grayClientInitializer() {

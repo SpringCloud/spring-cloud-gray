@@ -3,24 +3,14 @@ package cn.springcloud.gray.client.netflix.hystrix;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestVariableDefault;
 
 public class HystrixRequestLocalStorage implements RequestLocalStorage {
 
 
-    private ThreadLocal<Boolean> hystrixRequestContextInitialized = new ThreadLocal<>();
     private static final HystrixRequestVariableDefault<GrayTrackInfo> grayTrackInfoLocal = new HystrixRequestVariableDefault<GrayTrackInfo>();
     private static final HystrixRequestVariableDefault<GrayRequest> rrayRequestLocal = new HystrixRequestVariableDefault<GrayRequest>();
 
-
-    @Override
-    public void initContext() {
-        if (!HystrixRequestContext.isCurrentThreadInitialized()) {
-            HystrixRequestContext.initializeContext();
-            hystrixRequestContextInitialized.set(true);
-        }
-    }
 
     @Override
     public void setGrayTrackInfo(GrayTrackInfo grayTrackInfo) {
@@ -52,11 +42,4 @@ public class HystrixRequestLocalStorage implements RequestLocalStorage {
         return rrayRequestLocal.get();
     }
 
-    @Override
-    public void closeContext() {
-        Boolean hystrixReqCxtInited = hystrixRequestContextInitialized.get();
-        if (hystrixReqCxtInited != null && hystrixReqCxtInited && HystrixRequestContext.isCurrentThreadInitialized()) {
-            HystrixRequestContext.getContextForCurrentThread().shutdown();
-        }
-    }
 }
