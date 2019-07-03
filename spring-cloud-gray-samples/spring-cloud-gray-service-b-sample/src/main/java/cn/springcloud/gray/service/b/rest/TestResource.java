@@ -63,6 +63,7 @@ public class TestResource {
      * test feign invoke service-a
      *
      * @param version 请求的版本
+     * @param request 请求
      * @return 内容
      */
     @RequestMapping(value = "/feignGet", method = RequestMethod.GET)
