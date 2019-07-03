@@ -19,7 +19,7 @@ public class ExecutorGrayAspect {
 
 
     @Around("pointCut(command)")
-    public Object aroundLog(ProceedingJoinPoint joinpoint, Runnable command) throws Throwable {
+    public Object executeAround(ProceedingJoinPoint joinpoint, Runnable command) throws Throwable {
         if (joinpoint.getTarget() instanceof GrayExecutor
                 || joinpoint.getTarget() instanceof GrayExecutorService
                 || command instanceof GrayRunnable) {
