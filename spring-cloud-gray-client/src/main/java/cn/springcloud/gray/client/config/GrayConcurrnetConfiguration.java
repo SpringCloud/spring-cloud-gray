@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConditionalOnBean(GrayManager.class)
-@ConditionalOnProperty(value = "gray.client.threadpool.transparent-local-store.enabled", matchIfMissing = true)
+@ConditionalOnProperty(value = "gray.client.threadpool.transparent-local-store.enabled")
 public class GrayConcurrnetConfiguration {
 
     @Bean
