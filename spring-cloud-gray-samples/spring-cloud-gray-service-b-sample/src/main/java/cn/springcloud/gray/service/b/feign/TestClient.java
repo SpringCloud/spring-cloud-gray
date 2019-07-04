@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by saleson on 2017/11/10.
  */
-@FeignClient(name = "service-a")
+@FeignClient(name = "service-a"/*, url = "http://localhost:20104"*/)
 public interface TestClient {
 
     @RequestMapping(path = "/api/test/get", method = RequestMethod.GET)

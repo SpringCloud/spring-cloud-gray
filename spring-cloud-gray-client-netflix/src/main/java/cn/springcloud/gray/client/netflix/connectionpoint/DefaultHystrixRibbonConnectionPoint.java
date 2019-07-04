@@ -1,24 +1,28 @@
 package cn.springcloud.gray.client.netflix.connectionpoint;
 
 import cn.springcloud.gray.GrayManager;
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
-import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;
 
+@Deprecated
 public class DefaultHystrixRibbonConnectionPoint extends DefaultRibbonConnectionPoint {
 
     private ThreadLocal<Boolean> hystrixRequestContextInitialized = new ThreadLocal<>();
 
-    public DefaultHystrixRibbonConnectionPoint(GrayManager grayManager, RequestLocalStorage requestLocalStorage) {
-        super(grayManager, requestLocalStorage);
+    public DefaultHystrixRibbonConnectionPoint(
+            GrayManager grayManager,
+            RequestLocalStorage requestLocalStorage,
+            LocalStorageLifeCycle localStorageLifeCycle) {
+        super(grayManager, requestLocalStorage, localStorageLifeCycle);
     }
 
 
     @Override
     public void executeConnectPoint(ConnectPointContext connectPointContext) {
-        if (!HystrixRequestContext.isCurrentThreadInitialized()) {
-            HystrixRequestContext.initializeContext();
-            hystrixRequestContextInitialized.set(true);
-        }
+//        if (!HystrixRequestContext.isCurrentThreadInitialized()) {
+//            HystrixRequestContext.initializeContext();
+//            hystrixRequestContextInitialized.set(true);
+//        }
         super.executeConnectPoint(connectPointContext);
     }
 
@@ -27,10 +31,10 @@ public class DefaultHystrixRibbonConnectionPoint extends DefaultRibbonConnection
         try {
             super.shutdownconnectPoint(connectPointContext);
         } finally {
-            Boolean hystrixReqCxtInited = hystrixRequestContextInitialized.get();
-            if (hystrixReqCxtInited != null && hystrixReqCxtInited && HystrixRequestContext.isCurrentThreadInitialized()) {
-                HystrixRequestContext.getContextForCurrentThread().shutdown();
-            }
+//            Boolean hystrixReqCxtInited = hystrixRequestContextInitialized.get();
+//            if (hystrixReqCxtInited != null && hystrixReqCxtInited && HystrixRequestContext.isCurrentThreadInitialized()) {
+//                HystrixRequestContext.getContextForCurrentThread().shutdown();
+//            }
         }
     }
 

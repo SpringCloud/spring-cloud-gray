@@ -4,6 +4,7 @@ public class ThreadLocalRequestStorage implements RequestLocalStorage {
     private ThreadLocal<GrayRequest> grayRequestThreadLocal = new ThreadLocal<>();
     private ThreadLocal<GrayTrackInfo> grayTrackInfoThreadLocal = new ThreadLocal<>();
 
+
     @Override
     public void setGrayTrackInfo(GrayTrackInfo grayTrackInfo) {
         grayTrackInfoThreadLocal.set(grayTrackInfo);
@@ -33,4 +34,5 @@ public class ThreadLocalRequestStorage implements RequestLocalStorage {
     public GrayRequest getGrayRequest() {
         return grayRequestThreadLocal.get();
     }
+
 }

@@ -41,4 +41,5 @@ public class HystrixRequestLocalStorage implements RequestLocalStorage {
     public GrayRequest getGrayRequest() {
         return rrayRequestLocal.get();
     }
+
 }

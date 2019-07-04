@@ -14,4 +14,5 @@ public interface RequestLocalStorage {
     void removeGrayRequest();
 
     GrayRequest getGrayRequest();
+
 }

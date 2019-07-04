@@ -1,7 +1,9 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
+import cn.springcloud.gray.servernode.ServerListProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,7 +20,10 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
     public void afterPropertiesSet() throws Exception {
         GrayClientHolder.setGrayManager(getBean("grayManager", GrayManager.class));
         GrayClientHolder.setRequestLocalStorage(getBean("requestLocalStorage", RequestLocalStorage.class));
+        GrayClientHolder.setLocalStorageLifeCycle(getBean("localStorageLifeCycle", LocalStorageLifeCycle.class));
         GrayClientHolder.setServerExplainer(getBean("serverExplainer", ServerExplainer.class));
+        GrayClientHolder.setServerListProcessor(
+                getBean("serverListProcessor", ServerListProcessor.class, new ServerListProcessor.Default()));
 
         initGrayManagerRequestInterceptors();
 
@@ -42,6 +47,24 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
             t = cxt.getBean(cls);
         }
         return t;
+    }
+
+    private <T> T getBean(String beanName, Class<T> cls, T defaultBean) {
+        try {
+            return getBean(beanName, cls);
+        } catch (BeansException e) {
+            log.warn("没有从spring容器中找到name为'{}', class为'{}'的Bean, 返回默认的bean:{}", beanName, cls, defaultBean);
+            return defaultBean;
+        }
+    }
+
+    private <T> T getBeanNullable(String beanName, Class<T> cls) {
+        try {
+            return getBean(beanName, cls);
+        } catch (BeansException e) {
+            log.warn("没有从spring容器中找到name为'{}', class为'{}'的Bean", beanName, cls);
+            return null;
+        }
     }
 
 

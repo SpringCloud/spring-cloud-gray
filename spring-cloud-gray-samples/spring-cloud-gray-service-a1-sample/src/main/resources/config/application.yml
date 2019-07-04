@@ -13,7 +13,7 @@ eureka:
     instanceId: ${spring.application.name}:${server.port}
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
-    initial-status: up
+    initial-status: starting
 #    initial-status: out_of_service
 gray:
   enabled: false

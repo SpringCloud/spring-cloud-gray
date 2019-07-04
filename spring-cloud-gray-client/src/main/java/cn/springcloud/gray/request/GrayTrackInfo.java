@@ -2,6 +2,7 @@ package cn.springcloud.gray.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections.MapUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,7 @@ public class GrayTrackInfo {
 
     public static final String GRAY_TRACK_SEPARATE = "__";
 
-    public static final String GRAY_TRACK_PREFIX = "_graytrack_";
+    public static final String GRAY_TRACK_PREFIX = "_G_T_";
 
     public static final String GRAY_TRACK_TRACE_IP = GRAY_TRACK_PREFIX + "traceIP";
 
@@ -31,6 +32,10 @@ public class GrayTrackInfo {
         attributes.put(name, value);
     }
 
+
+    public Map<String, String> getAttributes() {
+        return MapUtils.unmodifiableMap(attributes);
+    }
 
     /**
      * 生成灰度追踪的名称
