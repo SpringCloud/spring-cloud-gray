@@ -16,7 +16,7 @@ eureka:
     initial-status: starting
 #    initial-status: out_of_service
 gray:
-  enabled: false
+  enabled: true
   client:
     instance:
       grayEnroll: true #是否在启动后自动注册成灰度实例

@@ -14,14 +14,14 @@ public abstract class AbstraceCRUDService<MODEL, REPOSITORY extends JpaRepositor
 
     protected abstract ModelMapper<MODEL, T> getModelMapper();
 
-    protected void save(T entity) {
-        getRepository().save(entity);
+    protected T save(T entity) {
+        return getRepository().save(entity);
     }
 
     @Transactional
-    public void saveModel(MODEL entity) {
+    public MODEL saveModel(MODEL entity) {
         T t = model2do(entity);
-        save(t);
+        return do2model(save(t));
 
     }
 

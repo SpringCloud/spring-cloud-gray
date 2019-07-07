@@ -73,11 +73,11 @@ public class HttpInformationClient implements InformationClient {
     public void serviceDownline(String instanceId) {
         String url = this.baseUrl + "/gray/instance/{id}/switchStatus?switch=0";
         Map<String, String> params = new HashMap<>();
-        params.put("instanceId", instanceId);
+        params.put("id", instanceId);
         try {
-            rest.delete(url, params);
+            rest.put(url, null, params);
         } catch (Exception e) {
-            log.error("灰度服务实例下线失败", e);
+            log.error("灰度服务实例下线失败, url:{}, params:{}", url, params, e);
             throw e;
         }
     }

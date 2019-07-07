@@ -95,7 +95,7 @@ public class JPAGrayServerModule implements GrayServerModule {
 
 
     @Override
-    public void saveGrayInstance(GrayInstance instance) {
+    public GrayInstance saveGrayInstance(GrayInstance instance) {
         GrayService grayService = grayServiceService.findOneModel(instance.getServiceId());
         if (grayService == null) {
             grayService = GrayService.builder()
@@ -112,7 +112,7 @@ public class JPAGrayServerModule implements GrayServerModule {
             }
 
         }
-        grayInstanceService.saveModel(instance);
+        GrayInstance newRecord = grayInstanceService.saveModel(instance);
         if (grayServerProperties.getInstance().getNormalInstanceStatus().contains(instance.getInstanceStatus())) {
             if (Objects.equals(instance.getGrayStatus(), GrayStatus.OPEN)) {
                 publishUpdateIntanceEvent(instance);
@@ -120,6 +120,7 @@ public class JPAGrayServerModule implements GrayServerModule {
                 publishDownIntanceEvent(instance);
             }
         }
+        return newRecord;
     }
 
     @Override
@@ -153,9 +154,10 @@ public class JPAGrayServerModule implements GrayServerModule {
     }
 
     @Override
-    public void saveGrayPolicy(GrayPolicy grayPolicy) {
-        grayPolicyService.saveModel(grayPolicy);
+    public GrayPolicy saveGrayPolicy(GrayPolicy grayPolicy) {
+        GrayPolicy newRecord = grayPolicyService.saveModel(grayPolicy);
         publishUpdateIntanceEvent(grayInstanceService.findOneModel(grayPolicy.getInstanceId()));
+        return newRecord;
     }
 
     @Override
@@ -168,9 +170,12 @@ public class JPAGrayServerModule implements GrayServerModule {
     }
 
     @Override
-    public void saveGrayDecision(GrayDecision grayDecision) {
-        grayDecisionService.saveModel(grayDecision);
+    public GrayDecision saveGrayDecision(GrayDecision grayDecision) {
+        GrayPolicy policy = grayPolicyService.findOneModel(grayDecision.getPolicyId());
+        grayDecision.setInstanceId(policy.getInstanceId());
+        GrayDecision newRecord = grayDecisionService.saveModel(grayDecision);
         publishUpdateIntanceEvent(grayInstanceService.findOneModel(grayDecision.getInstanceId()));
+        return newRecord;
     }
 
     @Override
@@ -215,8 +220,8 @@ public class JPAGrayServerModule implements GrayServerModule {
     }
 
     @Override
-    public void saveGrayService(GrayService grayPolicy) {
-        grayServiceService.saveModel(grayPolicy);
+    public GrayService saveGrayService(GrayService grayPolicy) {
+        return grayServiceService.saveModel(grayPolicy);
     }
 
     @Override
