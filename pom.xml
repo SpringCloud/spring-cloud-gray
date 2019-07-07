@@ -39,7 +39,6 @@
         <module>spring-cloud-gray-client-netflix</module>
         <module>spring-cloud-gray-utils</module>
         <module>spring-cloud-gray-starter-dependencies</module>
-        <module>spring-cloud-gray-webui</module>
         <module>spring-cloud-starter-gray-eureka-server</module>
     </modules>
 
