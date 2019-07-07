@@ -25,6 +25,16 @@ public class JPAGrayServerTrackModule implements GrayServerTrackModule {
     }
 
     @Override
+    public Page<GrayTrack> listGrayTracks(String serviceId, Pageable pageable) {
+        return grayTrackService.listGrayTracks(serviceId, pageable);
+    }
+
+    @Override
+    public Page<GrayTrack> listGrayTracks(Pageable pageable) {
+        return grayTrackService.listGrayTracks(pageable);
+    }
+
+    @Override
     public List<GrayTrack> listGrayTracksEmptyInstanceByServiceId(String serviceId) {
         return grayTrackService.listGrayTracksEmptyInstanceByServiceId(serviceId);
     }
@@ -52,12 +62,12 @@ public class JPAGrayServerTrackModule implements GrayServerTrackModule {
     }
 
     @Override
-    public void saveGrayTrack(GrayTrack track) {
+    public GrayTrack saveGrayTrack(GrayTrack track) {
         GrayTrack pre = null;
         if (track.getId() != null) {
             pre = grayTrackService.findOneModel(track.getId());
         }
-        grayTrackService.saveModel(track);
+        GrayTrack newRecord = grayTrackService.saveModel(track);
         if (pre != null) {
             if (!StringUtils.equals(pre.getServiceId(), track.getServiceId()) ||
                     !StringUtils.equals(pre.getInstanceId(), track.getInstanceId())) {
@@ -65,6 +75,7 @@ public class JPAGrayServerTrackModule implements GrayServerTrackModule {
             }
         }
         publishGrayTrackEvent(EventType.UPDATE, track);
+        return newRecord;
     }
 
     protected void publishGrayTrackEvent(EventType eventType, GrayTrack grayTrack) {

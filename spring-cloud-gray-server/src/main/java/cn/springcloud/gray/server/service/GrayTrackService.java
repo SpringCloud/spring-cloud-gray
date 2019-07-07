@@ -48,4 +48,14 @@ public class GrayTrackService extends AbstraceCRUDService<GrayTrack, GrayTrackRe
         return PaginationUtils.convert(pageable, page, getModelMapper());
 
     }
+
+    public Page<GrayTrack> listGrayTracks(String serviceId, Pageable pageable) {
+        Page<GrayTrackDO> page = repository.findAllByServiceId(serviceId, pageable);
+        return PaginationUtils.convert(pageable, page, getModelMapper());
+    }
+
+    public Page<GrayTrack> listGrayTracks(Pageable pageable) {
+        Page<GrayTrackDO> page = repository.findAll(pageable);
+        return PaginationUtils.convert(pageable, page, getModelMapper());
+    }
 }

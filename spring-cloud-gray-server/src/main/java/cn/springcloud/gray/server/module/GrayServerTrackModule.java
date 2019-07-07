@@ -9,6 +9,10 @@ import java.util.List;
 public interface GrayServerTrackModule {
 
 
+    Page<GrayTrack> listGrayTracks(String serviceId, Pageable pageable);
+
+    Page<GrayTrack> listGrayTracks(Pageable pageable);
+
     List<GrayTrack> listGrayTracksEmptyInstanceByServiceId(String serviceId);
 
     List<GrayTrack> listGrayTracksByInstanceId(String instanceId);
@@ -19,5 +23,5 @@ public interface GrayServerTrackModule {
 
     void deleteGrayTrack(Long id);
 
-    void saveGrayTrack(GrayTrack track);
+    GrayTrack saveGrayTrack(GrayTrack track);
 }

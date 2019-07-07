@@ -12,7 +12,7 @@
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-gray</artifactId>
     <packaging>pom</packaging>
-    <version>A.1.0.7</version>
+    <version>A.1.0.8</version>
     <url>https://github.com/SpringCloud/spring-cloud-gray</url>
     <organization>
         <name>Spring Cloud中国社区</name>
@@ -39,7 +39,6 @@
         <module>spring-cloud-gray-client-netflix</module>
         <module>spring-cloud-gray-utils</module>
         <module>spring-cloud-gray-starter-dependencies</module>
-        <module>spring-cloud-gray-webui</module>
         <module>spring-cloud-starter-gray-eureka-server</module>
     </modules>
 

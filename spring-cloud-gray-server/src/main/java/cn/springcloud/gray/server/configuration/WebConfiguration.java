@@ -34,7 +34,7 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 
         public CORSFilter() {
             this("POST, PUT, GET, OPTIONS, DELETE",
-                    "x-requested-with,Authorization,Origin,X-Requested-With,Content-Type,Accept"
+                    "x-requested-with,Authorization,Origin,X-Requested-With,Content-Type,Accept,X-Total-Count,X-Pagination,x-token"
             );
         }
 

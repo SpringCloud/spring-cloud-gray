@@ -103,7 +103,7 @@ Desktop.ini
 ######################
 # Directories
 ######################
-/build/**
+#/build/**
 /bin/**
 /spring_loaded/**
 /deploy/**

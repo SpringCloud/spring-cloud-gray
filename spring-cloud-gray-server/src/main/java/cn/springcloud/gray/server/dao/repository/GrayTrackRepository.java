@@ -23,4 +23,6 @@ public interface GrayTrackRepository extends JpaRepository<GrayTrackDO, Long> {
 
     @Query(value = "SELECT do FROM GrayTrackDO do WHERE serviceId = ?1 AND (instanceId = null or instanceId='') ")
     Page<GrayTrackDO> findAllByServiceIdAndInstanceIdIsEmpty(String instanceId, Pageable pageable);
+
+    Page<GrayTrackDO> findAllByServiceId(String serviceId, Pageable pageable);
 }

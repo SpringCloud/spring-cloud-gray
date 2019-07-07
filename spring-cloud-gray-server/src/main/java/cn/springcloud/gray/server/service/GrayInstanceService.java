@@ -64,9 +64,9 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
     }
 
     @Override
-    public void saveModel(GrayInstance grayInstance) {
+    public GrayInstance saveModel(GrayInstance grayInstance) {
         grayInstance.setLastUpdateDate(new Date());
-        super.saveModel(grayInstance);
+        return super.saveModel(grayInstance);
     }
 
     public List<GrayInstance> findAllByStatus(GrayStatus grayStatus, Collection<InstanceStatus> instanceStatusList) {

@@ -2,6 +2,7 @@ package cn.springcloud.gray.server.resources.rest;
 
 import cn.springcloud.gray.server.module.GrayServerModule;
 import cn.springcloud.gray.server.module.domain.GrayService;
+import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -27,35 +28,38 @@ public class GrayServiceResource {
     private GrayServerModule grayServerModule;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public List<GrayService> list() {
-        return grayServerModule.listAllGrayServices();
+    public ApiRes<List<GrayService>> list() {
+        return ApiRes.<List<GrayService>>builder().code("0").data(grayServerModule.listAllGrayServices()).build();
     }
 
 
     @GetMapping(value = "/page")
-    public ResponseEntity<List<GrayService>> list(
+    public ResponseEntity<ApiRes<List<GrayService>>> list(
             @ApiParam @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable) {
         Page<GrayService> page = grayServerModule.listAllGrayServices(pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
-        return new ResponseEntity<List<GrayService>>(
-                page.getContent(),
+        ApiRes<List<GrayService>> data = ApiRes.<List<GrayService>>builder().code("0").data(page.getContent()).build();
+        return new ResponseEntity<>(
+                data,
                 headers,
                 HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public GrayService info(@PathVariable("id") String id) {
-        return grayServerModule.getGrayService(id);
+    public ApiRes<GrayService> info(@PathVariable("id") String id) {
+        return ApiRes.<GrayService>builder().code("0").data(grayServerModule.getGrayService(id)).build();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable("id") String id) {
+    public ApiRes<Void> delete(@PathVariable("id") String id) {
         grayServerModule.deleteGrayService(id);
+        return ApiRes.<Void>builder().code("0").build();
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public void save(@RequestBody GrayService grayPolicy) {
+    public ApiRes<Void> save(@RequestBody GrayService grayPolicy) {
         grayServerModule.saveGrayService(grayPolicy);
+        return ApiRes.<Void>builder().code("0").build();
     }
 }

@@ -40,7 +40,7 @@ public interface GrayServerModule {
 
     void updateGrayStatus(String instanceId, GrayStatus grayStatus);
 
-    void saveGrayInstance(GrayInstance instance);
+    GrayInstance saveGrayInstance(GrayInstance instance);
 
     void updateInstanceStatus(String instanceId, InstanceStatus instanceStatus);
 
@@ -48,11 +48,11 @@ public interface GrayServerModule {
 
     void deleteGrayInstance(String intanceId);
 
-    void saveGrayPolicy(GrayPolicy grayPolicy);
+    GrayPolicy saveGrayPolicy(GrayPolicy grayPolicy);
 
     void deleteGrayPolicy(Long policyId);
 
-    void saveGrayDecision(GrayDecision grayDecision);
+    GrayDecision saveGrayDecision(GrayDecision grayDecision);
 
     void deleteGrayDecision(Long decisionId);
 
@@ -65,7 +65,7 @@ public interface GrayServerModule {
 
     List<GrayService> listAllGrayServices();
 
-    void saveGrayService(GrayService grayPolicy);
+    GrayService saveGrayService(GrayService grayPolicy);
 
     GrayService getGrayService(String id);
 
