@@ -26,7 +26,7 @@ public class HttpTrackParameterGrayDecisionFactory extends CompareGrayDecisionFa
             if (predicateComparator == null) {
                 return false;
             }
-            return predicateComparator.test(grayTrackInfo.getParameters().get(configBean.getName()), configBean.getValues());
+            return predicateComparator.test(grayTrackInfo.getParameter(configBean.getName()), configBean.getValues());
         };
     }
 }

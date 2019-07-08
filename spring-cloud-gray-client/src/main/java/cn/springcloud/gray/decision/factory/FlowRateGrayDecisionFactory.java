@@ -60,7 +60,7 @@ public class FlowRateGrayDecisionFactory extends AbstractGrayDecisionFactory<Flo
                 (grayReq, field) -> {
                     GrayHttpTrackInfo grayHttpTrackInfo = ((GrayHttpTrackInfo) grayReq.getGrayTrackInfo());
                     if (!Objects.isNull(grayHttpTrackInfo)) {
-                        return getValueForMultiValueMap(grayHttpTrackInfo.getHeaders(), field);
+                        return joinString(grayHttpTrackInfo.getHeader(field));
                     }
                     return null;
                 });
@@ -69,7 +69,7 @@ public class FlowRateGrayDecisionFactory extends AbstractGrayDecisionFactory<Flo
                 (grayReq, field) -> {
                     GrayHttpTrackInfo grayHttpTrackInfo = ((GrayHttpTrackInfo) grayReq.getGrayTrackInfo());
                     if (!Objects.isNull(grayHttpTrackInfo)) {
-                        return getValueForMultiValueMap(grayHttpTrackInfo.getParameters(), field);
+                        return joinString(grayHttpTrackInfo.getParameter(field));
                     }
                     return null;
                 });
@@ -84,7 +84,10 @@ public class FlowRateGrayDecisionFactory extends AbstractGrayDecisionFactory<Flo
     }
 
     private String getValueForMultiValueMap(Map<String, ? extends Collection<String>> map, String field) {
-        Collection<String> collection = map.get(field);
+        return joinString(map.get(field));
+    }
+
+    private String joinString(Collection<String> collection) {
         if (collection != null) {
             return StringUtils.join(collection, ",");
         }

@@ -3,15 +3,19 @@ package cn.springcloud.gray.server.resources.rest;
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
 import cn.springcloud.gray.server.module.GrayServerModule;
+import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.server.resources.domain.fo.RemoteInstanceStatusUpdateFO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Objects;
 
 
 /**
@@ -51,18 +55,33 @@ public class DiscoverInstanceResource {
      * @return http status
      */
     @RequestMapping(value = "/instanceInfo/setInstanceStatus", method = RequestMethod.PUT)
-    public ResponseEntity<Void> setInstanceStatus(@RequestBody RemoteInstanceStatusUpdateFO instanceStatusUpdateFO) {
+    public ResponseEntity<ApiRes<Void>> setInstanceStatus(@RequestBody RemoteInstanceStatusUpdateFO instanceStatusUpdateFO) {
         InstanceInfo instanceInfo = serviceDiscovery.getInstanceInfo(
                 instanceStatusUpdateFO.getServiceId(), instanceStatusUpdateFO.getInstanceId());
         if (instanceInfo == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiRes.<Void>builder()
+                            .code(ApiRes.CODE_NOT_FOUND)
+                            .message(HttpStatus.NOT_FOUND.getReasonPhrase())
+                            .build());
+        }
+        if (StringUtils.isEmpty(instanceInfo.getHost()) || Objects.equals(instanceInfo.getPort(), 0)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiRes.<Void>builder()
+                            .code(String.valueOf(HttpStatus.BAD_REQUEST))
+                            .message("instance host or port is empty")
+                            .build());
         }
         String uri = "/gray/discovery/instance/setStatus?status={status}";
         String url = new StringBuilder("http://").append(instanceInfo.getHost())
                 .append(":").append(instanceInfo.getPort())
                 .append(uri).toString();
         restTemplate.put(url, null, instanceStatusUpdateFO.getInstanceStatus().name());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(
+                ApiRes.<Void>builder()
+                        .code(ApiRes.CODE_SUCCESS)
+                        .build()
+        );
     }
 
 }

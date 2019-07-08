@@ -6,7 +6,6 @@ import cn.springcloud.gray.decision.compare.PredicateComparator;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 
 import java.util.Collection;
-import java.util.Map;
 
 public class HttpTrackHeaderGrayDecisionFactory extends CompareGrayDecisionFactory<HttpHeaderGrayDecisionFactory.Config> {
 
@@ -22,13 +21,12 @@ public class HttpTrackHeaderGrayDecisionFactory extends CompareGrayDecisionFacto
                 return false;
             }
 
-            Map<String, ? extends Collection<String>> headers = grayTrackInfo.getHeaders();
             PredicateComparator<Collection<String>> predicateComparator =
                     Comparators.getCollectionStringComparator(configBean.getCompareMode());
             if (predicateComparator == null) {
                 return false;
             }
-            return predicateComparator.test(headers.get(configBean.getHeader()), configBean.getValues());
+            return predicateComparator.test(grayTrackInfo.getHeader(configBean.getHeader()), configBean.getValues());
         };
     }
 }
