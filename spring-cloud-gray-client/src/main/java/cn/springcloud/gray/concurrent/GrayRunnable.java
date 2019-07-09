@@ -22,6 +22,8 @@ public class GrayRunnable implements Runnable {
         try {
             context.getTarget().run();
         } finally {
+            requestLocalStorage.removeGrayTrackInfo();
+            requestLocalStorage.removeGrayRequest();
             localStorageLifeCycle.closeContext();
         }
     }

@@ -26,43 +26,44 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
-        GrayHttpTrackInfo grayTrack = getGrayHttpTrackInfo();
-        if (grayTrack != null) {
-            if (StringUtils.isNotEmpty(grayTrack.getUri())) {
-                template.header(GrayHttpTrackInfo.GRAY_TRACK_URI, grayTrack.getUri());
-            }
-            if (StringUtils.isNotEmpty(grayTrack.getTraceIp())) {
-                template.header(GrayHttpTrackInfo.GRAY_TRACK_TRACE_IP, grayTrack.getTraceIp());
-            }
-            if (StringUtils.isNotEmpty(grayTrack.getMethod())) {
-                template.header(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
-            }
-            if (grayTrack.getParameters() != null && !grayTrack.getParameters().isEmpty()) {
-                grayTrack.getParameters().entrySet().forEach(entry -> {
-                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
-                            .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
-                            .append(entry.getKey()).toString();
-                    template.header(name, entry.getValue());
-                });
-            }
-            if (grayTrack.getHeaders() != null && !grayTrack.getHeaders().isEmpty()) {
-                grayTrack.getHeaders().entrySet().forEach(entry -> {
-                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
-                            .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
-                            .append(entry.getKey()).toString();
-                    template.header(name, entry.getValue());
-                });
-            }
-
-            appendGrayTrackInfoToHeader(GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX, grayTrack.getAttributes(), template);
+        GrayHttpTrackInfo grayTrack = getGrayHttpTrackInfo(template);
+        if (grayTrack == null) {
+            return;
         }
+        if (StringUtils.isNotEmpty(grayTrack.getUri())) {
+            template.header(GrayHttpTrackInfo.GRAY_TRACK_URI, grayTrack.getUri());
+        }
+        if (StringUtils.isNotEmpty(grayTrack.getTraceIp())) {
+            template.header(GrayHttpTrackInfo.GRAY_TRACK_TRACE_IP, grayTrack.getTraceIp());
+        }
+        if (StringUtils.isNotEmpty(grayTrack.getMethod())) {
+            template.header(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
+        }
+        if (grayTrack.getParameters() != null && !grayTrack.getParameters().isEmpty()) {
+            grayTrack.getParameters().entrySet().forEach(entry -> {
+                String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
+                        .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
+                        .append(entry.getKey()).toString();
+                template.header(name, entry.getValue());
+            });
+        }
+        if (grayTrack.getHeaders() != null && !grayTrack.getHeaders().isEmpty()) {
+            grayTrack.getHeaders().entrySet().forEach(entry -> {
+                String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
+                        .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
+                        .append(entry.getKey()).toString();
+                template.header(name, entry.getValue());
+            });
+        }
+
+        appendGrayTrackInfoToHeader(GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX, grayTrack.getAttributes(), template);
     }
 
-    private GrayHttpTrackInfo getGrayHttpTrackInfo() {
+    private GrayHttpTrackInfo getGrayHttpTrackInfo(RequestTemplate template) {
         try {
             return (GrayHttpTrackInfo) requestLocalStorage.getGrayTrackInfo();
         } catch (Exception e) {
-            log.error("从requestLocalStorage中获取GrayTrackInfo对象失败.", e);
+            log.warn("从requestLocalStorage中获取GrayTrackInfo对象失败, url:{}", template.url(), e);
             return null;
         }
     }

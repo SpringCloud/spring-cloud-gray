@@ -3,12 +3,16 @@ package cn.springcloud.gray.concurrent;
 import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 public class GrayConcurrentHelper {
+
+    private static final Logger log = LoggerFactory.getLogger(GrayConcurrentHelper.class);
 
     private GrayConcurrentHelper() {
     }
@@ -59,7 +63,12 @@ public class GrayConcurrentHelper {
 
     public static GrayTrackInfo getGrayTrackInfo() {
         RequestLocalStorage requestLocalStorage = GrayClientHolder.getRequestLocalStorage();
-        return requestLocalStorage == null ? null : requestLocalStorage.getGrayTrackInfo();
+        try {
+            return requestLocalStorage == null ? null : requestLocalStorage.getGrayTrackInfo();
+        } catch (Exception e) {
+            log.warn("获取GrayTrackInfo失败, 线程名是 {}", Thread.currentThread().getName(), e);
+            return null;
+        }
     }
 
 }

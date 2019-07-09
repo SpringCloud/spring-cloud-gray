@@ -7,7 +7,7 @@ import cn.springcloud.gray.request.RequestLocalStorage;
 @Deprecated
 public class DefaultHystrixRibbonConnectionPoint extends DefaultRibbonConnectionPoint {
 
-    private ThreadLocal<Boolean> hystrixRequestContextInitialized = new ThreadLocal<>();
+    private static final ThreadLocal<Boolean> hystrixRequestContextInitialized = new ThreadLocal<>();
 
     public DefaultHystrixRibbonConnectionPoint(
             GrayManager grayManager,
@@ -32,8 +32,12 @@ public class DefaultHystrixRibbonConnectionPoint extends DefaultRibbonConnection
             super.shutdownconnectPoint(connectPointContext);
         } finally {
 //            Boolean hystrixReqCxtInited = hystrixRequestContextInitialized.get();
-//            if (hystrixReqCxtInited != null && hystrixReqCxtInited && HystrixRequestContext.isCurrentThreadInitialized()) {
-//                HystrixRequestContext.getContextForCurrentThread().shutdown();
+//            if (hystrixReqCxtInited != null) {
+//                hystrixRequestContextInitialized.remove();
+//                if (hystrixReqCxtInited && HystrixRequestContext.isCurrentThreadInitialized()) {
+//                    hystrixRequestContextInitialized.remove();
+//                    HystrixRequestContext.getContextForCurrentThread().shutdown();
+//                }
 //            }
         }
     }

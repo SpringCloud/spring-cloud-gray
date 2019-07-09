@@ -20,8 +20,12 @@ public class HystrixLocalStorageCycle implements LocalStorageLifeCycle {
     @Override
     public void closeContext() {
         Boolean hystrixReqCxtInited = hystrixRequestContextInitialized.get();
-        if (hystrixReqCxtInited != null && hystrixReqCxtInited && HystrixRequestContext.isCurrentThreadInitialized()) {
-            HystrixRequestContext.getContextForCurrentThread().shutdown();
+        if (hystrixReqCxtInited != null) {
+            hystrixRequestContextInitialized.remove();
+            if (hystrixReqCxtInited && HystrixRequestContext.isCurrentThreadInitialized()) {
+                HystrixRequestContext.getContextForCurrentThread().shutdown();
+            }
+
         }
     }
 }
