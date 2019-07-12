@@ -15,10 +15,3 @@ eureka:
     lease-expiration-duration-in-seconds: 30
     initial-status: starting
 #    initial-status: out_of_service
-gray:
-  enabled: true
-  client:
-    instance:
-      grayEnroll: true #是否在启动后自动注册成灰度实例
-  server:
-    url: http://localhost:20202 #灰度服务端的url

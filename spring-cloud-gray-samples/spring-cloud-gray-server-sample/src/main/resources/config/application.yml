@@ -6,9 +6,9 @@ spring:
   #通用数据源配置
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/gray_server01?charset=utf8mb4&useSSL=false
-    username: root
-    password: root
+    url: jdbc:mysql://10.171.196.188:3306/zma-stu-gray-test?useUnicode=true&autoReconnect=true&rewriteBatchedStatements=TRUE
+    username: forge
+    password: zhangmen1dui1
     # Hikari 数据源专用配置
     hikari:
       maximum-pool-size: 20
@@ -20,31 +20,31 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
-  rabbitmq:
-    addresses: 127.0.0.1:5672
-    username: admin
-    password: admin
-  cloud:
-    stream:
-      bindings:
-        #        GrayEventInput:
-        #          group: service-a
-        #          destination: test
-        #          consumer:
-        #            concurrency: 1 #并发数
-        #            max-attempts: 1
-        GrayEventOutput:
-          destination: gray_event
-          #      rabbit:
-          #        bindings:
-          #          GrayEventInput:
-          #            consumer:
-          #              maxConcurrency: 1 #并发数
-          #              prefetch: 1 #从mq一次获取消息的数量
-          #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
-          #              auto-bind-dlq: true
-          #              acknowledgeMode: AUTO
-#              acknowledgeMode: MANUAL
+#  rabbitmq:
+#    addresses: 127.0.0.1:5672
+#    username: admin
+#    password: admin
+#  cloud:
+#    stream:
+#      bindings:
+#        #        GrayEventInput:
+#        #          group: service-a
+#        #          destination: test
+#        #          consumer:
+#        #            concurrency: 1 #并发数
+#        #            max-attempts: 1
+#        GrayEventOutput:
+#          destination: gray_event
+#          #      rabbit:
+#          #        bindings:
+#          #          GrayEventInput:
+#          #            consumer:
+#          #              maxConcurrency: 1 #并发数
+#          #              prefetch: 1 #从mq一次获取消息的数量
+#          #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
+#          #              auto-bind-dlq: true
+#          #              acknowledgeMode: AUTO
+##              acknowledgeMode: MANUAL
 eureka:
   client:
     register-with-eureka: true

@@ -53,8 +53,8 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
     }
 
     public void openForWork() {
-        log.info("拉取灰度列表");
         if (getGrayInformationClient() != null) {
+            log.info("拉取灰度列表");
             doUpdate();
             int timerMs = getGrayClientConfig().getServiceUpdateIntervalTimerInMs();
             if (timerMs > 0) {

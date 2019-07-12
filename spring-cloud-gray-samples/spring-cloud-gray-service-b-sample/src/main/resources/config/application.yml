@@ -1,31 +1,31 @@
 spring:
   application:
     name: service-b
-  rabbitmq:
-    addresses: 127.0.0.1:5672
-    username: admin
-    password: admin
-  cloud:
-    stream:
-      bindings:
-        GrayEventInput:
-          group: service-a
-          destination: gray_event
-          consumer:
-            concurrency: 1 #并发数
-        #            max-attempts: 1
-      #        GrayEventOutput:
-      #          destination: gray-event
-      rabbit:
-        bindings:
-          GrayEventInput:
-            consumer:
-              maxConcurrency: 1 #并发数
-              #              prefetch: 1 #从mq一次获取消息的数量
-              #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
-              #              auto-bind-dlq: true
-              acknowledgeMode: AUTO
-#              acknowledgeMode: MANUAL
+#  rabbitmq:
+#    addresses: 127.0.0.1:5672
+#    username: admin
+#    password: admin
+#  cloud:
+#    stream:
+#      bindings:
+#        GrayEventInput:
+#          group: service-a
+#          destination: gray_event
+#          consumer:
+#            concurrency: 1 #并发数
+#        #            max-attempts: 1
+#      #        GrayEventOutput:
+#      #          destination: gray-event
+#      rabbit:
+#        bindings:
+#          GrayEventInput:
+#            consumer:
+#              maxConcurrency: 1 #并发数
+#              #              prefetch: 1 #从mq一次获取消息的数量
+#              #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
+#              #              auto-bind-dlq: true
+#              acknowledgeMode: AUTO
+##              acknowledgeMode: MANUAL
 server:
   port: 20102
 eureka:
@@ -35,9 +35,10 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:20001/eureka/
   instance:
-    instanceId: ${spring.application.name}:${server.port}
+    instanceId: ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15
+    prefer-ip-address: true
 #    initial-status: starting
 feign:
   hystrix:
@@ -59,7 +60,8 @@ gray:
     retryNumberOfRetries: 3
   client:
     runenv: web
-    serviceUpdateIntervalTimerInMs: 10000
+    serviceUpdateIntervalTimerInMs: 60000
+    serviceInitializeDelayTimeInMs: 10000
     instance:
       grayEnroll: false
       grayEnrollDealyTimeInMs: 20000
@@ -71,34 +73,35 @@ gray:
     track:
       enabled: true
       trackType: web
-      definitionsUpdateIntervalTimerInMs: 0
+      definitionsUpdateIntervalTimerInMs: 60000
+      definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:
           #          - name: HttpIP
           #          - name: HttpMethod
           #          - name: HttpURI
           - name: HttpReceive
-          - name: HttpHeader
-            value: test,test-mm
+        #          - name: HttpHeader
+        #            value: test,test-mm
         #          - name: HttpParameter
         #            value: version,test
         path-patterns: /*
         exclude-path-patterns: /test/*
   load:
     enabled: true
-    gray-instances:
-      - serviceId: service-a
-        instance-id: service-a:20104
-        policy-definitions:
-          - policyId: policy-1
-            alias: policy-1
-            list:
-              - id: decision-1
-                name: HttpHeader
-                infos:
-                  compare-mode: EQUAL
-                  header: _graytrack_header__test
-                  values: true
+#    gray-instances:
+#      - serviceId: service-a
+#        instance-id: service-a:20104
+#        policy-definitions:
+#          - policyId: policy-1
+#            alias: policy-1
+#            list:
+#              - id: decision-1
+#                name: HttpHeader
+#                infos:
+#                  compare-mode: EQUAL
+#                  header: _graytrack_header__test
+#                  values: true
 #  client:
 #    instance:
 #      grayEnroll: false #是否在启动后自动注册成灰度实例

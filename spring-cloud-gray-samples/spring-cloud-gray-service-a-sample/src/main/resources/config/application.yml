@@ -10,13 +10,7 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:20001/eureka/
   instance:
-    instanceId: ${spring.application.name}:${server.port}
+    instanceId: ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
-gray:
-  enabled: false
-  client:
-    instance:
-      grayEnroll: false #是否在启动后自动注册成灰度实例
-  server:
-    url: http://localhost:20202 #灰度服务端的url
+    prefer-ip-address: true
