@@ -6,9 +6,9 @@ spring:
   #通用数据源配置
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://10.171.196.188:3306/zma-stu-gray-test?useUnicode=true&autoReconnect=true&rewriteBatchedStatements=TRUE
-    username: forge
-    password: zhangmen1dui1
+    url: jdbc:mysql://localhost:3306/gray_server01?charset=utf8mb4&useSSL=false
+    username: root
+    password: root
     # Hikari 数据源专用配置
     hikari:
       maximum-pool-size: 20

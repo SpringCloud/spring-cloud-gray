@@ -52,6 +52,11 @@ hystrix:
   threadpool:
     default:
       coreSize: 100
+#  command:
+#    service-a:
+#      circuitBreaker:
+#        enabled: true
+#        forceOpen: true
 gray:
   enabled: true
   hystrix:
@@ -61,11 +66,11 @@ gray:
     loadbalanced: false
   client:
     runenv: web
-    serviceUpdateIntervalTimerInMs: 60000
+    serviceUpdateIntervalTimerInMs: 10000
     serviceInitializeDelayTimeInMs: 10000
   request:
     track:
-      definitionsUpdateIntervalTimerInMs: 60000
+      definitionsUpdateIntervalTimerInMs: 10000
       definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:

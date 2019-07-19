@@ -60,7 +60,7 @@ gray:
     retryNumberOfRetries: 3
   client:
     runenv: web
-    serviceUpdateIntervalTimerInMs: 60000
+    serviceUpdateIntervalTimerInMs: 10000
     serviceInitializeDelayTimeInMs: 10000
     instance:
       grayEnroll: false
@@ -73,7 +73,7 @@ gray:
     track:
       enabled: true
       trackType: web
-      definitionsUpdateIntervalTimerInMs: 60000
+      definitionsUpdateIntervalTimerInMs: 10000
       definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:

@@ -26,10 +26,10 @@ public class TestResource {
     @ResponseBody
     public Map<String, String> testGet(@RequestParam(value = "version", required = false) String version) {
         long start = System.currentTimeMillis();
-        try {
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
-        }
+//        try {
+//            Thread.sleep(sleepTime);
+//        } catch (InterruptedException e) {
+//        }
         return ImmutableMap.of("test", "success.",
                 "version", StringUtils.defaultIfEmpty(version, ""),
                 "serverPort", env.getProperty("server.port"),

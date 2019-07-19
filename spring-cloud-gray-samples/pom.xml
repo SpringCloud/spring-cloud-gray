@@ -19,6 +19,7 @@
         <module>spring-cloud-gray-server-sample</module>
         <module>spring-cloud-gray-service-a1-sample</module>
         <module>spring-cloud-gray-stream-sample</module>
+        <module>spring-cloud-gray-performance-agent</module>
     </modules>
 
     <build>
@@ -33,6 +34,25 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <!--        <defaultGoal>spring-boot:run</defaultGoal>-->
+        <!--        <plugins>-->
+        <!--            <plugin>-->
+        <!--                <groupId>org.springframework.boot</groupId>-->
+        <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+        <!--                <executions>-->
+        <!--                    <execution>-->
+        <!--                        <goals>-->
+        <!--                            <goal>build-info</goal>-->
+        <!--                        </goals>-->
+        <!--                    </execution>-->
+        <!--                </executions>-->
+        <!--                <configuration>-->
+        <!--                    <executable>true</executable>-->
+        <!--                    &lt;!&ndash; 没有该配置，devtools 不生效 &ndash;&gt;-->
+        <!--                    <fork>true</fork>-->
+        <!--                </configuration>-->
+        <!--            </plugin>-->
+        <!--        </plugins>-->
     </build>
 
 </project>
