@@ -30,7 +30,7 @@ export function updateInstance(data) {
 
 export function deleteInstance(instanceId) {
   return request({
-    url: '/gray/instance/' + instanceId,
+    url: '/gray/instance/?id=' + instanceId,
     method: 'delete'
   })
 }

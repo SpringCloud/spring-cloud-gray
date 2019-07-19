@@ -52,17 +52,26 @@ hystrix:
   threadpool:
     default:
       coreSize: 100
+#  command:
+#    service-a:
+#      circuitBreaker:
+#        enabled: true
+#        forceOpen: true
 gray:
   enabled: true
   hystrix:
     enabled: true
-  #  server:
-  #    url: http://localhost:20202
+  server:
+    url: http://localhost:20202
+    loadbalanced: false
   client:
-    serviceUpdateIntervalTimerInMs: 0
+    runenv: web
+    serviceUpdateIntervalTimerInMs: 10000
+    serviceInitializeDelayTimeInMs: 10000
   request:
     track:
-      definitionsUpdateIntervalTimerInMs: 0
+      definitionsUpdateIntervalTimerInMs: 10000
+      definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:
           #          - name: HttpIP
@@ -70,24 +79,23 @@ gray:
           #          - name: HttpURI
           #          - name: HttpReceive
           - name: HttpHeader
-            value: test,test-mm
         #          - name: HttpParameter
         #            value: version,test
         path-patterns: /*
   load:
     enabled: true
-    gray-instances:
-      - serviceId: service-a
-        instance-id: service-a:20104
-        policy-definitions:
-          - policyId: policy-1
-            alias: policy-1
-            list:
-              - id: decision-1
-                name: HttpHeader
-                infos:
-                  compare-mode: EQUAL
-                  header: _graytrack_header__test
-                  values: true
+#    gray-instances:
+#      - serviceId: service-a
+#        instance-id: service-a:20103
+#        policy-definitions:
+#          - policyId: policy-1
+#            alias: policy-1
+#            list:
+#              - id: decision-1
+#                name: HttpHeader
+#                infos:
+#                  compare-mode: EQUAL
+#                  header: _graytrack_header__test
+#                  values: true
 #                  _graytrack_heander__test: true
 

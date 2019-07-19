@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ApiRes<T> {
 
     public static final String CODE_SUCCESS = "0";
+    public static final String CODE_NOT_FOUND = "404";
 
     private String code = "0";
     private String message;

@@ -9,7 +9,7 @@ public class HystrixRequestLocalStorage implements RequestLocalStorage {
 
 
     private static final HystrixRequestVariableDefault<GrayTrackInfo> grayTrackInfoLocal = new HystrixRequestVariableDefault<GrayTrackInfo>();
-    private static final HystrixRequestVariableDefault<GrayRequest> rrayRequestLocal = new HystrixRequestVariableDefault<GrayRequest>();
+    private static final HystrixRequestVariableDefault<GrayRequest> grayRequestLocal = new HystrixRequestVariableDefault<GrayRequest>();
 
 
     @Override
@@ -29,17 +29,17 @@ public class HystrixRequestLocalStorage implements RequestLocalStorage {
 
     @Override
     public void setGrayRequest(GrayRequest grayRequest) {
-        rrayRequestLocal.set(grayRequest);
+        grayRequestLocal.set(grayRequest);
     }
 
     @Override
     public void removeGrayRequest() {
-        rrayRequestLocal.remove();
+        grayRequestLocal.remove();
     }
 
     @Override
     public GrayRequest getGrayRequest() {
-        return rrayRequestLocal.get();
+        return grayRequestLocal.get();
     }
 
 }

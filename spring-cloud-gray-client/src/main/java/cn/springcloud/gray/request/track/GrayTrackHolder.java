@@ -28,12 +28,12 @@ public interface GrayTrackHolder {
         getGrayInfoTrackers().forEach(tracker -> {
             GrayTrackDefinition definition = getGrayTrackDefinition(tracker.name());
             if (definition != null) {
+                TrackArgs args = TrackArgs.builder()
+                        .trackInfo(info)
+                        .request(req)
+                        .trackDefinition(definition)
+                        .build();
                 try {
-                    TrackArgs args = TrackArgs.builder()
-                            .trackInfo(info)
-                            .request(req)
-                            .trackDefinition(definition)
-                            .build();
                     tracker.call(args);
                 } catch (Exception e) {
                     LogUtils.logger(GrayTrackHolder.class).error(e.getMessage());

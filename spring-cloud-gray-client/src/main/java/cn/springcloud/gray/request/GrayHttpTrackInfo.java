@@ -1,16 +1,16 @@
 package cn.springcloud.gray.request;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-@Getter
 public class GrayHttpTrackInfo extends GrayTrackInfo {
 
     public static final String GRAY_TRACK_HEADER_PREFIX = GRAY_TRACK_PREFIX + "header";
@@ -23,26 +23,52 @@ public class GrayHttpTrackInfo extends GrayTrackInfo {
 
     private HttpHeaders headers = new HttpHeaders();
     @Setter
+    @Getter
     private String method;
     private MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
     @Setter
+    @Getter
     private String uri;
 
     public void addHeader(String name, String value) {
-        headers.add(name, value);
+        headers.add(name.toLowerCase(), value);
     }
 
     public void setHeader(String name, List<String> values) {
-        headers.put(name, values);
+        headers.put(name.toLowerCase(), values);
+    }
+
+    public List<String> getHeader(String name) {
+        return headers.get(name.toLowerCase());
     }
 
 
     public void addParameter(String name, String value) {
-        parameters.add(name, value);
+        parameters.add(name.toLowerCase(), value);
     }
 
     public void setParameters(String name, List<String> value) {
-        parameters.put(name, value);
+        parameters.put(name.toLowerCase(), value);
+    }
+
+    public List<String> getParameter(String name) {
+        return parameters.get(name.toLowerCase());
+    }
+
+    public Set<String> headerNames() {
+        return headers.keySet();
+    }
+
+    public Set<String> parameterNames() {
+        return parameters.keySet();
+    }
+
+    public Map<String, List<String>> getHeaders() {
+        return MapUtils.unmodifiableMap(headers);
+    }
+
+    public Map<String, List<String>> getParameters() {
+        return MapUtils.unmodifiableMap(parameters);
     }
 
 
