@@ -4,12 +4,8 @@ package cn.springcloud.gray.service.b;
 //import cn.springcloud.gray.request.LocalStorageLifeCycle;
 //import cn.springcloud.gray.request.RequestLocalStorage;
 
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = ServiceBApplication.class)
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(classes = ServiceBApplication.class)
 public class ExecutorServiceGrayAspectTest {
 
 //    @Autowired
