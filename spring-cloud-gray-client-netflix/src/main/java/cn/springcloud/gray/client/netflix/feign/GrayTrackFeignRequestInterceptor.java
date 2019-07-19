@@ -1,16 +1,15 @@
 package cn.springcloud.gray.client.netflix.feign;
 
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
-import cn.springcloud.gray.request.GrayTrackInfo;
+import cn.springcloud.gray.request.HttpGrayTrackRecordDevice;
+import cn.springcloud.gray.request.HttpGrayTrackRecordHelper;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
+import java.util.List;
 
 
 public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
@@ -30,33 +29,31 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
         if (grayTrack == null) {
             return;
         }
-        if (StringUtils.isNotEmpty(grayTrack.getUri())) {
-            template.header(GrayHttpTrackInfo.GRAY_TRACK_URI, grayTrack.getUri());
-        }
-        if (StringUtils.isNotEmpty(grayTrack.getTraceIp())) {
-            template.header(GrayHttpTrackInfo.GRAY_TRACK_TRACE_IP, grayTrack.getTraceIp());
-        }
-        if (StringUtils.isNotEmpty(grayTrack.getMethod())) {
-            template.header(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
-        }
-        if (grayTrack.getParameters() != null && !grayTrack.getParameters().isEmpty()) {
-            grayTrack.getParameters().entrySet().forEach(entry -> {
-                String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
-                        .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
-                        .append(entry.getKey()).toString();
-                template.header(name, entry.getValue());
-            });
-        }
-        if (grayTrack.getHeaders() != null && !grayTrack.getHeaders().isEmpty()) {
-            grayTrack.getHeaders().entrySet().forEach(entry -> {
-                String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
-                        .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
-                        .append(entry.getKey()).toString();
-                template.header(name, entry.getValue());
-            });
-        }
-
-        appendGrayTrackInfoToHeader(GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX, grayTrack.getAttributes(), template);
+        HttpGrayTrackRecordHelper.record(new FeignHttpGrayTrackRecordDevice(template), grayTrack);
+//        if (StringUtils.isNotEmpty(grayTrack.getUri())) {
+//            template.header(GrayHttpTrackInfo.GRAY_TRACK_URI, grayTrack.getUri());
+//        }
+//        if (StringUtils.isNotEmpty(grayTrack.getTraceIp())) {
+//            template.header(GrayHttpTrackInfo.GRAY_TRACK_TRACE_IP, grayTrack.getTraceIp());
+//        }
+//        if (StringUtils.isNotEmpty(grayTrack.getMethod())) {
+//            template.header(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
+//        }
+//        if (MapUtils.isNotEmpty(grayTrack.getParameters())) {
+//            appendGrayTrackInfosToHeader(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX, grayTrack.getParameters(), template);
+////            String prefix = GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX + GrayTrackInfo.GRAY_TRACK_SEPARATE;
+////            grayTrack.getParameters().entrySet().forEach(entry -> {
+////                template.header(prefix + entry.getKey(), entry.getValue());
+////            });
+//        }
+//        if (MapUtils.isNotEmpty(grayTrack.getHeaders())) {
+//            appendGrayTrackInfosToHeader(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX, grayTrack.getHeaders(), template);
+////            String prefix = GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX + GrayTrackInfo.GRAY_TRACK_SEPARATE;
+////            grayTrack.getHeaders().entrySet().forEach(entry -> {
+////                template.header(prefix + entry.getKey(), entry.getValue());
+////            });
+//        }
+//        appendGrayTrackInfoToHeader(GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX, grayTrack.getAttributes(), template);
     }
 
     private GrayHttpTrackInfo getGrayHttpTrackInfo(RequestTemplate template) {
@@ -68,14 +65,40 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
         }
     }
 
-    private void appendGrayTrackInfoToHeader(String grayPrefix, Map<String, String> infos, RequestTemplate template) {
-        if (MapUtils.isNotEmpty(infos)) {
-            infos.entrySet().forEach(entry -> {
-                String name = new StringBuilder().append(grayPrefix)
-                        .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
-                        .append(entry.getKey()).toString();
-                template.header(name, entry.getValue());
-            });
+
+    public static class FeignHttpGrayTrackRecordDevice implements HttpGrayTrackRecordDevice {
+
+        private RequestTemplate template;
+
+        public FeignHttpGrayTrackRecordDevice(RequestTemplate template) {
+            this.template = template;
+        }
+
+        @Override
+        public void record(String name, String value) {
+            template.header(name, value);
+        }
+
+        @Override
+        public void record(String name, List<String> values) {
+            template.header(name, values);
         }
     }
+
+//
+//    private void appendGrayTrackInfoToHeader(String grayPrefix, Map<String, String> infos, RequestTemplate template) {
+//        String prefix = grayPrefix + GrayTrackInfo.GRAY_TRACK_SEPARATE;
+//        if (MapUtils.isNotEmpty(infos)) {
+//            infos.entrySet().forEach(entry -> {
+//                template.header(prefix + entry.getKey(), entry.getValue());
+//            });
+//        }
+//    }
+//
+//    private void appendGrayTrackInfosToHeader(String grayPrefix, Map<String, List<String>> infos, RequestTemplate template) {
+//        String prefix = grayPrefix + GrayTrackInfo.GRAY_TRACK_SEPARATE;
+//        infos.entrySet().forEach(entry -> {
+//            template.header(prefix + entry.getKey(), entry.getValue());
+//        });
+//    }
 }

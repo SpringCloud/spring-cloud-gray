@@ -51,16 +51,16 @@ public class GrayInstanceResource {
                 HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ApiRes<GrayInstance> info(@PathVariable("id") String id) {
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ApiRes<GrayInstance> info(@RequestParam("id") String id) {
         return ApiRes.<GrayInstance>builder()
                 .code(CODE_SUCCESS)
                 .data(grayServerModule.getGrayInstance(id))
                 .build();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ApiRes<Void> delete(@PathVariable("id") String id) {
+    @RequestMapping(value = "/", method = RequestMethod.DELETE)
+    public ApiRes<Void> delete(@RequestParam("id") String id) {
         grayServerModule.deleteGrayInstance(id);
         return ApiRes.<Void>builder()
                 .code(CODE_SUCCESS)
@@ -76,8 +76,8 @@ public class GrayInstanceResource {
     }
 
 
-    @RequestMapping(value = "{id}/switchStatus", method = RequestMethod.PUT)
-    public ApiRes<Void> switchGrayStatus(@PathVariable("id") String instanceId,
+    @RequestMapping(value = "/switchStatus", method = RequestMethod.PUT)
+    public ApiRes<Void> switchGrayStatus(@RequestParam("id") String instanceId,
                                          @ApiParam(value = "灰度开关{0: close, 1: open}", defaultValue = "0") @RequestParam("switch") int onoff) {
         switch (onoff) {
             case 1:
