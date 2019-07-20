@@ -13,7 +13,7 @@ spring-cloud-gray-server负责灰度决策、灰度追踪等信息的管理以�
 spring-cloud-gray-webui提供操作界面。
 
 
-#### 设计
+## 设计
 在微服务架构中，接口的调用通常是服务消费方按照某种负载均衡策略去选择服务实例；但这无法满足线上更特殊化的一些路由逻辑，比如根据一次请求携带的请求头中的信息路由到某一个服务实例上。Spring Cloud Gray正是为此而创建。<br/>
 在Spring Cloud Gray中定义了几个角色灰度客户端(gray-client)、灰度管控端(gray-server)、注册中心。<br/>
 ![Role](./doc/img/gray.png)
