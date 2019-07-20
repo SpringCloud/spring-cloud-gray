@@ -30,7 +30,7 @@ spring-cloud-gray-webui提供操作界面。
 </dependency>
 ```
 
-## demo
+## Demo
 [点击查看](./spring-cloud-gray-samples)
 
 
