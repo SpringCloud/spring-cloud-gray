@@ -33,6 +33,31 @@ spring-cloud-gray-webui提供操作界面。
 
 ![](./doc/img/gray-all.png)
 
+## 灰度决策
+灰度决策是灰度路由的关键，灰度决策由工厂类创建，工厂类的抽象接口是cn.springcloud.gray.decision.factory.GrayDecisionFactory。<br>
+目前已有的灰度决策有：
+名称 | 工厂类 | 描述
+--- | --- | ---
+HttpHeader | HttpHeaderGrayDecisionFactory | 根据http请求头的字段进行判断
+HttpMethod | HttpMethodGrayDecisionFactory | 根据http请求方法的字段进行判断
+HttpParameter | HttpParameterGrayDecisionFactory | 根据http url参数进行判断
+HttpTrackHeader | HttpTrackHeaderGrayDecisionFactory | 根据灰度追踪记录的http请求头的字段进行判断
+HttpTrackParameter | HttpTrackParameterGrayDecisionFactory | 根据灰度追踪记录的http url参数进行判断
+TraceIpGray | TraceIpGrayDecisionFactory | 根据灰度追踪记录的请求ip进行判断
+TrackAttribute | TrackAttributeGrayDecisionFactory | 根据灰度追踪记录的属性值进行判断
+FlowRateGray | FlowRateGrayDecisionFactory | 按百分比放量进行判断
+
+## 灰度追踪
+灰度追踪记录的逻辑是由cn.springcloud.gray.request.GrayInfoTracker的实现类实现。<br/>
+目前已有的灰度追踪有:
+名称 | 实现类 | 描述
+--- | --- | ---
+HttpReceive | HttpReceiveGrayInfoTracker | 接收调用端传递过来的灰追踪信息
+HttpHeader | HttpHeaderGrayInfoTracker | 获取http请求的header并记录到灰度追踪的Header中
+HttpIP | HttpIPGrayInfoTracker | 获取http请求的ip并记录到灰度追踪中
+HttpMethod | HttpMethodGrayInfoTracker | 获取http请求的请求方法并记录到灰度追踪中
+HttpParameter | HttpParameterGrayInfoTracker | 获取http请求的url参数并记录到灰度追踪的parameter中
+HttpURI | HttpURIGrayInfoTracker | 获取http请求的URI并记录到灰度追踪中
 
 ## 操作界面
 
