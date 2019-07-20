@@ -13,6 +13,24 @@ spring-cloud-gray-server负责灰度决策、灰度追踪等信息的管理以�
 spring-cloud-gray-webui提供操作界面。
 
 
+## pom引用
+```xml
+<!-- 客户端 --> 
+<dependency>
+    <groupId>cn.springcloud.gray</groupId>
+    <artifactId>spring-cloud-starter-gray-client</artifactId>
+    <version>${project.version}</version>
+</dependency>
+
+<!-- 管控端 -->
+<dependency>
+    <groupId>cn.springcloud.gray</groupId>
+    <artifactId>spring-cloud-starter-gray-server</artifactId>
+    <version>${project.version}</version>
+</dependency>
+```
+
+
 ## 设计
 在微服务架构中，接口的调用通常是服务消费方按照某种负载均衡策略去选择服务实例；但这无法满足线上更特殊化的一些路由逻辑，比如根据一次请求携带的请求头中的信息路由到某一个服务实例上。Spring Cloud Gray正是为此而创建。<br/>
 在Spring Cloud Gray中定义了几个角色灰度客户端(gray-client)、灰度管控端(gray-server)、注册中心。<br/>
@@ -36,6 +54,7 @@ spring-cloud-gray-webui提供操作界面。
 ## 灰度决策
 灰度决策是灰度路由的关键，灰度决策由工厂类创建，工厂类的抽象接口是cn.springcloud.gray.decision.factory.GrayDecisionFactory。<br>
 目前已有的灰度决策有：
+
 名称 | 工厂类 | 描述
 --- | --- | ---
 HttpHeader | HttpHeaderGrayDecisionFactory | 根据http请求头的字段进行判断
@@ -50,6 +69,7 @@ FlowRateGray | FlowRateGrayDecisionFactory | 按百分比放量进行判断
 ## 灰度追踪
 灰度追踪记录的逻辑是由cn.springcloud.gray.request.GrayInfoTracker的实现类实现。<br/>
 目前已有的灰度追踪有:
+
 名称 | 实现类 | 描述
 --- | --- | ---
 HttpReceive | HttpReceiveGrayInfoTracker | 接收调用端传递过来的灰追踪信息
