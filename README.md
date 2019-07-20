@@ -19,14 +19,14 @@ spring-cloud-gray-webui提供操作界面。
 <dependency>
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-starter-gray-client</artifactId>
-    <version>${project.version}</version>
+    <version>A.1.0.10</version>
 </dependency>
 
 <!-- 管控端 -->
 <dependency>
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-starter-gray-server</artifactId>
-    <version>${project.version}</version>
+    <version>A.1.0.10</version>
 </dependency>
 ```
 
