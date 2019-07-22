@@ -1,5 +1,6 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
@@ -24,6 +25,8 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         GrayClientHolder.setServerExplainer(getBean("serverExplainer", ServerExplainer.class));
         GrayClientHolder.setServerListProcessor(
                 getBean("serverListProcessor", ServerListProcessor.class, new ServerListProcessor.Default()));
+        GrayClientHolder.setGraySwitcher(getBean(
+                "graySwitcher", GraySwitcher.class, new GraySwitcher.DefaultGraySwitcher()));
 
         initGrayManagerRequestInterceptors();
 

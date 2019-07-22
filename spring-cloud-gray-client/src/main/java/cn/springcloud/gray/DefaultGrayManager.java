@@ -52,6 +52,12 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
         updateTimer.cancel();
     }
 
+
+    @Override
+    public boolean hasGray(String serviceId) {
+        return GrayClientHolder.getGraySwitcher().judge() && super.hasGray(serviceId);
+    }
+
     public void openForWork() {
         if (getGrayInformationClient() != null) {
             log.info("拉取灰度列表");

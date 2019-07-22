@@ -4,6 +4,8 @@ import cn.springcloud.gray.*;
 import cn.springcloud.gray.cache.CaffeineCache;
 import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.*;
+import cn.springcloud.gray.client.switcher.EnbGraySwitcher;
+import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
@@ -24,7 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableConfigurationProperties(
-        {GrayClientProperties.class,
+        {GrayProperties.class,
+                GrayClientProperties.class,
                 GrayServerProperties.class,
                 GrayRequestProperties.class,
                 GrayLoadProperties.class,
@@ -38,6 +41,8 @@ public class GrayClientAutoConfiguration {
 
     @Autowired
     private GrayClientProperties grayClientProperties;
+    @Autowired
+    private GrayProperties grayProperties;
 
 
     @Bean
@@ -62,6 +67,12 @@ public class GrayClientAutoConfiguration {
 //        return new CachedDelegateGrayManager(grayManager, new CaffeineCache<>(cache));
     }
 
+
+    @Bean
+    @ConditionalOnMissingBean
+    public GraySwitcher graySwitcher() {
+        return new EnbGraySwitcher(grayProperties);
+    }
 
     @Bean
     @ConditionalOnProperty(value = "gray.client.instance.grayEnroll")

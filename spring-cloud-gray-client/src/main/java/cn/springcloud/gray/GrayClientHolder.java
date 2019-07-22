@@ -1,5 +1,6 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
@@ -12,6 +13,7 @@ public class GrayClientHolder {
     private static LocalStorageLifeCycle localStorageLifeCycle;
     private static ServerExplainer<?> serverExplainer;
     private static ServerListProcessor<?> serverListProcessor;
+    private static GraySwitcher graySwitcher = new GraySwitcher.DefaultGraySwitcher();
 
     public static GrayManager getGrayManager() {
         return grayManager;
@@ -51,5 +53,13 @@ public class GrayClientHolder {
 
     public static <SERVER> ServerListProcessor<SERVER> getServereListProcessor() {
         return (ServerListProcessor<SERVER>) serverListProcessor;
+    }
+
+    public static GraySwitcher getGraySwitcher() {
+        return graySwitcher;
+    }
+
+    public static void setGraySwitcher(GraySwitcher graySwitcher) {
+        GrayClientHolder.graySwitcher = graySwitcher;
     }
 }
