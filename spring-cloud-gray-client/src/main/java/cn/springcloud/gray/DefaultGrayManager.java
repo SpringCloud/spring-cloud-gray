@@ -55,7 +55,7 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
 
     @Override
     public boolean hasGray(String serviceId) {
-        return GrayClientHolder.getGraySwitcher().judge() && super.hasGray(serviceId);
+        return GrayClientHolder.getGraySwitcher().state() && super.hasGray(serviceId);
     }
 
     public void openForWork() {

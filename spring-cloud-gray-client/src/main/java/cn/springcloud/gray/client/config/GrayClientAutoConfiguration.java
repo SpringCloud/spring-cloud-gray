@@ -4,7 +4,7 @@ import cn.springcloud.gray.*;
 import cn.springcloud.gray.cache.CaffeineCache;
 import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.*;
-import cn.springcloud.gray.client.switcher.EnbGraySwitcher;
+import cn.springcloud.gray.client.switcher.EnvGraySwitcher;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.GrayDecision;
@@ -71,7 +71,7 @@ public class GrayClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public GraySwitcher graySwitcher() {
-        return new EnbGraySwitcher(grayProperties);
+        return new EnvGraySwitcher(grayProperties);
     }
 
     @Bean

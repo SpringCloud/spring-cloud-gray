@@ -2,13 +2,13 @@ package cn.springcloud.gray.client.switcher;
 
 public interface GraySwitcher {
 
-    boolean judge();
+    boolean state();
 
 
     public static class DefaultGraySwitcher implements GraySwitcher {
 
         @Override
-        public boolean judge() {
+        public boolean state() {
             return true;
         }
     }

@@ -2,16 +2,16 @@ package cn.springcloud.gray.client.switcher;
 
 import cn.springcloud.gray.client.config.properties.GrayProperties;
 
-public class EnbGraySwitcher implements GraySwitcher {
+public class EnvGraySwitcher implements GraySwitcher {
 
     private GrayProperties grayProperties;
 
-    public EnbGraySwitcher(GrayProperties grayProperties) {
+    public EnvGraySwitcher(GrayProperties grayProperties) {
         this.grayProperties = grayProperties;
     }
 
     @Override
-    public boolean judge() {
+    public boolean state() {
         return grayProperties.isEnabled();
     }
 }
