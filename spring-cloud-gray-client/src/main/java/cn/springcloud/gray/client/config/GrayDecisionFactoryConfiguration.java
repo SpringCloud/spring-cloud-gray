@@ -52,6 +52,11 @@ public class GrayDecisionFactoryConfiguration {
         public TrackAttributeGrayDecisionFactory trackAttributeGrayDecisionFactory() {
             return new TrackAttributeGrayDecisionFactory();
         }
+
+        @Bean
+        public FlowRateGrayDecisionFactory flowRateGrayDecisionFactory(){
+            return new FlowRateGrayDecisionFactory();
+        }
     }
 
 
