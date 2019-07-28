@@ -12,7 +12,9 @@ public class HttpIPGrayInfoTracker implements HttpGrayInfoTracker {
 
 
     public void call(GrayHttpTrackInfo trackInfo, HttpServletRequest request) {
-        trackInfo.setTraceIp(WebUtils.getIpAddr(request));
+        String ip = WebUtils.getIpAddr(request);
+        trackInfo.setTraceIp(ip);
+        trackInfo.setAttribute("track_ip", ip);
         log.debug("记录下ip:{}", trackInfo.getTraceIp());
     }
 

@@ -77,20 +77,6 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
 
     @Bean
     public Docket createRestApi() {
-//        return new Docket(DocumentationType.SWAGGER_2)
-//                .apiInfo(apiInfo())
-//                .groupName("v1")
-//                .genericModelSubstitutes(DeferredResult.class)
-//                .useDefaultResponseMessages(false)
-//                .globalResponseMessage(RequestMethod.GET, customerResponseMessage())
-//                .forCodeGeneration(true)
-//                .select()
-//                .apis(RequestHandlerSelectors.any())
-//                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-//                .paths(PathSelectors.any())
-//                .build();
-
-
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .forCodeGeneration(true)
@@ -144,15 +130,17 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
 
     private List<ApiKey> apiKeys() {
         return Arrays.asList(
-//                new ApiKey(AdminInterceptor.AUTH_HEADER, "token", "header"),
+                new ApiKey("accessToken", "accessToken", "header"),
 //                new ApiKey(CompanyUserInterceptor.AUTH_HEADER, "companyToken", "header")
+                new ApiKey("Authorization", "authorization", "header")
         );
     }
 
     private SecurityContext securityContext() {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex("/anyPath.*"))
+//                .forPaths(PathSelectors.regex("/anyPath.*"))
+                .forPaths(PathSelectors.regex("^(?!auth).*$"))
                 .build();
     }
 
@@ -161,9 +149,10 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
                 = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return Arrays.asList();
-//        return Arrays.asList(
-//                new SecurityReference(AdminInterceptor.AUTH_HEADER, authorizationScopes),
+//        return Arrays.asList();
+        return Arrays.asList(
+                new SecurityReference("accessToken", authorizationScopes),
+        new SecurityReference("Authorization", authorizationScopes));
 //                new SecurityReference(CompanyUserInterceptor.AUTH_HEADER, authorizationScopes));
     }
 

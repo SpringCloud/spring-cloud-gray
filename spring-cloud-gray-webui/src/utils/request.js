@@ -16,10 +16,12 @@ service.interceptors.request.use(
     // do something before request is sent
 
     if (store.getters.token) {
+      config.withCredentials = true
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      // config.headers['X-Token'] = getToken()
+      config.headers['Authorization'] = 'Bearer ' + getToken()
     }
     return config
   },
@@ -70,6 +72,7 @@ service.interceptors.response.use(
     } else {
       res.resHeaders = response.headers
       const total = response.headers['x-total-count']
+      alert(total)
       if (total !== undefined && total !== null) {
         const data = { 'total': parseInt(total), 'items': response.data.data }
         res.data = data

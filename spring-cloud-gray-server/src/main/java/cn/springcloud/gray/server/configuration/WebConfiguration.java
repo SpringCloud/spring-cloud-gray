@@ -4,6 +4,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.*;
@@ -20,58 +23,23 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new CORSFilter());
+
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.setMaxAge(3600l);
+        corsConfiguration.addExposedHeader("X-Total-Count");
+        corsConfiguration.addExposedHeader("X-Pagination");
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+        new CorsFilter(urlBasedCorsConfigurationSource);
+
+        FilterRegistrationBean filterRegistrationBean =
+                new FilterRegistrationBean(new CorsFilter(urlBasedCorsConfigurationSource));
         filterRegistrationBean.addUrlPatterns("/*");
         return filterRegistrationBean;
     }
 
-
-    public class CORSFilter implements Filter {
-
-        private String allowMethods;
-        private String allowHeaders;
-        private String exposeHeaders;
-
-        public CORSFilter() {
-            this("POST, PUT, GET, OPTIONS, DELETE",
-                    "x-requested-with,Authorization,Origin,X-Requested-With,Content-Type,Accept,X-Total-Count,X-Pagination,x-token"
-            );
-        }
-
-        public CORSFilter(String allowMethods, String allowHeaders) {
-            this(allowMethods, allowHeaders, allowHeaders);
-        }
-
-        public CORSFilter(String allowMethods, String allowHeaders, String exposeHeaders) {
-            this.allowMethods = allowMethods;
-            this.allowHeaders = allowHeaders;
-            this.exposeHeaders = exposeHeaders;
-        }
-
-        @Override
-        public void init(FilterConfig filterConfig) throws ServletException {
-            // TODO Auto-generated method stub
-
-        }
-
-
-        @Override
-        public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-                throws IOException, ServletException {
-            HttpServletResponse response = (HttpServletResponse) servletResponse;
-//        String origin = (String) servletRequest.getRemoteHost()+":"+servletRequest.getRemotePort();
-            response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setHeader("Access-Control-Allow-Methods", allowMethods);
-            response.setHeader("Access-Control-Max-Age", "3600");
-            response.setHeader("Access-Control-Allow-Headers", allowHeaders);
-            response.setHeader("Access-Control-Expose-Headers", allowHeaders);
-            response.setHeader("Access-Control-Allow-Credentials", "true");
-            filterChain.doFilter(servletRequest, servletResponse);
-        }
-
-        @Override
-        public void destroy() {
-
-        }
-    }
 }
