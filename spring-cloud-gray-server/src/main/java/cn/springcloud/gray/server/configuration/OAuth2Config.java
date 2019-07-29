@@ -116,6 +116,9 @@ public class OAuth2Config {
 
                     .antMatchers(HttpMethod.OPTIONS, "/gray/**").permitAll()
                     .antMatchers("/gray/service/**").authenticated()
+                    .antMatchers("/gray/policy/**").authenticated()
+                    .antMatchers("/gray/decision/**").authenticated()
+                    .antMatchers("/gray/discover/**").authenticated()
                     .antMatchers("/gray/track/**").authenticated()
                     .anyRequest().permitAll()
                     .and()
