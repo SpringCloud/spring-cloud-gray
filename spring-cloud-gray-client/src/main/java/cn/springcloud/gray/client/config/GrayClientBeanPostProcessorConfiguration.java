@@ -1,11 +1,15 @@
 package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.InstanceLocalInfo;
-import cn.springcloud.gray.InstanceLocalInfoAware;
+import cn.springcloud.gray.local.InstanceLocalInfo;
+import cn.springcloud.gray.local.InstanceLocalInfoAware;
+import cn.springcloud.gray.local.InstanceLocalInfoAwareProcessor;
+import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,24 +17,13 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnBean(GrayManager.class)
 public class GrayClientBeanPostProcessorConfiguration {
 
-
     @Bean
-//    @ConditionalOnBean(InstanceLocalInfo.class)
-    public BeanPostProcessor beanPostProcessor(InstanceLocalInfo instanceLocalInfo) {
-        return new BeanPostProcessor() {
-            @Override
-            public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-                if (bean instanceof InstanceLocalInfoAware) {
-                    ((InstanceLocalInfoAware) bean).setInstanceLocalInfo(instanceLocalInfo);
-                }
-                return bean;
-            }
-
-            @Override
-            public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-                return bean;
-            }
-        };
+    @ConditionalOnProperty(value = "gray.aware.instanceLocalInfo.enabled", matchIfMissing = true)
+    public InstanceLocalInfoAwareProcessor instanceLocalInfoAwareProcessor(
+            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer) {
+        return new InstanceLocalInfoAwareProcessor(instanceLocalInfoInitiralizer.getInstanceLocalInfo());
     }
+
+
 
 }

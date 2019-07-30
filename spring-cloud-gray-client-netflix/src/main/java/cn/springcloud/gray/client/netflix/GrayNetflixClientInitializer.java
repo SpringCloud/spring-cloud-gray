@@ -1,7 +1,10 @@
-package cn.springcloud.gray;
+package cn.springcloud.gray.client.netflix;
 
+import cn.springcloud.gray.GrayClientHolder;
+import cn.springcloud.gray.GrayManager;
+import cn.springcloud.gray.RequestInterceptor;
+import cn.springcloud.gray.UpdateableGrayManager;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
@@ -15,7 +18,7 @@ import org.springframework.context.ApplicationContextAware;
 import java.util.Map;
 
 @Slf4j
-public class GrayClientInitializer implements ApplicationContextAware, InitializingBean {
+public class GrayNetflixClientInitializer implements ApplicationContextAware, InitializingBean {
     private ApplicationContext cxt;
 
     @Override
@@ -31,22 +34,12 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
 
         initGrayManagerRequestInterceptors();
 
-        loadInstanceLocalInfo();
     }
-
 
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.cxt = applicationContext;
-    }
-
-    private void loadInstanceLocalInfo(){
-        InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer = getBean("instanceLocalInfoInitiralizer", InstanceLocalInfoInitiralizer.class);
-        if(instanceLocalInfoInitiralizer==null){
-            return;
-        }
-        GrayClientHolder.setInstanceLocalInfo(instanceLocalInfoInitiralizer.getInstanceLocalInfo());
     }
 
 

@@ -1,7 +1,8 @@
 package cn.springcloud.gray.request.track;
 
-import cn.springcloud.gray.InstanceLocalInfo;
-import cn.springcloud.gray.InstanceLocalInfoAware;
+import cn.springcloud.gray.GrayClientHolder;
+import cn.springcloud.gray.local.InstanceLocalInfo;
+import cn.springcloud.gray.local.InstanceLocalInfoAware;
 import cn.springcloud.gray.client.config.properties.GrayTrackProperties;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.model.GrayTrackDefinition;
@@ -68,6 +69,9 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
             log.debug("更新灰度追踪列表...");
 
             InstanceLocalInfo instanceLocalInfo = getInstanceLocalInfo();
+            if(instanceLocalInfo==null){
+                log.warn("本地实例信息为null,跳过更新");
+            }
             List<GrayTrackDefinition> trackDefinitions = getGrayInformationClient()
                     .getTrackDefinitions(instanceLocalInfo.getServiceId(), instanceLocalInfo.getInstanceId());
             trackDefinitions.forEach(definition -> {
@@ -101,6 +105,9 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
     }
 
     public InstanceLocalInfo getInstanceLocalInfo() {
+        if(instanceLocalInfo==null){
+            instanceLocalInfo = GrayClientHolder.getInstanceLocalInfo();
+        }
         return instanceLocalInfo;
     }
 

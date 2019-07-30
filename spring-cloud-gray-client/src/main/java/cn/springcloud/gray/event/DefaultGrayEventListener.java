@@ -1,13 +1,16 @@
 package cn.springcloud.gray.event;
 
 import cn.springcloud.gray.CommunicableGrayManager;
-import cn.springcloud.gray.InstanceLocalInfo;
-import cn.springcloud.gray.InstanceLocalInfoAware;
+import cn.springcloud.gray.GrayClientHolder;
+import cn.springcloud.gray.local.InstanceLocalInfo;
+import cn.springcloud.gray.local.InstanceLocalInfoAware;
 import cn.springcloud.gray.exceptions.EventException;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayTrackDefinition;
 import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -18,6 +21,7 @@ import java.util.function.Consumer;
  * 事件类型分两种：更新、删除
  */
 public class DefaultGrayEventListener implements GrayEventListener, InstanceLocalInfoAware {
+    private static final Logger log = LoggerFactory.getLogger(DefaultGrayEventListener.class);
 
     private CommunicableGrayManager grayManager;
     private CommunicableGrayTrackHolder grayTrackHolder;
@@ -60,6 +64,11 @@ public class DefaultGrayEventListener implements GrayEventListener, InstanceLoca
 
 
     private void handleGrayInstance(GrayEventMsg msg) {
+        InstanceLocalInfo instanceLocalInfo = getInstanceLocalInfo();
+        if(instanceLocalInfo==null){
+            log.warn("instanceLocalInfo is null");
+            return;
+        }
         if (StringUtils.equals(msg.getServiceId(), instanceLocalInfo.getServiceId())
                 && StringUtils.equals(msg.getInstanceId(), instanceLocalInfo.getInstanceId())) {
             return;
@@ -75,6 +84,12 @@ public class DefaultGrayEventListener implements GrayEventListener, InstanceLoca
     }
 
     private void handleGrayTrack(GrayEventMsg msg) {
+        InstanceLocalInfo instanceLocalInfo = getInstanceLocalInfo();
+        if(instanceLocalInfo==null){
+            log.warn("instanceLocalInfo is null");
+            return;
+        }
+
         if (!StringUtils.equals(msg.getServiceId(), instanceLocalInfo.getServiceId())) {
             return;
         }
@@ -110,5 +125,12 @@ public class DefaultGrayEventListener implements GrayEventListener, InstanceLoca
     @Override
     public void setInstanceLocalInfo(InstanceLocalInfo instanceLocalInfo) {
         this.instanceLocalInfo = instanceLocalInfo;
+    }
+
+    public InstanceLocalInfo getInstanceLocalInfo() {
+        if(instanceLocalInfo==null){
+            instanceLocalInfo = GrayClientHolder.getInstanceLocalInfo();
+        }
+        return instanceLocalInfo;
     }
 }

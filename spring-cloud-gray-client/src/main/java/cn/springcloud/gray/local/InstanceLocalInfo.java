@@ -1,4 +1,4 @@
-package cn.springcloud.gray;
+package cn.springcloud.gray.local;
 
 import lombok.*;
 
