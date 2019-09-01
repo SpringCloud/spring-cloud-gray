@@ -2,8 +2,8 @@
 
 
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Release](https://img.shields.io/badge/release-A.10.10-blue.svg)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/A.1.0.10)
-
+[![Release](https://img.shields.io/badge/release-A.1.1.0-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/A.1.1.0)
+[![Release](https://img.shields.io/badge/release-B.0.0.1-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/B.0.0.1)
 
 ## 介绍
 Spring Cloud Gray 是一套开源的微服务灰度路由解决方案，它由spring-cloud-gray-client，spring-cloud-gray-client-netflix 和 spring-cloud-tray-server，spring-cloud-gray-webui组成。<br/>
@@ -17,8 +17,10 @@ spring-cloud-gray-webui提供操作界面。
 [点击查看](./spring-cloud-gray-samples)
 
 在管控端数据库执行一条insert语名：
+```sql
 insert into `gray_server01`.`user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`, `create_time`, `operater`, `update_time`, `operator`, `operate_time`) values ( 'admin', 'admin', 'Admin', 'e7a57e51394e91cba19deca3337bfab0', 'admin', '1', null, null, null, 'admin', '2019-08-09 00:11:12');
-这是管理员账号的，用户名:`admin` 密码:`abc123`
+```
+这是添加管理员账号的，用户名:`admin` 密码:`abc123`
 
 
 ## 版本信息
@@ -114,17 +116,3 @@ HttpMethod | HttpMethodGrayInfoTracker | 获取http请求的请求方法并记�
 HttpParameter | HttpParameterGrayInfoTracker | 获取http请求的url参数并记录到灰度追踪的parameter中
 HttpURI | HttpURIGrayInfoTracker | 获取http请求的URI并记录到灰度追踪中
 
-## 操作界面
-
-### 灰度服务
-![](./doc/img/springcloud-gray-service.png)
-
-### 灰度实例
-![](./doc/img/springcloud-gray-instance.png)
-
-### 灰度策略
-![](./doc/img/springcloud-gray-policy.png)
-![](./doc/img/springcloud-gray-decision.png)
-
-### 灰度追踪
-![](./doc/img/springcloud-gray-track.png)
