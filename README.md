@@ -17,7 +17,7 @@ spring-cloud-gray-webui提供操作界面。
 [点击查看](./spring-cloud-gray-samples)
 
 ## 版本信息
-版本 | srpingcloud版本 | springboot版本
+项目版本 | srpingcloud版本 | springboot版本
 --- | --- | ---
 A.1.1.0 | Edgware.SR6 | 1.5.4.RELEASE
 B.0.0.1 | Finchley.SR4 | 2.0.9.RELEASE
