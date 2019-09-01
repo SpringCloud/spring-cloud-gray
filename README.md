@@ -2,8 +2,8 @@
 
 
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Release](https://img.shields.io/badge/release-A.10.10-blue.svg)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/A.1.0.10)
-
+[![Release](https://img.shields.io/badge/release-A.1.1.0-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/A.1.1.0)
+[![Release](https://img.shields.io/badge/release-B.0.0.1-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/B.0.0.1)
 
 ## 介绍
 Spring Cloud Gray 是一套开源的微服务灰度路由解决方案，它由spring-cloud-gray-client，spring-cloud-gray-client-netflix 和 spring-cloud-tray-server，spring-cloud-gray-webui组成。<br/>
