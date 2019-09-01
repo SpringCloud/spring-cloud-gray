@@ -47,6 +47,8 @@ spring-cloud-gray-webui | 灰度管控端的web界面，vue编写
 
 示例模块
 
+模块 | 描述
+--- | ---
 spring-cloud-gray-eureka-sample | eureka server/注册中心
 spring-cloud-gray-server-sample | 灰度管控端示例，界面是spring-cloud-gray-webui模块
 spring-cloud-gray-service-a-sample | 服务提供方示例
