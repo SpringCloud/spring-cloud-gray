@@ -2,6 +2,8 @@ package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.*;
 import cn.springcloud.gray.cache.CaffeineCache;
+import cn.springcloud.gray.choose.DefaultGrayPredicate;
+import cn.springcloud.gray.choose.GrayPredicate;
 import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.*;
 import cn.springcloud.gray.client.switcher.EnvGraySwitcher;
@@ -13,7 +15,9 @@ import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
+import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -54,10 +58,17 @@ public class GrayClientAutoConfiguration {
             @Autowired(required = false) InformationClient informationClient) {
 
         CacheProperties cacheProperties = grayClientProperties.getCacheProperties("grayDecision");
+//        com.github.benmanes.caffeine.cache.Cache<String, List<GrayDecision>> cache = Caffeine.newBuilder()
+//                .maximumSize(cacheProperties.getMaximumSize())
+//                .expireAfterAccess(cacheProperties.getExpireSeconds(), TimeUnit.SECONDS)
+//                .softValues()
+//                .build();
+
         com.github.benmanes.caffeine.cache.Cache<String, List<GrayDecision>> cache = Caffeine.newBuilder()
-                .maximumSize(cacheProperties.getMaximumSize())
                 .expireAfterWrite(cacheProperties.getExpireSeconds(), TimeUnit.SECONDS)
-                .softValues()
+                .initialCapacity(10)
+                .maximumSize(cacheProperties.getMaximumSize())
+                .recordStats()
                 .build();
 
         DefaultGrayManager grayManager = new DefaultGrayManager(
@@ -74,6 +85,7 @@ public class GrayClientAutoConfiguration {
     public GraySwitcher graySwitcher() {
         return new EnvGraySwitcher(grayProperties);
     }
+
 
     @Bean
     @ConditionalOnProperty(value = "gray.client.instance.grayEnroll")
@@ -100,4 +112,9 @@ public class GrayClientAutoConfiguration {
         return new GrayClientInitializer();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public GrayPredicate grayPredicate(RequestLocalStorage requestLocalStorage, GrayManager grayManager){
+        return new DefaultGrayPredicate(requestLocalStorage, grayManager);
+    }
 }

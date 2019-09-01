@@ -22,7 +22,7 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="Id" prop="serviceId" width="110px" align="center">
+      <el-table-column label="Id" prop="serviceId" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -32,9 +32,19 @@
           <span>{{ scope.row.alias }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Instance Id" align="center">
+      <!--<el-table-column label="Instance Id" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.instanceId }}</span>
+        </template>
+      </el-table-column>-->
+      <el-table-column label="Operator" prop="operator" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.operator }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Operate Time" prop="operateTime" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.operateTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
@@ -163,7 +173,7 @@ export default {
         // Just to simulate the time of the request
         setTimeout(() => {
           this.listLoading = false
-        }, 1 * 1000)
+        }, 0.2 * 1000)
       })
     },
     handleFilter() {
@@ -259,20 +269,26 @@ export default {
       })
     },
     handleDelete(row) {
-      deletePolicy(row.id).then(() => {
-        this.dialogFormVisible = false
-        for (const v of this.list) {
-          if (v.id === row.id) {
-            const index = this.list.indexOf(v)
-            this.list.splice(index, 1)
-            break
+      this.$confirm('Confirm to remove the record?', 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async() => {
+        deletePolicy(row.id).then(() => {
+          this.dialogFormVisible = false
+          for (const v of this.list) {
+            if (v.id === row.id) {
+              const index = this.list.indexOf(v)
+              this.list.splice(index, 1)
+              break
+            }
           }
-        }
-        this.$notify({
-          title: 'Success',
-          message: 'Delete Successfully',
-          type: 'success',
-          duration: 2000
+          this.$notify({
+            title: 'Success',
+            message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
         })
       })
     },

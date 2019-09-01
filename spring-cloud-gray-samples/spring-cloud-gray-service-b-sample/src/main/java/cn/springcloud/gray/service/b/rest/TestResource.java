@@ -1,5 +1,8 @@
 package cn.springcloud.gray.service.b.rest;
 
+import cn.springcloud.gray.choose.GrayPredicate;
+import cn.springcloud.gray.client.config.properties.GrayClientProperties;
+import cn.springcloud.gray.client.config.properties.GrayProperties;
 import cn.springcloud.gray.service.b.feign.Test2Client;
 import cn.springcloud.gray.service.b.feign.TestClient;
 import cn.springcloud.gray.service.b.service.TestService;
@@ -30,6 +33,8 @@ public class TestResource {
     private Test2Client test2Client;
     @Autowired
     private TestService testService;
+    @Autowired
+    private GrayProperties grayProperties;
 
 
     @RequestMapping(value = "/testGet", method = RequestMethod.GET)
@@ -102,5 +107,13 @@ public class TestResource {
             HttpServletRequest request) {
         Map map = test2Client.testGet(version);
         return ImmutableMap.of("feignGet", "success.", "service-a-result", map);
+    }
+
+
+    @RequestMapping(value = "/graySwith", method = RequestMethod.GET)
+    @ResponseBody
+    public String graySwith(){
+        grayProperties.setEnabled(!grayProperties.isEnabled());
+        return "sccuess";
     }
 }

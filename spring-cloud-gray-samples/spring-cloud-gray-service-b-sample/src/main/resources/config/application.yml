@@ -1,39 +1,45 @@
 spring:
   application:
     name: service-b
-#  rabbitmq:
-#    addresses: 127.0.0.1:5672
-#    username: admin
-#    password: admin
-#  cloud:
-#    stream:
-#      bindings:
-#        GrayEventInput:
-#          group: service-a
-#          destination: gray_event
-#          consumer:
-#            concurrency: 1 #并发数
-#        #            max-attempts: 1
-#      #        GrayEventOutput:
-#      #          destination: gray-event
-#      rabbit:
-#        bindings:
-#          GrayEventInput:
-#            consumer:
-#              maxConcurrency: 1 #并发数
-#              #              prefetch: 1 #从mq一次获取消息的数量
-#              #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
-#              #              auto-bind-dlq: true
-#              acknowledgeMode: AUTO
-##              acknowledgeMode: MANUAL
+  rabbitmq:
+    addresses: 127.0.0.1:5672
+    username: admin
+    password: admin
+  cloud:
+    stream:
+      bindings:
+        GrayEventInput:
+          group: service-a
+          destination: gray_event
+          consumer:
+            concurrency: 1 #并发数
+        #            max-attempts: 1
+      #        GrayEventOutput:
+      #          destination: gray-event
+      rabbit:
+        bindings:
+          GrayEventInput:
+            consumer:
+              maxConcurrency: 1 #并发数
+              #              prefetch: 1 #从mq一次获取消息的数量
+              #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
+              #              auto-bind-dlq: true
+              acknowledgeMode: AUTO
+#              acknowledgeMode: MANUAL
 server:
   port: 20102
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+    region: sh
+    availability-zones:
+      sh: xuhui,gray
     serviceUrl:
-      defaultZone: http://localhost:20001/eureka/
+      #      defaultZone: http://localhost:20001/eureka/
+      xuhui: http://localhost:20001/eureka/
+      gray: http://localhost:20001/eureka/
+    registry-fetch-interval-seconds: 5
   instance:
     instanceId: ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}
     lease-renewal-interval-in-seconds: 5
@@ -60,7 +66,7 @@ gray:
     retryNumberOfRetries: 3
   client:
     runenv: web
-    serviceUpdateIntervalTimerInMs: 10000
+    serviceUpdateIntervalTimerInMs: 0
     serviceInitializeDelayTimeInMs: 10000
     instance:
       grayEnroll: false
@@ -73,7 +79,7 @@ gray:
     track:
       enabled: true
       trackType: web
-      definitionsUpdateIntervalTimerInMs: 10000
+      definitionsUpdateIntervalTimerInMs: 0
       definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:

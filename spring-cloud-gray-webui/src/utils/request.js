@@ -72,7 +72,6 @@ service.interceptors.response.use(
     } else {
       res.resHeaders = response.headers
       const total = response.headers['x-total-count']
-      alert(total)
       if (total !== undefined && total !== null) {
         const data = { 'total': parseInt(total), 'items': response.data.data }
         res.data = data

@@ -1,7 +1,9 @@
 package cn.springcloud.gray.concurrent;
 
 import cn.springcloud.gray.GrayClientHolder;
+import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
+import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,7 @@ public class GrayConcurrentHelper {
         context.setLocalStorageLifeCycle(GrayClientHolder.getLocalStorageLifeCycle());
         context.setRequestLocalStorage(GrayClientHolder.getRequestLocalStorage());
         context.setGrayTrackInfo(getGrayTrackInfo());
+        context.setGrayRequest(getGrayRequest());
         context.setTarget(runnable);
         return context;
     }
@@ -57,6 +60,7 @@ public class GrayConcurrentHelper {
         context.setRequestLocalStorage(GrayClientHolder.getRequestLocalStorage());
         context.setLocalStorageLifeCycle(GrayClientHolder.getLocalStorageLifeCycle());
         context.setGrayTrackInfo(getGrayTrackInfo());
+        context.setGrayRequest(getGrayRequest());
         context.setTarget(callable);
         return context;
     }
@@ -69,6 +73,37 @@ public class GrayConcurrentHelper {
             log.warn("获取GrayTrackInfo失败, 线程名是 {}", Thread.currentThread().getName(), e);
             return null;
         }
+    }
+
+    public static GrayRequest getGrayRequest(){
+        RequestLocalStorage requestLocalStorage = GrayClientHolder.getRequestLocalStorage();
+        try {
+            return requestLocalStorage == null ? null : requestLocalStorage.getGrayRequest();
+        } catch (Exception e) {
+            log.warn("获取GrayRequest失败, 线程名是 {}", Thread.currentThread().getName(), e);
+            return null;
+        }
+    }
+
+
+    public static void initRequestLocalStorageContext(GrayAsyncContext context){
+        GrayTrackInfo grayTrackInfo = context.getGrayTrackInfo();
+        LocalStorageLifeCycle localStorageLifeCycle = context.getLocalStorageLifeCycle();
+        localStorageLifeCycle.initContext();
+        RequestLocalStorage requestLocalStorage = context.getRequestLocalStorage();
+        requestLocalStorage.setGrayTrackInfo(grayTrackInfo);
+        if(context.getGrayRequest()!=null && requestLocalStorage.getGrayRequest()==null){
+            requestLocalStorage.setGrayRequest(context.getGrayRequest());
+        }
+    }
+
+    public static void cleanRequestLocalStorageContext(GrayAsyncContext context){
+        LocalStorageLifeCycle localStorageLifeCycle = context.getLocalStorageLifeCycle();
+        RequestLocalStorage requestLocalStorage = context.getRequestLocalStorage();
+
+        requestLocalStorage.removeGrayTrackInfo();
+        requestLocalStorage.removeGrayRequest();
+        localStorageLifeCycle.closeContext();
     }
 
 }

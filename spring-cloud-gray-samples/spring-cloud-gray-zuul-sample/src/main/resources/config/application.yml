@@ -1,36 +1,37 @@
 spring:
   application:
     name: api-Gateway
-#  rabbitmq:
-#    addresses: 127.0.0.1:5672
-#    username: admin
-#    password: admin
-#  cloud:
-#    stream:
-#      bindings:
-#        GrayEventInput:
-#          group: zuul
-#          destination: gray_event
-#          consumer:
-#            concurrency: 1 #并发数
-#        #            max-attempts: 1
-#      #        GrayEventOutput:
-#      #          destination: gray-event
-#      rabbit:
-#        bindings:
-#          GrayEventInput:
-#            consumer:
-#              maxConcurrency: 1 #并发数
-#              #              prefetch: 1 #从mq一次获取消息的数量
-#              #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
-#              #              auto-bind-dlq: true
-#              acknowledgeMode: AUTO
+  rabbitmq:
+    addresses: 127.0.0.1:5672
+    username: admin
+    password: admin
+  cloud:
+    stream:
+      bindings:
+        GrayEventInput:
+          group: zuul
+          destination: gray_event
+          consumer:
+            concurrency: 1 #并发数
+        #            max-attempts: 1
+      #        GrayEventOutput:
+      #          destination: gray-event
+      rabbit:
+        bindings:
+          GrayEventInput:
+            consumer:
+              maxConcurrency: 1 #并发数
+              #              prefetch: 1 #从mq一次获取消息的数量
+              #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
+              #              auto-bind-dlq: true
+              acknowledgeMode: AUTO
 server:
   port: 20301
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:20001/eureka/
+    registry-fetch-interval-seconds: 5
   instance:
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15
@@ -68,6 +69,10 @@ gray:
     runenv: web
     serviceUpdateIntervalTimerInMs: 10000
     serviceInitializeDelayTimeInMs: 10000
+  holdoutServer:
+    enabled: true
+    services:
+      "service-b": starting
   request:
     track:
       definitionsUpdateIntervalTimerInMs: 10000

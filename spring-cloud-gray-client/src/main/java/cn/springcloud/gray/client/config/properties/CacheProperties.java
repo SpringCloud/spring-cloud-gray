@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class CacheProperties {
 
-    private long maximumSize = 1000;
+    private long maximumSize = 500;
 
-    private long expireSeconds = 60;
+    private long expireSeconds = 3600;
 }

@@ -4,7 +4,7 @@ import cn.springcloud.gray.server.dao.mapper.GrayPolicyMapper;
 import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.model.GrayPolicyDO;
 import cn.springcloud.gray.server.dao.repository.GrayPolicyRepository;
-import cn.springcloud.gray.server.module.domain.GrayPolicy;
+import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

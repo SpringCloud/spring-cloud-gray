@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.netflix.feign.configuration;
 
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.client.netflix.feign.GrayFeignClient;
 import feign.Client;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,8 @@ public class GrayFeignClientsConfiguration {
 
 
     @Bean
-    public Client getFeignClient(Client feignClient, RibbonConnectionPoint ribbonConnectionPoint) {
-        return new GrayFeignClient(feignClient, ribbonConnectionPoint, grayRequestProperties);
+    public Client getFeignClient(Client feignClient, RoutingConnectionPoint routingConnectionPoint) {
+        return new GrayFeignClient(feignClient, routingConnectionPoint, grayRequestProperties);
     }
 
 

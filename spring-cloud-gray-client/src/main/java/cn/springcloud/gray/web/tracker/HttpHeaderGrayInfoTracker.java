@@ -2,11 +2,11 @@ package cn.springcloud.gray.web.tracker;
 
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.TrackArgs;
+import cn.springcloud.gray.web.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -16,9 +16,9 @@ public class HttpHeaderGrayInfoTracker implements HttpGrayInfoTracker {
 
 
     @Override
-    public void call(TrackArgs<GrayHttpTrackInfo, HttpServletRequest> args) {
+    public void call(TrackArgs<GrayHttpTrackInfo, HttpRequest> args) {
         GrayHttpTrackInfo trackInfo = args.getTrackInfo();
-        HttpServletRequest request = args.getRequest();
+        HttpRequest request = args.getRequest();
         String defValue = args.getTrackDefinition().getValue();
         if (StringUtils.isEmpty(defValue)) {
             return;

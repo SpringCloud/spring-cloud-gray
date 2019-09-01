@@ -15,6 +15,8 @@ import java.util.Map;
 public class GrayHoldoutServerProperties {
 
     private boolean enabled;
+    private boolean zoneAffinity;
+    private boolean cacheable;
 
     private Map<String, List<InstanceStatus>> services = new HashMap<>();
 }

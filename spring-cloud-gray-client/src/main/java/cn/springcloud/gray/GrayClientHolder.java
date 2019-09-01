@@ -16,6 +16,7 @@ public class GrayClientHolder {
     private static ServerListProcessor<?> serverListProcessor;
     private static GraySwitcher graySwitcher = new GraySwitcher.DefaultGraySwitcher();
     private static InstanceLocalInfo instanceLocalInfo;
+    private static ServerChooser<?> serverChooser;
 
     public static GrayManager getGrayManager() {
         return grayManager;
@@ -71,5 +72,14 @@ public class GrayClientHolder {
 
     public static void setInstanceLocalInfo(InstanceLocalInfo instanceLocalInfo) {
         GrayClientHolder.instanceLocalInfo = instanceLocalInfo;
+    }
+
+
+    public static <SERVER> ServerChooser<SERVER> getServerChooser() {
+        return (ServerChooser<SERVER>) serverChooser;
+    }
+
+    public static void setServerChooser(ServerChooser<?> serverChooser) {
+        GrayClientHolder.serverChooser = serverChooser;
     }
 }

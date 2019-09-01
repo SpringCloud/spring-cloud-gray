@@ -1,8 +1,8 @@
 package cn.springcloud.gray.client.netflix.feign;
 
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.netflix.connectionpoint.ConnectPointContext;
-import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectPointContext;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
 import cn.springcloud.gray.request.GrayHttpRequest;
 import cn.springcloud.gray.utils.WebUtils;
@@ -16,12 +16,12 @@ import java.net.URI;
 class GrayFeignClientWrapper implements Client {
 
     private Client delegate;
-    private RibbonConnectionPoint ribbonConnectionPoint;
+    private RoutingConnectionPoint routingConnectionPoint;
     private GrayRequestProperties grayRequestProperties;
 
-    public GrayFeignClientWrapper(Client delegate, RibbonConnectionPoint ribbonConnectionPoint, GrayRequestProperties grayRequestProperties) {
+    public GrayFeignClientWrapper(Client delegate, RoutingConnectionPoint routingConnectionPoint, GrayRequestProperties grayRequestProperties) {
         this.delegate = delegate;
-        this.ribbonConnectionPoint = ribbonConnectionPoint;
+        this.routingConnectionPoint = routingConnectionPoint;
         this.grayRequestProperties = grayRequestProperties;
     }
 
@@ -42,10 +42,10 @@ class GrayFeignClientWrapper implements Client {
 
         grayRequest.setAttribute(GrayFeignClient.GRAY_REQUEST_ATTRIBUTE_NAME_FEIGN_REQUEST, request);
         grayRequest.setAttribute(GrayFeignClient.GRAY_REQUEST_ATTRIBUTE_NAME_FEIGN_REQUEST_OPTIONS, options);
-        ConnectPointContext connectPointContext = ConnectPointContext.builder()
+        RoutingConnectPointContext connectPointContext = RoutingConnectPointContext.builder()
                 .interceptroType(GrayNetflixClientConstants.INTERCEPTRO_TYPE_FEIGN)
                 .grayRequest(grayRequest).build();
-        return ribbonConnectionPoint.execute(connectPointContext, () -> delegate.execute(request, options));
+        return routingConnectionPoint.execute(connectPointContext, () -> delegate.execute(request, options));
 
 //        try {
 //            ribbonConnectionPoint.executeConnectPoint(connectPointContext);
@@ -63,8 +63,8 @@ class GrayFeignClientWrapper implements Client {
     }
 
 
-    RibbonConnectionPoint getRibbonConnectionPoint() {
-        return ribbonConnectionPoint;
+    RoutingConnectionPoint getRoutingConnectionPoint() {
+        return routingConnectionPoint;
     }
 
     GrayRequestProperties getGrayRequestProperties() {

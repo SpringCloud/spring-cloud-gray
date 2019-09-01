@@ -4,7 +4,7 @@ import cn.springcloud.gray.server.dao.mapper.GrayDecisionMapper;
 import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.model.GrayDecisionDO;
 import cn.springcloud.gray.server.dao.repository.GrayDecisionRepository;
-import cn.springcloud.gray.server.module.domain.GrayDecision;
+import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -29,6 +29,8 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         GrayClientHolder.setGraySwitcher(
                 getBean("graySwitcher", GraySwitcher.class, new GraySwitcher.DefaultGraySwitcher()));
 
+        GrayClientHolder.setServerChooser(getBean("serverChooser", ServerChooser.class));
+
         initGrayManagerRequestInterceptors();
 
         loadInstanceLocalInfo();

@@ -1,11 +1,10 @@
 package cn.springcloud.gray.client.netflix.resttemplate;
 
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.netflix.connectionpoint.ConnectPointContext;
-import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectPointContext;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
 import cn.springcloud.gray.request.GrayHttpRequest;
-import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.utils.WebUtils;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -24,12 +23,12 @@ public class GrayClientHttpRequestIntercptor implements ClientHttpRequestInterce
     public static final String GRAY_REQUEST_ATTRIBUTE_RESTTEMPLATE_REQUEST = "restTemplate.request";
 
     private GrayRequestProperties grayRequestProperties;
-    private RibbonConnectionPoint ribbonConnectionPoint;
+    private RoutingConnectionPoint routingConnectionPoint;
 
     public GrayClientHttpRequestIntercptor(
-            GrayRequestProperties grayRequestProperties, RibbonConnectionPoint ribbonConnectionPoint) {
+            GrayRequestProperties grayRequestProperties, RoutingConnectionPoint routingConnectionPoint) {
         this.grayRequestProperties = grayRequestProperties;
-        this.ribbonConnectionPoint = ribbonConnectionPoint;
+        this.routingConnectionPoint = routingConnectionPoint;
     }
 
     @Override
@@ -47,11 +46,11 @@ public class GrayClientHttpRequestIntercptor implements ClientHttpRequestInterce
         grayRequest.addHeaders(request.getHeaders());
 
         grayRequest.setAttribute(GRAY_REQUEST_ATTRIBUTE_RESTTEMPLATE_REQUEST, request);
-        ConnectPointContext connectPointContext = ConnectPointContext.builder()
+        RoutingConnectPointContext connectPointContext = RoutingConnectPointContext.builder()
                 .interceptroType(GrayNetflixClientConstants.INTERCEPTRO_TYPE_RESTTEMPLATE)
                 .grayRequest(grayRequest).build();
 
-        return ribbonConnectionPoint.execute(connectPointContext, () -> execution.execute(request, body));
+        return routingConnectionPoint.execute(connectPointContext, () -> execution.execute(request, body));
 
 //        try {
 //            ribbonConnectionPoint.executeConnectPoint(connectPointContext);

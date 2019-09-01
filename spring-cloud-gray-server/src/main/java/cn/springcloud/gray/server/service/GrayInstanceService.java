@@ -6,16 +6,20 @@ import cn.springcloud.gray.server.dao.mapper.GrayInstanceMapper;
 import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.model.GrayInstanceDO;
 import cn.springcloud.gray.server.dao.repository.GrayInstanceRepository;
-import cn.springcloud.gray.server.module.domain.GrayInstance;
+import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -89,7 +93,26 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
 
     public List<GrayInstance> listGrayInstancesByNormalInstanceStatus(Collection<InstanceStatus> instanceStatusList) {
         String[] instanceStatusAry = toArray(instanceStatusList);
-        return dos2models(repository.findAllByGrayStatusAndInstanceStatusIn(GrayStatus.OPEN.name(), instanceStatusAry));
+//        return dos2models(repository.findAllByGrayStatusAndInstanceStatusInOrGrayLock(
+//                GrayStatus.OPEN.name(), instanceStatusAry, GrayInstance.GRAY_LOCKED));
+
+        Specification<GrayInstanceDO> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList();
+            Predicate predGrayStatus = cb.equal(root.get("grayStatus").as(String.class), GrayStatus.OPEN.name());
+            predicates.add(predGrayStatus);
+
+            CriteriaBuilder.In predInstanceStatusIn = cb.in(root.get("instanceStatus").as(String.class));
+            for (String instanceStatus : instanceStatusAry){
+                predInstanceStatusIn.value(instanceStatus);
+            }
+            Predicate predTrayLock = cb.equal(root.get("grayLock").as(Integer.class), GrayInstance.GRAY_LOCKED);
+
+            predicates.add(cb.or(predInstanceStatusIn, predTrayLock));
+
+            query.where(predicates.toArray(new Predicate[predicates.size()]));
+            return query.getRestriction();
+        };
+        return dos2models(repository.findAll(spec));
     }
 
     private String[] toArray(Collection<InstanceStatus> instanceStatusList) {

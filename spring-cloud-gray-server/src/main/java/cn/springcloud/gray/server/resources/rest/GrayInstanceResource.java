@@ -1,10 +1,16 @@
 package cn.springcloud.gray.server.resources.rest;
 
-import cn.springcloud.gray.server.module.GrayServerModule;
-import cn.springcloud.gray.server.module.domain.GrayInstance;
+import cn.springcloud.gray.server.module.gray.GrayModelType;
+import cn.springcloud.gray.server.module.gray.GrayServerModule;
+import cn.springcloud.gray.server.module.gray.GrayServiceIdFinder;
+import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
+import cn.springcloud.gray.server.module.user.ServiceManageModule;
+import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.resources.domain.ApiRes;
+import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 import static cn.springcloud.gray.server.resources.domain.ApiRes.CODE_SUCCESS;
@@ -26,6 +33,12 @@ public class GrayInstanceResource {
 
     @Autowired
     private GrayServerModule grayServerModule;
+    @Autowired
+    private UserModule userModule;
+    @Autowired
+    private ServiceManageModule serviceManageModule;
+    @Autowired
+    private GrayServiceIdFinder grayServiceIdFinder;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, params = {"serviceId"})
     public ApiRes<List<GrayInstance>> listByServiceId(@RequestParam("serviceId") String serviceId) {
@@ -61,6 +74,10 @@ public class GrayInstanceResource {
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     public ApiRes<Void> delete(@RequestParam("id") String id) {
+        if (!serviceManageModule.hasServiceAuthority(
+                grayServiceIdFinder.getServiceId(GrayModelType.INSTANCE, id))) {
+            return ApiResHelper.notAuthority();
+        }
         grayServerModule.deleteGrayInstance(id);
         return ApiRes.<Void>builder()
                 .code(CODE_SUCCESS)
@@ -69,6 +86,13 @@ public class GrayInstanceResource {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ApiRes<Void> save(@RequestBody GrayInstance grayInstance) {
+        if (StringUtils.isNotEmpty(userModule.getCurrentUserId())) {
+            if (!serviceManageModule.hasServiceAuthority(grayInstance.getServiceId())) {
+                return ApiResHelper.notAuthority();
+            }
+        }
+        grayInstance.setOperator(userModule.getCurrentUserId());
+        grayInstance.setOperateTime(new Date());
         grayServerModule.saveGrayInstance(grayInstance);
         return ApiRes.<Void>builder()
                 .code(CODE_SUCCESS)
@@ -79,6 +103,14 @@ public class GrayInstanceResource {
     @RequestMapping(value = "/switchStatus", method = RequestMethod.PUT)
     public ApiRes<Void> switchGrayStatus(@RequestParam("id") String instanceId,
                                          @ApiParam(value = "灰度开关{0: close, 1: open}", defaultValue = "0") @RequestParam("switch") int onoff) {
+
+        if (StringUtils.isNotEmpty(userModule.getCurrentUserId())) {
+            if (!serviceManageModule.hasServiceAuthority(
+                    grayServiceIdFinder.getServiceId(GrayModelType.INSTANCE, instanceId))) {
+                return ApiResHelper.notAuthority();
+            }
+        }
+
         switch (onoff) {
             case 1:
                 grayServerModule.openGray(instanceId);
@@ -93,8 +125,6 @@ public class GrayInstanceResource {
             default:
                 throw new UnsupportedOperationException("不支持的开关类型");
         }
-
-
     }
 
 

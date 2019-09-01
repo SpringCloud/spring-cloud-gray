@@ -21,6 +21,8 @@ public interface GrayTrackHolder {
 
     void updateTrackDefinition(GrayTrackDefinition definition);
 
+    void deleteTrackDefinition(GrayTrackDefinition definition);
+
     void deleteTrackDefinition(String name);
 
 

@@ -34,3 +34,12 @@ export function deleteInstance(instanceId) {
     method: 'delete'
   })
 }
+
+export function tryChangeInstanceStatus(row, status) {
+  const data = { 'serviceId': row.serviceId, 'instanceId': row.instanceId, 'instanceStatus': status }
+  return request({
+    url: '/gray/discover/instanceInfo/setInstanceStatus',
+    method: 'put',
+    data
+  })
+}

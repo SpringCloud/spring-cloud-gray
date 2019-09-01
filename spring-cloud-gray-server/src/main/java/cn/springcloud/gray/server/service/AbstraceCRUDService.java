@@ -1,6 +1,9 @@
 package cn.springcloud.gray.server.service;
 
 import cn.springcloud.gray.server.dao.mapper.ModelMapper;
+import cn.springcloud.gray.server.utils.PaginationUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;
@@ -60,6 +63,10 @@ public abstract class AbstraceCRUDService<MODEL, REPOSITORY extends JpaRepositor
 
     public List<MODEL> findAllModel(Iterable<ID> ids) {
         return dos2models(findAll(ids));
+    }
+
+    public Page<MODEL> findAllModels(Pageable pageable){
+        return PaginationUtils.convert(pageable, getRepository().findAll(pageable), getModelMapper());
     }
 
 

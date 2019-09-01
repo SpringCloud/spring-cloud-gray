@@ -2,7 +2,7 @@ package cn.springcloud.gray.client.netflix.zuul.configuration;
 
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.client.netflix.zuul.GrayPostZuulFilter;
 import cn.springcloud.gray.client.netflix.zuul.GrayPreZuulFilter;
 import cn.springcloud.gray.client.netflix.zuul.ZuulRequestInterceptor;
@@ -15,23 +15,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnBean(
-        value = {GrayManager.class},
-        name = {"zuulServlet"})
 @ConditionalOnClass(value = ZuulServlet.class)
+@ConditionalOnProperty(value = "gray.enabled")
 public class GrayZuulAutoConfiguration {
 
     @Autowired
     private GrayRequestProperties grayRequestProperties;
 
     @Bean
-    public GrayPreZuulFilter grayPreZuulFilter(RibbonConnectionPoint ribbonConnectionPoint) {
-        return new GrayPreZuulFilter(grayRequestProperties, ribbonConnectionPoint);
+    public GrayPreZuulFilter grayPreZuulFilter(RoutingConnectionPoint routingConnectionPoint) {
+        return new GrayPreZuulFilter(grayRequestProperties, routingConnectionPoint);
     }
 
     @Bean
-    public GrayPostZuulFilter grayPostZuulFilter(RibbonConnectionPoint ribbonConnectionPoint) {
-        return new GrayPostZuulFilter(ribbonConnectionPoint);
+    public GrayPostZuulFilter grayPostZuulFilter(RoutingConnectionPoint routingConnectionPoint) {
+        return new GrayPostZuulFilter(routingConnectionPoint);
     }
 
 

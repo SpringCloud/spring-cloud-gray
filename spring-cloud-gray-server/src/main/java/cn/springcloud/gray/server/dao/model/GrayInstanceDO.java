@@ -22,8 +22,14 @@ public class GrayInstanceDO {
     private String host;
     @Column(length = 5)
     private Integer port;
+    @Column(length = 128)
+    private String des;
     @Column
     private Date lastUpdateDate;
+    @Column(length = 32)
+    private String operator;
+    @Column
+    private Date operateTime;
 
     /**
      * 实例状态
@@ -36,5 +42,10 @@ public class GrayInstanceDO {
     @Column(length = 16)
     private String grayStatus;
 
+    /**
+     * 灰度锁定
+     */
+    @Column(length = 2)
+    private Integer grayLock;
 
 }

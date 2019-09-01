@@ -14,17 +14,11 @@ public class GrayRunnable implements Runnable {
 
     @Override
     public void run() {
-        GrayTrackInfo grayTrackInfo = context.getGrayTrackInfo();
-        LocalStorageLifeCycle localStorageLifeCycle = context.getLocalStorageLifeCycle();
-        localStorageLifeCycle.initContext();
-        RequestLocalStorage requestLocalStorage = context.getRequestLocalStorage();
-        requestLocalStorage.setGrayTrackInfo(grayTrackInfo);
+        GrayConcurrentHelper.initRequestLocalStorageContext(context);
         try {
             context.getTarget().run();
         } finally {
-            requestLocalStorage.removeGrayTrackInfo();
-            requestLocalStorage.removeGrayRequest();
-            localStorageLifeCycle.closeContext();
+            GrayConcurrentHelper.cleanRequestLocalStorageContext(context);
         }
     }
 }

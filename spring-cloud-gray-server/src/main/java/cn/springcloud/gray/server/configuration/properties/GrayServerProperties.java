@@ -15,7 +15,9 @@ import java.util.concurrent.TimeUnit;
 @ConfigurationProperties(prefix = "gray.server")
 public class GrayServerProperties {
 
-    private long evictionIntervalTimerInMs = TimeUnit.SECONDS.toMillis(60);
+
+
+    private DiscoveryProperties discovery = new DiscoveryProperties();
 
     private InstanceProperties instance = new InstanceProperties();
 
@@ -30,6 +32,14 @@ public class GrayServerProperties {
         private InstanceRecordEvictProperties eviction = new InstanceRecordEvictProperties();
 
 
+    }
+
+
+    @Setter
+    @Getter
+    public static class DiscoveryProperties{
+        private boolean evictionEnabled = true;
+        private long evictionIntervalTimerInMs = TimeUnit.SECONDS.toMillis(60);
     }
 
 

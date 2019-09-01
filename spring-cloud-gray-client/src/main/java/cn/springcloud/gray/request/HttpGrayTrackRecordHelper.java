@@ -1,7 +1,6 @@
 package cn.springcloud.gray.request;
 
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -13,15 +12,6 @@ public class HttpGrayTrackRecordHelper {
 
     public static void record(HttpGrayTrackRecordDevice recordDevice, GrayTrackInfo grayTrackInfo) {
         GrayHttpTrackInfo httpTrackInfo = (GrayHttpTrackInfo) grayTrackInfo;
-        if (StringUtils.isNotEmpty(httpTrackInfo.getUri())) {
-            recordDevice.record(GrayHttpTrackInfo.GRAY_TRACK_URI, httpTrackInfo.getUri());
-        }
-        if (StringUtils.isNotEmpty(httpTrackInfo.getTraceIp())) {
-            recordDevice.record(GrayHttpTrackInfo.GRAY_TRACK_TRACE_IP, httpTrackInfo.getTraceIp());
-        }
-        if (StringUtils.isNotEmpty(httpTrackInfo.getMethod())) {
-            recordDevice.record(GrayHttpTrackInfo.GRAY_TRACK_METHOD, httpTrackInfo.getMethod());
-        }
 
         Map<String, List<String>> trackParameters = httpTrackInfo.getParameters();
         if (MapUtils.isNotEmpty(trackParameters)) {

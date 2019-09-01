@@ -5,10 +5,7 @@ export function fetchList(query) {
   tempData.page = query.page - 1
   tempData.size = query.limit
   delete tempData['limit']
-  var uri = '/gray/track/page'
-  if (tempData.serviceId) {
-    uri = '/gray/track/pageByService'
-  }
+  var uri = '/gray/track/pageByService'
   return request({
     url: uri,
     method: 'get',

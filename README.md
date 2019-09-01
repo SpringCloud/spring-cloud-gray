@@ -1,4 +1,4 @@
-# Spring Cloud Gray - 微服务灰度路由中间件
+# Spring Cloud Gray - 微服务灰度中间件
 
 
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)

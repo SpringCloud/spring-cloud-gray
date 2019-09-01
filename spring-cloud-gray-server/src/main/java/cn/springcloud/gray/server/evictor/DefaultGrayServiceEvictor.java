@@ -5,9 +5,9 @@ import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
 import cn.springcloud.gray.server.discovery.ServiceInfo;
-import cn.springcloud.gray.server.module.GrayServerModule;
-import cn.springcloud.gray.server.module.domain.GrayInstance;
-import cn.springcloud.gray.server.module.domain.GrayService;
+import cn.springcloud.gray.server.module.gray.GrayServerModule;
+import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
+import cn.springcloud.gray.server.module.gray.domain.GrayService;
 
 import java.util.List;
 import java.util.Objects;

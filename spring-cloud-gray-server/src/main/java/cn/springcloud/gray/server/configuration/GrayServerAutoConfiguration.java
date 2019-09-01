@@ -10,10 +10,10 @@ import cn.springcloud.gray.server.evictor.GrayServerEvictor;
 import cn.springcloud.gray.server.evictor.NoActionGrayServerEvictor;
 import cn.springcloud.gray.server.manager.DefaultGrayServiceManager;
 import cn.springcloud.gray.server.manager.GrayServiceManager;
-import cn.springcloud.gray.server.module.GrayModule;
-import cn.springcloud.gray.server.module.GrayServerModule;
-import cn.springcloud.gray.server.module.GrayServerTrackModule;
-import cn.springcloud.gray.server.module.SimpleGrayModule;
+import cn.springcloud.gray.server.module.gray.GrayModule;
+import cn.springcloud.gray.server.module.gray.GrayServerModule;
+import cn.springcloud.gray.server.module.gray.GrayServerTrackModule;
+import cn.springcloud.gray.server.module.gray.SimpleGrayModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -26,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableConfigurationProperties({GrayServerProperties.class})
-@Import(value = {WebConfiguration.class})
+@Import(value = {WebConfiguration.class, DateTimeFormatConfiguration.class})
 @ConditionalOnBean(GrayServerMarkerConfiguration.GrayServerMarker.class)
 public class GrayServerAutoConfiguration {
 
@@ -83,11 +83,9 @@ public class GrayServerAutoConfiguration {
             return new SimpleGrayModule(grayServerProperties, grayServerModule, grayServerTrackModule, objectMapper);
         }
 
-        @Bean
-        @ConditionalOnMissingBean
-        public GrayEventPublisher grayEventPublisher() {
-            return new DefaultGrayEventPublisher();
-        }
     }
+
+
+
 
 }

@@ -1,21 +1,24 @@
 package cn.springcloud.gray.server.resources.rest;
 
+import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
-import cn.springcloud.gray.server.module.GrayServerModule;
+import cn.springcloud.gray.server.module.gray.GrayServerModule;
+import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
+import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.server.resources.domain.fo.RemoteInstanceStatusUpdateFO;
-import org.apache.commons.lang.StringUtils;
+import cn.springcloud.gray.server.utils.ApiResHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 /**
@@ -31,6 +34,9 @@ public class DiscoverInstanceResource {
     private ServiceDiscovery serviceDiscovery;
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private ServiceManageModule serviceManageModule;
 
 
     /**
@@ -55,7 +61,12 @@ public class DiscoverInstanceResource {
      * @return http status
      */
     @RequestMapping(value = "/instanceInfo/setInstanceStatus", method = RequestMethod.PUT)
-    public ResponseEntity<ApiRes<Void>> setInstanceStatus(@RequestBody RemoteInstanceStatusUpdateFO instanceStatusUpdateFO) {
+    public ResponseEntity<ApiRes<Void>> setInstanceStatus(
+            @RequestBody RemoteInstanceStatusUpdateFO instanceStatusUpdateFO) {
+        if (!serviceManageModule.hasServiceAuthority(instanceStatusUpdateFO.getServiceId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(ApiResHelper.notAuthority());
+        }
         InstanceInfo instanceInfo = serviceDiscovery.getInstanceInfo(
                 instanceStatusUpdateFO.getServiceId(), instanceStatusUpdateFO.getInstanceId());
         if (instanceInfo == null) {
@@ -82,6 +93,27 @@ public class DiscoverInstanceResource {
                         .code(ApiRes.CODE_SUCCESS)
                         .build()
         );
+    }
+
+    @RequestMapping(value = "/instances", method = RequestMethod.GET, params = {"serviceId"})
+    public ApiRes<List<GrayInstance>> instances(@RequestParam("serviceId") String serviceId){
+        List<InstanceInfo> instanceInfos = serviceDiscovery.listInstanceInfos(serviceId);
+
+        List<GrayInstance> grayInstances = instanceInfos.stream().map(info->{
+            GrayInstance instance = new GrayInstance();
+            instance.setServiceId(serviceId);
+            instance.setInstanceId(info.getInstanceId());
+            instance.setHost(info.getHost());
+            instance.setPort(info.getPort());
+            instance.setInstanceStatus(info.getInstanceStatus());
+            instance.setGrayStatus(GrayStatus.CLOSE);
+            GrayInstance grayInstance = grayServerModule.getGrayInstance(instance.getInstanceId());
+            if(grayInstance!=null){
+                instance.setGrayStatus(grayInstance.getGrayStatus());
+            }
+            return instance;
+        }).collect(Collectors.toList());
+        return ApiResHelper.successData(grayInstances);
     }
 
 }

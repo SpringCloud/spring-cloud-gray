@@ -41,9 +41,9 @@ public class DefaultGrayEventListener implements GrayEventListener, InstanceLoca
     }
 
     private void handleSource(GrayEventMsg msg) {
-        Optional.ofNullable(getHandler(msg.getSourceType())).ifPresent(handler -> {
-            handler.accept(msg);
-        });
+        Optional.ofNullable(getHandler(msg.getSourceType())).orElse(
+                msg1 -> handleUpdateInstance(msg1.getServiceId(), msg1.getInstanceId())
+        ).accept(msg);
     }
 
 
@@ -65,31 +65,32 @@ public class DefaultGrayEventListener implements GrayEventListener, InstanceLoca
 
     private void handleGrayInstance(GrayEventMsg msg) {
         InstanceLocalInfo instanceLocalInfo = getInstanceLocalInfo();
-        if(instanceLocalInfo==null){
-            log.warn("instanceLocalInfo is null");
-            return;
-        }
-        if (StringUtils.equals(msg.getServiceId(), instanceLocalInfo.getServiceId())
-                && StringUtils.equals(msg.getInstanceId(), instanceLocalInfo.getInstanceId())) {
-            return;
+        if (instanceLocalInfo != null) {
+            if (StringUtils.equals(msg.getServiceId(), instanceLocalInfo.getServiceId())
+                    /*&& StringUtils.equals(msg.getInstanceId(), instanceLocalInfo.getInstanceId())*/) {
+                return;
+            }
         }
         switch (msg.getEventType()) {
             case DOWN:
                 grayManager.closeGray(msg.getServiceId(), msg.getInstanceId());
             case UPDATE:
-                GrayInstance grayInstance = grayManager.getGrayInformationClient()
-                        .getGrayInstance(msg.getServiceId(), msg.getInstanceId());
-                grayManager.updateGrayInstance(grayInstance);
+                handleUpdateInstance(msg.getServiceId(), msg.getInstanceId());
         }
+    }
+
+    private void handleUpdateInstance(String serviceId, String instanceId) {
+        GrayInstance grayInstance = grayManager.getGrayInformationClient()
+                .getGrayInstance(serviceId, instanceId);
+        grayManager.updateGrayInstance(grayInstance);
     }
 
     private void handleGrayTrack(GrayEventMsg msg) {
         InstanceLocalInfo instanceLocalInfo = getInstanceLocalInfo();
-        if(instanceLocalInfo==null){
+        if (instanceLocalInfo == null) {
             log.warn("instanceLocalInfo is null");
             return;
         }
-
         if (!StringUtils.equals(msg.getServiceId(), instanceLocalInfo.getServiceId())) {
             return;
         }
@@ -97,11 +98,12 @@ public class DefaultGrayEventListener implements GrayEventListener, InstanceLoca
                 && !StringUtils.equals(msg.getInstanceId(), instanceLocalInfo.getInstanceId())) {
             return;
         }
+
         if (Objects.isNull(grayTrackHolder)) {
             return;
         }
 
-        GrayTrackDefinition definition = (GrayTrackDefinition) msg.getExtra();
+        GrayTrackDefinition definition = (GrayTrackDefinition) msg.getSource();
         if (definition == null) {
             List<GrayTrackDefinition> definitions =
                     grayTrackHolder.getGrayInformationClient().getTrackDefinitions(msg.getServiceId(), msg.getInstanceId());
@@ -128,7 +130,7 @@ public class DefaultGrayEventListener implements GrayEventListener, InstanceLoca
     }
 
     public InstanceLocalInfo getInstanceLocalInfo() {
-        if(instanceLocalInfo==null){
+        if (instanceLocalInfo == null) {
             instanceLocalInfo = GrayClientHolder.getInstanceLocalInfo();
         }
         return instanceLocalInfo;

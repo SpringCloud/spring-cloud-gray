@@ -1,8 +1,13 @@
 package cn.springcloud.gray.server.resources.rest;
 
-import cn.springcloud.gray.server.module.GrayServerModule;
-import cn.springcloud.gray.server.module.domain.GrayPolicy;
+import cn.springcloud.gray.server.module.gray.GrayModelType;
+import cn.springcloud.gray.server.module.gray.GrayServerModule;
+import cn.springcloud.gray.server.module.gray.GrayServiceIdFinder;
+import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
+import cn.springcloud.gray.server.module.user.ServiceManageModule;
+import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.resources.domain.ApiRes;
+import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 import static cn.springcloud.gray.server.resources.domain.ApiRes.CODE_SUCCESS;
@@ -25,6 +31,12 @@ public class GrayPolicyResource {
 
     @Autowired
     private GrayServerModule grayServerModule;
+    @Autowired
+    private ServiceManageModule serviceManageModule;
+    @Autowired
+    private GrayServiceIdFinder grayServiceIdFinder;
+    @Autowired
+    private UserModule userModule;
 
     @RequestMapping(value = "list", method = RequestMethod.GET, params = "instanceId")
     public ApiRes<List<GrayPolicy>> listByInstanceId(@RequestParam("instanceId") String instanceId) {
@@ -53,12 +65,23 @@ public class GrayPolicyResource {
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ApiRes<Void> delete(@PathVariable("id") Long id) {
+
+        if (!serviceManageModule.hasServiceAuthority(
+                grayServiceIdFinder.getServiceId(GrayModelType.POLICY, id))) {
+            return ApiResHelper.notAuthority();
+        }
         grayServerModule.deleteGrayPolicy(id);
         return ApiRes.<Void>builder().code(CODE_SUCCESS).build();
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ApiRes<GrayPolicy> save(@RequestBody GrayPolicy grayPolicy) {
+        if (!serviceManageModule.hasServiceAuthority(
+                grayServiceIdFinder.getServiceId(GrayModelType.INSTANCE, grayPolicy.getInstanceId()))) {
+            return ApiResHelper.notAuthority();
+        }
+        grayPolicy.setOperator(userModule.getCurrentUserId());
+        grayPolicy.setOperateTime(new Date());
         return ApiRes.<GrayPolicy>builder()
                 .code(CODE_SUCCESS)
                 .data(grayServerModule.saveGrayPolicy(grayPolicy))

@@ -7,9 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.*;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +25,7 @@ public class Oauth2Service {
     private ClientDetailsService clientDetailsService;
     private OAuth2RequestFactory requestFactory;
     private DefaultTokenGranter defaultTokenGranter;
+    private JwtTokenStore jwtTokenStore;
 
     public Oauth2Service(ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory, DefaultTokenGranter defaultTokenGranter) {
         this.clientDetailsService = clientDetailsService;
@@ -56,5 +61,23 @@ public class Oauth2Service {
                 (Map) oauth2TokenRequest.getTokenRequestInfo().getExtensionProperties());
         return tokenGranter.grant(tokenRequest.getGrantType(), tokenRequest);
     }
+
+
+    public String getUserPrincipal(){
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        String userPrincipal = null;
+        if (authentication != null) {
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
+                userPrincipal = springSecurityUser.getUsername();
+            } else if (authentication.getPrincipal() instanceof String) {
+                userPrincipal = (String) authentication.getPrincipal();
+            }
+        }
+        return userPrincipal;
+    }
+
+
 
 }

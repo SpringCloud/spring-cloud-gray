@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.manager;
 
 
-import cn.springcloud.gray.server.module.GrayServerModule;
+import cn.springcloud.gray.server.module.gray.GrayServerModule;
 
 /**
  * 灰度服务管理类，属于服务端的类。主要是编辑服务实例，编辑灰度策略，以及维护最新的灰度列表。

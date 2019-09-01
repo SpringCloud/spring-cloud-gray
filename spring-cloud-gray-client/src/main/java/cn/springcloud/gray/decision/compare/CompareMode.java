@@ -3,6 +3,22 @@ package cn.springcloud.gray.decision.compare;
 public enum CompareMode {
 
     EQUAL,
+    /**
+     * 小于
+     */
+    LT,
+    /**
+     * 小于或等于
+     */
+    LTE,
+    /**
+     * 大于
+     */
+    GT,
+    /**
+     * 大于或等于
+     */
+    GTE,
 
     UNEQUAL,
     /**
@@ -21,7 +37,6 @@ public enum CompareMode {
 
     /**
      * 至少不包含其中一个
-     * 与 NOT_CONTAINS_ALL 一样
      */
     NOT_CONTAINS_ANY
 }

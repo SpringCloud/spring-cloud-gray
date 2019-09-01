@@ -6,16 +6,15 @@ import org.apache.commons.collections.MapUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Setter
 public class GrayHttpRequest extends GrayRequest {
 
-    private Map<String, ? extends Collection<String>> headers = new LinkedMultiValueMap<>();
+    private Map<String, List<String>> headers = new LinkedMultiValueMap<>();
     private String method;
-    private Map<String, ? extends Collection<String>> parameters = new LinkedMultiValueMap<>();
+    private Map<String, List<String>> parameters = new LinkedMultiValueMap<>();
     private byte[] body;
 
 
@@ -24,8 +23,7 @@ public class GrayHttpRequest extends GrayRequest {
             return;
         }
         headers.forEach((k, v) -> {
-            Map<String, Collection<String>> headerMap = (Map<String, Collection<String>>) this.headers;
-            headerMap.put(k, v);
+            this.headers.put(k, new ArrayList<>(v));
         });
     }
 
@@ -35,10 +33,23 @@ public class GrayHttpRequest extends GrayRequest {
             return;
         }
         parameters.forEach((k, v) -> {
-            Map<String, Collection<String>> parameterMap = (Map<String, Collection<String>>) this.parameters;
-            parameterMap.put(k, v);
+            this.parameters.put(k, new ArrayList<>(v));
         });
     }
 
 
+    public void addHeader(String name, String value) {
+        List<String> values = headers.computeIfAbsent(name, (k) -> new LinkedList());
+        values.add(value);
+    }
+
+
+    public List<String> getHeader(String name) {
+        return headers.get(name.toLowerCase());
+    }
+
+
+    public List<String> getParameter(String name) {
+        return parameters.get(name.toLowerCase());
+    }
 }

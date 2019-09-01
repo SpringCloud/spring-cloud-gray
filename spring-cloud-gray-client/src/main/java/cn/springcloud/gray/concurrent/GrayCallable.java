@@ -16,15 +16,11 @@ public class GrayCallable<V> implements Callable<V> {
 
     @Override
     public V call() throws Exception {
-        GrayTrackInfo grayTrackInfo = context.getGrayTrackInfo();
-        LocalStorageLifeCycle localStorageLifeCycle = context.getLocalStorageLifeCycle();
-        localStorageLifeCycle.initContext();
-        RequestLocalStorage requestLocalStorage = context.getRequestLocalStorage();
-        requestLocalStorage.setGrayTrackInfo(grayTrackInfo);
+        GrayConcurrentHelper.initRequestLocalStorageContext(context);
         try {
             return (V) context.getTarget().call();
         } finally {
-            localStorageLifeCycle.closeContext();
+            GrayConcurrentHelper.cleanRequestLocalStorageContext(context);
         }
     }
 }

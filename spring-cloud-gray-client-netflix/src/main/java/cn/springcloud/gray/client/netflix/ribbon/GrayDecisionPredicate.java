@@ -7,10 +7,14 @@ import cn.springcloud.gray.servernode.ServerSpec;
 import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.PredicateKey;
 import com.netflix.loadbalancer.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class GrayDecisionPredicate extends AbstractServerPredicate {
+
+    private static final Logger log = LoggerFactory.getLogger(GrayDecisionPredicate.class);
 
     public GrayDecisionPredicate(GrayLoadBalanceRule rule) {
         super(rule);
@@ -25,16 +29,21 @@ public class GrayDecisionPredicate extends AbstractServerPredicate {
         Server server = input.getServer();
         String serviceId = grayRequest.getServiceId();
         String instanceId = server.getMetaInfo().getInstanceId();
-        List<GrayDecision> grayDecisions = grayRule.getGrayManager().getGrayDecision(serviceId, instanceId);
+        try {
+            ServerSpec serverSpec = grayRule.getServerExplainer().apply(server);
 
-        ServerSpec serverSpec = grayRule.getServerExplainer().apply(server);
+            GrayDecisionInputArgs decisionInputArgs = GrayDecisionInputArgs
+                    .builder().grayRequest(grayRequest).server(serverSpec).build();
 
-        GrayDecisionInputArgs decisionInputArgs = GrayDecisionInputArgs
-                .builder().grayRequest(grayRequest).server(serverSpec).build();
-        for (GrayDecision grayDecision : grayDecisions) {
-            if (grayDecision.test(decisionInputArgs)) {
-                return true;
+            List<GrayDecision> grayDecisions = grayRule.getGrayManager().getGrayDecision(serviceId, instanceId);
+
+            for (GrayDecision grayDecision : grayDecisions) {
+                if (grayDecision.test(decisionInputArgs)) {
+                    return true;
+                }
             }
+        }catch (Exception e){
+            log.error("", e);
         }
         return false;
     }

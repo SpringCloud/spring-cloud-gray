@@ -8,6 +8,7 @@ import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.model.GrayStatus;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,8 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
     private GrayLoadProperties grayLoadProperties;
     private GrayClientConfig grayClientConfig;
     private InformationClient informationClient;
+    private int scheduleOpenForWorkCount = 0;
+    private int scheduleOpenForWorkLimit = 5;
 
     public DefaultGrayManager(
             GrayClientConfig grayClientConfig,
@@ -38,12 +41,7 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
     @Override
     public void setup() {
         super.setup();
-        updateTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                openForWork();
-            }
-        }, getGrayClientConfig().getServiceInitializeDelayTimeInMs());
+        scheduleOpenForWork();
     }
 
     @Override
@@ -61,22 +59,40 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
     public void openForWork() {
         if (getGrayInformationClient() != null) {
             log.info("拉取灰度列表");
-            doUpdate();
+            boolean t = doUpdate();
             int timerMs = getGrayClientConfig().getServiceUpdateIntervalTimerInMs();
             if (timerMs > 0) {
                 updateTimer.schedule(new UpdateTask(), timerMs, timerMs);
+            } else if (!t) {
+                scheduleOpenForWork();
             }
         } else {
             loadPropertiesGrays();
         }
-
     }
 
-    private void doUpdate() {
+    private void scheduleOpenForWork() {
+        if (scheduleOpenForWorkCount > scheduleOpenForWorkLimit) {
+            return;
+        }
+        scheduleOpenForWorkCount++;
+
+        updateTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                openForWork();
+            }
+        }, getGrayClientConfig().getServiceInitializeDelayTimeInMs());
+    }
+
+    private boolean doUpdate() {
         lock.lock();
         try {
             log.debug("更新灰度服务列表...");
             List<GrayInstance> grayInstances = getGrayInformationClient().allGrayInstances();
+            if (grayInstances == null) {
+                throw new NullPointerException();
+            }
             Map<String, GrayService> grayServices = new ConcurrentHashMap<>();
             grayInstances.forEach(
                     instance -> {
@@ -84,8 +100,10 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
                     });
             joinLoadedGrays(grayServices);
             setGrayServices(grayServices);
+            return true;
         } catch (Exception e) {
             log.error("更新灰度服务列表失败", e);
+            return false;
         } finally {
             lock.unlock();
         }
