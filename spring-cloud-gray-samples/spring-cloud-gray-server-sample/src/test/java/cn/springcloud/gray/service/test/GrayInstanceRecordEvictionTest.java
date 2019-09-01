@@ -1,8 +1,8 @@
 package cn.springcloud.gray.service.test;
 
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
-import cn.springcloud.gray.server.module.GrayInstanceRecordEvictor;
-import cn.springcloud.gray.server.module.domain.GrayInstance;
+import cn.springcloud.gray.server.module.gray.GrayInstanceRecordEvictor;
+import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
 import cn.springcloud.gray.server.service.GrayInstanceService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;

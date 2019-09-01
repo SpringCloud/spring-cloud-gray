@@ -1,5 +1,6 @@
 package cn.springcloud.gray.concurrent;
 
+import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
@@ -12,5 +13,6 @@ public abstract class GrayAsyncContext {
     protected LocalStorageLifeCycle localStorageLifeCycle;
 
     protected GrayTrackInfo grayTrackInfo;
+    protected GrayRequest grayRequest;
 
 }

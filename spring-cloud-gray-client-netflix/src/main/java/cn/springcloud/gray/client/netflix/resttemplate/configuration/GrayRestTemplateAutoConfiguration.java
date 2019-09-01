@@ -2,7 +2,7 @@ package cn.springcloud.gray.client.netflix.resttemplate.configuration;
 
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.client.netflix.resttemplate.GrayClientHttpRequestIntercptor;
 import cn.springcloud.gray.client.netflix.resttemplate.RestTemplateRequestInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +28,14 @@ public class GrayRestTemplateAutoConfiguration {
         @Autowired
         private GrayRequestProperties grayRequestProperties;
         @Autowired
-        private RibbonConnectionPoint ribbonConnectionPoint;
+        private RoutingConnectionPoint routingConnectionPoint;
 
 
         @Bean
         public GrayClientHttpRequestIntercptor grayClientHttpRequestIntercptor(
                 @Autowired(required = false) @LoadBalanced List<RestTemplate> restTemplates) {
             GrayClientHttpRequestIntercptor intercptor = new GrayClientHttpRequestIntercptor(
-                    grayRequestProperties, ribbonConnectionPoint);
+                    grayRequestProperties, routingConnectionPoint);
             if (restTemplates != null) {
                 restTemplates.forEach(restTemplate -> restTemplate.getInterceptors().add(intercptor));
             }

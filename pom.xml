@@ -12,7 +12,7 @@
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-gray</artifactId>
     <packaging>pom</packaging>
-    <version>A.1.0.10</version>
+    <version>A.1.1.0-SNAPSHOT</version>
     <url>https://github.com/SpringCloud/spring-cloud-gray</url>
     <organization>
         <name>Spring Cloud中国社区</name>
@@ -27,9 +27,7 @@
         </developer>
     </developers>
     <modules>
-
         <module>spring-cloud-gray-dependencies</module>
-
         <module>spring-cloud-gray-core</module>
         <module>spring-cloud-gray-server</module>
         <module>spring-cloud-gray-client</module>
@@ -40,8 +38,9 @@
         <module>spring-cloud-gray-utils</module>
         <module>spring-cloud-gray-starter-dependencies</module>
         <module>spring-cloud-starter-gray-eureka-server</module>
+        <module>spring-cloud-gray-server-plugins</module>
+        <module>spring-cloud-gray-plugins</module>
     </modules>
-
 
     <licenses>
         <license>
@@ -62,7 +61,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Edgware.SR5</spring-cloud.version>
+        <spring-cloud.version>Edgware.SR6</spring-cloud.version>
         <springfox.version>2.9.2</springfox.version>
         <lombok.version>1.18.8</lombok.version>
         <slf4j.version>1.7.26</slf4j.version>
@@ -72,6 +71,7 @@
         <mapstruct.version>1.1.0.Final</mapstruct.version>
         <caffeine.version>2.7.0</caffeine.version>
         <aspectj.version>1.8.13</aspectj.version>
+        <querydsl.version>4.2.1</querydsl.version>
     </properties>
 
 
@@ -151,6 +151,61 @@
                 <artifactId>spring-cloud-starter-gray-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+
+
+
+            <!-- gray client plugins start -->
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-webmvc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-eureka</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-feign</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-zuul</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-event-stream</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- gray client plugins end -->
+
+
+            <!-- gray server plugins start -->
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-server-plugin-eureka</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-server-plugin-event-stream</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- gray server plugins end -->
+
 
             <dependency>
                 <groupId>org.aspectj</groupId>
@@ -241,42 +296,25 @@
                 <artifactId>javax.interceptor-api</artifactId>
                 <version>1.2.2</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-apt</artifactId>
+                <version>${querydsl.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-jpa</artifactId>
+                <version>${querydsl.version}</version>
+            </dependency>
         </dependencies>
-
-
     </dependencyManagement>
 
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
-            <!-- Source -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Javadoc -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!-- Compile -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -305,6 +343,34 @@
             <id>sonatype-oss-release</id>
             <build>
                 <plugins>
+                    <!-- Source -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <!-- GPG -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>

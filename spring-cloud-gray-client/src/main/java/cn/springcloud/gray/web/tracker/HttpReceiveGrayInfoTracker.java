@@ -3,11 +3,11 @@ package cn.springcloud.gray.web.tracker;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.TrackArgs;
+import cn.springcloud.gray.web.HttpRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -23,7 +23,7 @@ public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
     }
 
 
-    public void call(GrayHttpTrackInfo trackInfo, HttpServletRequest request) {
+    public void call(GrayHttpTrackInfo trackInfo, HttpRequest request) {
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
@@ -36,7 +36,7 @@ public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
 
 
     @Override
-    public void call(TrackArgs<GrayHttpTrackInfo, HttpServletRequest> args) {
+    public void call(TrackArgs<GrayHttpTrackInfo, HttpRequest> args) {
         call(args.getTrackInfo(), args.getRequest());
     }
 
@@ -53,12 +53,6 @@ public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
     }
 
     private void init() {
-        loaders.put(GrayTrackInfo.GRAY_TRACK_TRACE_IP, loadSpec -> {
-            String value = loadSpec.getHeaderValue();
-            loadSpec.getTrackInfo().setTraceIp(value);
-            log.debug("接收到{} --> {}", GrayTrackInfo.GRAY_TRACK_TRACE_IP, value);
-        });
-
         loaders.put(GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX, loadSpec -> {
             String value = loadSpec.getHeaderValue();
             loadSpec.getTrackInfo().setAttribute(loadSpec.getNames()[1], loadSpec.getHeaderValue());
@@ -68,18 +62,6 @@ public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
         loaders.put(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX, loadSpec -> {
             List<String> value = loadSpec.getHeaderValues();
             loadSpec.getTrackInfo().setHeader(loadSpec.getNames()[1], value);
-            log.debug("接收到{} --> {}", loadSpec.getHeaderName(), value);
-        });
-
-        loaders.put(GrayHttpTrackInfo.GRAY_TRACK_METHOD, loadSpec -> {
-            String value = loadSpec.getHeaderValue();
-            loadSpec.getTrackInfo().setMethod(value);
-            log.debug("接收到{} --> {}", loadSpec.getHeaderName(), value);
-        });
-
-        loaders.put(GrayHttpTrackInfo.GRAY_TRACK_URI, loadSpec -> {
-            String value = loadSpec.getHeaderValue();
-            loadSpec.getTrackInfo().setUri(value);
             log.debug("接收到{} --> {}", loadSpec.getHeaderName(), value);
         });
 
@@ -97,7 +79,7 @@ public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
         private String headerName;
         private String[] names;
         private GrayHttpTrackInfo trackInfo;
-        private HttpServletRequest request;
+        private HttpRequest request;
 
 
         public String getHeaderValue() {

@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.netflix.zuul;
 
-import cn.springcloud.gray.client.netflix.connectionpoint.ConnectPointContext;
-import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectPointContext;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import com.netflix.zuul.ZuulFilter;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 
@@ -11,11 +11,11 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 public class GrayPostZuulFilter extends ZuulFilter {
 
 
-    private RibbonConnectionPoint ribbonConnectionPoint;
+    private RoutingConnectionPoint routingConnectionPoint;
 
 
-    public GrayPostZuulFilter(RibbonConnectionPoint ribbonConnectionPoint) {
-        this.ribbonConnectionPoint = ribbonConnectionPoint;
+    public GrayPostZuulFilter(RoutingConnectionPoint routingConnectionPoint) {
+        this.routingConnectionPoint = routingConnectionPoint;
     }
 
     @Override
@@ -35,9 +35,9 @@ public class GrayPostZuulFilter extends ZuulFilter {
 
     @Override
     public Object run() {
-        ConnectPointContext cpc = ConnectPointContext.getContextLocal();
+        RoutingConnectPointContext cpc = RoutingConnectPointContext.getContextLocal();
         if (cpc != null) {
-            ribbonConnectionPoint.shutdownconnectPoint(cpc);
+            routingConnectionPoint.shutdownconnectPoint(cpc);
         }
         return null;
     }

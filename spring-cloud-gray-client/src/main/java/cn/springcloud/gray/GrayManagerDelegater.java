@@ -2,8 +2,10 @@ package cn.springcloud.gray;
 
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.GrayDecision;
+import cn.springcloud.gray.model.DecisionDefinition;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
+import cn.springcloud.gray.model.PolicyDefinition;
 
 import java.util.Collection;
 import java.util.List;
@@ -97,6 +99,41 @@ public abstract class GrayManagerDelegater implements UpdateableGrayManager, Com
             return ((CommunicableGrayManager) delegate).getGrayInformationClient();
         }
         throw new UnsupportedOperationException("delegate不是CommunicableGrayManager的实现类");
+    }
+
+
+    public void removeGrayService(String serviceId){
+        if (delegate instanceof UpdateableGrayManager) {
+            ((UpdateableGrayManager) delegate).removeGrayService(serviceId);
+        }
+    }
+
+    @Override
+    public void removePolicyDefinition(String serviceId, String instanceId, String policyId){
+        if (delegate instanceof UpdateableGrayManager) {
+            ((UpdateableGrayManager) delegate).removePolicyDefinition(serviceId, instanceId, policyId);
+        }
+    }
+
+    @Override
+    public void updatePolicyDefinition(String serviceId, String instanceId, PolicyDefinition policyDefinition){
+        if (delegate instanceof UpdateableGrayManager) {
+            ((UpdateableGrayManager) delegate).updatePolicyDefinition(serviceId, instanceId, policyDefinition);
+        }
+    }
+
+    @Override
+    public void removeDecisionDefinition(String serviceId, String instanceId, String policyId, String decisionId){
+        if (delegate instanceof UpdateableGrayManager) {
+            ((UpdateableGrayManager) delegate).removeDecisionDefinition(serviceId, instanceId, policyId, decisionId);
+        }
+    }
+
+    @Override
+    public void updateDecisionDefinition(String serviceId, String instanceId, String policyId, DecisionDefinition decisionDefinition){
+        if (delegate instanceof UpdateableGrayManager) {
+            ((UpdateableGrayManager) delegate).updateDecisionDefinition(serviceId, instanceId, policyId, decisionDefinition);
+        }
     }
 
 }

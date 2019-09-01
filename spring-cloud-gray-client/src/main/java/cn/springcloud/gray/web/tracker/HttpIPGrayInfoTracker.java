@@ -2,22 +2,59 @@ package cn.springcloud.gray.web.tracker;
 
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.TrackArgs;
-import cn.springcloud.gray.utils.WebUtils;
+import cn.springcloud.gray.web.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Slf4j
 public class HttpIPGrayInfoTracker implements HttpGrayInfoTracker {
 
 
-    public void call(GrayHttpTrackInfo trackInfo, HttpServletRequest request) {
-        trackInfo.setTraceIp(WebUtils.getIpAddr(request));
+    public void call(GrayHttpTrackInfo trackInfo, HttpRequest request) {
+        String ip = getIpAddr(request);
+        trackInfo.setTraceIp(ip);
         log.debug("记录下ip:{}", trackInfo.getTraceIp());
     }
 
     @Override
-    public void call(TrackArgs<GrayHttpTrackInfo, HttpServletRequest> args) {
+    public void call(TrackArgs<GrayHttpTrackInfo, HttpRequest> args) {
         call(args.getTrackInfo(), args.getRequest());
+    }
+
+
+
+    public String getIpAddr(HttpRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+            if (ip.equals("127.0.0.1")) {
+                /** 根据网卡取本机配置的IP */
+                InetAddress inet = null;
+                try {
+                    inet = InetAddress.getLocalHost();
+                    ip = inet.getHostAddress();
+                } catch (UnknownHostException e) {
+                    log.error("[IpHelper-getIpAddr] IpHelper error.", e);
+                }
+            }
+        }
+        /**
+         * 对于通过多个代理的情况， 第一个IP为客户端真实IP,多个IP按照','分割 "***.***.***.***".length() =
+         * 15
+         */
+        if (ip != null && ip.length() > 15) {
+            if (ip.indexOf(",") > 0) {
+                ip = ip.substring(0, ip.indexOf(","));
+            }
+        }
+        return ip;
     }
 }

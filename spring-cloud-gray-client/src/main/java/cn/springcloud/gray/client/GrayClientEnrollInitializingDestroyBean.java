@@ -2,7 +2,7 @@ package cn.springcloud.gray.client;
 
 import cn.springcloud.gray.CommunicableGrayManager;
 import cn.springcloud.gray.GrayClientConfig;
-import cn.springcloud.gray.InstanceLocalInfo;
+import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayStatus;
 import lombok.extern.slf4j.Slf4j;

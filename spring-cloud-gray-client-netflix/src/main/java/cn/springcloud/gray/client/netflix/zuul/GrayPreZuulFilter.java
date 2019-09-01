@@ -1,8 +1,8 @@
 package cn.springcloud.gray.client.netflix.zuul;
 
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.netflix.connectionpoint.ConnectPointContext;
-import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectPointContext;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
 import cn.springcloud.gray.request.GrayHttpRequest;
 import com.netflix.zuul.ZuulFilter;
@@ -33,11 +33,11 @@ public class GrayPreZuulFilter extends ZuulFilter {
     public static final String GRAY_REQUEST_ATTRIBUTE_NAME_ZUUL_REQUEST_CONTEXT = "zuul.requestContext";
 
     private GrayRequestProperties grayRequestProperties;
-    private RibbonConnectionPoint ribbonConnectionPoint;
+    private RoutingConnectionPoint routingConnectionPoint;
 
-    public GrayPreZuulFilter(GrayRequestProperties grayRequestProperties, RibbonConnectionPoint ribbonConnectionPoint) {
+    public GrayPreZuulFilter(GrayRequestProperties grayRequestProperties, RoutingConnectionPoint routingConnectionPoint) {
         this.grayRequestProperties = grayRequestProperties;
-        this.ribbonConnectionPoint = ribbonConnectionPoint;
+        this.routingConnectionPoint = routingConnectionPoint;
     }
 
     @Override
@@ -88,10 +88,10 @@ public class GrayPreZuulFilter extends ZuulFilter {
         grayRequest.setAttribute(GRAY_REQUEST_ATTRIBUTE_NAME_ZUUL_REQUEST_CONTEXT, context);
         //context.getZuulRequestHeaders().get(FilterConstants.X_FORWARDED_FOR_HEADER.toLowerCase())
 
-        ConnectPointContext connectPointContext = ConnectPointContext.builder()
+        RoutingConnectPointContext connectPointContext = RoutingConnectPointContext.builder()
                 .interceptroType(GrayNetflixClientConstants.INTERCEPTRO_TYPE_ZUUL)
                 .grayRequest(grayRequest).build();
-        ribbonConnectionPoint.executeConnectPoint(connectPointContext);
+        routingConnectionPoint.executeConnectPoint(connectPointContext);
         return null;
     }
 

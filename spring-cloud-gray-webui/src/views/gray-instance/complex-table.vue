@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.serviceId" placeholder="Service Id" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         Search
       </el-button>
@@ -23,11 +22,11 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="Service Id" prop="serviceId" align="center">
+      <!--<el-table-column label="Service Id" prop="serviceId" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.serviceId }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="Instance Id" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.instanceId }}</span>
@@ -48,30 +47,62 @@
           <el-tag>{{ scope.row.grayStatus }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="Gray Lock" class-name="status-col" min-width="100px">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.grayLock | grayLockStatusFilter">{{ scope.row.grayLock | grayLockFilter }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="Instance Status" min-width="110px">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.instanceStatus }}</el-tag>
         </template>
       </el-table-column>
-
-      <el-table-column label="Last Update" width="150px" align="center">
+      <el-table-column label="Des" class-name="status-col" min-width="100px">
+        <template slot-scope="scope">
+          <span>{{ scope.row.des }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Operator" prop="operator" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.operator }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Operate Time" prop="operateTime" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.operateTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
+      </el-table-column>
+      <!--<el-table-column label="Last Update" width="150px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.lastUpdateDate | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      </el-table-column>-->
+      <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button type="primary" size="mini" class="list-button" @click="handleUpdate(row)">
             Edit
           </el-button>
           <router-link :to="'/gray/instance/policy?instanceId='+row.instanceId">
-            <el-button size="mini" type="success">
+            <el-button size="mini" type="success" class="list-button">
               策略
             </el-button>
           </router-link>
-          <el-button size="mini" type="danger" @click="handleDelete(row)">
+          <el-button size="mini" type="danger" class="list-button" @click="handleDelete(row)">
             Delete
           </el-button>
+          <el-dropdown trigger="click">
+            <el-button size="mini" type="info" style="width:80px" class="list-button">
+              实例状态
+              <i class="el-icon-arrow-down" />
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="changeInstanceStatus(row, 'STARTING')">STARTING</el-dropdown-item>
+              <el-dropdown-item @click.native="changeInstanceStatus(row, 'UP')">UP</el-dropdown-item>
+              <el-dropdown-item @click.native="changeInstanceStatus(row, 'OUT_OF_SERVICE')">OUT_OF_SERVICE</el-dropdown-item>
+              <el-dropdown-item @click.native="changeInstanceStatus(row, 'DOWN')">DOWN</el-dropdown-item>
+              <el-dropdown-item @click.native="changeInstanceStatus(row, 'UNKNOWN')">UNKNOWN</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -97,6 +128,14 @@
             <el-option v-for="item in grayStatusOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
+        <el-form-item label="Gray Lock" prop="grayStatus">
+          <el-select v-model="temp.grayLock" class="filter-item" placeholder="Please select">
+            <el-option v-for="item in grayLockOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Describe" prop="describe">
+          <el-input v-model="temp.des" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -121,7 +160,7 @@
 </template>
 
 <script>
-import { fetchList, deleteInstance, createInstance, updateInstance } from '@/api/gray-instance'
+import { fetchList, deleteInstance, createInstance, updateInstance, tryChangeInstanceStatus } from '@/api/gray-instance'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -137,6 +176,20 @@ export default {
         CLOSE: 'danger'
       }
       return statusMap[status]
+    },
+    grayLockStatusFilter(status) {
+      const lockMap = {
+        0: 'success',
+        1: 'danger'
+      }
+      return lockMap[status]
+    },
+    grayLockFilter(status) {
+      const lockMap = {
+        1: 'LOCKED',
+        0: 'UNLOCK'
+      }
+      return lockMap[status]
     },
     instanceStatusFilter(status) {
       const statusMap = {
@@ -159,13 +212,16 @@ export default {
       },
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       grayStatusOptions: ['OPEN', 'CLOSE'],
+      grayLockOptions: [{ value: 0, label: 'UNLOCK' }, { value: 1, label: 'LOCK' }],
       showReviewer: false,
       temp: {
         serviceId: this.$route.query.serviceId || '',
         instanceId: '',
         host: '',
         port: 0,
-        grayStatus: 'OPEN'
+        grayStatus: 'OPEN',
+        grayLock: 0,
+        des: ''
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -219,7 +275,7 @@ export default {
         // Just to simulate the time of the request
         setTimeout(() => {
           this.listLoading = false
-        }, 1 * 1000)
+        }, 0.2 * 1000)
       })
     },
     handleFilter() {
@@ -249,7 +305,9 @@ export default {
         instanceId: '',
         host: '',
         port: 0,
-        grayStatus: 'OPEN'
+        grayStatus: 'OPEN',
+        grayLock: 0,
+        dec: ''
       }
     },
     handleCreate() {
@@ -312,18 +370,35 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteInstance(row.instanceId).then(() => {
-        this.dialogFormVisible = false
-        for (const v of this.list) {
-          if (v.instanceId === row.instanceId) {
-            const index = this.list.indexOf(v)
-            this.list.splice(index, 1)
-            break
+      this.$confirm('Confirm to remove the record?', 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async() => {
+        deleteInstance(row.instanceId).then(() => {
+          this.dialogFormVisible = false
+          for (const v of this.list) {
+            if (v.instanceId === row.instanceId) {
+              const index = this.list.indexOf(v)
+              this.list.splice(index, 1)
+              break
+            }
           }
-        }
+          this.$notify({
+            title: 'Success',
+            message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      })
+    },
+    async changeInstanceStatus(row, status) {
+      tryChangeInstanceStatus(row, status).then(() => {
+        this.dialogFormVisible = false
         this.$notify({
           title: 'Success',
-          message: 'Delete Successfully',
+          message: '更新成功，稍等重新查看实例状态',
           type: 'success',
           duration: 2000
         })
@@ -355,3 +430,8 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .list-button {
+    margin-top: 5px;
+  }
+</style>

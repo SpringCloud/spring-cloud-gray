@@ -3,7 +3,7 @@ package cn.springcloud.gray.server;
 import cn.springcloud.gray.concurrent.DefaultThreadFactory;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.manager.GrayServiceManager;
-import cn.springcloud.gray.server.module.GrayInstanceRecordEvictor;
+import cn.springcloud.gray.server.module.gray.GrayInstanceRecordEvictor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;

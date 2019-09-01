@@ -1,9 +1,7 @@
 package cn.springcloud.gray.server.dao.mapper;
 
 import cn.springcloud.gray.server.dao.model.GrayDecisionDO;
-import cn.springcloud.gray.server.dao.model.GrayPolicyDO;
-import cn.springcloud.gray.server.module.domain.GrayDecision;
-import cn.springcloud.gray.server.module.domain.GrayPolicy;
+import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 

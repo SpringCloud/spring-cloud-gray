@@ -1,5 +1,7 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.client.switcher.GraySwitcher;
+import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
@@ -24,15 +26,29 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         GrayClientHolder.setServerExplainer(getBean("serverExplainer", ServerExplainer.class));
         GrayClientHolder.setServerListProcessor(
                 getBean("serverListProcessor", ServerListProcessor.class, new ServerListProcessor.Default()));
+        GrayClientHolder.setGraySwitcher(
+                getBean("graySwitcher", GraySwitcher.class, new GraySwitcher.DefaultGraySwitcher()));
+
+        GrayClientHolder.setServerChooser(getBean("serverChooser", ServerChooser.class));
 
         initGrayManagerRequestInterceptors();
 
+        loadInstanceLocalInfo();
     }
+
 
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.cxt = applicationContext;
+    }
+
+    private void loadInstanceLocalInfo(){
+        InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer = getBean("instanceLocalInfoInitiralizer", InstanceLocalInfoInitiralizer.class);
+        if(instanceLocalInfoInitiralizer==null){
+            return;
+        }
+        GrayClientHolder.setInstanceLocalInfo(instanceLocalInfoInitiralizer.getInstanceLocalInfo());
     }
 
 

@@ -4,7 +4,7 @@ package cn.springcloud.gray.service.test;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
-import cn.springcloud.gray.server.module.domain.GrayInstance;
+import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
 import cn.springcloud.gray.server.service.GrayInstanceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -3,6 +3,7 @@ package cn.springcloud.gray.server.dao.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Setter
 @Getter
@@ -21,4 +22,8 @@ public class GrayPolicyDO {
     private String instanceId;
     @Column(length = 256, name = "alias_name")
     private String alias;
+    @Column(length = 32)
+    private String operator;
+    @Column
+    private Date operateTime;
 }

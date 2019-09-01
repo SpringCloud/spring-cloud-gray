@@ -1,10 +1,14 @@
 package cn.springcloud.gray.server.resources.rest;
 
-import cn.springcloud.gray.server.module.GrayServerTrackModule;
-import cn.springcloud.gray.server.module.domain.GrayTrack;
+import cn.springcloud.gray.server.module.gray.GrayServerTrackModule;
+import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
+import cn.springcloud.gray.server.module.user.ServiceManageModule;
+import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.resources.domain.ApiRes;
+import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import io.swagger.annotations.ApiParam;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 import static cn.springcloud.gray.server.resources.domain.ApiRes.CODE_SUCCESS;
@@ -25,6 +30,10 @@ public class GrayTrackResource {
 
     @Autowired
     private GrayServerTrackModule grayServerTrackModule;
+    @Autowired
+    private ServiceManageModule serviceManageModule;
+    @Autowired
+    private UserModule userModule;
 
     @RequestMapping(value = "listByInstance", method = RequestMethod.GET, params = "instanceId")
     public ApiRes<List<GrayTrack>> listByInstance(@RequestParam("instanceId") String instanceId) {
@@ -90,7 +99,13 @@ public class GrayTrackResource {
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     public ApiRes<Void> delete(@PathVariable("id") Long id) {
-        grayServerTrackModule.deleteGrayTrack(id);
+        GrayTrack grayTrack = grayServerTrackModule.getGrayTrack(id);
+        if (grayTrack != null) {
+            if (!serviceManageModule.hasServiceAuthority(grayTrack.getServiceId())) {
+                return ApiResHelper.notAuthority();
+            }
+            grayServerTrackModule.deleteGrayTrack(id);
+        }
         return ApiRes.<Void>builder()
                 .code(CODE_SUCCESS)
                 .build();
@@ -98,6 +113,11 @@ public class GrayTrackResource {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ApiRes<GrayTrack> save(@RequestBody GrayTrack track) {
+        if (!serviceManageModule.hasServiceAuthority(track.getServiceId())) {
+            return ApiResHelper.notAuthority();
+        }
+        track.setOperator(userModule.getCurrentUserId());
+        track.setOperateTime(new Date());
         return ApiRes.<GrayTrack>builder()
                 .code(CODE_SUCCESS)
                 .data(grayServerTrackModule.saveGrayTrack(track))

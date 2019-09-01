@@ -94,20 +94,93 @@ export const constantRoutes = [
         component: () => import('@/views/profile/index'),
         name: 'Profile',
         meta: { title: 'Profile', icon: 'user', noCache: true }
+      },
+      {
+        path: 'modifyPassword',
+        component: () => import('@/views/profile/modifyPassowrd'),
+        name: 'Modify Password',
+        meta: { title: 'Modify Password', icon: 'user', noCache: true }
       }
     ]
   },
 /* eslint-disable */
   {
     path: '/gray/service',
+    name: '灰度服务',
     component: Layout,
+    alwaysShow: true, // will always show the root menu
     redirect: '/grayService',
+    meta: {
+      title: '灰度服务',
+      icon: 'table',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
     children: [
       {
-        path: '',
-        component: () => import('@/views/gray-service/complex-table'),
-        name: '灰度服务',
-        meta: { title: '灰度服务', icon: 'table', noCache: true }
+        path: 'list',
+        component: () => import('@/views/gray-service/list'),
+        name: '服务列表',
+        meta: { title: '服务列表', icon: 'table', noCache: true }
+      },
+      {
+        path: 'owners',
+        component: () => import('@/views/gray-service/owners'),
+        name: '服务Owner',
+        meta: { title: '服务Owner', icon: 'table', noCache: true }
+      },
+      {
+        path: 'authority',
+        hidden: true,
+        component: () => import('@/views/gray-service/authority'),
+        name: '服务权限',
+        meta: { title: '服务权限', icon: 'table', noCache: true , activeMenu: '/gray/service'}
+      },
+      {
+        path: 'discovery-instances:id(.+)',
+        component: () => import('@/views/gray-instance/discovery-instances'),
+        name: '服务实例',
+        meta: { title: '服务实例', noCache: true, activeMenu: '/grayService' },
+        hidden: true
+      }
+    ]
+  },
+  {
+    path: '/gray/user',
+    name: '用户管理',
+    component: Layout,
+    alwaysShow: true, // will always show the root menu
+    redirect: '/gray/user',
+    meta: {
+      title: '用户管理',
+      icon: 'table',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/user/list'),
+        name: '用户列表',
+        meta: { title: '用户列表', icon: 'table', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/gray/opreaterecord',
+    name: '记录审计',
+    component: Layout,
+    alwaysShow: true, // will always show the root menu
+    redirect: '/gray/opreaterecord',
+    meta: {
+      title: '记录审计',
+      icon: 'table',
+      roles: ['admin'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/operate-record/list'),
+        name: '操作记录',
+        meta: { title: '操作记录', icon: 'table', noCache: true }
       }
     ]
   },
@@ -115,6 +188,7 @@ export const constantRoutes = [
     path: '/gray/instance',
     component: Layout,
     redirect: '/grayInstance',
+    hidden: true,
     children: [
     {
         path: '',
@@ -138,8 +212,9 @@ export const constantRoutes = [
 },
 {
     path: '/gray/trackor',
-        component: Layout,
+    component: Layout,
     redirect: '/graytrackor',
+    hidden: true,
     children: [
     {
         path: '',

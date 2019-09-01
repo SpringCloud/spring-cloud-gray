@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.netflix.feign;
 
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.netflix.connectionpoint.RibbonConnectionPoint;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import feign.Client;
 import feign.Request;
 import feign.Response;
@@ -25,17 +25,17 @@ public class GrayFeignClient implements Client, ApplicationContextAware {
 
 
     private Client delegate;
-    private RibbonConnectionPoint ribbonConnectionPoint;
+    private RoutingConnectionPoint routingConnectionPoint;
     private GrayRequestProperties grayRequestProperties;
     private volatile GrayFeignClientWrapper proxy;
     private ApplicationContext applicationContext;
 
     public GrayFeignClient(
             Client delegate,
-            RibbonConnectionPoint ribbonConnectionPoint,
+            RoutingConnectionPoint routingConnectionPoint,
             GrayRequestProperties grayRequestProperties) {
         this.delegate = delegate;
-        this.ribbonConnectionPoint = ribbonConnectionPoint;
+        this.routingConnectionPoint = routingConnectionPoint;
         this.grayRequestProperties = grayRequestProperties;
     }
 
@@ -63,7 +63,7 @@ public class GrayFeignClient implements Client, ApplicationContextAware {
             if (!isLoadBalanced && delegate instanceof LoadBalancerFeignClient) {
                 delegateClient = ((LoadBalancerFeignClient) delegate).getDelegate();
             }
-            proxy = new GrayFeignClientWrapper(delegateClient, ribbonConnectionPoint, grayRequestProperties);
+            proxy = new GrayFeignClientWrapper(delegateClient, routingConnectionPoint, grayRequestProperties);
 
         }
         return proxy;

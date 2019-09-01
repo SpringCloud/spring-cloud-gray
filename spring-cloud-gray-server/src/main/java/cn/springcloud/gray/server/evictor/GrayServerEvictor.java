@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.evictor;
 
 
-import cn.springcloud.gray.server.module.GrayServerModule;
+import cn.springcloud.gray.server.module.gray.GrayServerModule;
 
 /**
  *

@@ -68,7 +68,6 @@ public class GrayLoadBalanceRule extends ZoneAvoidanceRule {
             List<Server> normalServers = new ArrayList<>(Math.min(servers.size(), grayService.getGrayInstances().size()));
 
             for (Server server : servers) {
-//                ServerSpec serverSpec = serverExplainer.apply(server);
                 if (grayService.getGrayInstance(server.getMetaInfo().getInstanceId()) != null) {
                     grayServers.add(server);
                 } else {
@@ -85,16 +84,6 @@ public class GrayLoadBalanceRule extends ZoneAvoidanceRule {
         } else {
             return expect(super.choose(key));
         }
-    }
-
-    @Override
-    public void initWithNiwsConfig(IClientConfig clientConfig) {
-        super.initWithNiwsConfig(clientConfig);
-    }
-
-    @Override
-    public void setLoadBalancer(ILoadBalancer lb) {
-        super.setLoadBalancer(lb);
     }
 
     protected Server choose(AbstractServerPredicate serverPredicate, List<Server> servers, Object key) {

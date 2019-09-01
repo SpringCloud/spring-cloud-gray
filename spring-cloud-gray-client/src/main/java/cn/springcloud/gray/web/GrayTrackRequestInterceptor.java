@@ -56,35 +56,24 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
     }
 
     private void initHandlers() {
-        handlers.add(request -> {
-            GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
-            if (StringUtils.isNotEmpty(grayHttpTrackInfo.getTraceIp())) {
-                Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
-                h.put(GrayHttpTrackInfo.GRAY_TRACK_TRACE_IP, Arrays.asList(grayHttpTrackInfo.getTraceIp()));
-            }
-        });
 
         handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
-            if (StringUtils.isNotEmpty(grayHttpTrackInfo.getUri())) {
-                Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
-                h.put(GrayHttpTrackInfo.GRAY_TRACK_URI, Arrays.asList(grayHttpTrackInfo.getUri()));
+            if (MapUtils.isNotEmpty(grayHttpTrackInfo.getAttributes())) {
+                grayHttpTrackInfo.getAttributes().entrySet().forEach(entry -> {
+                    String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX)
+                            .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
+                            .append(entry.getKey()).toString();
+                    request.addHeader(name, entry.getValue());
+                });
             }
         });
 
-
-        handlers.add(request -> {
-            GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
-            if (StringUtils.isNotEmpty(grayHttpTrackInfo.getMethod())) {
-                Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
-                h.put(GrayHttpTrackInfo.GRAY_TRACK_METHOD, Arrays.asList(grayHttpTrackInfo.getMethod()));
-            }
-        });
 
         handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
             if (MapUtils.isNotEmpty(grayHttpTrackInfo.getHeaders())) {
-                Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
+                Map<String, List<String>> h = request.getHeaders();
                 grayHttpTrackInfo.getHeaders().entrySet().forEach(entry -> {
                     String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)
@@ -97,7 +86,7 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
         handlers.add(request -> {
             GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
             if (MapUtils.isNotEmpty(grayHttpTrackInfo.getParameters())) {
-                Map<String, List<String>> h = (Map<String, List<String>>) request.getHeaders();
+                Map<String, List<String>> h = request.getHeaders();
                 grayHttpTrackInfo.getParameters().entrySet().forEach(entry -> {
                     String name = new StringBuilder().append(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX)
                             .append(GrayTrackInfo.GRAY_TRACK_SEPARATE)

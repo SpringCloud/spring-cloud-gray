@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 
 @Setter
@@ -28,5 +29,9 @@ public class GrayServiceDO {
     private Integer grayInstanceNumber;
     @Column(length = 256, name = "des")
     private String describe;
+    @Column(length = 32)
+    private String operator;
+    @Column
+    private Date operateTime;
 
 }

@@ -53,17 +53,17 @@ public class PageableParameterBuilderPlugin implements OperationBuilderPlugin {
                 ModelReference stringModel = factory.apply(resolver.resolve(List.class, String.class));
 
                 parameters.add(new ParameterBuilder()
-                        .parameterType("query")
+                        .parameterType("queryRecords")
                         .name("page")
                         .modelRef(intModel)
                         .description("Results page you want to retrieve (0..N)").build());
                 parameters.add(new ParameterBuilder()
-                        .parameterType("query")
+                        .parameterType("queryRecords")
                         .name("size")
                         .modelRef(intModel)
                         .description("Number of records per page").build());
                 parameters.add(new ParameterBuilder()
-                        .parameterType("query")
+                        .parameterType("queryRecords")
                         .name("sort")
                         .modelRef(stringModel)
                         .allowMultiple(true)

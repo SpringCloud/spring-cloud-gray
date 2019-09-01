@@ -1,13 +1,13 @@
 package cn.springcloud.gray.event;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 public class GrayEventMsg implements Serializable {
     private static final long serialVersionUID = -8114806214567175543L;
@@ -16,6 +16,6 @@ public class GrayEventMsg implements Serializable {
     private EventType eventType;
     private SourceType sourceType;
 
-    private Object extra;
+    private Object source;
 
 }

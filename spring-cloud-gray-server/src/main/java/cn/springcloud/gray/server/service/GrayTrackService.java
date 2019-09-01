@@ -3,7 +3,7 @@ package cn.springcloud.gray.server.service;
 import cn.springcloud.gray.server.dao.mapper.GrayTrackMapper;
 import cn.springcloud.gray.server.dao.model.GrayTrackDO;
 import cn.springcloud.gray.server.dao.repository.GrayTrackRepository;
-import cn.springcloud.gray.server.module.domain.GrayTrack;
+import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

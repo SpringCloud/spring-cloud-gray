@@ -2,7 +2,7 @@ package cn.springcloud.gray.server.resources.rest;
 
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayTrackDefinition;
-import cn.springcloud.gray.server.module.GrayModule;
+import cn.springcloud.gray.server.module.gray.GrayModule;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

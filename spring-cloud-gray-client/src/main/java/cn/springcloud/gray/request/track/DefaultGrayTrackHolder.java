@@ -1,7 +1,8 @@
 package cn.springcloud.gray.request.track;
 
-import cn.springcloud.gray.InstanceLocalInfo;
-import cn.springcloud.gray.InstanceLocalInfoAware;
+import cn.springcloud.gray.GrayClientHolder;
+import cn.springcloud.gray.local.InstanceLocalInfo;
+import cn.springcloud.gray.local.InstanceLocalInfoAware;
 import cn.springcloud.gray.client.config.properties.GrayTrackProperties;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.model.GrayTrackDefinition;
@@ -21,6 +22,8 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
     private Timer updateTimer = new Timer("Gray-Track-Update-Timer", true);
     private GrayTrackProperties grayTrackProperties;
     private InstanceLocalInfo instanceLocalInfo;
+    private int scheduleOpenForWorkCount = 0;
+    private int scheduleOpenForWorkLimit = 5;
 
 
     public DefaultGrayTrackHolder(
@@ -39,6 +42,32 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
     }
 
     public void setup() {
+        scheduleOpenForWork();
+    }
+
+
+    public void openForWork() {
+        log.info("拉取灰度追踪列表");
+
+        if (getGrayInformationClient() != null) {
+            boolean t = doUpdate();
+            int timerMs = grayTrackProperties.getDefinitionsUpdateIntervalTimerInMs();
+            if (timerMs > 0) {
+                updateTimer.schedule(new DefaultGrayTrackHolder.UpdateTask(), timerMs, timerMs);
+            }else if(!t){
+                scheduleOpenForWork();
+            }
+        } else {
+            loadPropertiesTrackDefinitions();
+        }
+    }
+
+
+    private void scheduleOpenForWork(){
+        if (scheduleOpenForWorkCount > scheduleOpenForWorkLimit) {
+            return;
+        }
+        scheduleOpenForWorkCount++;
         updateTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -47,27 +76,16 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
         }, grayTrackProperties.getDefinitionsInitializeDelayTimeInMs());
     }
 
-
-    public void openForWork() {
-        log.info("拉取灰度追踪列表");
-
-        if (getGrayInformationClient() != null) {
-            doUpdate();
-            int timerMs = grayTrackProperties.getDefinitionsUpdateIntervalTimerInMs();
-            if (timerMs > 0) {
-                updateTimer.schedule(new DefaultGrayTrackHolder.UpdateTask(), timerMs, timerMs);
-            }
-        } else {
-            loadPropertiesTrackDefinitions();
-        }
-    }
-
-    private void doUpdate() {
+    private boolean doUpdate() {
         Map<String, GrayTrackDefinition> trackDefinitionMap = new ConcurrentHashMap<>();
         try {
             log.debug("更新灰度追踪列表...");
 
             InstanceLocalInfo instanceLocalInfo = getInstanceLocalInfo();
+            if(instanceLocalInfo==null){
+                log.warn("本地实例信息为null,跳过更新");
+                return false;
+            }
             List<GrayTrackDefinition> trackDefinitions = getGrayInformationClient()
                     .getTrackDefinitions(instanceLocalInfo.getServiceId(), instanceLocalInfo.getInstanceId());
             trackDefinitions.forEach(definition -> {
@@ -75,9 +93,11 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
             });
         } catch (Exception e) {
             log.error("更新灰度追踪列表失败", e);
+            return false;
         }
         joinLoadedTrackDefinitions(trackDefinitionMap);
         setTrackDefinitions(trackDefinitionMap);
+        return true;
     }
 
     private void loadPropertiesTrackDefinitions() {
@@ -101,6 +121,9 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
     }
 
     public InstanceLocalInfo getInstanceLocalInfo() {
+        if(instanceLocalInfo==null){
+            instanceLocalInfo = GrayClientHolder.getInstanceLocalInfo();
+        }
         return instanceLocalInfo;
     }
 

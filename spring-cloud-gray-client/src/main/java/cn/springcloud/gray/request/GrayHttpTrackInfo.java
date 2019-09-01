@@ -1,8 +1,7 @@
 package cn.springcloud.gray.request;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -13,22 +12,20 @@ import java.util.Set;
 
 public class GrayHttpTrackInfo extends GrayTrackInfo {
 
+    public static final String ATTRIBUTE_HTTP_METHOD = "method";
+    public static final String ATTRIBUTE_HTTP_URI = "uri";
+
+
     public static final String GRAY_TRACK_HEADER_PREFIX = GRAY_TRACK_PREFIX + "header";
 
-    public static final String GRAY_TRACK_METHOD = GRAY_TRACK_PREFIX + "method";
+    public static final String GRAY_TRACK_METHOD = GRAY_TRACK_PREFIX + ATTRIBUTE_HTTP_METHOD;
 
     public static final String GRAY_TRACK_PARAMETER_PREFIX = GRAY_TRACK_PREFIX + "param";
 
-    public static final String GRAY_TRACK_URI = GRAY_TRACK_PREFIX + "uri";
+    public static final String GRAY_TRACK_URI = GRAY_TRACK_PREFIX + ATTRIBUTE_HTTP_URI;
 
     private HttpHeaders headers = new HttpHeaders();
-    @Setter
-    @Getter
-    private String method;
     private MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-    @Setter
-    @Getter
-    private String uri;
 
     public void addHeader(String name, String value) {
         headers.add(name.toLowerCase(), value);
@@ -71,5 +68,19 @@ public class GrayHttpTrackInfo extends GrayTrackInfo {
         return MapUtils.unmodifiableMap(parameters);
     }
 
+    public void setUri(String url){
+        setAttribute(ATTRIBUTE_HTTP_URI, url);
+    }
 
+    public String getUri(){
+        return StringUtils.defaultString(getAttribute(ATTRIBUTE_HTTP_URI));
+    }
+
+    public void setMethod(String method){
+        setAttribute(ATTRIBUTE_HTTP_METHOD, method);
+    }
+
+    public String getMethod(){
+        return StringUtils.defaultString(getAttribute(ATTRIBUTE_HTTP_METHOD));
+    }
 }

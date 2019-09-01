@@ -5,17 +5,14 @@ import cn.springcloud.gray.client.config.properties.GrayTrackProperties;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.request.GrayInfoTracker;
 import cn.springcloud.gray.request.GrayTrackInfo;
-import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.DefaultGrayTrackHolder;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
-import cn.springcloud.gray.web.GrayTrackFilter;
 import cn.springcloud.gray.web.GrayTrackRequestInterceptor;
 import cn.springcloud.gray.web.tracker.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,38 +34,9 @@ public class GrayTrackConfiguration {
     }
 
 
-    @ConditionalOnProperty(value = "gray.client.runenv", havingValue = "web", matchIfMissing = true)
     @Configuration
-    public static class GrayClientWebConfiguration {
-
-        @Autowired
-        private GrayTrackProperties grayTrackProperties;
-
-        @Bean
-        @ConditionalOnMissingBean
-        public GrayTrackFilter grayTrackFilter(
-                GrayTrackHolder grayTrackHolder, RequestLocalStorage requestLocalStorage) {
-            return new GrayTrackFilter(grayTrackHolder, requestLocalStorage);
-        }
-
-
-        @Bean
-        public FilterRegistrationBean grayTrackFilter(GrayTrackFilter filter) {
-            GrayTrackProperties.Web webProperties = grayTrackProperties.getWeb();
-            FilterRegistrationBean registration = new FilterRegistrationBean();
-            //注入过滤器
-            registration.setFilter(filter);
-            //拦截规则
-            for (String pattern : webProperties.getPathPatterns()) {
-                registration.addUrlPatterns(pattern);
-            }
-            //过滤器名称
-            registration.setName("GrayTrackFilter");
-            //过滤器顺序
-            registration.setOrder(FilterRegistrationBean.LOWEST_PRECEDENCE);
-            return registration;
-        }
-
+    @ConditionalOnProperty(value = "gray.client.runenv", havingValue = "web", matchIfMissing = true)
+    public static class GrayHttpTrackerConfiguration {
 
         @Bean
         public HttpReceiveGrayInfoTracker httpReceiveGrayTracker() {

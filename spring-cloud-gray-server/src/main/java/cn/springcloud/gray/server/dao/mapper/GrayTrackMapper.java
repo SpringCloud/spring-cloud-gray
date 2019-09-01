@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.dao.mapper;
 
 import cn.springcloud.gray.server.dao.model.GrayTrackDO;
-import cn.springcloud.gray.server.module.domain.GrayTrack;
+import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 

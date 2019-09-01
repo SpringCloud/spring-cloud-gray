@@ -37,14 +37,19 @@
           <span>{{ scope.row.infos }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Service Id" align="center">
+      <!--<el-table-column label="Service Id" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.serviceId }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="Instance Id" align="center">
+      </el-table-column>-->
+      <el-table-column label="Operator" prop="operator" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.instanceId }}</span>
+          <span>{{ scope.row.operator }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Operate Time" prop="operateTime" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.operateTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
@@ -64,10 +69,7 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item label="Service Id" prop="serviceId">
-          <el-input v-model="temp.serviceId" />
-        </el-form-item>
-        <el-form-item label="Instance Id" prop="instanceId">
-          <el-input v-model="temp.instanceId" />
+          <el-input v-model="temp.serviceId" disabled="true" />
         </el-form-item>
         <el-form-item label="Name" prop="name">
           <el-input v-model="temp.name" />
@@ -180,7 +182,7 @@ export default {
         // Just to simulate the time of the request
         setTimeout(() => {
           this.listLoading = false
-        }, 1 * 1000)
+        }, 0.2 * 1000)
       })
     },
     handleFilter() {
@@ -271,20 +273,26 @@ export default {
       })
     },
     handleDelete(row) {
-      deleteTrackInfo(row.id).then(() => {
-        this.dialogFormVisible = false
-        for (const v of this.list) {
-          if (v.id === row.id) {
-            const index = this.list.indexOf(v)
-            this.list.splice(index, 1)
-            break
+      this.$confirm('Confirm to remove the record?', 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async() => {
+        deleteTrackInfo(row.id).then(() => {
+          this.dialogFormVisible = false
+          for (const v of this.list) {
+            if (v.id === row.id) {
+              const index = this.list.indexOf(v)
+              this.list.splice(index, 1)
+              break
+            }
           }
-        }
-        this.$notify({
-          title: 'Success',
-          message: 'Delete Successfully',
-          type: 'success',
-          duration: 2000
+          this.$notify({
+            title: 'Success',
+            message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
         })
       })
     },
