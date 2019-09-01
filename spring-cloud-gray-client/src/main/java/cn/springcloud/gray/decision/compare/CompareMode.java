@@ -21,6 +21,7 @@ public enum CompareMode {
 
     /**
      * 至少不包含其中一个
+     * 与 NOT_CONTAINS_ALL 一样
      */
     NOT_CONTAINS_ANY
 }

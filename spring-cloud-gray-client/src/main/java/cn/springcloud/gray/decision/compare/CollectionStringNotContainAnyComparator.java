@@ -17,10 +17,10 @@ public class CollectionStringNotContainAnyComparator implements PredicateCompara
         }
 
         for (String v : another) {
-            if (!src.contains(v)) {
-                return true;
+            if (src.contains(v)) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }
