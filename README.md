@@ -20,7 +20,7 @@ spring-cloud-gray-webui提供操作界面。
 ```sql
 insert into `gray_server01`.`user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`, `create_time`, `operater`, `update_time`, `operator`, `operate_time`) values ( 'admin', 'admin', 'Admin', 'e7a57e51394e91cba19deca3337bfab0', 'admin', '1', null, null, null, 'admin', '2019-08-09 00:11:12');
 ```
-这是管理员账号的，用户名:`admin` 密码:`abc123`
+这是添加管理员账号的，用户名:`admin` 密码:`abc123`
 
 
 ## 版本信息
