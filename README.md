@@ -116,17 +116,3 @@ HttpMethod | HttpMethodGrayInfoTracker | 获取http请求的请求方法并记�
 HttpParameter | HttpParameterGrayInfoTracker | 获取http请求的url参数并记录到灰度追踪的parameter中
 HttpURI | HttpURIGrayInfoTracker | 获取http请求的URI并记录到灰度追踪中
 
-## 操作界面
-
-### 灰度服务
-![](./doc/img/springcloud-gray-service.png)
-
-### 灰度实例
-![](./doc/img/springcloud-gray-instance.png)
-
-### 灰度策略
-![](./doc/img/springcloud-gray-policy.png)
-![](./doc/img/springcloud-gray-decision.png)
-
-### 灰度追踪
-![](./doc/img/springcloud-gray-track.png)
