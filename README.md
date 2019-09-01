@@ -24,7 +24,7 @@ B.0.0.1 | Finchley.SR4 | 2.0.9.RELEASE
 C.0.0.1-SNAPHOST | Greenwich.SR2 | 2.1.7.RELEASE
 
 ## 工程模块
-核心模块
+功能模块
 
 模块 | 描述
 --- | ---
@@ -33,9 +33,11 @@ spring-cloud-gray-core | 灰度数据模型/Java Bean定义，client端和server
 spring-cloud-gray-client | 灰度客户端的核心代码，属于灰度客户端的内核
 spring-cloud-gray-client-netflix | 灰度客户端与spring cloud netflix集成的代码，与之相关的插件都依赖这个模块
 spring-cloud-gray-plugin-webmvc | 支撑灰度客户端在spring mvc运行的插件
+spring-cloud-gray-plugin-webflux | 支撑灰度客户端在spring webfulx运行的插件(B版及以上)
 spring-cloud-gray-plugin-eureka | 灰度客户端与注册中心eureka集成的插件
 spring-cloud-gray-plugin-feign | 灰度客户端与openFiegn集成的插件
 spring-cloud-gray-plugin-zuul | 灰度客户端与zuul 1.0集成的插件
+spring-cloud-gray-plugin-gateway | 灰度客户端与spring cloud gateway集成的插件(B版及以上)
 spring-cloud-gray-plugin-event-stream | 灰度客户端与spring cloud stream(rabbitmq)集成的插件
 spring-cloud-gray-server | 灰度管控端的核心代码
 spring-cloud-gray-server-plugin-eureka | 灰度管控端与注册中心eureka集成的插件
@@ -55,6 +57,7 @@ spring-cloud-gray-service-a-sample | 服务提供方示例
 spring-cloud-gray-service-a1-sample | 服务提供方示例
 spring-cloud-gray-ervice-b-sample | 服务消费方示例
 spring-cloud-gray-zuul-sample | zuul网关示例
+spring-cloud-gray-gateway-sample | spring-cloud-gateway网关示例(B版及以上)
 
 
 
