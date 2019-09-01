@@ -26,7 +26,7 @@ insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`
 ## 版本信息
 项目版本 | srpingcloud版本 | springboot版本
 --- | --- | ---
-A.1.1.0 | Edgware.SR6 | 1.5.4.RELEASE
+A.1.1.0 | Edgware.SR6 | 1.5.22.RELEASE
 B.0.0.1 | Finchley.SR4 | 2.0.9.RELEASE
 C.0.0.1-SNAPHOST | Greenwich.SR2 | 2.1.7.RELEASE
 
