@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>A.1.1.0-SNAPSHOT</version>
+        <version>B.0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -21,6 +21,7 @@
         <module>spring-cloud-gray-stream-sample</module>
         <module>spring-cloud-gray-performance-agent</module>
         <module>spring-cloud-gray-btrace-sample</module>
+        <module>spring-cloud-gray-gateway-sample</module>
     </modules>
 
     <build>

@@ -1,6 +1,8 @@
 server:
   port: 20202
 spring:
+#  main:
+#    allow-bean-definition-overriding: true
   application:
     name: gray-Server
   #通用数据源配置
@@ -34,6 +36,7 @@ spring:
         #            concurrency: 1 #并发数
         #            max-attempts: 1
         GrayEventOutput:
+          contentType: application/x-java-serialized-object
           destination: gray_event
           #      rabbit:
           #        bindings:

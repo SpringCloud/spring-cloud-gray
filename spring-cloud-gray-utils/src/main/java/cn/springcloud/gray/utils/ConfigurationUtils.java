@@ -1,11 +1,11 @@
 package cn.springcloud.gray.utils;
 
-import cn.springcloud.gray.bean.properties.bind.Bindable;
-import cn.springcloud.gray.bean.properties.bind.Binder;
-import cn.springcloud.gray.bean.properties.source.MapConfigurationPropertySource;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.expression.Expression;

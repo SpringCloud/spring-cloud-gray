@@ -67,7 +67,7 @@ gray:
     loadbalanced: false
   client:
     runenv: web
-    serviceUpdateIntervalTimerInMs: 10000
+    serviceUpdateIntervalTimerInMs: 0
     serviceInitializeDelayTimeInMs: 10000
   holdoutServer:
     enabled: true
@@ -75,7 +75,7 @@ gray:
       "service-b": starting
   request:
     track:
-      definitionsUpdateIntervalTimerInMs: 10000
+      definitionsUpdateIntervalTimerInMs: 0
       definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:

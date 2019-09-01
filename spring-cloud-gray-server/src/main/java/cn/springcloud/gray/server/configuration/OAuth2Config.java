@@ -15,6 +15,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -96,8 +97,20 @@ public class OAuth2Config {
         return new Oauth2Service(clientDetailsService, requestFactory, defaultTokenGranter);
     }
 
-
     @Configuration
+    public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+        @Bean
+        @Override
+        public AuthenticationManager authenticationManagerBean() throws Exception {
+            AuthenticationManager manager = super.authenticationManagerBean();
+            return manager;
+        }
+
+    }
+
+
+        @Configuration
     @EnableResourceServer
     public static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
@@ -159,7 +172,7 @@ public class OAuth2Config {
 
     @Configuration
     @EnableAuthorizationServer
-    public static class OAuth2Config2 extends AuthorizationServerConfigurerAdapter {
+    public static class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         @Autowired
         private AuthenticationManager authenticationManager;
         @Autowired

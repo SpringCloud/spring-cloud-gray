@@ -18,7 +18,7 @@ eureka:
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
     prefer-ip-address: true
-    metadata-map:
-      zone: gray3
-      instanceId: s
-    initial-status: starting
+#    metadata-map:
+#      zone: gray3
+#      instanceId: s
+    initial-status: up

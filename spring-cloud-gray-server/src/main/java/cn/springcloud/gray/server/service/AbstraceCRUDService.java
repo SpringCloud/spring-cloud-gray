@@ -29,7 +29,7 @@ public abstract class AbstraceCRUDService<MODEL, REPOSITORY extends JpaRepositor
     }
 
     protected Iterable<T> save(Iterable<T> entities) {
-        return getRepository().save(entities);
+        return getRepository().saveAll(entities);
     }
 
     public List<MODEL> saveModels(Iterable<MODEL> entities) {
@@ -37,7 +37,7 @@ public abstract class AbstraceCRUDService<MODEL, REPOSITORY extends JpaRepositor
     }
 
     protected T findOne(ID id) {
-        return getRepository().findOne(id);
+        return getRepository().findById(id).orElse(null);
     }
 
     public MODEL findOneModel(ID id) {
@@ -46,7 +46,7 @@ public abstract class AbstraceCRUDService<MODEL, REPOSITORY extends JpaRepositor
 
 
     public boolean exists(ID id) {
-        return getRepository().exists(id);
+        return getRepository().existsById(id);
     }
 
     protected Iterable<T> findAll() {
@@ -54,7 +54,7 @@ public abstract class AbstraceCRUDService<MODEL, REPOSITORY extends JpaRepositor
     }
 
     protected Iterable<T> findAll(Iterable<ID> ids) {
-        return getRepository().findAll(ids);
+        return getRepository().findAllById(ids);
     }
 
     public List<MODEL> findAllModel() {
@@ -75,12 +75,12 @@ public abstract class AbstraceCRUDService<MODEL, REPOSITORY extends JpaRepositor
     }
 
     public void delete(ID id) {
-        getRepository().delete(id);
+        getRepository().deleteById(id);
     }
 
 
     protected void delete(Iterable<? extends T> entities) {
-        getRepository().delete(entities);
+        getRepository().deleteAll(entities);
     }
 
     public void deleteModel(Iterable<MODEL> models) {

@@ -7,7 +7,7 @@ import feign.Request;
 import feign.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.cloud.netflix.feign.ribbon.LoadBalancerFeignClient;
+import org.springframework.cloud.openfeign.ribbon.LoadBalancerFeignClient;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 

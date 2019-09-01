@@ -1,6 +1,7 @@
 package cn.springcloud.service.a;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -19,7 +20,7 @@ public class ServiceAApplication {
 
 
     public static void main(String[] args) throws UnknownHostException {
-        Environment env = new SpringApplicationBuilder(ServiceAApplication.class).web(true).run(args).getEnvironment();
+        Environment env = new SpringApplicationBuilder(ServiceAApplication.class).run(args).getEnvironment();
         log.info(
                 "\n----------------------------------------------------------\n\t"
                         + "Application '{}' is running! Access URLs:\n\t" + "Local: \t\thttp://127.0.0.1:{}\n\t"

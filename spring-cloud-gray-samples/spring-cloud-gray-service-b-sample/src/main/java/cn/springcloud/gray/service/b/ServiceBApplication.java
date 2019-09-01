@@ -1,10 +1,11 @@
 package cn.springcloud.gray.service.b;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
 
@@ -23,7 +24,7 @@ public class ServiceBApplication {
 
 
     public static void main(String[] args) throws UnknownHostException {
-        Environment env = new SpringApplicationBuilder(ServiceBApplication.class).web(true).run(args).getEnvironment();
+        Environment env = new SpringApplicationBuilder(ServiceBApplication.class).run(args).getEnvironment();
         log.info(
                 "\n----------------------------------------------------------\n\t"
                         + "Application '{}' is running! Access URLs:\n\t" + "Local: \t\thttp://127.0.0.1:{}\n\t"

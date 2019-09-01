@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.4.RELEASE</version>
+        <version>2.0.9.RELEASE</version>
     </parent>
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-gray</artifactId>
     <packaging>pom</packaging>
-    <version>A.1.1.0-SNAPSHOT</version>
+    <version>B.0.0.1-SNAPSHOT</version>
     <url>https://github.com/SpringCloud/spring-cloud-gray</url>
     <organization>
         <name>Spring Cloud中国社区</name>
@@ -61,11 +61,14 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Edgware.SR6</spring-cloud.version>
+        <spring-cloud.version>Finchley.SR4</spring-cloud.version>
+        <spring-security-oauth2.version>2.3.6.RELEASE</spring-security-oauth2.version>
+        <spring-security-jwt.version>1.0.10.RELEASE</spring-security-jwt.version>
         <springfox.version>2.9.2</springfox.version>
         <lombok.version>1.18.8</lombok.version>
         <slf4j.version>1.7.26</slf4j.version>
         <commons-lang3.version>3.5</commons-lang3.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <guava.version>27.0.1-jre</guava.version>
         <mapstruct.version>1.1.0.Final</mapstruct.version>
@@ -153,13 +156,17 @@
             </dependency>
 
 
-
-
             <!-- gray client plugins start -->
 
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-plugin-webmvc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-webflux</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -178,6 +185,12 @@
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-plugin-zuul</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-gateway</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -205,6 +218,24 @@
             </dependency>
 
             <!-- gray server plugins end -->
+
+
+            <dependency>
+                <groupId>org.springframework.security.oauth</groupId>
+                <artifactId>spring-security-oauth2</artifactId>
+                <version>${spring-security-oauth2.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.security</groupId>
+                        <artifactId>spring-security-jwt</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-jwt</artifactId>
+                <version>${spring-security-jwt.version}</version>
+            </dependency>
 
 
             <dependency>
@@ -246,6 +277,12 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
