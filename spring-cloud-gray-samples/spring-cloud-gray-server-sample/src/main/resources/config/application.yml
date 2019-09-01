@@ -1,8 +1,8 @@
 server:
   port: 20202
 spring:
-#  main:
-#    allow-bean-definition-overriding: true
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: gray-Server
   #通用数据源配置
