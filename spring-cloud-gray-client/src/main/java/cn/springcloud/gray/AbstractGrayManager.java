@@ -69,12 +69,18 @@ public abstract class AbstractGrayManager implements UpdateableGrayManager {
 
 
     private GrayDecision createGrayDecision(PolicyDefinition policyDefinition) {
-        MultiGrayDecision decision = new MultiGrayDecision(GrayDecision.allow());
-        for (DecisionDefinition decisionDefinition : policyDefinition.getList()) {
-            decision = decision.and(grayDecisionFactoryKeeper.getGrayDecision(decisionDefinition));
+        try {
+            MultiGrayDecision decision = new MultiGrayDecision(GrayDecision.allow());
+            for (DecisionDefinition decisionDefinition : policyDefinition.getList()) {
+                decision = decision.and(grayDecisionFactoryKeeper.getGrayDecision(decisionDefinition));
+            }
+            return decision;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return null;
         }
-        return decision;
     }
+
 
 
     public void setRequestInterceptors(Collection<RequestInterceptor> requestInterceptors) {
