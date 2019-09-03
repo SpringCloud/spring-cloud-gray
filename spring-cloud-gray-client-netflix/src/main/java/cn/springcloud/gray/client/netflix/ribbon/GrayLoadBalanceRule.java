@@ -74,16 +74,15 @@ public class GrayLoadBalanceRule extends ZoneAvoidanceRule {
                     normalServers.add(server);
                 }
             }
-            Optional<Server> server = grayCompositePredicate.chooseRoundRobinAfterFiltering(grayServers, key);
-            if (server.isPresent()) {
-                return expect(server.get());
-            } else {
-                return expect(choose(super.getPredicate(), normalServers, key));
+            if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
+                Optional<Server> server = grayCompositePredicate.chooseRoundRobinAfterFiltering(grayServers, key);
+                if (server.isPresent()) {
+                    return expect(server.get());
+                }
             }
-
-        } else {
-            return expect(super.choose(key));
+            return expect(choose(super.getPredicate(), normalServers, key));
         }
+        return expect(super.choose(key));
     }
 
     protected Server choose(AbstractServerPredicate serverPredicate, List<Server> servers, Object key) {

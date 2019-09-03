@@ -12,6 +12,8 @@ spring-cloud-gray-client-netflix在spring-cloud-gray-client的基础上集成了
 spring-cloud-gray-server负责灰度决策、灰度追踪等信息的管理以及持久化。<br/>
 spring-cloud-gray-webui提供操作界面。
 
+** 钉钉交流群 **
+![钉钉交流群](./doc/discuss-croup/C-Group-DingDing.png)
 
 ## Demo
 [点击查看](./spring-cloud-gray-samples)
