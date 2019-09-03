@@ -42,7 +42,7 @@ public class DefaultGrayDecisionFactoryKeeper implements GrayDecisionFactoryKeep
     public GrayDecision getGrayDecision(DecisionDefinition decisionDefinition) {
         GrayDecisionFactory factory = getDecisionFactory(decisionDefinition.getName());
         if (factory == null) {
-            log.error("没有找到灰度决定工厂:{}", decisionDefinition.getName());
+            log.warn("没有找到灰度决定工厂:{}", decisionDefinition.getName());
             throw new NullPointerException("没有找到灰度决定工厂:" + decisionDefinition.getName());
         }
         return factory.apply(configuration -> {
