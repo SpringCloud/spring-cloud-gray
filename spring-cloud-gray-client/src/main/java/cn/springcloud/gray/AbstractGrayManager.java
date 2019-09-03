@@ -76,7 +76,7 @@ public abstract class AbstractGrayManager implements UpdateableGrayManager {
             }
             return decision;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.warn(e.getMessage(), e);
             return null;
         }
     }
