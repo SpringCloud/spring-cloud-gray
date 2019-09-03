@@ -11,9 +11,11 @@ import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 import cn.springcloud.gray.servernode.ServerSpec;
 import com.netflix.loadbalancer.Server;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class RibbonServerChooser implements ServerChooser<Server> {
@@ -54,12 +56,11 @@ public class RibbonServerChooser implements ServerChooser<Server> {
 
     @Override
     public ServerListResult<Server> distinguishServerList(List<Server> servers) {
-        GrayRequest grayRequest = requestLocalStorage.getGrayRequest();
-        if (grayRequest == null) {
+        String serviceId = getServiceId(servers);
+        if(StringUtils.isNotEmpty(serviceId)){
             return null;
         }
-
-        return distinguishServerList(grayRequest.getServiceId(), servers);
+        return distinguishServerList(serviceId, servers);
     }
 
 
@@ -76,6 +77,18 @@ public class RibbonServerChooser implements ServerChooser<Server> {
                         .collect(Collectors.toList()));
 
         return serverListResult;
+    }
+
+    private String getServiceId(List<Server> servers){
+        GrayRequest grayRequest = requestLocalStorage.getGrayRequest();
+        if (grayRequest != null && StringUtils.isNotEmpty(grayRequest.getServiceId())) {
+            return grayRequest.getServiceId();
+        }
+        Server server = servers.get(0);
+        if(Objects.isNull(server)){
+            return server.getMetaInfo().getServiceIdForDiscovery();
+        }
+        return null;
     }
 
 

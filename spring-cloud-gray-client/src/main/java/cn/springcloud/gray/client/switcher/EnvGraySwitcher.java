@@ -14,4 +14,9 @@ public class EnvGraySwitcher implements GraySwitcher {
     public boolean state() {
         return grayProperties.isEnabled();
     }
+
+    @Override
+    public boolean isEanbleGrayRouting() {
+        return grayProperties.isGrayRouting();
+    }
 }
