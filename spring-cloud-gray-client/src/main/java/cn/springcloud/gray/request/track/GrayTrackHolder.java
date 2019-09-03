@@ -1,5 +1,6 @@
 package cn.springcloud.gray.request.track;
 
+import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.model.GrayTrackDefinition;
 import cn.springcloud.gray.request.GrayInfoTracker;
 import cn.springcloud.gray.request.GrayTrackInfo;
@@ -27,6 +28,9 @@ public interface GrayTrackHolder {
 
 
     default <REQ> void recordGrayTrack(GrayTrackInfo info, REQ req) {
+        if(!GrayClientHolder.getGraySwitcher().state()){
+            return;
+        }
         getGrayInfoTrackers().forEach(tracker -> {
             GrayTrackDefinition definition = getGrayTrackDefinition(tracker.name());
             if (definition != null) {
