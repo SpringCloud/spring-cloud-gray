@@ -24,6 +24,8 @@ insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`
 ```
 这是添加管理员账号的，用户名:`admin` 密码:`abc123`
 
+## 使用手册
+[管控端界面使用手册](doc/guide/gray-admin-guide.md)
 
 ## 版本信息
 项目版本 | srpingcloud版本 | springboot版本
