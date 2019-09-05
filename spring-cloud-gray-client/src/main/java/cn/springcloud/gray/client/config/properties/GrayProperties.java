@@ -9,7 +9,7 @@ public class GrayProperties {
 
     private boolean enabled;
 
-    private boolean grayRouting = false;
+    private boolean grayRouting = true;
 
 
 }
