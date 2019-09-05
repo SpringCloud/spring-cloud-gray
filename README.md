@@ -15,7 +15,28 @@ spring-cloud-gray-webui提供操作界面。
 **钉钉交流群**
 <img src="./doc/discuss-group/C-Group-DingDing.png" width="25%" />
 
-## SpringCloudGray能做什么
+
+## Demo
+[点击查看](./spring-cloud-gray-samples)
+
+在管控端数据库执行一条insert语名：
+```sql
+insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`, `create_time`, `operator`, `operate_time`) values ( 'admin', 'admin', 'Admin', 'e7a57e51394e91cba19deca3337bfab0', 'admin', '1', now(), 'admin', now());
+```
+这是添加管理员账号的，用户名:`admin` 密码:`abc123`
+
+## 使用手册
+[管控端界面使用手册](doc/guide/gray-admin-guide.md)
+
+## 版本信息
+项目版本 | srpingcloud版本 | springboot版本
+--- | --- | ---
+A.1.1.0 | Edgware.SR6 | 1.5.22.RELEASE
+B.0.0.1 | Finchley.SR4 | 2.0.9.RELEASE
+C.0.0.1-SNAPHOST | Greenwich.SR2 | 2.1.7.RELEASE
+
+
+## Spring Cloud Gray 能做什么
 1. 金丝雀测试
 
 	先发布1台实例，用于测试验证，指定测试的流量进入这台实例，其它流量依然进入其它正常的实例。优势在于发布成本小，快速测试，并且不影响正常用户体验影响，即使测试不通过，也只需回滚这一台实例，用户无感知。
@@ -39,27 +60,6 @@ spring-cloud-gray-webui提供操作界面。
 
 	首次上灰度时，会存在两种环境，一种是已经依赖了灰度客户端的环境，另一种是正常运行的当前环境。假如微服务的负载均衡是由ribbon实现，那么当前环境会请求路由到实例状态为UP的实例上，而依赖了灰度客户端的环境，则可以通过"破窗"能力，跟灰度路由结合，可以将匹配灰度策略的请求路由到实例状态为STARTING的实例上，不匹配灰度策略的请求路由到实例状态为UP的实例上。 
 	![](doc/img/breakwindow1.png)
-
-
-
-## Demo
-[点击查看](./spring-cloud-gray-samples)
-
-在管控端数据库执行一条insert语名：
-```sql
-insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`, `create_time`, `operator`, `operate_time`) values ( 'admin', 'admin', 'Admin', 'e7a57e51394e91cba19deca3337bfab0', 'admin', '1', now(), 'admin', now());
-```
-这是添加管理员账号的，用户名:`admin` 密码:`abc123`
-
-## 使用手册
-[管控端界面使用手册](doc/guide/gray-admin-guide.md)
-
-## 版本信息
-项目版本 | srpingcloud版本 | springboot版本
---- | --- | ---
-A.1.1.0 | Edgware.SR6 | 1.5.22.RELEASE
-B.0.0.1 | Finchley.SR4 | 2.0.9.RELEASE
-C.0.0.1-SNAPHOST | Greenwich.SR2 | 2.1.7.RELEASE
 
 
 
