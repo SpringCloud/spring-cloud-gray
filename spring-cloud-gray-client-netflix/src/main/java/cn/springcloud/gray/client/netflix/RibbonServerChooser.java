@@ -57,7 +57,7 @@ public class RibbonServerChooser implements ServerChooser<Server> {
     @Override
     public ServerListResult<Server> distinguishServerList(List<Server> servers) {
         String serviceId = getServiceId(servers);
-        if(StringUtils.isNotEmpty(serviceId)){
+        if(StringUtils.isEmpty(serviceId)){
             return null;
         }
         return distinguishServerList(serviceId, servers);
@@ -85,7 +85,7 @@ public class RibbonServerChooser implements ServerChooser<Server> {
             return grayRequest.getServiceId();
         }
         Server server = servers.get(0);
-        if(Objects.isNull(server)){
+        if(!Objects.isNull(server)){
             return server.getMetaInfo().getServiceIdForDiscovery();
         }
         return null;
