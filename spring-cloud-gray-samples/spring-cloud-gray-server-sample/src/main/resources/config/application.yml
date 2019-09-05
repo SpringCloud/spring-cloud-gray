@@ -7,7 +7,7 @@ spring:
     name: gray-Server
   #通用数据源配置
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/gray_server01?charset=utf8mb4&useSSL=false
     username: root
     password: root
