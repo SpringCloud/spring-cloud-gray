@@ -124,7 +124,7 @@ C.0.0.1-SNAPHOST | Greenwich.SR2 | 2.1.7.RELEASE
 	
 8. 改变实例状态
 
-	可在实例列表中，通过【实例状态】按钮修改实例状态。提前是实例得依赖了灰度客户端的jar包，并且uri没有设置前缀
+	可在实例列表中，通过【实例状态】按钮修改实例状态。提前是实例得依赖了灰度客户端的jar包，并且uri没有设置前缀(server.servlet.context-path)
 	![](doc/img/springcloud-gray-instance-status.png)
 	
 9. 操作审记
