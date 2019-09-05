@@ -19,6 +19,6 @@ eureka:
     lease-expiration-duration-in-seconds: 30
     prefer-ip-address: true
     metadata-map:
-      zone: gray3
+#      zone: gray3
       instanceId: s
-    initial-status: starting
+#    initial-status: starting
