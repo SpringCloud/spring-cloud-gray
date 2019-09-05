@@ -14,7 +14,7 @@ eureka:
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
     metadata-map:
-      zone: xuhui
+#      zone: xuhui
       instanceId: 3
 #    initial-status: starting
 #    initial-status: out_of_service
