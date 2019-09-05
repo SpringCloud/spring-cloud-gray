@@ -63,11 +63,11 @@ gray:
     loadbalanced: false
   client:
     runenv: web
-    serviceUpdateIntervalTimerInMs: 0
+    serviceUpdateIntervalTimerInMs: 10000
     serviceInitializeDelayTimeInMs: 10000
   request:
     track:
-      definitionsUpdateIntervalTimerInMs: 0
+      definitionsUpdateIntervalTimerInMs: 10000
       definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:
