@@ -37,15 +37,10 @@
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-server-plugin-eureka</artifactId>
         </dependency>
-        <dependency>
-            <groupId>cn.springcloud.gray</groupId>
-            <artifactId>spring-cloud-gray-server-plugin-event-stream</artifactId>
-        </dependency>
-
-<!--                <dependency>-->
-<!--                    <groupId>org.springframework.cloud</groupId>-->
-<!--                    <artifactId>spring-cloud-starter-stream-rabbit</artifactId>-->
-<!--                </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>cn.springcloud.gray</groupId>-->
+<!--            <artifactId>spring-cloud-gray-server-plugin-event-stream</artifactId>-->
+<!--        </dependency>-->
 
     </dependencies>
 
