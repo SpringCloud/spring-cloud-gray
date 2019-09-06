@@ -63,11 +63,11 @@ gray:
     loadbalanced: false
   client:
     runenv: web
-    serviceUpdateIntervalTimerInMs: 10000
+    serviceUpdateIntervalTimerInMs: 5000
     serviceInitializeDelayTimeInMs: 10000
   request:
     track:
-      definitionsUpdateIntervalTimerInMs: 10000
+      definitionsUpdateIntervalTimerInMs: 5000
       definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:
@@ -75,7 +75,7 @@ gray:
           #          - name: HttpMethod
           #          - name: HttpURI
           #          - name: HttpReceive
-          - name: HttpHeader
+#          - name: HttpHeader
         #          - name: HttpParameter
         #            value: version,test
         path-patterns: /*
