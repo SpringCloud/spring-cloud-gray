@@ -34,8 +34,7 @@ public class HttpHeaderGrayDecisionFactory
                 log.warn("没有找到相应与compareMode'{}'对应的PredicateComparator", configBean.getCompareMode());
                 return false;
             }
-            Map<String, ? extends Collection<String>> headers = grayRequest.getHeaders();
-            return predicateComparator.test(headers.get(configBean.getHeader()), configBean.getValues());
+            return predicateComparator.test(grayRequest.getHeader(configBean.getHeader()), configBean.getValues());
         };
     }
 
