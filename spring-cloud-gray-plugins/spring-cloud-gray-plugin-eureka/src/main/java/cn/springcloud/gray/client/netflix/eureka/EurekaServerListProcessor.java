@@ -47,7 +47,7 @@ public class EurekaServerListProcessor implements ServerListProcessor<Server>, E
 
     @Override
     public List<Server> process(String serviceId, List<Server> servers) {
-        if (!grayHoldoutServerProperties.isEnabled() || !grayHoldoutServerProperties.getServices().containsKey(serviceId)) {
+        if (!grayHoldoutServerProperties.isEnabled() || CollectionUtils.isEmpty(grayHoldoutServerProperties.getServices().get(serviceId))) {
             return servers;
         }
 

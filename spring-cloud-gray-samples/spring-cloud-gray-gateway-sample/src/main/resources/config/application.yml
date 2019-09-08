@@ -65,6 +65,8 @@ gray:
     runenv: web
     serviceUpdateIntervalTimerInMs: 5000
     serviceInitializeDelayTimeInMs: 10000
+  holdout-server:
+    enabled: true
   request:
     track:
       definitionsUpdateIntervalTimerInMs: 5000
