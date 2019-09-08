@@ -8,6 +8,8 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.netflix.loadbalancer.Server;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +31,12 @@ public class NacosServerListProcessor extends AbstractServerListProcessor<Server
     @Override
     protected List<Server> getServers(String serviceId, List<Server> servers) {
         List<InstanceStatus> statusList = getHoldoutInstanceStatus(serviceId);
-        return getInstances(serviceId).stream().filter(instance -> statusList.contains(getInstanceStatus(instance)))
+        List<Server> holdoutServers = getInstances(serviceId).stream().filter(instance -> statusList.contains(getInstanceStatus(instance)))
                 .map(NacosServer::new).collect(Collectors.toList());
+        if(CollectionUtils.isEmpty(holdoutServers)){
+            return servers;
+        }
+        return ListUtils.union(servers, holdoutServers);
     }
 
 

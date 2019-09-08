@@ -21,11 +21,12 @@ import org.springframework.context.annotation.Configuration;
 public class GrayClientRibbonNacosAutoConfiguration {
 
 
-    @Bean
-    public ServerListProcessor<Server> serverListProcessor(
-            GrayHoldoutServerProperties grayHoldoutServerProperties, NacosDiscoveryProperties discoveryProperties){
-        return new NacosServerListProcessor(grayHoldoutServerProperties, discoveryProperties.namingServiceInstance());
-    }
+//    @Bean
+//    @ConditionalOnProperty(value = "gray.holdout-server.enabled")
+//    public ServerListProcessor<Server> serverListProcessor(
+//            GrayHoldoutServerProperties grayHoldoutServerProperties, NacosDiscoveryProperties discoveryProperties){
+//        return new NacosServerListProcessor(grayHoldoutServerProperties, discoveryProperties.namingServiceInstance());
+//    }
 
 
     @Bean
