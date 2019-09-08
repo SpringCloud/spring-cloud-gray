@@ -6,6 +6,9 @@ spring:
     username: admin
     password: admin
   cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
     stream:
       bindings:
         GrayEventInput:
@@ -69,10 +72,10 @@ gray:
     runenv: web
     serviceUpdateIntervalTimerInMs: 10000
     serviceInitializeDelayTimeInMs: 10000
-  holdoutServer:
+  holdout-server:
     enabled: true
     services:
-      "service-b": starting
+      "service-a": starting
   request:
     track:
       definitionsUpdateIntervalTimerInMs: 10000
