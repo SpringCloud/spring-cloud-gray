@@ -7,6 +7,7 @@ import cn.springcloud.gray.servernode.ServerListProcessor;
 import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
@@ -16,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 //@ConditionalOnBean({GrayManager.class})
 @ConditionalOnProperty(value = "gray.enabled")
-@ConditionalOnBean({EurekaClient.class})
+@ConditionalOnClass({EurekaClient.class})
 public class GrayClientEurekaAutoConfiguration {
 
 
@@ -24,14 +25,12 @@ public class GrayClientEurekaAutoConfiguration {
     private SpringClientFactory springClientFactory;
 
     @Bean
-    @ConditionalOnMissingBean
-    public EurekaInstanceLocalInfoInitiralizer eurekaInstanceLocalInfoInitiralizer() {
+    public EurekaInstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer() {
         return new EurekaInstanceLocalInfoInitiralizer();
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public EurekaServerExplainer eurekaServerExplainer() {
+//    @Bean
+    public ServerExplainer<Server> serverExplainer() {
         return new EurekaServerExplainer(springClientFactory);
     }
 
@@ -43,7 +42,7 @@ public class GrayClientEurekaAutoConfiguration {
 
 
     @Bean
-    @ConditionalOnProperty(value = "gray.holdoutServer.enabled")
+    @ConditionalOnProperty(value = "gray.holdout-server.enabled")
     @ConditionalOnMissingBean
     public ServerListProcessor serverListProcessor(GrayHoldoutServerProperties grayHoldoutServerProperties, EurekaClient eurekaClient) {
         if(grayHoldoutServerProperties.isZoneAffinity()){
