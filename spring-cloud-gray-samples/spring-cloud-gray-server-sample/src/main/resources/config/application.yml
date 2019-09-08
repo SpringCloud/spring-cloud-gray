@@ -5,6 +5,7 @@ spring:
     allow-bean-definition-overriding: true
   application:
     name: gray-Server
+
   #通用数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -27,6 +28,9 @@ spring:
     username: admin
     password: admin
   cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
     stream:
       bindings:
         #        GrayEventInput:
