@@ -14,6 +14,7 @@
     <modules>
         <module>spring-cloud-gray-server-plugin-eureka</module>
         <module>spring-cloud-gray-server-plugin-event-stream</module>
+        <module>spring-cloud-gray-server-plugin-nacos-discovery</module>
     </modules>
 
 

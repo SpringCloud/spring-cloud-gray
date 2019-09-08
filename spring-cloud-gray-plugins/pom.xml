@@ -19,6 +19,7 @@
         <module>spring-cloud-gray-plugin-gateway</module>
         <module>spring-cloud-gray-plugin-webmvc</module>
         <module>spring-cloud-gray-plugin-webflux</module>
+        <module>spring-cloud-gray-plugin-ribbon-nacos-discovery</module>
     </modules>
 
 </project>
