@@ -76,7 +76,7 @@ public class OperateRecordResource {
     @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<OperateRecord>>> list(
             @Validated OperateQueryFO fo,
-            @ApiParam @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable) {
+            @ApiParam @PageableDefault(sort = "operateTime", direction = Sort.Direction.DESC) Pageable pageable) {
         OperateQuery query = fo.toOperateQuery();
         Page<OperateRecord> operateRecordPage = operateAuditModule.queryRecords(query, pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(operateRecordPage);

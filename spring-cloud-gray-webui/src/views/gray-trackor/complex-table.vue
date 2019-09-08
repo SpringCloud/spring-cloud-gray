@@ -142,8 +142,7 @@ export default {
       pvData: [],
       rules: {
         serviceId: [{ required: true, message: 'Service Id is required', trigger: 'change' }],
-        name: [{ required: true, message: 'Name is required', trigger: 'change' }],
-        infos: [{ required: true, message: 'Infos is required', trigger: 'change' }]
+        name: [{ required: true, message: 'Name is required', trigger: 'change' }]
       },
       downloadLoading: false,
       tempRoute: {}

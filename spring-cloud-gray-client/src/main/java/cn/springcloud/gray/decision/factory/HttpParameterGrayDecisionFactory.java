@@ -32,7 +32,7 @@ public class HttpParameterGrayDecisionFactory extends CompareGrayDecisionFactory
                 log.warn("没有找到相应与compareMode'{}'对应的PredicateComparator", configBean.getCompareMode());
                 return false;
             }
-            return predicateComparator.test(grayRequest.getParameters().get(configBean.getName()), configBean.getValues());
+            return predicateComparator.test(grayRequest.getParameter(configBean.getName()), configBean.getValues());
         };
     }
 

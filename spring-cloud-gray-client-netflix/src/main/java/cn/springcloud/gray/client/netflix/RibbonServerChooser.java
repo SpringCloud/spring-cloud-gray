@@ -1,5 +1,6 @@
 package cn.springcloud.gray.client.netflix;
 
+import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.ServerChooser;
 import cn.springcloud.gray.ServerListResult;
@@ -11,6 +12,7 @@ import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 import cn.springcloud.gray.servernode.ServerSpec;
 import com.netflix.loadbalancer.Server;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -71,10 +73,14 @@ public class RibbonServerChooser implements ServerChooser<Server> {
             return null;
         }
 
-        serverListResult.setGrayServers(
-                serverListResult.getGrayServers().stream()
-                        .filter(this::matchGrayDecisions)
-                        .collect(Collectors.toList()));
+        if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
+            serverListResult.setGrayServers(
+                    serverListResult.getGrayServers().stream()
+                            .filter(this::matchGrayDecisions)
+                            .collect(Collectors.toList()));
+        }else{
+            serverListResult.setGrayServers(ListUtils.EMPTY_LIST);
+        }
 
         return serverListResult;
     }
