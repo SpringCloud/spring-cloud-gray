@@ -190,6 +190,12 @@
 
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-ribbon-nacos-discovery</artifactId>
+                <version>${project.version}</version>
+            </dependency>w1`
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-plugin-feign</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -229,6 +235,11 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-server-plugin-nacos-discovery</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- gray server plugins end -->
 
 
