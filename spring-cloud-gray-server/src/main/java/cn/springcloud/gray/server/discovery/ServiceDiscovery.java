@@ -3,6 +3,8 @@ package cn.springcloud.gray.server.discovery;
 import cn.springcloud.gray.model.InstanceInfo;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -18,4 +20,7 @@ public interface ServiceDiscovery {
 
     InstanceInfo getInstanceInfo(String serviceId, String instanceId);
 
+    default Map<String, InstanceInfo> getInstanceInfos(String serviceId) {
+        return listInstanceInfos(serviceId).stream().collect(Collectors.toMap(info -> info.getInstanceId(), info -> info));
+    }
 }
