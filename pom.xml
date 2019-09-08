@@ -192,7 +192,7 @@
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-plugin-ribbon-nacos-discovery</artifactId>
                 <version>${project.version}</version>
-            </dependency>w1`
+            </dependency>
 
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
