@@ -120,7 +120,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        instanceId: this.$route.query.instanceId || ''
+        instanceId: unescape(this.$route.query.instanceId || '')
       },
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
@@ -128,7 +128,7 @@ export default {
       showReviewer: false,
       temp: {
         id: undefined,
-        instanceId: this.$route.query.instanceId || '',
+        instanceId: unescape(this.$route.query.instanceId || ''),
         alias: ''
       },
       dialogFormVisible: false,
