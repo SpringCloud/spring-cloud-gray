@@ -2,8 +2,8 @@
 
 
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Release](https://img.shields.io/badge/release-A.1.1.0-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/A.1.1.0)
-[![Release](https://img.shields.io/badge/release-B.0.0.1-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/B.0.0.1)
+[![A Release](https://img.shields.io/badge/release-A.1.1.1-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/A.1.1.1)
+[![B Release](https://img.shields.io/badge/release-B.0.0.1-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/B.0.0.1)
 
 ## 介绍
 Spring Cloud Gray 是一套开源的微服务灰度路由解决方案，它由spring-cloud-gray-client，spring-cloud-gray-client-netflix 和 spring-cloud-tray-server，spring-cloud-gray-webui组成。<br/>
@@ -29,11 +29,11 @@ insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`
 [管控端界面使用手册](doc/guide/gray-admin-guide.md)
 
 ## 版本信息
-项目版本 | srpingcloud版本 | springboot版本
+项目分支 | srpingcloud版本 | springboot版本
 --- | --- | ---
-A.1.1.0 | Edgware.SR6 | 1.5.22.RELEASE
-B.0.0.1 | Finchley.SR4 | 2.0.9.RELEASE
-C.0.0.1-SNAPHOST | Greenwich.SR2 | 2.1.7.RELEASE
+A | Edgware | 1.5.*
+B | Finchley | 2.0.*
+C | Greenwich | 2.1.*
 
 
 ## Spring Cloud Gray 能做什么
@@ -171,9 +171,11 @@ spring-cloud-gray-plugin-feign | 灰度客户端与openFiegn集成的插件
 spring-cloud-gray-plugin-zuul | 灰度客户端与zuul 1.0集成的插件
 spring-cloud-gray-plugin-gateway | 灰度客户端与spring cloud gateway集成的插件(B版及以上)
 spring-cloud-gray-plugin-event-stream | 灰度客户端与spring cloud stream(rabbitmq)集成的插件
+spring-cloud-gray-plugin-ribbon-nacos-discovery | 灰度客户端支持ribbon与注册中心nacos集成的插件
 spring-cloud-gray-server | 灰度管控端的核心代码
 spring-cloud-gray-server-plugin-eureka | 灰度管控端与注册中心eureka集成的插件
 spring-cloud-gray-server-plugin-event-stream | 灰度管控端与spring cloud stream(rabbitmq)集成的插件
+spring-cloud-gray-server-plugin-nacos-discovery | 灰度管控端与注册中心nacos集成的插件
 spring-cloud-starter-gray-client | 灰度客户端starter
 spring-cloud-starter-gray-server | 灰度管控端starter
 spring-cloud-starter-gray-eureka-server | eureka server的灰度插件
