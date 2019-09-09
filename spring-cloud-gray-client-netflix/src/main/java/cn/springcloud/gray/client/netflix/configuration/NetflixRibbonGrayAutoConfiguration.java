@@ -4,6 +4,7 @@ import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.choose.GrayPredicate;
 import cn.springcloud.gray.client.netflix.RibbonServerChooser;
+import cn.springcloud.gray.client.netflix.ribbon.RibbonServerExplainer;
 import cn.springcloud.gray.routing.connectionpoint.DefaultRoutingConnectionPoint;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.client.netflix.ribbon.configuration.GrayRibbonClientsConfiguration;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.netflix.ribbon.RibbonClients;
+import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -45,6 +47,13 @@ public class NetflixRibbonGrayAutoConfiguration {
         }
         return new RibbonServerChooser(grayManager, requestLocalStorage,
                 grayPredicate, serverExplainer, serverListProcess);
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ServerExplainer<Server> ribbonServerExplainer(SpringClientFactory springClientFactory){
+        return new RibbonServerExplainer(springClientFactory);
     }
 
 }

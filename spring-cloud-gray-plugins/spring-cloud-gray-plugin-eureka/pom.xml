@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray-plugins</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>A.1.1.1-SNAPSHOT</version>
+        <version>A.1.1.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -37,6 +37,20 @@
         <dependency>
             <groupId>com.netflix.archaius</groupId>
             <artifactId>archaius-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>error_prone_annotations</artifactId>
+                    <groupId>com.google.errorprone</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jsr305</artifactId>
+                    <groupId>com.google.code.findbugs</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>checker-qual</artifactId>
+                    <groupId>org.checkerframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

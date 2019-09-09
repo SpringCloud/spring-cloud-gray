@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>A.1.1.1-SNAPSHOT</version>
+        <version>A.1.1.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,6 +14,7 @@
     <modules>
         <module>spring-cloud-gray-server-plugin-eureka</module>
         <module>spring-cloud-gray-server-plugin-event-stream</module>
+        <module>spring-cloud-gray-server-plugin-nacos-discovery</module>
     </modules>
 
 

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>A.1.1.1-SNAPSHOT</version>
+        <version>A.1.1.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,6 +17,7 @@
         <module>spring-cloud-gray-plugin-zuul</module>
         <module>spring-cloud-gray-plugin-feign</module>
         <module>spring-cloud-gray-plugin-webmvc</module>
+        <module>spring-cloud-gray-plugin-ribbon-nacos-discovery</module>
     </modules>
 
 </project>
