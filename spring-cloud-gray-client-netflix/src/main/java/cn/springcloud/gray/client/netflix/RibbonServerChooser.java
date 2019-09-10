@@ -12,6 +12,7 @@ import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 import cn.springcloud.gray.servernode.ServerSpec;
 import com.netflix.loadbalancer.Server;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -90,9 +91,11 @@ public class RibbonServerChooser implements ServerChooser<Server> {
         if (grayRequest != null && StringUtils.isNotEmpty(grayRequest.getServiceId())) {
             return grayRequest.getServiceId();
         }
-        Server server = servers.get(0);
-        if(!Objects.isNull(server)){
-            return server.getMetaInfo().getServiceIdForDiscovery();
+        if(CollectionUtils.isNotEmpty(servers)) {
+            Server server = servers.get(0);
+            if (!Objects.isNull(server)) {
+                return server.getMetaInfo().getServiceIdForDiscovery();
+            }
         }
         return null;
     }
