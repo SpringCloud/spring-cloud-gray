@@ -21,14 +21,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-eureka</artifactId>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-sleuth</artifactId>
@@ -47,35 +40,38 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-starter-gray-client</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>cn.springcloud.gray</groupId>
-                    <artifactId>spring-cloud-gray-plugin-eureka</artifactId>
-                </exclusion>
-            </exclusions>
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>cn.springcloud.gray</groupId>-->
+<!--                    <artifactId>spring-cloud-gray-plugin-eureka</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
         </dependency>
 
-        <dependency>
-            <groupId>cn.springcloud.gray</groupId>
-            <artifactId>spring-cloud-gray-plugin-ribbon-nacos-discovery</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>cn.springcloud.gray</groupId>-->
+<!--            <artifactId>spring-cloud-gray-plugin-ribbon-nacos-discovery</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-plugin-feign</artifactId>
         </dependency>
-        <dependency>
-            <groupId>cn.springcloud.gray</groupId>
-            <artifactId>spring-cloud-gray-plugin-event-stream</artifactId>
-        </dependency>
-
-<!--                <dependency>-->
-<!--                    <groupId>org.springframework.cloud</groupId>-->
-<!--                    <artifactId>spring-cloud-starter-stream-rabbit</artifactId>-->
-<!--                </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>cn.springcloud.gray</groupId>-->
+<!--            <artifactId>spring-cloud-gray-plugin-event-stream</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
