@@ -4,8 +4,9 @@ import cn.springcloud.gray.server.module.audit.domain.OperateRecord;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.utils.WebUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -24,7 +25,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import java.io.IOException;
+import java.util.*;
 
 @Aspect
 public class ResultfulOpRecordAspect {
@@ -41,7 +43,10 @@ public class ResultfulOpRecordAspect {
         this.operateAuditModule = operateAuditModule;
     }
 
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping))")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping) " +
+            "|| @annotation(org.springframework.web.bind.annotation.PostMapping)" +
+            "|| @annotation(org.springframework.web.bind.annotation.DeleteMapping)" +
+            "|| @annotation(org.springframework.web.bind.annotation.PutMapping))")
     public void pointcut() {
     }
 
@@ -72,8 +77,9 @@ public class ResultfulOpRecordAspect {
 //            }
 //        }
         try {
-            operateRecord.setHeadlerArgs(objectMapper.writeValueAsString(joinPoint.getArgs()));
-        } catch (JsonProcessingException e) {
+            String HeadlerArgs = desensitizationArgs(request, joinPoint.getArgs());
+            operateRecord.setHeadlerArgs(objectMapper.writeValueAsString(HeadlerArgs));
+        } catch (Exception e) {
             log.warn(e.getMessage(), e);
         }
         if (result instanceof ApiRes) {
@@ -86,21 +92,55 @@ public class ResultfulOpRecordAspect {
         operateAuditModule.recordOperate(operateRecord);
     }
 
+    private Set<String> desensitizationUris = new HashSet<>(
+            Arrays.asList("/gray/user/", "/gray/user/login", "/gray/user/resetPassword", "/gray/user/updatePassword"));
+
+
+    private String[] desensitizationFields = new String[]{"password","oldPassword","newPassword"};
+
+    private String desensitizationArgs(HttpServletRequest request, Object[] args) throws IOException {
+        if (desensitizationUris.contains(request.getRequestURI())) {
+            List<Map<String, Object>> list = objectMapper.readValue(objectMapper.writeValueAsString(args), new TypeReference<List<Map<String, Object>>>(){});
+            if(CollectionUtils.isNotEmpty(list)){
+                Map<String, Object> map = list.get(0);
+                Object v;
+                for (String field : desensitizationFields){
+                    v = map.get(field);
+                    if(!Objects.isNull(v)){
+                        map.put(field, convertDesensitization(v.toString()));
+                    }
+                }
+
+            }
+            return objectMapper.writeValueAsString(list);
+        }
+        return objectMapper.writeValueAsString(args);
+    }
+
+
+    private String convertDesensitization(String str){
+        StringBuilder sb = new StringBuilder();
+        for(int i=0, l=str.length(); i<l;i++){
+            sb.append('*');
+        }
+        return sb.toString();
+    }
+
 
     private boolean isSholdRecord(RequestMapping requestMapping) {
-        if(requestMapping==null){
+        if (requestMapping == null) {
             return false;
         }
         return isSholdRecord(requestMapping.method()) && sholdFromRequest();
     }
 
-    private RequestMapping getRequestMapping(JoinPoint joinPoint){
+    private RequestMapping getRequestMapping(JoinPoint joinPoint) {
         if (joinPoint.getSignature() instanceof MethodSignature) {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             RequestMapping requestMapping = AnnotationUtils.findAnnotation(signature.getMethod(), RequestMapping.class);
-            if(requestMapping==null){
+            if (requestMapping == null) {
                 return AnnotationUtils.findAnnotation(joinPoint.getTarget().getClass(), RequestMapping.class);
-            }else{
+            } else {
                 return requestMapping;
             }
         }
