@@ -10,8 +10,9 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 
-
 public class GrayTrackWebFilter implements WebFilter {
+
+    public static final String GRAY_WEB_TRACK_ATTR_NAME = "GrayWebTrack";
 
     private RequestLocalStorage requestLocalStorage;
 
@@ -28,10 +29,19 @@ public class GrayTrackWebFilter implements WebFilter {
         GrayHttpTrackInfo webTrack = new GrayHttpTrackInfo();
         grayTrackHolder.recordGrayTrack(webTrack, new ServerHttpRequestWrapper(exchange.getRequest()));
         requestLocalStorage.setGrayTrackInfo(webTrack);
-//        try {
-            return chain.filter(exchange).doFinally(t->requestLocalStorage.removeGrayTrackInfo());
-//        } finally {
-//            ;
-//        }
+
+        recordGrayTrack(exchange, webTrack);
+        return chain.filter(exchange).doFinally(t -> requestLocalStorage.removeGrayTrackInfo());
+    }
+
+    /**
+     * 支持reactor nio event loop
+     *
+     * @param exchange
+     * @param webTrack
+     */
+    private void recordGrayTrack(ServerWebExchange exchange, GrayHttpTrackInfo webTrack) {
+        ////todo 需优化
+        exchange.getAttributes().put(GRAY_WEB_TRACK_ATTR_NAME, webTrack);
     }
 }
