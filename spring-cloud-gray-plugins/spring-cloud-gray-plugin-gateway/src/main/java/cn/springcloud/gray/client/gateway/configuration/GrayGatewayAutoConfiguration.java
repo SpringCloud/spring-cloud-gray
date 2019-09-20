@@ -3,6 +3,7 @@ package cn.springcloud.gray.client.gateway.configuration;
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
 import cn.springcloud.gray.client.gateway.GatewayRequestInterceptor;
 import cn.springcloud.gray.client.gateway.GrayGlobalFilter;
+import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,8 +18,8 @@ public class GrayGatewayAutoConfiguration {
     private GrayRequestProperties grayRequestProperties;
 
     @Bean
-    public GrayGlobalFilter grayGlobalFilter(RoutingConnectionPoint routingConnectionPoint) {
-        return new GrayGlobalFilter(grayRequestProperties, routingConnectionPoint);
+    public GrayGlobalFilter grayGlobalFilter(RoutingConnectionPoint routingConnectionPoint, RequestLocalStorage requestLocalStorage) {
+        return new GrayGlobalFilter(grayRequestProperties, routingConnectionPoint, requestLocalStorage);
     }
 
 
