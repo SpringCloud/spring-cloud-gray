@@ -9,6 +9,29 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+            #          lowerCaseServiceId: true
+            #      routes:
+            #        # 会员服务
+            #        - id: service-a
+            #          uri: lb://service-a
+            #          predicates:
+            #            - Path=/ser-a/**
+            #          filters:
+            #            # 限流配置
+            #            - name: RequestRateLimiter
+            #              args:
+            #                key-resolver: '#{@uriKeyResolver}'
+            #                redis-rate-limiter.replenishRate: 500
+            #                redis-rate-limiter.burstCapacity: 1000
+          # 降级配置
+    #            - name: Hystrix
+    #              args:
+    #                name: default
+    #                fallbackUri: 'forward:/fallback'
     stream:
       bindings:
         GrayEventInput:
@@ -28,11 +51,6 @@ spring:
               #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
               #              auto-bind-dlq: true
               acknowledgeMode: AUTO
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lowerCaseServiceId: true
 server:
   port: 20401
 eureka:
@@ -41,10 +59,10 @@ eureka:
       defaultZone: http://localhost:20001/eureka/
 
 ribbon:
-    ReadTimeout: 30000
-    ConnectTimeout: 30000
-    eureka:
-        enabled: true
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
+  eureka:
+    enabled: true
 hystrix:
   threadpool:
     # 这是默认的配置
@@ -76,11 +94,11 @@ gray:
       definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:
-          #          - name: HttpIP
-          #          - name: HttpMethod
-          #          - name: HttpURI
-          #          - name: HttpReceive
-#          - name: HttpHeader
+        #          - name: HttpIP
+        #          - name: HttpMethod
+        #          - name: HttpURI
+        #          - name: HttpReceive
+        #          - name: HttpHeader
         #          - name: HttpParameter
         #            value: version,test
         path-patterns: /*
