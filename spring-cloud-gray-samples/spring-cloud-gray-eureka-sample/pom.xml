@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray-samples</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>A.1.1.1</version>
+        <version>A.1.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -20,7 +20,7 @@
         <dependency>
             <artifactId>spring-cloud-gray-utils</artifactId>
             <groupId>cn.springcloud.gray</groupId>
-            <version>A.1.1.1</version>
+            <version>A.1.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

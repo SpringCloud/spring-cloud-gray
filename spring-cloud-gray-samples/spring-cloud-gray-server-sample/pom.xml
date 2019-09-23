@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray-samples</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>A.1.1.1</version>
+        <version>A.1.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -21,28 +21,36 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-eureka</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bcpkix-jdk15on</artifactId>
+                    <groupId>org.bouncycastle</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-starter-gray-server</artifactId>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>cn.springcloud.gray</groupId>-->
-        <!--            <artifactId>spring-cloud-gray-server-plugin-eureka</artifactId>-->
-        <!--        </dependency>-->
-
-        <!-- nacos -->
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
-            <artifactId>spring-cloud-gray-server-plugin-nacos-discovery</artifactId>
+            <artifactId>spring-cloud-gray-server-plugin-eureka</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
+
+        <!-- nacos -->
+<!--        <dependency>-->
+<!--            <groupId>cn.springcloud.gray</groupId>-->
+<!--            <artifactId>spring-cloud-gray-server-plugin-nacos-discovery</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+<!--        </dependency>-->
+
+
 <!--        <dependency>-->
 <!--            <groupId>cn.springcloud.gray</groupId>-->
 <!--            <artifactId>spring-cloud-gray-server-plugin-event-stream</artifactId>-->

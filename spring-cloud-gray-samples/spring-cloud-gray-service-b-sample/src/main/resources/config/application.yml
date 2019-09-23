@@ -12,7 +12,7 @@ spring:
     stream:
       bindings:
         GrayEventInput:
-          group: service-a
+          group: service-b
           destination: gray_event
           consumer:
             concurrency: 1 #并发数
@@ -69,7 +69,7 @@ gray:
     retryNumberOfRetries: 3
   client:
     runenv: web
-    serviceUpdateIntervalTimerInMs: 0
+    serviceUpdateIntervalTimerInMs: 10000
     serviceInitializeDelayTimeInMs: 10000
     instance:
       grayEnroll: false
@@ -82,7 +82,7 @@ gray:
     track:
       enabled: true
       trackType: web
-      definitionsUpdateIntervalTimerInMs: 0
+      definitionsUpdateIntervalTimerInMs: 10000
       definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:
