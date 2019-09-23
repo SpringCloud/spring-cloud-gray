@@ -2,6 +2,7 @@ package cn.springcloud.gray.model;
 
 import lombok.*;
 
+@ToString
 @Setter
 @Getter
 @AllArgsConstructor
