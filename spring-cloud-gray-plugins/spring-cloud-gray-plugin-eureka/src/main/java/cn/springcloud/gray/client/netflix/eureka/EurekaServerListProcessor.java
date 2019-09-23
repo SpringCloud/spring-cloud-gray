@@ -53,7 +53,7 @@ public class EurekaServerListProcessor implements ServerListProcessor<Server>, E
 
         List<Server> serverList = null;
 
-        if(grayHoldoutServerProperties.isCacheable()) {
+        if (grayHoldoutServerProperties.isCacheable()) {
             serverList = serversMap.get(serviceId);
             if (CollectionUtils.isNotEmpty(serverList)) {
                 return serverList;
@@ -65,7 +65,7 @@ public class EurekaServerListProcessor implements ServerListProcessor<Server>, E
         if (CollectionUtils.isNotEmpty(unUpServers)) {
             serverList = ListUtils.union(servers, unUpServers);
         }
-        if(grayHoldoutServerProperties.isCacheable()){
+        if (grayHoldoutServerProperties.isCacheable()) {
             serversMap.put(serviceId, serverList);
         }
         return serverList;
@@ -130,6 +130,11 @@ public class EurekaServerListProcessor implements ServerListProcessor<Server>, E
     }
 
     public void reload() {
+        if (!grayHoldoutServerProperties.isEnabled()) {
+            unUpServersMap.clear();
+            serversMap.clear();
+            return;
+        }
         if (!semaphore.tryAcquire()) {
             log.info("已有其它线程在执行reload");
             return;
