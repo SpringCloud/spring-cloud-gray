@@ -2,9 +2,9 @@ package cn.springcloud.gray.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -12,6 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * 灰度实例，有状态属性
  */
+@ToString
 @Setter
 @Getter
 public class GrayInstance implements Serializable {
