@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.SignalType;
 
 import java.net.URI;
 
@@ -85,7 +86,7 @@ public class GrayGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpRequest newRequest = requestBuilder.build();
         ServerWebExchange newExchange = exchange.mutate().request(newRequest).build();
 
-        return chain.filter(newExchange).doFinally(t -> routingConnectionPoint.shutdownconnectPoint(connectPointContext));
+        return chain.filter(newExchange).doFinally(t -> destoryRequestLocal(t, connectPointContext));
     }
 
 
@@ -103,6 +104,14 @@ public class GrayGlobalFilter implements GlobalFilter, Ordered {
             }
         }
     }
+
+
+    private void destoryRequestLocal(SignalType t, RoutingConnectPointContext connectPointContext) {
+        //todo 需优化
+        routingConnectionPoint.shutdownconnectPoint(connectPointContext);
+        requestLocalStorage.removeGrayTrackInfo();
+    }
+
 
     @Override
     public int getOrder() {
