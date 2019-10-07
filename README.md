@@ -27,11 +27,11 @@ insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`
 这是添加管理员账号的，用户名:`admin` 密码:`abc123`
 
 ## 使用手册
-[管控端部署手册](doc/guide/guide-gray-server-deploy.md)
-[客户端部署手册](doc/guide/guide-gray-client-deploy.md)
-[管控端配置参数说明](doc/guide/gray-server-properties.md)
-[客户端配置参数说明](doc/guide/gray-client-properties.md)
-[管控端界面使用手册](doc/guide/gray-admin-guide.md)
+[管控端部署手册](doc/guide/guide-gray-server-deploy.md)<br/>
+[客户端部署手册](doc/guide/guide-gray-client-deploy.md)<br/>
+[管控端配置参数说明](doc/guide/gray-server-properties.md)<br/>
+[客户端配置参数说明](doc/guide/gray-client-properties.md)<br/>
+[管控端界面使用手册](doc/guide/gray-admin-guide.md)<br/>
 
 ## 版本信息
 项目分支 | srpingcloud版本 | springboot版本
