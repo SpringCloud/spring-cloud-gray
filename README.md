@@ -27,6 +27,10 @@ insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`
 这是添加管理员账号的，用户名:`admin` 密码:`abc123`
 
 ## 使用手册
+[管控端部署手册](doc/guide/guide-gray-server-deploy.md)
+[客户端部署手册](doc/guide/guide-gray-client-deploy.md)
+[管控端配置参数说明](doc/guide/gray-server-properties.md)
+[客户端配置参数说明](doc/guide/gray-client-properties.md)
 [管控端界面使用手册](doc/guide/gray-admin-guide.md)
 
 ## 版本信息
@@ -46,7 +50,7 @@ C | Greenwich | 2.1.*
 2. 灰度放量
 
 	通过金丝雀测试后，可以逐渐放量到新的版本上。例如，根据userId或者ip放5%的流量到其中一台灰度实例上，观察一段时间没异常，可调整放入20%的流量，如果一台实例扛不住，可再发一台或多台实例。将发布产生的风险保持在可控范围内。
-		![](doc/img/gray-Inflow-rate.png)
+	![](doc/img/gray-Inflow-rate.png)
 	
 3. 切断实例流量
 
