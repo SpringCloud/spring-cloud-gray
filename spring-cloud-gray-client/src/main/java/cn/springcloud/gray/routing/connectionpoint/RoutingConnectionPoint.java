@@ -2,19 +2,34 @@ package cn.springcloud.gray.routing.connectionpoint;
 
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 public interface RoutingConnectionPoint {
 
 
-    default <T> T execute(RoutingConnectPointContext connectPointContext, Supplier<T> supplier) throws IOException {
+    default <T> T execute(RoutingConnectPointContext connectPointContext, Supplier<T> supplier) {
         try {
             executeConnectPoint(connectPointContext);
             return supplier.get();
         } catch (Exception e) {
             connectPointContext.setThrowable(e);
-            throw e;
+            throw new RuntimeException(e);
         } finally {
             shutdownconnectPoint(connectPointContext);
+        }
+    }
+
+    default <T> T execute(
+            RoutingConnectPointContext connectPointContext,
+            Supplier<T> supplier,
+            Consumer<RoutingConnectPointContext> finalConsumer) {
+        try {
+            return execute(connectPointContext, supplier);
+        } finally {
+            if (!Objects.isNull(finalConsumer)) {
+                finalConsumer.accept(connectPointContext);
+            }
         }
     }
 
