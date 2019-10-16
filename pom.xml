@@ -12,8 +12,8 @@
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-gray</artifactId>
     <packaging>pom</packaging>
-    <version>B.0.0.2</version>
-    <url>https://github.com/SpringCloud/spring-cloud-gray</url>
+    <version>B.0.0.3</version>
+    <url>https://github.com/SpringCloud/sprding-cloud-gray</url>
     <organization>
         <name>Spring Cloud中国社区</name>
         <url>http://springcloud.cn/</url>
