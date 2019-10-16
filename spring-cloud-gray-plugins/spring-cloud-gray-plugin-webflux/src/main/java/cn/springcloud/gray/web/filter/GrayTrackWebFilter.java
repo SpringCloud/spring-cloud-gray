@@ -4,12 +4,14 @@ import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.web.ServerHttpRequestWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 
+@Slf4j
 public class GrayTrackWebFilter implements WebFilter {
 
     public static final String GRAY_WEB_TRACK_ATTR_NAME = "GrayWebTrack";
@@ -41,7 +43,6 @@ public class GrayTrackWebFilter implements WebFilter {
      * @param webTrack
      */
     private void recordGrayTrack(ServerWebExchange exchange, GrayHttpTrackInfo webTrack) {
-        ////todo 需优化
         exchange.getAttributes().put(GRAY_WEB_TRACK_ATTR_NAME, webTrack);
     }
 }
