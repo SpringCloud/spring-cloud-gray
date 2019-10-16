@@ -13,25 +13,26 @@ spring:
       discovery:
         locator:
           enabled: true
-            #          lowerCaseServiceId: true
-            #      routes:
-            #        # 会员服务
-            #        - id: service-a
-            #          uri: lb://service-a
-            #          predicates:
-            #            - Path=/ser-a/**
-            #          filters:
-            #            # 限流配置
-            #            - name: RequestRateLimiter
-            #              args:
-            #                key-resolver: '#{@uriKeyResolver}'
-            #                redis-rate-limiter.replenishRate: 500
-            #                redis-rate-limiter.burstCapacity: 1000
-          # 降级配置
-    #            - name: Hystrix
-    #              args:
-    #                name: default
-    #                fallbackUri: 'forward:/fallback'
+          lowerCaseServiceId: true
+      routes:
+        # service-a
+        - id: service-a
+          uri: lb://service-a
+          predicates:
+            - Path=/ser-a/**
+          filters:
+            - StripPrefix=1
+            # 限流配置
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@uriKeyResolver}'
+                redis-rate-limiter.replenishRate: 500
+                redis-rate-limiter.burstCapacity: 1000
+            # 降级配置
+            - name: Hystrix
+              args:
+                name: default
+                fallbackUri: 'forward:/fallback'
     stream:
       bindings:
         GrayEventInput:
