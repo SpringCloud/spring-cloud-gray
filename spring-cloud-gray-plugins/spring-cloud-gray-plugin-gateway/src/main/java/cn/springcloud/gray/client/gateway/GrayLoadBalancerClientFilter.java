@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.cloud.gateway.config.LoadBalancerProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.LoadBalancerClientFilter;
 import org.springframework.cloud.gateway.support.NotFoundException;
@@ -36,8 +37,11 @@ public class GrayLoadBalancerClientFilter extends LoadBalancerClientFilter {
     @Autowired
     private RequestLocalStorage requestLocalStorage;
 
-    public GrayLoadBalancerClientFilter(LoadBalancerClient loadBalancer) {
-        super(loadBalancer);
+    private LoadBalancerProperties properties;
+
+    public GrayLoadBalancerClientFilter(LoadBalancerClient loadBalancer, LoadBalancerProperties properties) {
+        super(loadBalancer, properties);
+        this.properties = properties;
     }
 
 
@@ -46,22 +50,22 @@ public class GrayLoadBalancerClientFilter extends LoadBalancerClientFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         URI url = exchange.getAttribute(GATEWAY_REQUEST_URL_ATTR);
         String schemePrefix = exchange.getAttribute(GATEWAY_SCHEME_PREFIX_ATTR);
-        if (url == null || (!"lb".equals(url.getScheme()) && !"lb".equals(schemePrefix))) {
+        if (url == null
+                || (!"lb".equals(url.getScheme()) && !"lb".equals(schemePrefix))) {
             return chain.filter(exchange);
         }
-        //preserve the original url
+        // preserve the original url
         addOriginalRequestUrl(exchange, url);
 
         log.trace("LoadBalancerClientFilter url before: " + url);
-
-
         // gray append start
         ServerHttpRequest.Builder requestBuilder = exchange.getRequest().mutate();
         final ServiceInstance instance = choose(url, exchange, requestBuilder);
         // gray append end
 
         if (instance == null) {
-            throw new NotFoundException("Unable to find instance for " + url.getHost());
+            throw NotFoundException.create(properties.isUse404(),
+                    "Unable to find instance for " + url.getHost());
         }
 
         URI uri = exchange.getRequest().getURI();
@@ -73,7 +77,8 @@ public class GrayLoadBalancerClientFilter extends LoadBalancerClientFilter {
             overrideScheme = url.getScheme();
         }
 
-        URI requestUrl = loadBalancer.reconstructURI(new DelegatingServiceInstance(instance, overrideScheme), uri);
+        URI requestUrl = loadBalancer.reconstructURI(
+                new DelegatingServiceInstance(instance, overrideScheme), uri);
 
         log.trace("LoadBalancerClientFilter url chosen: " + requestUrl);
         exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, requestUrl);
