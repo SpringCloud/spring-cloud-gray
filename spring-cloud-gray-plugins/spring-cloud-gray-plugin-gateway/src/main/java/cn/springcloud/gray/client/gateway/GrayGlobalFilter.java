@@ -25,6 +25,10 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_SCHEME_PREFIX_ATTR;
 
 
+/**
+ * @see GrayLoadBalancerClientFilter
+ */
+@Deprecated
 public class GrayGlobalFilter implements GlobalFilter, Ordered {
 
     private static final Logger log = LoggerFactory.getLogger(GrayGlobalFilter.class);
