@@ -6,6 +6,8 @@ import cn.springcloud.gray.model.GrayService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -41,6 +43,16 @@ public interface GrayManager {
     void closeGray(String serviceId, String instanceId);
 
     List<RequestInterceptor> getRequeestInterceptors(String interceptroType);
+
+    /**
+     * 以serviceId -> grayInstances的形式返回所有灰度服务的实例信息
+     *
+     * @return
+     */
+    default Map<String, Collection<GrayInstance>> getMapByAllGrayServices() {
+        return allGrayServices().stream()
+                .collect(Collectors.toMap(GrayService::getServiceId, GrayService::getGrayInstances));
+    }
 
     void setup();
 
