@@ -16,7 +16,7 @@ import java.util.Map;
  * @date 2019-11-24 12:12
  */
 @RestController
-@RequestMapping("/gray/client/service")
+@RequestMapping("/gray/service")
 public class GrayClientServiceResource {
     @Autowired
     private GrayManager grayManager;
