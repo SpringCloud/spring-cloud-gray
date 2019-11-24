@@ -1,8 +1,8 @@
 package cn.springcloud.gray.server.module.audit;
 
+import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.module.audit.domain.OperateRecord;
 import cn.springcloud.gray.server.module.user.UserModule;
-import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.utils.WebUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,17 +96,18 @@ public class ResultfulOpRecordAspect {
             Arrays.asList("/gray/user/", "/gray/user/login", "/gray/user/resetPassword", "/gray/user/updatePassword"));
 
 
-    private String[] desensitizationFields = new String[]{"password","oldPassword","newPassword"};
+    private String[] desensitizationFields = new String[]{"password", "oldPassword", "newPassword"};
 
     private String desensitizationArgs(HttpServletRequest request, Object[] args) throws IOException {
         if (desensitizationUris.contains(request.getRequestURI())) {
-            List<Map<String, Object>> list = objectMapper.readValue(objectMapper.writeValueAsString(args), new TypeReference<List<Map<String, Object>>>(){});
-            if(CollectionUtils.isNotEmpty(list)){
+            List<Map<String, Object>> list = objectMapper.readValue(objectMapper.writeValueAsString(args), new TypeReference<List<Map<String, Object>>>() {
+            });
+            if (CollectionUtils.isNotEmpty(list)) {
                 Map<String, Object> map = list.get(0);
                 Object v;
-                for (String field : desensitizationFields){
+                for (String field : desensitizationFields) {
                     v = map.get(field);
-                    if(!Objects.isNull(v)){
+                    if (!Objects.isNull(v)) {
                         map.put(field, convertDesensitization(v.toString()));
                     }
                 }
@@ -118,9 +119,9 @@ public class ResultfulOpRecordAspect {
     }
 
 
-    private String convertDesensitization(String str){
+    private String convertDesensitization(String str) {
         StringBuilder sb = new StringBuilder();
-        for(int i=0, l=str.length(); i<l;i++){
+        for (int i = 0, l = str.length(); i < l; i++) {
             sb.append('*');
         }
         return sb.toString();

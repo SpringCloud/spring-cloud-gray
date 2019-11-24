@@ -1,10 +1,9 @@
 package cn.springcloud.gray.server.resources.rest;
 
-import cn.springcloud.gray.server.module.gray.domain.GrayService;
+import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.module.user.domain.UserServiceAuthority;
-import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.server.resources.domain.fo.ServiceAuthorityFO;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
@@ -33,7 +32,6 @@ public class ServiceAuthorityResource {
     private UserModule userModule;
 
 
-
     @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<UserServiceAuthority>>> list(
             @RequestParam("serviceId") String serviceId,
@@ -54,14 +52,14 @@ public class ServiceAuthorityResource {
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ApiRes<Void> delete(@PathVariable("id") Long id) {
         UserServiceAuthority serviceAuthority = serviceManageModule.getServiceAuthority(id);
-        if(serviceAuthority==null){
+        if (serviceAuthority == null) {
             return ApiResHelper.notFound();
         }
         String serviceId = serviceAuthority.getServiceId();
         if (!serviceManageModule.hasServiceAuthority(serviceId)) {
             return ApiResHelper.notAuthority();
         }
-        if(serviceManageModule.isServiceOwner(serviceId, serviceAuthority.getUserId())){
+        if (serviceManageModule.isServiceOwner(serviceId, serviceAuthority.getUserId())) {
             return ApiRes.<Void>builder().code("403").message("service owner is can not delete").build();
         }
 
@@ -74,7 +72,7 @@ public class ServiceAuthorityResource {
         if (!serviceManageModule.hasServiceAuthority(serviceAuthorityFO.getServiceId())) {
             return ApiResHelper.notAuthority();
         }
-        if(userModule.getUserInfo(serviceAuthorityFO.getUserId())==null){
+        if (userModule.getUserInfo(serviceAuthorityFO.getUserId()) == null) {
             return ApiResHelper.notFound("has not found user");
         }
         UserServiceAuthority serviceAuthority =

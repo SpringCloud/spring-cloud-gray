@@ -1,14 +1,13 @@
 package cn.springcloud.gray.server.resources.rest;
 
+import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.module.gray.GrayServerTrackModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.module.user.UserModule;
-import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import io.swagger.annotations.ApiParam;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
-import static cn.springcloud.gray.server.resources.domain.ApiRes.CODE_SUCCESS;
+import static cn.springcloud.gray.api.ApiRes.CODE_SUCCESS;
 
 @RestController
 @RequestMapping("/gray/track")

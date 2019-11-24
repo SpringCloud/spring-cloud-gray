@@ -1,11 +1,10 @@
 package cn.springcloud.gray.server.resources.rest;
 
+import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.module.user.domain.ServiceOwner;
 import cn.springcloud.gray.server.module.user.domain.ServiceOwnerQuery;
-import cn.springcloud.gray.server.resources.domain.ApiRes;
-import cn.springcloud.gray.server.resources.domain.fo.ServiceAuthorityFO;
 import cn.springcloud.gray.server.resources.domain.fo.ServiceOwnerFO;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
@@ -67,14 +66,14 @@ public class ServiceOwnerResource {
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ApiRes<Void> save(@Validated @RequestBody ServiceOwnerFO serviceOwnerFO) {
         ServiceOwner serviceOwner = serviceManageModule.getServiceOwner(serviceOwnerFO.getServiceId());
-        if(serviceOwner==null){
+        if (serviceOwner == null) {
             return ApiResHelper.notFound();
         }
-        if(StringUtils.isNotEmpty(serviceOwner.getUserId()) &&
-                !StringUtils.equals(serviceOwner.getUserId(), userModule.getCurrentUserId())){
+        if (StringUtils.isNotEmpty(serviceOwner.getUserId()) &&
+                !StringUtils.equals(serviceOwner.getUserId(), userModule.getCurrentUserId())) {
             return ApiResHelper.notAuthority();
         }
-        if(userModule.getUserInfo(serviceOwnerFO.getUserId())==null){
+        if (userModule.getUserInfo(serviceOwnerFO.getUserId()) == null) {
             return ApiResHelper.notFound("has not found user");
         }
         serviceManageModule.transferServiceOwner(serviceOwnerFO.getServiceId(), serviceOwnerFO.getUserId());

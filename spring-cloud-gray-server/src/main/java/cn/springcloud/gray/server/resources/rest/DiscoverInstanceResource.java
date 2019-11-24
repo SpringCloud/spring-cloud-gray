@@ -1,12 +1,12 @@
 package cn.springcloud.gray.server.resources.rest;
 
+import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
 import cn.springcloud.gray.server.module.gray.GrayServerModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
-import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.server.resources.domain.fo.RemoteInstanceStatusUpdateFO;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -96,10 +96,10 @@ public class DiscoverInstanceResource {
     }
 
     @RequestMapping(value = "/instances", method = RequestMethod.GET, params = {"serviceId"})
-    public ApiRes<List<GrayInstance>> instances(@RequestParam("serviceId") String serviceId){
+    public ApiRes<List<GrayInstance>> instances(@RequestParam("serviceId") String serviceId) {
         List<InstanceInfo> instanceInfos = serviceDiscovery.listInstanceInfos(serviceId);
 
-        List<GrayInstance> grayInstances = instanceInfos.stream().map(info->{
+        List<GrayInstance> grayInstances = instanceInfos.stream().map(info -> {
             GrayInstance instance = new GrayInstance();
             instance.setServiceId(serviceId);
             instance.setInstanceId(info.getInstanceId());
@@ -108,7 +108,7 @@ public class DiscoverInstanceResource {
             instance.setInstanceStatus(info.getInstanceStatus());
             instance.setGrayStatus(GrayStatus.CLOSE);
             GrayInstance grayInstance = grayServerModule.getGrayInstance(instance.getInstanceId());
-            if(grayInstance!=null){
+            if (grayInstance != null) {
                 instance.setGrayStatus(grayInstance.getGrayStatus());
             }
             return instance;
