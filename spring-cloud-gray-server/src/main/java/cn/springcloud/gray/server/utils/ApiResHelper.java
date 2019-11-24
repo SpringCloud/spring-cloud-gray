@@ -1,6 +1,6 @@
 package cn.springcloud.gray.server.utils;
 
-import cn.springcloud.gray.server.resources.domain.ApiRes;
+import cn.springcloud.gray.api.ApiRes;
 import org.springframework.http.HttpStatus;
 
 public class ApiResHelper {
@@ -45,6 +45,7 @@ public class ApiResHelper {
                 .message(msg)
                 .build();
     }
+
     public static <T> ApiRes successData(T data) {
         return successData("operation is success", data);
     }
