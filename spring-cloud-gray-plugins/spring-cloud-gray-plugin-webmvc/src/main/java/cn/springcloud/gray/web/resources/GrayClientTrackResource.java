@@ -15,7 +15,7 @@ import java.util.Collection;
  * @date 2019-11-24 12:12
  */
 @RestController
-@RequestMapping("/gray/client/track")
+@RequestMapping("/gray/track")
 public class GrayClientTrackResource {
 
 
