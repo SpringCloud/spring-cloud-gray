@@ -84,6 +84,10 @@ public class DiscoverInstanceResource {
                             .build());
         }
         String uri = "/gray/discovery/instance/setStatus?status={status}";
+        String contextPath = grayServerModule.getServiceContextPath(instanceStatusUpdateFO.getServiceId());
+        if (StringUtils.isEmpty(contextPath)) {
+            uri = contextPath + uri;
+        }
         String url = new StringBuilder("http://").append(instanceInfo.getHost())
                 .append(":").append(instanceInfo.getPort())
                 .append(uri).toString();
