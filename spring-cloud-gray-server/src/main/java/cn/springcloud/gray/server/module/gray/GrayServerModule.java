@@ -69,6 +69,8 @@ public interface GrayServerModule {
 
     GrayService getGrayService(String id);
 
+    String getServiceContextPath(String serviceId);
+
     List<GrayPolicy> listGrayPoliciesByInstanceId(String instanceId);
 
     Page<GrayService> listAllGrayServices(Pageable pageable);

@@ -19,6 +19,8 @@ public class GrayService {
     private String serviceId;
     @ApiModelProperty("服务名称")
     private String serviceName;
+    @ApiModelProperty("服务的servlet.context-path")
+    private String contextPath;
     @ApiModelProperty("服务实例个数")
     private Integer instanceNumber;
     @ApiModelProperty("灰度实例个数")
