@@ -23,6 +23,8 @@ public class GrayServiceDO {
     private String serviceId;
     @Column(length = 64)
     private String serviceName;
+    @Column(length = 64)
+    private String contextPath;
     @Column(length = 4)
     private Integer instanceNumber;
     @Column(length = 4)
