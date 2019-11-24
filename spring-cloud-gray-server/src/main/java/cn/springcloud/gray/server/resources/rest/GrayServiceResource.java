@@ -1,10 +1,10 @@
 package cn.springcloud.gray.server.resources.rest;
 
+import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.module.gray.GrayServerModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayService;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.module.user.UserModule;
-import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import io.swagger.annotations.Api;
@@ -74,7 +74,7 @@ public class GrayServiceResource {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ApiRes<Void> save(@RequestBody GrayService grayService) {
-        if(grayServerModule.getGrayService(grayService.getServiceId())!=null){
+        if (grayServerModule.getGrayService(grayService.getServiceId()) != null) {
             if (!serviceManageModule.hasServiceAuthority(grayService.getServiceId())) {
                 return ApiResHelper.notAuthority();
             }

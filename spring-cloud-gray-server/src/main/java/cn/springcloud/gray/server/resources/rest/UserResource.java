@@ -1,11 +1,11 @@
 package cn.springcloud.gray.server.resources.rest;
 
+import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.module.user.domain.UserInfo;
 import cn.springcloud.gray.server.module.user.domain.UserQuery;
 import cn.springcloud.gray.server.oauth2.Oauth2Service;
 import cn.springcloud.gray.server.oauth2.TokenRequestInfo;
-import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.server.resources.domain.fo.LoginFO;
 import cn.springcloud.gray.server.resources.domain.fo.ResetPasswordFO;
 import cn.springcloud.gray.server.resources.domain.fo.UpdatePasswordFO;
@@ -50,7 +50,7 @@ public class UserResource {
     @PostMapping(value = "/login")
     public ApiRes<Map<String, String>> login(@RequestBody LoginFO fo) {
         UserInfo userInfo = userModule.login(fo.getUsername(), fo.getPassword());
-        if(userInfo==null){
+        if (userInfo == null) {
             return ApiRes.<Map<String, String>>builder()
                     .code("1")
                     .message("用户名或密码不正确")
@@ -61,7 +61,7 @@ public class UserResource {
         for (String role : userInfo.getRoles()) {
             authorities.add(new SimpleGrantedAuthority(role));
         }
-        User user =  new User(fo.getUsername(), fo.getPassword(), authorities);
+        User user = new User(fo.getUsername(), fo.getPassword(), authorities);
         OAuth2AccessToken oAuth2AccessToken = oauth2Service.getAccessToken(
                 TokenRequestInfo.builder().userDetails(user).build());
 
@@ -71,7 +71,7 @@ public class UserResource {
     @RequestMapping(value = "/info", method = {RequestMethod.OPTIONS, RequestMethod.GET})
     public ApiRes<UserInfo> info() {
         UserInfo userInfo = userModule.getUserInfo(userModule.getCurrentUserId());
-        if(userInfo==null){
+        if (userInfo == null) {
             return ApiResHelper.notFound();
         }
         return ApiResHelper.successData(userInfo);
@@ -87,7 +87,7 @@ public class UserResource {
     public ResponseEntity<ApiRes<List<UserInfo>>> page(
             @RequestParam(value = "key", required = false) String key,
             @RequestParam(value = "status", required = false) Integer status,
-            @ApiParam @PageableDefault(sort = "createTime",direction = Sort.Direction.DESC) Pageable pageable) {
+            @ApiParam @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable) {
 
         UserQuery userQuery = UserQuery.builder()
                 .key(key)
@@ -104,9 +104,9 @@ public class UserResource {
 
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ApiRes<UserInfo> addUser(@RequestBody UserRegisterFO fo){
+    public ApiRes<UserInfo> addUser(@RequestBody UserRegisterFO fo) {
         UserInfo currentUser = userModule.getCurrentUserInfo();
-        if(currentUser==null || !currentUser.isAdmin()){
+        if (currentUser == null || !currentUser.isAdmin()) {
             return ApiResHelper.notAuthority();
         }
         UserInfo newUserInfo = userModule.register(fo.toUserInfo(), fo.getPassword());
@@ -115,15 +115,15 @@ public class UserResource {
 
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ApiRes<UserInfo> updateUser(@RequestBody UserInfo userInfo){
+    public ApiRes<UserInfo> updateUser(@RequestBody UserInfo userInfo) {
         UserInfo currentUser = userModule.getCurrentUserInfo();
-        if(currentUser==null || !currentUser.isAdmin()){
+        if (currentUser == null || !currentUser.isAdmin()) {
             return ApiResHelper.notAuthority();
         }
 
         userInfo.setOperator(userModule.getCurrentUserId());
         UserInfo newUserInfo = userModule.updateUserInfo(userInfo);
-        if(newUserInfo==null){
+        if (newUserInfo == null) {
             ApiResHelper.notFound();
         }
         return ApiResHelper.successData(newUserInfo);
@@ -131,9 +131,9 @@ public class UserResource {
 
 
     @RequestMapping(value = "/resetPassword", method = RequestMethod.PUT)
-    public ApiRes<Void> resetPassword(@RequestBody ResetPasswordFO fo){
+    public ApiRes<Void> resetPassword(@RequestBody ResetPasswordFO fo) {
         UserInfo currentUser = userModule.getCurrentUserInfo();
-        if(currentUser==null || !currentUser.isAdmin()){
+        if (currentUser == null || !currentUser.isAdmin()) {
             return ApiResHelper.notAuthority();
         }
         userModule.resetPassword(fo.getUserId(), fo.getPassword());
@@ -141,11 +141,11 @@ public class UserResource {
     }
 
     @RequestMapping(value = "/updatePassword", method = RequestMethod.PUT)
-    public ApiRes<Void> updatePassword(@RequestBody UpdatePasswordFO fo){
+    public ApiRes<Void> updatePassword(@RequestBody UpdatePasswordFO fo) {
         boolean result = userModule.resetPassword(
                 userModule.getCurrentUserId(), fo.getOldPassword(), fo.getNewPassword());
 
-        return result? ApiResHelper.success() : ApiResHelper.failed();
+        return result ? ApiResHelper.success() : ApiResHelper.failed();
     }
 
 }

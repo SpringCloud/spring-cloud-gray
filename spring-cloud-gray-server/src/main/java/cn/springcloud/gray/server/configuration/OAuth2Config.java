@@ -1,8 +1,8 @@
 package cn.springcloud.gray.server.configuration;
 
+import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.oauth2.DefaultTokenGranter;
 import cn.springcloud.gray.server.oauth2.Oauth2Service;
-import cn.springcloud.gray.server.resources.domain.ApiRes;
 import cn.springcloud.gray.server.utils.WebHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +93,7 @@ public class OAuth2Config {
     public Oauth2Service oauth2Service(
             ClientDetailsService clientDetailsService,
             OAuth2RequestFactory requestFactory,
-            DefaultTokenGranter defaultTokenGranter){
+            DefaultTokenGranter defaultTokenGranter) {
         return new Oauth2Service(clientDetailsService, requestFactory, defaultTokenGranter);
     }
 
