@@ -68,7 +68,7 @@
             </el-dropdown-menu>
           </el-dropdown>
           <el-dropdown trigger="click">
-            <el-button size="mini" type="info" style="width:80px">
+            <el-button size="mini" type="info" style="width:80px" class="list-button">
               灰度信息
               <i class="el-icon-arrow-down" />
             </el-button>
@@ -80,12 +80,26 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog :title="grayInfo.type" :visible.sync="grayInfo.dialogVisible" :loading="grayInfo.loading">
+      <pre>{{ grayInfo.content }}</pre>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="grayInfo.dialogVisible = false">
+          Cancel
+        </el-button>
+        <el-button type="primary" @click="refershGrayInfos()">
+          Refersh
+        </el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import { fetchList, createInstance, tryChangeInstanceStatus } from '@/api/discovery-instance'
 import waves from '@/directive/waves' // waves directive
+import { getServiceAllInfos, getAllDefinitions } from '@/api/gray-client'
 import { parseTime } from '@/utils'
 
 export default {
@@ -126,6 +140,13 @@ export default {
         port: 0,
         grayStatus: 'OPEN',
         des: ''
+      },
+      grayInfo: {
+        instanceId: '',
+        type: '',
+        content: '',
+        dialogVisible: false,
+        loading: false
       },
       downloadLoading: false,
       tempRoute: {}
@@ -237,6 +258,27 @@ export default {
         })
         this.downloadLoading = false
       })
+    },
+    showGrayInfos(row, type) {
+      this.grayInfo.instanceId = row.instanceId
+      this.grayInfo.type = type
+      this.grayInfo.dialogVisible = true
+      this.grayInfo.content = ''
+      this.refershGrayInfos()
+    },
+    refershGrayInfos() {
+      this.grayInfo.loading = true
+      if (this.grayInfo.type === 'SERVICES') {
+        getServiceAllInfos(this.listQuery.serviceId, this.grayInfo.instanceId).then(res => {
+          this.grayInfo.content = res.data
+          this.grayInfo.loading = false
+        })
+      } else if (this.grayInfo.type === 'TRACKS') {
+        getAllDefinitions(this.listQuery.serviceId, this.grayInfo.instanceId).then(res => {
+          this.grayInfo.content = res.data
+          this.grayInfo.loading = false
+        })
+      }
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {

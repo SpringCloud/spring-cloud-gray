@@ -104,7 +104,7 @@
             </el-dropdown-menu>
           </el-dropdown>
           <el-dropdown trigger="click">
-            <el-button size="mini" type="info" style="width:80px">
+            <el-button size="mini" type="info" style="width:80px" class="list-button">
               灰度信息
               <i class="el-icon-arrow-down" />
             </el-button>
@@ -158,7 +158,7 @@
     </el-dialog>
 
     <el-dialog :title="grayInfo.type" :visible.sync="grayInfo.dialogVisible" :loading="grayInfo.loading">
-      {{ grayInfo.content }}
+      <pre>{{ grayInfo.content }}</pre>
       <div slot="footer" class="dialog-footer">
         <el-button @click="grayInfo.dialogVisible = false">
           Cancel
@@ -441,6 +441,7 @@ export default {
       this.grayInfo.instanceId = row.instanceId
       this.grayInfo.type = type
       this.grayInfo.dialogVisible = true
+      this.grayInfo.content = ''
       this.refershGrayInfos()
     },
     refershGrayInfos() {

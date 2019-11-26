@@ -1,5 +1,6 @@
 package cn.springcloud.gray.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,6 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @ToString
 @Setter
 @Getter
+@JsonIgnoreProperties({"gray"})
 public class GrayInstance implements Serializable {
 
     private static final long serialVersionUID = 1604426811546120884L;

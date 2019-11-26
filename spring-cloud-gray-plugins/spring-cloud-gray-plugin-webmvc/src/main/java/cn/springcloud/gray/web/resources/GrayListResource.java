@@ -37,6 +37,7 @@ public class GrayListResource {
     @GetMapping("/service/allInfos")
     public ApiRes<Map<String, Collection<GrayInstance>>> getAllGrayServiceInfos() {
         return ApiRes.<Map<String, Collection<GrayInstance>>>builder()
+                .code(ApiRes.CODE_SUCCESS)
                 .data(grayManager.getMapByAllGrayServices())
                 .build();
     }
@@ -49,6 +50,7 @@ public class GrayListResource {
     @GetMapping("/track/allDefinitions")
     public ApiRes<Collection<GrayTrackDefinition>> getAllGrayTracks() {
         return ApiRes.<Collection<GrayTrackDefinition>>builder()
+                .code(ApiRes.CODE_SUCCESS)
                 .data(grayTrackHolder.getTrackDefinitions())
                 .build();
     }
