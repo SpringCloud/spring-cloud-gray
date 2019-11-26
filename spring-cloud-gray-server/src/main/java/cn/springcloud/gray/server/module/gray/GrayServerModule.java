@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public interface GrayServerModule {
 
@@ -69,7 +70,10 @@ public interface GrayServerModule {
 
     GrayService getGrayService(String id);
 
-    String getServiceContextPath(String serviceId);
+    default String getServiceContextPath(String serviceId) {
+        GrayService grayService = getGrayService(serviceId);
+        return Objects.isNull(grayService) ? "" : grayService.getContextPath();
+    }
 
     List<GrayPolicy> listGrayPoliciesByInstanceId(String instanceId);
 
