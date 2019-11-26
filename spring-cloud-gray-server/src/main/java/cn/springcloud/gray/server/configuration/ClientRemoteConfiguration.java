@@ -1,4 +1,4 @@
-package cn.springcloud.gray.server;
+package cn.springcloud.gray.server.configuration;
 
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
 import cn.springcloud.gray.server.module.client.ClientRemoteModule;
