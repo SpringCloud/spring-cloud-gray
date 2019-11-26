@@ -4,6 +4,7 @@ import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
+import cn.springcloud.gray.server.module.client.ClientRemoteModule;
 import cn.springcloud.gray.server.module.gray.GrayServerModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -37,6 +37,9 @@ public class DiscoverInstanceResource {
 
     @Autowired
     private ServiceManageModule serviceManageModule;
+
+    @Autowired
+    private ClientRemoteModule clientRemoteModule;
 
 
     /**
@@ -67,31 +70,12 @@ public class DiscoverInstanceResource {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(ApiResHelper.notAuthority());
         }
-        InstanceInfo instanceInfo = serviceDiscovery.getInstanceInfo(
-                instanceStatusUpdateFO.getServiceId(), instanceStatusUpdateFO.getInstanceId());
-        if (instanceInfo == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiRes.<Void>builder()
-                            .code(ApiRes.CODE_NOT_FOUND)
-                            .message(HttpStatus.NOT_FOUND.getReasonPhrase())
-                            .build());
-        }
-        if (StringUtils.isEmpty(instanceInfo.getHost()) || Objects.equals(instanceInfo.getPort(), 0)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiRes.<Void>builder()
-                            .code(String.valueOf(HttpStatus.BAD_REQUEST))
-                            .message("instance host or port is empty")
-                            .build());
-        }
-        String uri = "/gray/discovery/instance/setStatus?status={status}";
-        String contextPath = grayServerModule.getServiceContextPath(instanceStatusUpdateFO.getServiceId());
-        if (StringUtils.isEmpty(contextPath)) {
-            uri = contextPath + uri;
-        }
-        String url = new StringBuilder("http://").append(instanceInfo.getHost())
-                .append(":").append(instanceInfo.getPort())
-                .append(uri).toString();
-        restTemplate.put(url, null, instanceStatusUpdateFO.getInstanceStatus().name());
+
+        clientRemoteModule.callClient(instanceStatusUpdateFO.getServiceId(), instanceStatusUpdateFO.getInstanceId(),
+                "/gray/discovery/instance/setStatus?status={status}", url -> {
+                    restTemplate.put(url, null, instanceStatusUpdateFO.getInstanceStatus().name());
+                });
+
         return ResponseEntity.ok(
                 ApiRes.<Void>builder()
                         .code(ApiRes.CODE_SUCCESS)
