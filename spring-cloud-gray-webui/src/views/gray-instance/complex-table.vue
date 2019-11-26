@@ -103,6 +103,16 @@
               <el-dropdown-item @click.native="changeInstanceStatus(row, 'UNKNOWN')">UNKNOWN</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
+          <el-dropdown trigger="click">
+            <el-button size="mini" type="info" style="width:80px" class="list-button">
+              灰度信息
+              <i class="el-icon-arrow-down" />
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="showGrayInfos(row, 'SERVICES')">服务/实例</el-dropdown-item>
+              <el-dropdown-item @click.native="showGrayInfos(row, 'TRACKS')">追踪</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -147,6 +157,18 @@
       </div>
     </el-dialog>
 
+    <el-dialog custom-class="el-dialog-cus" :title="grayInfo.type" :visible.sync="grayInfo.dialogVisible" :loading="grayInfo.loading">
+      <pre>{{ grayInfo.content }}</pre>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="grayInfo.dialogVisible = false">
+          Cancel
+        </el-button>
+        <el-button type="primary" @click="refershGrayInfos()">
+          Refersh
+        </el-button>
+      </div>
+    </el-dialog>
+
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="key" label="Channel" />
@@ -161,6 +183,7 @@
 
 <script>
 import { fetchList, deleteInstance, createInstance, updateInstance, tryChangeInstanceStatus } from '@/api/gray-instance'
+import { getServiceAllInfos, getAllDefinitions } from '@/api/gray-client'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -222,6 +245,13 @@ export default {
         grayStatus: 'OPEN',
         grayLock: 0,
         des: ''
+      },
+      grayInfo: {
+        instanceId: '',
+        type: '',
+        content: '',
+        dialogVisible: false,
+        loading: false
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -407,6 +437,27 @@ export default {
         })
       })
     },
+    showGrayInfos(row, type) {
+      this.grayInfo.instanceId = row.instanceId
+      this.grayInfo.type = type
+      this.grayInfo.dialogVisible = true
+      this.grayInfo.content = ''
+      this.refershGrayInfos()
+    },
+    refershGrayInfos() {
+      this.grayInfo.loading = true
+      if (this.grayInfo.type === 'SERVICES') {
+        getServiceAllInfos(this.listQuery.serviceId, this.grayInfo.instanceId).then(res => {
+          this.grayInfo.content = res.data
+          this.grayInfo.loading = false
+        })
+      } else if (this.grayInfo.type === 'TRACKS') {
+        getAllDefinitions(this.listQuery.serviceId, this.grayInfo.instanceId).then(res => {
+          this.grayInfo.content = res.data
+          this.grayInfo.loading = false
+        })
+      }
+    },
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
@@ -436,5 +487,8 @@ export default {
 <style lang="scss">
   .list-button {
     margin-top: 5px;
+  }
+  .el-dialog-cus{
+    width: 80%;
   }
 </style>

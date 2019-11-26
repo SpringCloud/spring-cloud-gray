@@ -1,10 +1,10 @@
 package cn.springcloud.gray.server.app.web.rest;
 
+import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.app.web.domain.fo.LoginFO;
 import cn.springcloud.gray.server.app.web.domain.vo.UserInfoVO;
 import cn.springcloud.gray.server.oauth2.Oauth2Service;
 import cn.springcloud.gray.server.oauth2.TokenRequestInfo;
-import cn.springcloud.gray.server.resources.domain.ApiRes;
 import com.google.common.collect.ImmutableBiMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -30,8 +30,8 @@ public class UserResource {
 
     @PostMapping(value = "/login")
     public ApiRes<Map<String, String>> login(@RequestBody LoginFO fo) {
-        if(!StringUtils.equals("admin", fo.getUsername())
-                || !StringUtils.equals("abc~!@345", fo.getPassword())){
+        if (!StringUtils.equals("admin", fo.getUsername())
+                || !StringUtils.equals("abc~!@345", fo.getPassword())) {
             return ApiRes.<Map<String, String>>builder()
                     .code("1")
                     .message("用户名或密码不正确")
@@ -39,7 +39,7 @@ public class UserResource {
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        User user =  new User(fo.getUsername(), fo.getPassword(), authorities);
+        User user = new User(fo.getUsername(), fo.getPassword(), authorities);
         OAuth2AccessToken oAuth2AccessToken = oauth2Service.getAccessToken(
                 TokenRequestInfo.builder().userDetails(user).build());
         return ApiRes.<Map<String, String>>builder()
