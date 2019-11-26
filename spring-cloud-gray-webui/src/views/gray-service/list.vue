@@ -33,6 +33,11 @@
           <span>{{ scope.row.serviceName }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="Context Path" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.contextPath }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="实例数" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.instanceNumber }}</span>
@@ -100,6 +105,9 @@
         <el-form-item label="Service Name" prop="serviceName">
           <el-input v-model="temp.serviceName" />
         </el-form-item>
+        <el-form-item label="Context Path" prop="contextPath">
+          <el-input v-model="temp.contextPath" />
+        </el-form-item>
         <el-form-item label="Describe" prop="describe">
           <el-input v-model="temp.describe" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
@@ -153,6 +161,7 @@ export default {
       temp: {
         serviceName: '',
         serviceId: '',
+        contextPath: '',
         describe: ''
       },
       dialogFormVisible: false,
@@ -208,6 +217,7 @@ export default {
       this.temp = {
         serviceId: '',
         serviceName: '',
+        contextPath: '',
         describe: ''
       }
     },

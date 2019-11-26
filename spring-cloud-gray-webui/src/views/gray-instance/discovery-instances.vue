@@ -67,6 +67,16 @@
               <el-dropdown-item @click.native="changeInstanceStatus(row, 'UNKNOWN')">UNKNOWN</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
+          <el-dropdown trigger="click">
+            <el-button size="mini" type="info" style="width:80px">
+              灰度信息
+              <i class="el-icon-arrow-down" />
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="showGrayInfos(row, 'SERVICES')">服务/实例</el-dropdown-item>
+              <el-dropdown-item @click.native="showGrayInfos(row, 'TRACKS')">追踪</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
