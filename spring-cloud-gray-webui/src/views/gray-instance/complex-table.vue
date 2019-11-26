@@ -157,7 +157,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="grayInfo.type" :visible.sync="grayInfo.dialogVisible" :loading="grayInfo.loading">
+    <el-dialog custom-class="el-dialog-cus" :title="grayInfo.type" :visible.sync="grayInfo.dialogVisible" :loading="grayInfo.loading">
       <pre>{{ grayInfo.content }}</pre>
       <div slot="footer" class="dialog-footer">
         <el-button @click="grayInfo.dialogVisible = false">
@@ -487,5 +487,8 @@ export default {
 <style lang="scss">
   .list-button {
     margin-top: 5px;
+  }
+  .el-dialog-cus{
+    width: 80%;
   }
 </style>
