@@ -1,6 +1,9 @@
 package cn.springcloud.gray.server.module.gray.jpa;
 
-import cn.springcloud.gray.event.*;
+import cn.springcloud.gray.event.EventType;
+import cn.springcloud.gray.event.GrayEventMsg;
+import cn.springcloud.gray.event.GraySourceEventPublisher;
+import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.model.InstanceStatus;
@@ -270,7 +273,7 @@ public class JPAGrayServerModule implements GrayServerModule {
 
     @Override
     public GrayService getGrayService(String id) {
-        return null;
+        return grayServiceService.findOneModel(id);
     }
 
     @Override
