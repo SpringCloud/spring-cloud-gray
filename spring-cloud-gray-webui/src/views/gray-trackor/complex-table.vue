@@ -71,11 +71,40 @@
         <el-form-item label="Service Id" prop="serviceId">
           <el-input v-model="temp.serviceId" disabled="true" />
         </el-form-item>
-        <el-form-item label="Name" prop="name">
-          <el-input v-model="temp.name" />
+        <el-form-item
+          label="Name"
+          prop="type"
+        >
+          <div style="display:flex;align-items: center;">
+            <el-select
+              v-model="temp.type"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-input
+              v-if="temp.type === '自定义名称'"
+              v-model="temp.name"
+              style="margin-left:20px"
+            />
+          </div>
+
         </el-form-item>
-        <el-form-item label="Infos" prop="infos">
-          <el-input v-model="temp.infos" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        <el-form-item
+          label="Infos"
+          prop="infos"
+        >
+          <el-input
+            v-model="temp.infos"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            type="textarea"
+            placeholder="Please input"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -111,10 +140,45 @@ export default {
   components: { Pagination },
   directives: { waves },
   data() {
+    const Typerules = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('Name is required'))
+      } else {
+        if (!this.temp.name && value === '自定义名称') {
+          callback(new Error('Name is required'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       tableKey: 0,
       list: null,
       total: 0,
+      options: [{
+        value: 'HttpReceive',
+        label: 'HttpReceive'
+      }, {
+        value: 'HttpHeader',
+        label: 'HttpHeader'
+      }, {
+        value: 'HttpIP',
+        label: 'HttpIP'
+      }, {
+        value: 'HttpMethod',
+        label: 'HttpMethod'
+      }, {
+        value: 'HttpParameter',
+        label: 'HttpParameter'
+      }, {
+        value: 'HttpURI',
+        label: 'HttpURI'
+      }, {
+        value: '自定义名称',
+        label: '自定义名称'
+      }
+      ],
+      value: '',
       listLoading: true,
       listQuery: {
         page: 1,
@@ -130,6 +194,7 @@ export default {
         serviceId: this.$route.query.serviceId || '',
         instanceId: '',
         name: '',
+        type: '',
         infos: ''
       },
       dialogFormVisible: false,
@@ -142,7 +207,7 @@ export default {
       pvData: [],
       rules: {
         serviceId: [{ required: true, message: 'Service Id is required', trigger: 'change' }],
-        name: [{ required: true, message: 'Name is required', trigger: 'change' }]
+        type: [{ required: true, trigger: 'change', validator: Typerules }]
       },
       downloadLoading: false,
       tempRoute: {}
@@ -209,6 +274,7 @@ export default {
         serviceId: serviceId,
         instanceId: '',
         name: '',
+        type: '',
         infos: ''
       }
     },
@@ -225,6 +291,9 @@ export default {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
           this.temp.author = 'vue-element-admin'
+          if (this.temp.type !== '自定义名称') {
+            this.temp.name = this.temp.type
+          }
           createTrackInfo(this.temp).then(response => {
             this.list.unshift(response.data)
             this.dialogFormVisible = false
@@ -240,6 +309,12 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
+      console.log(this.temp.name)
+      if (this.checkName(this.temp.name)) {
+        this.$set(this.temp, 'type', this.temp.name)
+      } else {
+        this.$set(this.temp, 'type', '自定义名称')
+      }
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -247,9 +322,21 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
+    checkName(str) {
+      let flag = false
+      this.options.forEach(item => {
+        if (item.value === str) {
+          flag = true
+        }
+      })
+      return flag
+    },
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          if (this.temp.type !== '自定义名称') {
+            this.temp.name = this.temp.type
+          }
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           updateTrackInfo(tempData).then(response => {

@@ -71,14 +71,38 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Name" prop="name">
-          <el-input v-model="temp.name" />
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="70%">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 90%; margin-left:50px;">
+        <el-form-item v-if="dialogFormVisible" label="Name" prop="type">
+          <div style="display:flex;align-items: center;">
+            <el-select
+              v-model="temp.type"
+              placeholder="请选择"
+              @change="changeSelect"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-input v-if="temp.type === '自定义名称'" v-model="temp.name" style="margin-left:30px;" />
+          </div>
         </el-form-item>
-        <el-form-item label="Infos" prop="infos">
-          <el-input v-model="temp.infos" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
-        </el-form-item>
+        <div>
+          <HttpHeader v-if="temp.type === 'HttpHeader'" ref="HttpHeader" :info="temp.infos" @sendInfos="sendInfos" />
+          <HttpMethod v-if="temp.type === 'HttpMethod'" ref="HttpMethod" :info="temp.infos" @sendInfos="sendInfos" />
+          <HttpParameter v-if="temp.type === 'HttpParameter'" ref="HttpParameter" :info="temp.infos" @sendInfos="sendInfos" />
+          <HttpTrackHeader v-if="temp.type === 'HttpTrackHeader'" ref="HttpTrackHeader" :info="temp.infos" @sendInfos="sendInfos" />
+          <HttpTrackParameter v-if="temp.type === 'HttpTrackParameter'" ref="HttpTrackParameter" :info="temp.infos" @sendInfos="sendInfos" />
+          <TraceIp v-if="temp.type === 'TraceIp'" ref="TraceIp" :info="temp.info" @sendInfos="sendInfos" />
+          <TrackAttribute v-if="temp.type === 'TrackAttribute'" ref="TrackAttribute" :info="temp.infos" @sendInfos="sendInfos" />
+          <FlowRate v-if="temp.type === 'FlowRate'" ref="FlowRate" :info="temp.infos" @sendInfos="sendInfos" />
+          <el-form-item v-if="temp.type === '自定义名称'" label="infos" prop="infos">
+            <el-input v-model="temp.infos" />
+          </el-form-item>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -110,9 +134,29 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination,
+    HttpHeader: () => import('./components/HttpHeader'),
+    HttpMethod: () => import('./components/HttpMethod'),
+    HttpParameter: () => import('./components/HttpParameter'),
+    HttpTrackHeader: () => import('./components/HttpTrackHeader'),
+    HttpTrackParameter: () => import('./components/HttpTrackParameter'),
+    TraceIp: () => import('./components/TraceIp'),
+    TrackAttribute: () => import('./components/TrackAttribute'),
+    FlowRate: () => import('./components/FlowRate')
+  },
   directives: { waves },
   data() {
+    const Typerules = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('Name is required'))
+      } else {
+        if (!this.temp.name && value === '自定义名称') {
+          callback(new Error('Name is required'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       tableKey: 0,
       list: null,
@@ -123,6 +167,36 @@ export default {
         limit: 10,
         policyId: this.$route.params.policyId || ''
       },
+      options: [{
+        value: 'HttpHeader',
+        label: 'HttpHeader'
+      }, {
+        value: 'HttpMethod',
+        label: 'HttpMethod'
+      }, {
+        value: 'HttpParameter',
+        label: 'HttpParameter'
+      }, {
+        value: 'HttpTrackHeader',
+        label: 'HttpTrackHeader'
+      }, {
+        value: 'HttpTrackParameter',
+        label: 'HttpTrackParameter'
+      }, {
+        value: 'TraceIp',
+        label: 'TraceIp'
+      }, {
+        value: 'TrackAttribute',
+        label: 'TrackAttribute'
+      }, {
+        value: 'FlowRate',
+        label: 'FlowRate'
+      },
+      {
+        value: '自定义名称',
+        label: '自定义名称'
+      }
+      ],
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
@@ -144,8 +218,9 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        infos: [{ required: true, message: 'Infos is required', trigger: 'change' }],
-        name: [{ required: true, message: 'Name is required', trigger: 'change' }]
+        type: [{ required: true, trigger: 'change', validator: Typerules }],
+        infos: [{ required: true, message: 'infos is required', trigger: 'blur' }]
+
       },
       downloadLoading: false,
       tempRoute: {}
@@ -158,6 +233,12 @@ export default {
     this.setPageTitle()
   },
   methods: {
+    changeSelect() {
+      this.temp.infos = ''
+    },
+    sendInfos(val) {
+      this.temp.infos = val
+    },
     setPageTitle() {
       const title = '灰度决策'
       document.title = `${title} - ${this.listQuery.policyId}`
@@ -219,23 +300,59 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          createDecision(this.temp).then(response => {
-            this.list.unshift(response.data)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Created Successfully',
-              type: 'success',
-              duration: 2000
+          if (this.temp.type !== '自定义名称') {
+            if (this.$refs[this.temp.type].check()) {
+              this.temp.name = this.temp.type
+              this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+              this.temp.author = 'vue-element-admin'
+              createDecision(this.temp).then(response => {
+                this.list.unshift(response.data)
+                this.dialogFormVisible = false
+                this.$notify({
+                  title: 'Success',
+                  message: 'Created Successfully',
+                  type: 'success',
+                  duration: 2000
+                })
+              })
+            }
+          } else {
+            this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+            this.temp.author = 'vue-element-admin'
+            createDecision(this.temp).then(response => {
+              this.list.unshift(response.data)
+              this.dialogFormVisible = false
+              this.$notify({
+                title: 'Success',
+                message: 'Created Successfully',
+                type: 'success',
+                duration: 2000
+              })
             })
-          })
+          }
         }
       })
     },
+    checkName(str) {
+      let flag = false
+      this.options.forEach(item => {
+        if (item.value === str) {
+          flag = true
+        }
+      })
+      return flag
+    },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
+      this.temp = { ...row } // copy obj
+      if (this.checkName(this.temp.name)) {
+        this.$set(this.temp, 'type', this.temp.name)
+        this.$nextTick(() => {
+          this.$refs[this.temp.name].clear()
+        })
+      } else {
+        this.$set(this.temp, 'type', '自定义名称')
+      }
+      console.log(this.temp)
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -246,24 +363,47 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateDecision(tempData).then(response => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, response.data)
-                break
-              }
+          if (this.temp.type !== '自定义名称') {
+            if (this.$refs[this.temp.type].check()) {
+              const tempData = Object.assign({}, this.temp)
+              tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+              updateDecision(tempData).then(response => {
+                for (const v of this.list) {
+                  if (v.id === this.temp.id) {
+                    const index = this.list.indexOf(v)
+                    this.list.splice(index, 1, response.data)
+                    break
+                  }
+                }
+                this.dialogFormVisible = false
+                this.$notify({
+                  title: 'Success',
+                  message: 'Update Successfully',
+                  type: 'success',
+                  duration: 2000
+                })
+              })
             }
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Update Successfully',
-              type: 'success',
-              duration: 2000
+          } else {
+            const tempData = Object.assign({}, this.temp)
+            tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+            updateDecision(tempData).then(response => {
+              for (const v of this.list) {
+                if (v.id === this.temp.id) {
+                  const index = this.list.indexOf(v)
+                  this.list.splice(index, 1, response.data)
+                  break
+                }
+              }
+              this.dialogFormVisible = false
+              this.$notify({
+                title: 'Success',
+                message: 'Update Successfully',
+                type: 'success',
+                duration: 2000
+              })
             })
-          })
+          }
         }
       })
     },
