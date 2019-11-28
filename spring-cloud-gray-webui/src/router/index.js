@@ -109,7 +109,7 @@ export const constantRoutes = [
     name: '灰度服务',
     component: Layout,
     alwaysShow: true, // will always show the root menu
-    redirect: '/grayService',
+    redirect: '/gray/services',
     meta: {
       title: '灰度服务',
       icon: 'table',
