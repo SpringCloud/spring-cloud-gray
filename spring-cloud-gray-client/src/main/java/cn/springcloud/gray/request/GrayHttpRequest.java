@@ -43,6 +43,10 @@ public class GrayHttpRequest extends GrayRequest {
         values.add(value);
     }
 
+    public void setHeader(String name, String... values) {
+        headers.put(name, new LinkedList(Arrays.asList(values)));
+    }
+
 
     public List<String> getHeader(String name) {
         return headers.get(name.toLowerCase());
