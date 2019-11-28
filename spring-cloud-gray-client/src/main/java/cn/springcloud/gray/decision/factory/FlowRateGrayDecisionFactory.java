@@ -75,7 +75,7 @@ public class FlowRateGrayDecisionFactory extends AbstractGrayDecisionFactory<Flo
                 });
     }
 
-    private String getFieldValue(GrayHttpRequest grayRequest, Config configBean) {
+    protected String getFieldValue(GrayHttpRequest grayRequest, Config configBean) {
         BiFunction<GrayHttpRequest, String, String> func = fieldValueGetters.get(configBean.getType());
         if (!Objects.isNull(func)) {
             return func.apply(grayRequest, configBean.getField());
@@ -93,7 +93,6 @@ public class FlowRateGrayDecisionFactory extends AbstractGrayDecisionFactory<Flo
         }
         return null;
     }
-
 
     @Setter
     @Getter
