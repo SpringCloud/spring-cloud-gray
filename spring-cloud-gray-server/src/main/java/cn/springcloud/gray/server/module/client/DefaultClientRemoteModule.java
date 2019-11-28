@@ -34,12 +34,15 @@ public class DefaultClientRemoteModule implements ClientRemoteModule {
             throw new IllegalArgumentException();
         }
 
-        String contextPath = grayServerModule.getServiceContextPath(serviceId);
         StringBuilder path = new StringBuilder("http://")
                 .append(instanceInfo.getHost())
                 .append(":")
-                .append(instanceInfo.getPort())
-                .append(contextPath);
+                .append(instanceInfo.getPort());
+        String contextPath = grayServerModule.getServiceContextPath(serviceId);
+        if (StringUtils.isNotEmpty(contextPath)) {
+            path.append("/")
+                    .append(contextPath);
+        }
         return path.toString();
     }
 
