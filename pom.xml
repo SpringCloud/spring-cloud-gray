@@ -12,7 +12,7 @@
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-gray</artifactId>
     <packaging>pom</packaging>
-    <version>B.0.0.6</version>
+    <version>B.1.0.0</version>
     <url>https://github.com/SpringCloud/sprding-cloud-gray</url>
     <organization>
         <name>Spring Cloud中国社区</name>
@@ -40,6 +40,7 @@
         <module>spring-cloud-starter-gray-eureka-server</module>
         <module>spring-cloud-gray-server-plugins</module>
         <module>spring-cloud-gray-plugins</module>
+        <module>spring-cloud-gray-client-dynamic-logic</module>
     </modules>
 
     <licenses>
@@ -76,6 +77,7 @@
         <caffeine.version>2.7.0</caffeine.version>
         <aspectj.version>1.8.13</aspectj.version>
         <querydsl.version>4.2.1</querydsl.version>
+        <fm-dynamic-compiler.version>1.0-SNAPSHOT</fm-dynamic-compiler.version>
     </properties>
 
 
@@ -85,6 +87,13 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -168,6 +177,8 @@
             </dependency>
 
 
+
+
             <!-- gray client plugins start -->
 
             <dependency>
@@ -203,12 +214,6 @@
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-plugin-zuul</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-gateway</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -368,6 +373,12 @@
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
                 <version>${querydsl.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.saleson.fm-dynamic-compiler</groupId>
+                <artifactId>fm-dynamic-compiler-core</artifactId>
+                <version>${fm-dynamic-compiler.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
