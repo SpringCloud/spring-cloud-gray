@@ -18,6 +18,7 @@
         <module>spring-cloud-gray-plugin-feign</module>
         <module>spring-cloud-gray-plugin-webmvc</module>
         <module>spring-cloud-gray-plugin-ribbon-nacos-discovery</module>
+        <module>spring-cloud-gray-plugin-dynamic-logic</module>
     </modules>
 
 </project>

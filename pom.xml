@@ -40,6 +40,7 @@
         <module>spring-cloud-starter-gray-eureka-server</module>
         <module>spring-cloud-gray-server-plugins</module>
         <module>spring-cloud-gray-plugins</module>
+        <module>spring-cloud-gray-client-dynamic-logic</module>
     </modules>
 
     <licenses>
@@ -62,6 +63,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <java.version>1.8</java.version>
         <spring-cloud.version>Edgware.SR6</spring-cloud.version>
+        <spring-cloud-alibaba-dependencies.version>0.1.2.RELEASE</spring-cloud-alibaba-dependencies.version>
         <alibaba-cloud.version>1.5.0.RELEASE</alibaba-cloud.version>
         <springfox.version>2.9.2</springfox.version>
         <lombok.version>1.18.8</lombok.version>
@@ -73,6 +75,7 @@
         <caffeine.version>2.7.0</caffeine.version>
         <aspectj.version>1.8.13</aspectj.version>
         <querydsl.version>4.2.1</querydsl.version>
+        <fm-dynamic-compiler.version>1.0-SNAPSHOT</fm-dynamic-compiler.version>
     </properties>
 
 
@@ -82,6 +85,13 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -165,8 +175,6 @@
             </dependency>
 
 
-
-
             <!-- gray client plugins start -->
 
             <dependency>
@@ -228,7 +236,6 @@
                 <version>${project.version}</version>
             </dependency>
             <!-- gray server plugins end -->
-
 
             <dependency>
                 <groupId>org.aspectj</groupId>
@@ -331,6 +338,12 @@
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
                 <version>${querydsl.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.saleson.fm-dynamic-compiler</groupId>
+                <artifactId>fm-dynamic-compiler-core</artifactId>
+                <version>${fm-dynamic-compiler.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
