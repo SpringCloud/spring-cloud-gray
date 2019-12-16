@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>C.0.0.3</version>
+        <version>C.0.0.4</version>
     </parent>
     <!--    <parent>-->
     <!--        <groupId>org.springframework.boot</groupId>-->
@@ -17,7 +17,7 @@
 
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-gray-dependencies</artifactId>
-    <version>C.0.0.3</version>
+    <version>C.0.0.4</version>
     <packaging>pom</packaging>
 
     <licenses>
