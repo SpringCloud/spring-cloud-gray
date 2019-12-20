@@ -1,11 +1,12 @@
 package cn.springcloud.gray.request.track;
 
 import cn.springcloud.gray.GrayClientHolder;
-import cn.springcloud.gray.local.InstanceLocalInfo;
-import cn.springcloud.gray.local.InstanceLocalInfoAware;
 import cn.springcloud.gray.client.config.properties.GrayTrackProperties;
 import cn.springcloud.gray.communication.InformationClient;
+import cn.springcloud.gray.local.InstanceLocalInfo;
+import cn.springcloud.gray.local.InstanceLocalInfoAware;
 import cn.springcloud.gray.model.GrayTrackDefinition;
+import cn.springcloud.gray.refresh.Refresher;
 import cn.springcloud.gray.request.GrayInfoTracker;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,9 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder implements InstanceLocalInfoAware {
+public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder implements InstanceLocalInfoAware, Refresher {
+
+    public static final String GRAY_TRACK_REFRESH_TRIGGER_NAME = "refresh_gray_track";
 
     private Timer updateTimer = new Timer("Gray-Track-Update-Timer", true);
     private GrayTrackProperties grayTrackProperties;
@@ -54,7 +57,7 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
             int timerMs = grayTrackProperties.getDefinitionsUpdateIntervalTimerInMs();
             if (timerMs > 0) {
                 updateTimer.schedule(new DefaultGrayTrackHolder.UpdateTask(), timerMs, timerMs);
-            }else if(!t){
+            } else if (!t) {
                 scheduleOpenForWork();
             }
         } else {
@@ -63,7 +66,7 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
     }
 
 
-    private void scheduleOpenForWork(){
+    private void scheduleOpenForWork() {
         if (scheduleOpenForWorkCount > scheduleOpenForWorkLimit) {
             return;
         }
@@ -82,7 +85,7 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
             log.debug("更新灰度追踪列表...");
 
             InstanceLocalInfo instanceLocalInfo = getInstanceLocalInfo();
-            if(instanceLocalInfo==null){
+            if (instanceLocalInfo == null) {
                 log.warn("本地实例信息为null,跳过更新");
                 return false;
             }
@@ -121,10 +124,24 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
     }
 
     public InstanceLocalInfo getInstanceLocalInfo() {
-        if(instanceLocalInfo==null){
+        if (instanceLocalInfo == null) {
             instanceLocalInfo = GrayClientHolder.getInstanceLocalInfo();
         }
         return instanceLocalInfo;
+    }
+
+    @Override
+    public void refresh() {
+        if (getGrayInformationClient() != null) {
+            doUpdate();
+        } else {
+            loadPropertiesTrackDefinitions();
+        }
+    }
+
+    @Override
+    public String triggerName() {
+        return GRAY_TRACK_REFRESH_TRIGGER_NAME;
     }
 
     class UpdateTask extends TimerTask {

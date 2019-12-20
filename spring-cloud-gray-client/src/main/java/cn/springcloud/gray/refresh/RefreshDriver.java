@@ -8,4 +8,6 @@ public interface RefreshDriver {
 
     void refresh();
 
+    void doRefresh(String triggerName);
+
 }

@@ -217,6 +217,12 @@
 
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-refresher</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-plugin-zuul</artifactId>
                 <version>${project.version}</version>
             </dependency>

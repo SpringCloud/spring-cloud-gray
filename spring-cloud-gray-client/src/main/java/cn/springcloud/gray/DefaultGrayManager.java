@@ -7,8 +7,8 @@ import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.model.GrayStatus;
+import cn.springcloud.gray.refresh.Refresher;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,9 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class DefaultGrayManager extends CachedGrayManager implements CommunicableGrayManager {
+public class DefaultGrayManager extends CachedGrayManager implements CommunicableGrayManager, Refresher {
+
+    public static final String GRAY_MANAGER_REFRESH_TRIGGER_NAME = "refresh_gray_manager";
 
     private Timer updateTimer = new Timer("Gray-Update-Timer", true);
     private GrayLoadProperties grayLoadProperties;
@@ -57,7 +59,7 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
     }
 
     public void openForWork() {
-        if (getGrayInformationClient() != null) {
+        if (needPullGrayServerInfos()) {
             log.info("拉取灰度列表");
             boolean t = doUpdate();
             int timerMs = getGrayClientConfig().getServiceUpdateIntervalTimerInMs();
@@ -69,6 +71,10 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
         } else {
             loadPropertiesGrays();
         }
+    }
+
+    private boolean needPullGrayServerInfos() {
+        return getGrayInformationClient() != null;
     }
 
     private void scheduleOpenForWork() {
@@ -136,6 +142,21 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
                         }
                     });
         }
+    }
+
+    @Override
+    public void refresh() {
+        if (needPullGrayServerInfos()) {
+            doUpdate();
+        } else {
+            loadPropertiesGrays();
+        }
+
+    }
+
+    @Override
+    public String triggerName() {
+        return GRAY_MANAGER_REFRESH_TRIGGER_NAME;
     }
 
     class UpdateTask extends TimerTask {
