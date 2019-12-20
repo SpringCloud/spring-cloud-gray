@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>B.0.0.6</version>
+        <version>B.1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -21,6 +21,7 @@
         <module>spring-cloud-gray-plugin-webflux</module>
         <module>spring-cloud-gray-plugin-ribbon-nacos-discovery</module>
         <module>spring-cloud-gray-plugin-dynamic-logic</module>
+        <module>spring-cloud-gray-plugin-refresher</module>
     </modules>
 
 </project>
