@@ -8,4 +8,8 @@ public interface Refresher {
 
     void refresh();
 
+
+    String triggerName();
+
+
 }
