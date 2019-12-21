@@ -1,0 +1,76 @@
+apollo:
+  bootstrap:
+    enabled: true
+    namespaces: application
+
+
+spring:
+  application:
+    name: apollo-config-sample
+#server:
+#  port: 20106
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    serviceUrl:
+#      defaultZone: http://localhost:20001/eureka/
+#    registry-fetch-interval-seconds: 5
+#  instance:
+#    instanceId: ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}
+#    lease-renewal-interval-in-seconds: 5
+#    lease-expiration-duration-in-seconds: 15
+#    prefer-ip-address: true
+#feign:
+#  hystrix:
+#    enabled: true
+#hystrix:
+#  threadpool:
+#    default:
+#      coreSize: 100
+#
+#gray:
+#  enabled: true
+#  hystrix:
+#    enabled: true
+#  server:
+#    loadbalanced: false
+#    retryable: true
+#    retryNumberOfRetries: 3
+#  client:
+#    runenv: web
+#    serviceInitializeDelayTimeInMs: 5000
+#    instance:
+#      grayEnroll: false
+#      grayEnrollDealyTimeInMs: 20000
+#  holdoutServer:
+#    enabled: true
+#    services:
+#      service-a: starting
+#  request:
+#    track:
+#      enabled: true
+#      trackType: web
+#      web:
+#        track-definitions:
+#          - name: HttpIP
+#          - name: HttpReceive
+#          - name: HttpHeader
+#            value: test,test-mm43
+#        path-patterns: /*
+#        exclude-path-patterns: /test/*
+#  load:
+#    enabled: true
+#    gray-instances:
+#      - serviceId: service-a
+#        instance-id: service-a:20104
+#        policy-definitions:
+#          - policyId: policy-1
+#            alias: policy-1
+#            list:
+#              - id: decision-1
+#                name: HttpHeader
+#                infos:
+#                  compare-mode: EQUAL
+#                  header: _graytrack_header__test
+#                  values: true

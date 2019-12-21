@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>spring-cloud-gray-samples</artifactId>
+        <groupId>cn.springcloud.gray</groupId>
+        <version>A.1.2.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>spring-cloud-gray-apollo-config-sample</artifactId>
+
+    <properties>
+        <apollo.version>1.2.0</apollo.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-starter-gray-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-plugin-feign</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-plugin-refresher</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ctrip.framework.apollo</groupId>
+            <artifactId>apollo-client</artifactId>
+            <version>${apollo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>checker-qual</artifactId>
+                    <groupId>org.checkerframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>error_prone_annotations</artifactId>
+                    <groupId>com.google.errorprone</groupId>
+                </exclusion>
+            </exclusions>
+            <!--            <exclusions>-->
+            <!--                <exclusion>-->
+            <!--                    <artifactId>jsr305</artifactId>-->
+            <!--                    <groupId>com.google.code.findbugs</groupId>-->
+            <!--                </exclusion>-->
+            <!--                <exclusion>-->
+            <!--                    <artifactId>gson</artifactId>-->
+            <!--                    <groupId>com.google.code.gson</groupId>-->
+            <!--                </exclusion>-->
+            <!--            </exclusions>-->
+        </dependency>
+
+    </dependencies>
+
+</project>
