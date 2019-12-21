@@ -132,6 +132,7 @@ public class DefaultGrayTrackHolder extends AbstractCommunicableGrayTrackHolder 
 
     @Override
     public void refresh() {
+        log.info("刷新灰度追踪元配置信息");
         if (getGrayInformationClient() != null) {
             doUpdate();
         } else {
