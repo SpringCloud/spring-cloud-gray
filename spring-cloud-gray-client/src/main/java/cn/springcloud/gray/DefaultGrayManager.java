@@ -146,6 +146,7 @@ public class DefaultGrayManager extends CachedGrayManager implements Communicabl
 
     @Override
     public void refresh() {
+        log.info("刷新灰度实例信息");
         if (needPullGrayServerInfos()) {
             doUpdate();
         } else {

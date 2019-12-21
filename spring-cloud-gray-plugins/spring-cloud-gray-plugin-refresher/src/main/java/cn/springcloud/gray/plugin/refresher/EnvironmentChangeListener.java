@@ -5,6 +5,8 @@ import cn.springcloud.gray.refresh.RefreshDriver;
 import cn.springcloud.gray.request.track.DefaultGrayTrackHolder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
 import org.springframework.context.ApplicationListener;
 
@@ -20,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @author saleson
  * @date 2019-12-20 13:00
  */
+@Slf4j
 public class EnvironmentChangeListener implements ApplicationListener<EnvironmentChangeEvent> {
 
     private RefreshDriver refreshDriver;
@@ -49,7 +52,12 @@ public class EnvironmentChangeListener implements ApplicationListener<Environmen
 
     @Override
     public void onApplicationEvent(EnvironmentChangeEvent event) {
-        getTriggerNames(event.getKeys()).forEach(this::invokeRefresher);
+        Set<String> triggerNames = getTriggerNames(event.getKeys());
+        if (CollectionUtils.isEmpty(triggerNames)) {
+            return;
+        }
+        log.info("接收到更新的属性:{}, 触发刷新条件:{}", event.getKeys(), triggerNames);
+        triggerNames.forEach(this::invokeRefresher);
     }
 
 
