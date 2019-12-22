@@ -217,6 +217,7 @@ HttpTrackParameter | HttpTrackParameterGrayDecisionFactory | 根据灰度追踪�
 TraceIpGray | TraceIpGrayDecisionFactory | 根据灰度追踪记录的请求ip进行判断
 TrackAttribute | TrackAttributeGrayDecisionFactory | 根据灰度追踪记录的属性值进行判断
 FlowRateGray | FlowRateGrayDecisionFactory | 按百分比放量进行判断
+RandomFlowRate | RandomFlowRateGrayDecisionFactory | 随机放量
 
 ### 自定义灰度决策实现
 如果上面这些决策还不能满足需求，那么可以扩展`cn.springcloud.gray.decision.factory.GrayDecisionFactory`，实现自定义的逻辑，发布到spring 容器中即可。如:
