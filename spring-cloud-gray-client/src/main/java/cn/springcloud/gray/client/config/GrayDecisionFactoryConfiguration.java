@@ -3,6 +3,10 @@ package cn.springcloud.gray.client.config;
 import cn.springcloud.gray.decision.DefaultGrayDecisionFactoryKeeper;
 import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
 import cn.springcloud.gray.decision.factory.*;
+import cn.springcloud.gray.dynamic.decision.DynamicGrayDecisionFactoryKeeper;
+import cn.springcloud.gray.dynamiclogic.DynamicLogicDriver;
+import cn.springcloud.gray.dynamiclogic.DynamicLogicManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +14,7 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.validation.Validator;
 
 import java.util.List;
+import java.util.Objects;
 
 @Configuration
 public class GrayDecisionFactoryConfiguration {
@@ -59,8 +64,29 @@ public class GrayDecisionFactoryConfiguration {
         }
 
         @Bean
-        public FlowRateGrayDecisionFactory flowRateGrayDecisionFactory(){
+        public FlowRateGrayDecisionFactory flowRateGrayDecisionFactory() {
             return new FlowRateGrayDecisionFactory();
+        }
+    }
+
+
+    @Configuration
+    @ConditionalOnBean(DynamicLogicDriver.class)
+    public class DynamicGrayDecisionFactoryConfiguration {
+        @Bean
+        @ConditionalOnMissingBean
+        public GrayDecisionFactoryKeeper grayDecisionFactoryKeeper(
+                DynamicLogicDriver dynamicLogicDriver,
+                Validator validator, List<GrayDecisionFactory> decisionFactories) {
+            DynamicLogicManager dynamicLogicManager =
+                    dynamicLogicDriver.getDynamicLogicManager(DynamicGrayDecisionFactoryKeeper.GRAY_DECISION_DYNAMIC_TYPE);
+            if (Objects.isNull(dynamicLogicManager)) {
+                return new DefaultGrayDecisionFactoryKeeper(
+                        DefaultConversionService.getSharedInstance(), validator, decisionFactories);
+            }
+            return new DynamicGrayDecisionFactoryKeeper(
+                    dynamicLogicManager, DefaultConversionService.getSharedInstance(), validator, decisionFactories);
+
         }
     }
 
@@ -75,12 +101,9 @@ public class GrayDecisionFactoryConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public GrayDecisionFactoryKeeper grayDecisionFactoryKeeper(
-            /*List<ConversionService> conversionServices, */
             Validator validator, List<GrayDecisionFactory> decisionFactories) {
-//        if (CollectionUtils.isNotEmpty(conversionServices)) {
-//            return new DefaultGrayDecisionFactoryKeeper(conversionServices.get(0), validator, decisionFactories);
-//        }
-        return new DefaultGrayDecisionFactoryKeeper(DefaultConversionService.getSharedInstance(), validator, decisionFactories);
+        return new DefaultGrayDecisionFactoryKeeper(
+                DefaultConversionService.getSharedInstance(), validator, decisionFactories);
 
     }
 
