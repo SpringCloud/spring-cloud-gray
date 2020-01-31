@@ -15,19 +15,22 @@ import java.util.Objects;
 public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
 
     private GrayEventSender grayEventSender;
-    private List<EventConverter> eventConverters;
     private GenericRetriever<EventConverter> genericRetriever;
 
 
     public AbstractGrayEventTrigger(GrayEventSender grayEventSender, List<EventConverter> eventConverters) {
         this.grayEventSender = grayEventSender;
-        this.eventConverters = eventConverters;
         this.genericRetriever = new GenericRetriever<>(eventConverters, EventConverter.class);
     }
 
     @Override
     public void triggering(Object eventMsg, TriggerType triggerType) {
         GrayEvent grayEvent = convertGrayEvent(eventMsg, triggerType);
+        if (Objects.isNull(grayEvent)) {
+            log.warn("转换失败, grayEvent is null, eventMsg:{}, triggerType:{}", eventMsg, triggerType);
+            return;
+        }
+        logEventTrigger(eventMsg, triggerType, grayEvent);
         grayEventSender.send(grayEvent);
     }
 
