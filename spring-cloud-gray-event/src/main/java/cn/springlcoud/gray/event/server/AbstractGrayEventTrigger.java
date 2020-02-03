@@ -30,6 +30,9 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
             log.warn("转换失败, grayEvent is null, eventSource:{}, triggerType:{}", eventSource, triggerType);
             return;
         }
+        if (Objects.isNull(grayEvent.getTriggerType())) {
+            grayEvent.setTriggerType(triggerType);
+        }
         grayEventSender.send(grayEvent);
     }
 
