@@ -19,7 +19,7 @@ public class DefaultGrayEventTrigger extends AbstractGrayEventTrigger {
     }
 
     @Override
-    protected void logEventTrigger(Object eventMsg, TriggerType triggerType, GrayEvent grayEvent) {
-        grayEventLogger.log(eventMsg, triggerType, grayEvent);
+    protected void logEventTrigger(Object eventSource, TriggerType triggerType, GrayEvent grayEvent) {
+        grayEventLogger.log(eventSource, triggerType, grayEvent);
     }
 }

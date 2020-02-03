@@ -1,6 +1,7 @@
 package cn.springlcoud.gray.event.server;
 
 import cn.springlcoud.gray.event.GrayEvent;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author saleson
@@ -8,5 +9,15 @@ import cn.springlcoud.gray.event.GrayEvent;
  */
 public interface GrayEventLogger {
 
-    void log(Object eventMsg, TriggerType triggerType, GrayEvent grayEvent);
+    void log(Object eventSource, TriggerType triggerType, GrayEvent grayEvent);
+
+
+    @Slf4j
+    public static class Default implements GrayEventLogger {
+
+        @Override
+        public void log(Object eventSource, TriggerType triggerType, GrayEvent grayEvent) {
+            log.info("triggerType:{}, eventMsg:{}, eventSource:{}", triggerType, eventSource, grayEvent);
+        }
+    }
 }

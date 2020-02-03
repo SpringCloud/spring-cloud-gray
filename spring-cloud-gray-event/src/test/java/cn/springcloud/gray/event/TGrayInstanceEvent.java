@@ -10,4 +10,14 @@ public class TGrayInstanceEvent extends GrayEvent {
     public TGrayInstanceEvent(long timestamp, Object source) {
         super(timestamp, source);
     }
+
+    @Override
+    public String getSourceId() {
+        return "";
+    }
+
+    @Override
+    public String getType() {
+        return "";
+    }
 }

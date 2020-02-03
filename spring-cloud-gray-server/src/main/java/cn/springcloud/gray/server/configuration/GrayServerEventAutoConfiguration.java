@@ -3,6 +3,7 @@ package cn.springcloud.gray.server.configuration;
 import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.event.GraySourceEventPublisher;
 import cn.springcloud.gray.server.event.*;
+import cn.springlcoud.gray.event.server.GrayEventTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -18,9 +19,6 @@ import java.util.concurrent.TimeUnit;
 public class GrayServerEventAutoConfiguration {
 
 
-
-
-
     @Bean
     @ConditionalOnMissingBean
     public GrayEventPublisher grayEventPublisher() {
@@ -30,7 +28,7 @@ public class GrayServerEventAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public EventSourceConvertService eventSourceConvertService(List<EventSourceConverter> converters){
+    public EventSourceConvertService eventSourceConvertService(List<EventSourceConverter> converters) {
         return new EventSourceConvertService.Default(converters);
     }
 
@@ -40,43 +38,42 @@ public class GrayServerEventAutoConfiguration {
     public GraySourceEventPublisher graySourceEventPublisher(
             GrayEventPublisher publisherDelegater,
             @Autowired(required = false) ExecutorService grayEventExecutorService,
-            EventSourceConvertService eventSourceConvertService){
-        if(grayEventExecutorService==null){
+            EventSourceConvertService eventSourceConvertService,
+            GrayEventTrigger grayEventTrigger) {
+        if (grayEventExecutorService == null) {
             grayEventExecutorService = new ThreadPoolExecutor(5, 20,
                     1l, TimeUnit.MINUTES, new ArrayBlockingQueue<>(40));
         }
-        return new DefaultGraySourceEventPublisher(publisherDelegater, grayEventExecutorService, eventSourceConvertService);
+        return new DefaultGraySourceEventPublisher(
+                publisherDelegater, grayEventExecutorService, eventSourceConvertService, grayEventTrigger);
     }
 
 
-
     @Configuration
-    public static class EventSourceConvertConfiguration{
+    public static class EventSourceConvertConfiguration {
 
 
         @Bean
-        public GrayDecisionEventSourceConverter grayDecisionEventSourceConverter(){
+        public GrayDecisionEventSourceConverter grayDecisionEventSourceConverter() {
             return new GrayDecisionEventSourceConverter();
         }
 
         @Bean
-        public GrayInstanceEventSourceConverter grayInstanceEventSourceConverter(){
+        public GrayInstanceEventSourceConverter grayInstanceEventSourceConverter() {
             return new GrayInstanceEventSourceConverter();
         }
 
         @Bean
-        public GrayPolicyEventSourceConverter grayPolicyEventSourceConverter(){
+        public GrayPolicyEventSourceConverter grayPolicyEventSourceConverter() {
             return new GrayPolicyEventSourceConverter();
         }
 
         @Bean
-        public GrayTrackEventSourceConverter grayTrackEventSourceConverter(){
+        public GrayTrackEventSourceConverter grayTrackEventSourceConverter() {
             return new GrayTrackEventSourceConverter();
         }
 
     }
-
-
 
 
 }

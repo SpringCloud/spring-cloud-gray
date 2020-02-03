@@ -24,11 +24,12 @@ public class GrayEventLogDO {
     private String type;
     @Column(name = "source_id", length = 64)
     private String sourceId;
-    private Long timestamp;
+    @Column(name = "sort_mark", length = 20)
+    private Long sortMark;
+    @Column(name = "content", length = 2048)
+    private String content;
     @Column(name = "create_time")
     private Date createTime;
-    @Column(length = 32)
-    private String operator;
     @Column(name = "del_flag")
     private Boolean delFlag;
 

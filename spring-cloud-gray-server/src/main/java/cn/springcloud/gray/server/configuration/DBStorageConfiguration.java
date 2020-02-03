@@ -5,14 +5,8 @@ import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
 import cn.springcloud.gray.server.module.audit.OperateAuditModule;
 import cn.springcloud.gray.server.module.audit.jpa.JPAOperateAuditModule;
-import cn.springcloud.gray.server.module.gray.GrayInstanceRecordEvictor;
-import cn.springcloud.gray.server.module.gray.GrayServerModule;
-import cn.springcloud.gray.server.module.gray.GrayServerTrackModule;
-import cn.springcloud.gray.server.module.gray.GrayServiceIdFinder;
-import cn.springcloud.gray.server.module.gray.jpa.JPAGrayInstanceRecordEvictor;
-import cn.springcloud.gray.server.module.gray.jpa.JPAGrayServerModule;
-import cn.springcloud.gray.server.module.gray.jpa.JPAGrayServerTrackModule;
-import cn.springcloud.gray.server.module.gray.jpa.JPAGrayServiceIdFinder;
+import cn.springcloud.gray.server.module.gray.*;
+import cn.springcloud.gray.server.module.gray.jpa.*;
 import cn.springcloud.gray.server.module.user.JPAServiceManageModule;
 import cn.springcloud.gray.server.module.user.JPAUserModule;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
@@ -93,8 +87,15 @@ public class DBStorageConfiguration {
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnProperty(value = "gray.server.operate.audit.enable", matchIfMissing = true)
-        public OperateAuditModule operateAuditModule(OperateRecordService operateRecordService){
+        public OperateAuditModule operateAuditModule(OperateRecordService operateRecordService) {
             return new JPAOperateAuditModule(operateRecordService);
+        }
+
+
+        @Bean
+        @ConditionalOnMissingBean
+        public GrayEventLogModule grayEventLogModule(GrayEventLogService grayEventLogService) {
+            return new JPAGrayEventLogModule(grayEventLogService);
         }
 
     }

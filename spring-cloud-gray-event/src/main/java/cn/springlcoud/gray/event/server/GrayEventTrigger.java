@@ -9,7 +9,7 @@ package cn.springlcoud.gray.event.server;
  */
 public interface GrayEventTrigger {
 
-    void triggering(Object eventMsg, TriggerType triggerType);
+    void triggering(Object eventSource, TriggerType triggerType);
 
 
 }

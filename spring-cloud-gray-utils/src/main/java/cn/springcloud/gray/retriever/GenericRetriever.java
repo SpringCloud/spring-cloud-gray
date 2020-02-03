@@ -19,11 +19,17 @@ public class GenericRetriever<FUNC> {
 
     private List<FUNC> funcList;
     private Class<?> genericDefineSuperCls;
+    private int genericIndex = 0;
 
 
     public GenericRetriever(List<FUNC> funcList, Class<?> genericDefineSuperCls) {
+        this(funcList, genericDefineSuperCls, 0);
+    }
+
+    public GenericRetriever(List<FUNC> funcList, Class<?> genericDefineSuperCls, int genericIndex) {
         this.funcList = funcList;
         this.genericDefineSuperCls = genericDefineSuperCls;
+        this.genericIndex = genericIndex;
     }
 
 
@@ -89,7 +95,7 @@ public class GenericRetriever<FUNC> {
      * @return
      */
     protected boolean supportsEvent(FUNC function, Class<?> genericTargetCls) {
-        return GenericMatchUtils.match(function, genericDefineSuperCls, genericTargetCls);
+        return GenericMatchUtils.match(function, genericDefineSuperCls, genericTargetCls, genericIndex);
     }
 
 
