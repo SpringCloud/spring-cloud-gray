@@ -9,4 +9,7 @@ public interface GrayEventRetriever {
 
     GrayEventRetrieveResult retrieveGreaterThan(long sortMark);
 
+
+    long getNewestSortMark();
+
 }

@@ -7,4 +7,9 @@ package cn.springlcoud.gray.event.client;
 public interface GrayEventReceiver {
 
 
+    void start(long sortMark);
+
+
+    void shutdown();
+
 }

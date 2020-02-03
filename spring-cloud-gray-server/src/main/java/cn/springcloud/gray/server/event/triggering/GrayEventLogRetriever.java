@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +42,11 @@ public class GrayEventLogRetriever implements GrayEventRetriever {
         return new GrayEventRetrieveResult(grayEvents);
     }
 
+    @Override
+    public long getNewestSortMark() {
+        return grayEventLogModule.getNewestSortMark();
+    }
+
 
     private List<GrayEventLog> queryAllGreaterThanSortMark(long sortMark) {
         return grayEventLogModule.queryAllGreaterThanSortMark(sortMark);
@@ -67,12 +73,12 @@ public class GrayEventLogRetriever implements GrayEventRetriever {
 
 
     protected GrayEvent decorateEvent(GrayEvent grayEvent) {
-        List<EventConverter> eventConverters = genericRetriever.retrieveFunctions(grayEvent.getClass());
-        GrayEvent event = grayEvent;
-        for (EventConverter eventConverter : eventConverters) {
-            event = eventConverter.decorate(event);
+        EventConverter eventConverter = genericRetriever.retrieve(grayEvent.getClass());
+        if (Objects.isNull(eventConverter)) {
+            log.warn("没有找到EventConverter, GrayEvent class：{}", grayEvent.getClass());
+            return grayEvent;
         }
-        return event;
+        return eventConverter.decorate(grayEvent);
     }
 
 

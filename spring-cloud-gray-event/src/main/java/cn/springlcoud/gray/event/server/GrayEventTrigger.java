@@ -11,5 +11,4 @@ public interface GrayEventTrigger {
 
     void triggering(Object eventSource, TriggerType triggerType);
 
-
 }

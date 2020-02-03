@@ -5,6 +5,7 @@ import cn.springcloud.gray.server.module.gray.domain.GrayEventLog;
 import cn.springcloud.gray.server.service.GrayEventLogService;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -28,5 +29,15 @@ public class JPAGrayEventLogModule implements GrayEventLogModule {
             grayEventLog.setDelFlag(false);
         }
         return grayEventLogService.saveModel(grayEventLog);
+    }
+
+    @Override
+    public List<GrayEventLog> queryAllGreaterThanSortMark(long sortMark) {
+        return grayEventLogService.queryAllGreaterThanSortMark(sortMark);
+    }
+
+    @Override
+    public long getNewestSortMark() {
+        return grayEventLogService.getNewestSortMark();
     }
 }
