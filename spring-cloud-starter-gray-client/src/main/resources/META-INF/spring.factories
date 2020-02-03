@@ -8,6 +8,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.springcloud.gray.client.netflix.configuration.NetflixRibbonGrayAutoConfiguration,\
   cn.springcloud.gray.client.netflix.resttemplate.configuration.GrayRestTemplateAutoConfiguration,\
   cn.springcloud.gray.client.config.GrayClientEventAutoConfiguration,\
-  cn.springcloud.gray.client.config.GrayEventAutoConfiguration,\
   cn.springcloud.gray.client.config.GrayClientBeanPostProcessorConfiguration,\
   cn.springcloud.gray.client.config.GrayConcurrnetConfiguration

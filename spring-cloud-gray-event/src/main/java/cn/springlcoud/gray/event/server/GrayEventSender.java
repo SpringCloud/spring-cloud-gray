@@ -8,13 +8,13 @@ import cn.springlcoud.gray.event.GrayEvent;
  */
 public interface GrayEventSender {
 
-    <T> void send(GrayEvent grayEvent);
+    void send(GrayEvent grayEvent);
 
 
     public static class Default implements GrayEventSender {
 
         @Override
-        public <T> void send(GrayEvent grayEvent) {
+        public void send(GrayEvent grayEvent) {
 
         }
     }

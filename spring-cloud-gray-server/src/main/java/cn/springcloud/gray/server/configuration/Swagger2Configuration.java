@@ -3,7 +3,6 @@ package cn.springcloud.gray.server.configuration;
 import cn.springcloud.gray.server.configuration.apidoc.PageableParameterAlternateTypeRuleConvention;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -29,7 +28,6 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 //@Import(springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class)
-@ComponentScan({"cn.springcloud.gray.server.resources"})
 public class Swagger2Configuration extends WebMvcConfigurerAdapter {
 
 
@@ -152,7 +150,7 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
 //        return Arrays.asList();
         return Arrays.asList(
                 new SecurityReference("accessToken", authorizationScopes),
-        new SecurityReference("Authorization", authorizationScopes));
+                new SecurityReference("Authorization", authorizationScopes));
 //                new SecurityReference(CompanyUserInterceptor.AUTH_HEADER, authorizationScopes));
     }
 

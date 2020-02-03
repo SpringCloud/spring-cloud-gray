@@ -77,6 +77,7 @@
         <aspectj.version>1.8.13</aspectj.version>
         <querydsl.version>4.2.1</querydsl.version>
         <fm-dynamic-compiler.version>1.0-SNAPSHOT</fm-dynamic-compiler.version>
+        <validation-api.version>2.0.1.Final</validation-api.version>
     </properties>
 
 
@@ -332,6 +333,12 @@
             <!--                <scope>provided</scope>-->
             <!--            </dependency>-->
 
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${validation-api.version}</version>
+                <optional>true</optional>
+            </dependency>
 
             <dependency>
                 <groupId>commons-io</groupId>
