@@ -1,4 +1,4 @@
-package cn.springlcoud.gray.event;
+package cn.springcloud.gray.error.handler;
 
 /**
  * @author saleson
