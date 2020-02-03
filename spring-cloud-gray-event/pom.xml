@@ -14,6 +14,10 @@
     <dependencies>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-utils</artifactId>
         </dependency>
         <dependency>

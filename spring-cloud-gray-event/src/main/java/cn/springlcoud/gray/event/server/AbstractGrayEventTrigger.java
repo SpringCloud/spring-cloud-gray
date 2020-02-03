@@ -24,22 +24,25 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
     }
 
     @Override
-    public void triggering(Object eventMsg, TriggerType triggerType) {
-        GrayEvent grayEvent = convertGrayEvent(eventMsg, triggerType);
+    public void triggering(Object eventSource, TriggerType triggerType) {
+        GrayEvent grayEvent = convertGrayEvent(eventSource, triggerType);
         if (Objects.isNull(grayEvent)) {
-            log.warn("转换失败, grayEvent is null, eventMsg:{}, triggerType:{}", eventMsg, triggerType);
+            log.warn("转换失败, grayEvent is null, eventSource:{}, triggerType:{}", eventSource, triggerType);
             return;
         }
-        logEventTrigger(eventMsg, triggerType, grayEvent);
         grayEventSender.send(grayEvent);
     }
 
+    protected abstract void logEventTrigger(Object eventSource, TriggerType triggerType, GrayEvent grayEvent);
 
-    protected abstract void logEventTrigger(Object eventMsg, TriggerType triggerType, GrayEvent grayEvent);
-
-    protected GrayEvent convertGrayEvent(Object eventMsg, TriggerType triggerType) {
-        EventConverter eventConverter = getEventConverter(eventMsg.getClass());
-        return eventConverter.convert(eventMsg, triggerType);
+    protected GrayEvent convertGrayEvent(Object eventSource, TriggerType triggerType) {
+        EventConverter eventConverter = getEventConverter(eventSource.getClass());
+        GrayEvent event = eventConverter.convert(eventSource, triggerType);
+        if (Objects.isNull(event)) {
+            return null;
+        }
+        logEventTrigger(eventSource, triggerType, event);
+        return eventConverter.decorate(event);
     }
 
 

@@ -10,4 +10,14 @@ public class TGrayPolicyEvent extends GrayEvent {
     public TGrayPolicyEvent(long timestamp, Object source) {
         super(timestamp, source);
     }
+
+    @Override
+    public String getSourceId() {
+        return "";
+    }
+
+    @Override
+    public String getType() {
+        return "";
+    }
 }

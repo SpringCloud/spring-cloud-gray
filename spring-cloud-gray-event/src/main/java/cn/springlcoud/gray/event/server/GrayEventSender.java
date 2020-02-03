@@ -10,4 +10,13 @@ public interface GrayEventSender {
 
     <T> void send(GrayEvent grayEvent);
 
+
+    public static class Default implements GrayEventSender {
+
+        @Override
+        public <T> void send(GrayEvent grayEvent) {
+
+        }
+    }
+
 }
