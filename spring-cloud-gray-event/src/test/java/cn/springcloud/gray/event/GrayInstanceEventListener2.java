@@ -9,7 +9,7 @@ import cn.springlcoud.gray.event.client.GrayEventListener;
 public class GrayInstanceEventListener2 implements GrayEventListener<TGrayInstanceEvent> {
     @Override
     public void onEvent(TGrayInstanceEvent event) {
-        GrayEventPublisherTest.testList.add(new TGrayInstanceEvent(event.getTimestamp(), event.getSource() + "EXT"));
+        GrayEventPublisherTest.testList.add(new TGrayInstanceEvent(event.getTimestamp(), "EXT"));
 //        GrayEventPublisherTest.testList.add(event);
     }
 }

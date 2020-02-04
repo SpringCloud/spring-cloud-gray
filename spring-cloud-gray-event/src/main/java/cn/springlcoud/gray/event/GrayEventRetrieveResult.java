@@ -1,6 +1,6 @@
-package cn.springlcoud.gray.event.server;
+package cn.springlcoud.gray.event;
 
-import cn.springlcoud.gray.event.GrayEvent;
+import lombok.ToString;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * @author saleson
  * @date 2020-02-01 16:05
  */
+@ToString
 public class GrayEventRetrieveResult {
 
     private Long maxSortMark;
@@ -23,9 +24,9 @@ public class GrayEventRetrieveResult {
     public GrayEventRetrieveResult(List<GrayEvent> grayEvents) {
         if (CollectionUtils.isNotEmpty(grayEvents)) {
             this.grayEvents = grayEvents.stream()
-                    .sorted(Comparator.comparing(GrayEvent::getSortMark)).collect(Collectors.toList());
-            retrieveMaxSortMark();
+                    .sorted(Comparator.comparing(GrayEvent::getSortMark).reversed()).collect(Collectors.toList());
         }
+        retrieveMaxSortMark();
     }
 
     private void retrieveMaxSortMark() {
@@ -47,6 +48,9 @@ public class GrayEventRetrieveResult {
         return maxSortMark;
     }
 
+    public void setMaxSortMark(Long maxSortMark) {
+        this.maxSortMark = maxSortMark;
+    }
 
     public boolean hasResult() {
         return CollectionUtils.isNotEmpty(grayEvents);

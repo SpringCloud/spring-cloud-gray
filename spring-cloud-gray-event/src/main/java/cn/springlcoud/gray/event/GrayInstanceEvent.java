@@ -8,8 +8,9 @@ import lombok.Data;
  * @date 2020-02-03 09:38
  */
 @Data
-public class GrayInstanceEvent extends GrayEvent<GrayInstance> {
+public class GrayInstanceEvent extends GrayEvent {
 
+    private GrayInstance source;
 
     @Override
     public String getSourceId() {

@@ -1,6 +1,5 @@
 package cn.springcloud.gray.event.sourcehander;
 
-import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.UpdateableGrayManager;
 import cn.springcloud.gray.event.EventType;
 import cn.springcloud.gray.event.GrayEventMsg;
@@ -32,7 +31,7 @@ public class GrayServiceEventHandler implements GraySourceEventHandler {
             return;
         }
 
-        if(Objects.equals(eventMsg.getEventType(), EventType.UPDATE)){
+        if (Objects.equals(eventMsg.getEventType(), EventType.UPDATE)) {
             log.warn("");
             return;
         }
@@ -41,7 +40,7 @@ public class GrayServiceEventHandler implements GraySourceEventHandler {
 
         if (instanceLocalInfo == null) {
             if (instanceLocalInfo != null) {
-                if (StringUtils.equals(eventMsg.getServiceId(), instanceLocalInfo.getServiceId())){
+                if (StringUtils.equals(eventMsg.getServiceId(), instanceLocalInfo.getServiceId())) {
                     return;
                 }
             }

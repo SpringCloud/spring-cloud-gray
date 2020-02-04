@@ -1,11 +1,12 @@
 package cn.springcloud.gray.server.configuration;
 
-import cn.springcloud.gray.server.event.triggering.GrayEventCodec;
 import cn.springcloud.gray.server.event.triggering.GrayEventLogRetriever;
 import cn.springcloud.gray.server.event.triggering.GrayEventStorage;
-import cn.springcloud.gray.server.event.triggering.JsonGrayEventCodec;
 import cn.springcloud.gray.server.module.gray.GrayEventLogModule;
+import cn.springlcoud.gray.event.codec.GrayEventCodec;
+import cn.springlcoud.gray.event.codec.JsonGrayEventCodec;
 import cn.springlcoud.gray.event.server.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -36,6 +37,7 @@ public class GrayServerEventTriggeringAutoConfiguration {
             @Autowired(required = false) ObjectMapper grayEventObjectMapper) {
         if (Objects.isNull(grayEventObjectMapper)) {
             grayEventObjectMapper = new ObjectMapper();
+            grayEventObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         }
         return new JsonGrayEventCodec(grayEventObjectMapper);
     }

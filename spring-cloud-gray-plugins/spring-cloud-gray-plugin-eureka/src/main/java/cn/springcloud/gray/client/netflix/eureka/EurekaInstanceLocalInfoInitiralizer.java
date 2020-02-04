@@ -13,18 +13,17 @@ public class EurekaInstanceLocalInfoInitiralizer implements InstanceLocalInfoIni
     private InstanceLocalInfo instanceLocalInfo;
 
 
-
     @Override
     public InstanceLocalInfo getInstanceLocalInfo() {
-        if(instanceLocalInfo==null){
+        if (instanceLocalInfo == null) {
             EurekaInstanceConfig eurekaInstanceConfig = applicationContext.getBean(EurekaInstanceConfig.class);
             String instanceId = eurekaInstanceConfig.getInstanceId();
 
             int port = eurekaInstanceConfig.getNonSecurePort();
-            if(eurekaInstanceConfig.getSecurePortEnabled()){
+            if (eurekaInstanceConfig.getSecurePortEnabled()) {
                 port = eurekaInstanceConfig.getSecurePort();
             }
-            instanceLocalInfo =  InstanceLocalInfo.builder()
+            instanceLocalInfo = InstanceLocalInfo.builder()
                     .instanceId(instanceId)
                     .serviceId(eurekaInstanceConfig.getAppname())
                     .host(eurekaInstanceConfig.getHostName(false))

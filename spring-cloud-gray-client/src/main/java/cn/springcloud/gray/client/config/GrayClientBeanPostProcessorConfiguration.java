@@ -1,13 +1,8 @@
 package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.local.InstanceLocalInfo;
-import cn.springcloud.gray.local.InstanceLocalInfoAware;
 import cn.springcloud.gray.local.InstanceLocalInfoAwareProcessor;
 import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +18,6 @@ public class GrayClientBeanPostProcessorConfiguration {
             InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer) {
         return new InstanceLocalInfoAwareProcessor(instanceLocalInfoInitiralizer.getInstanceLocalInfo());
     }
-
 
 
 }

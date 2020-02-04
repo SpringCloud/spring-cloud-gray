@@ -12,7 +12,7 @@ public abstract class LazyInstanceLocalInfoInitiralizer implements InstanceLocal
 
     @Override
     public InstanceLocalInfo getInstanceLocalInfo() {
-        if(instanceLocalInfo==null){
+        if (instanceLocalInfo == null) {
             instanceLocalInfo = createInstanceLocalInfo();
         }
         return instanceLocalInfo;
