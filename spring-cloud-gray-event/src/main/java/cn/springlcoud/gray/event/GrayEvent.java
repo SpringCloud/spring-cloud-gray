@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2020-01-30 12:41
  */
 @Data
-public abstract class GrayEvent<S> {
+public abstract class GrayEvent {
 
     private long timestamp;
 
@@ -16,12 +16,9 @@ public abstract class GrayEvent<S> {
 
     private TriggerType triggerType;
 
-    private S source;
-
     public GrayEvent() {
         this.timestamp = System.currentTimeMillis();
     }
-
 
     public abstract String getSourceId();
 

@@ -1,6 +1,7 @@
-package cn.springcloud.gray.server.event.triggering;
+package cn.springlcoud.gray.event.codec;
 
 import cn.springlcoud.gray.event.GrayEvent;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class JsonGrayEventCodec implements GrayEventCodec<String> {
 
 
     public JsonGrayEventCodec() {
-        this(new ObjectMapper());
+        this(new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false));
     }
 
     public JsonGrayEventCodec(ObjectMapper objectMapper) {

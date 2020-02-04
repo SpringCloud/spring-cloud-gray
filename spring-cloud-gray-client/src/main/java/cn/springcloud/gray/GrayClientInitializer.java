@@ -37,15 +37,14 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
     }
 
 
-
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.cxt = applicationContext;
     }
 
-    private void loadInstanceLocalInfo(){
+    private void loadInstanceLocalInfo() {
         InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer = getBean("instanceLocalInfoInitiralizer", InstanceLocalInfoInitiralizer.class);
-        if(instanceLocalInfoInitiralizer==null){
+        if (instanceLocalInfoInitiralizer == null) {
             return;
         }
         GrayClientHolder.setInstanceLocalInfo(instanceLocalInfoInitiralizer.getInstanceLocalInfo());

@@ -1,15 +1,11 @@
 package cn.springcloud.gray.event.sourcehander;
 
-import cn.springcloud.gray.UpdateableGrayManager;
-import cn.springcloud.gray.event.DecisionDefinitionMsg;
 import cn.springcloud.gray.event.EventType;
 import cn.springcloud.gray.event.GrayEventMsg;
 import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
-import cn.springcloud.gray.model.DecisionDefinition;
 import cn.springcloud.gray.model.GrayTrackDefinition;
-import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -38,7 +34,7 @@ public class GrayTrackEventHandler implements GraySourceEventHandler {
             return;
         }
 
-        if(eventMsg.getSource()==null){
+        if (eventMsg.getSource() == null) {
             throw new NullPointerException("event source is null");
         }
 
@@ -55,9 +51,9 @@ public class GrayTrackEventHandler implements GraySourceEventHandler {
 
         GrayTrackDefinition grayTrackDefinition = (GrayTrackDefinition) eventMsg.getSource();
 
-        if(Objects.equals(eventMsg.getEventType(), EventType.UPDATE)){
+        if (Objects.equals(eventMsg.getEventType(), EventType.UPDATE)) {
             grayTrackHolder.updateTrackDefinition(grayTrackDefinition);
-        }else{
+        } else {
             grayTrackHolder.deleteTrackDefinition(grayTrackDefinition);
         }
     }

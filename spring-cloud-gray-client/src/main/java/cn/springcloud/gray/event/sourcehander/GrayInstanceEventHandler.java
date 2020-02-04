@@ -33,15 +33,15 @@ public class GrayInstanceEventHandler implements GraySourceEventHandler {
 
         InstanceLocalInfo instanceLocalInfo = instanceLocalInfoInitiralizer.getInstanceLocalInfo();
         if (instanceLocalInfo != null) {
-            if (StringUtils.equals(eventMsg.getServiceId(), instanceLocalInfo.getServiceId())){
+            if (StringUtils.equals(eventMsg.getServiceId(), instanceLocalInfo.getServiceId())) {
                 return;
             }
         }
 
 
-        if(Objects.equals(eventMsg.getEventType(), EventType.UPDATE)){
+        if (Objects.equals(eventMsg.getEventType(), EventType.UPDATE)) {
             grayManager.updateGrayInstance((GrayInstance) eventMsg.getSource());
-        }else{
+        } else {
             grayManager.closeGray(eventMsg.getServiceId(), eventMsg.getInstanceId());
         }
     }

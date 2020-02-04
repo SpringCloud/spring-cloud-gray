@@ -32,23 +32,23 @@ public class GrayPolicyEventHandler implements GraySourceEventHandler {
             return;
         }
 
-        if(eventMsg.getSource()==null){
+        if (eventMsg.getSource() == null) {
             throw new NullPointerException("event source is null");
         }
 
         InstanceLocalInfo instanceLocalInfo = instanceLocalInfoInitiralizer.getInstanceLocalInfo();
         if (instanceLocalInfo != null) {
-            if (StringUtils.equals(eventMsg.getServiceId(), instanceLocalInfo.getServiceId())){
+            if (StringUtils.equals(eventMsg.getServiceId(), instanceLocalInfo.getServiceId())) {
                 return;
             }
         }
 
         PolicyDefinition policyDefinition = (PolicyDefinition) eventMsg.getSource();
 
-        if(Objects.equals(eventMsg.getEventType(), EventType.UPDATE)){
+        if (Objects.equals(eventMsg.getEventType(), EventType.UPDATE)) {
             grayManager.updatePolicyDefinition(
                     eventMsg.getServiceId(), eventMsg.getInstanceId(), policyDefinition);
-        }else{
+        } else {
             grayManager.removePolicyDefinition(
                     eventMsg.getServiceId(), eventMsg.getInstanceId(), policyDefinition.getPolicyId());
         }

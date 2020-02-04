@@ -8,11 +8,13 @@ import lombok.Data;
  * @date 2020-02-03 12:15
  */
 @Data
-public class GrayTrackEvent extends GrayEvent<GrayTrackDefinition> {
+public class GrayTrackEvent extends GrayEvent {
 
     private String serviceId;
     private String instanceId;
     private String sourceId;
+
+    private GrayTrackDefinition source;
 
     public GrayTrackEvent() {
     }

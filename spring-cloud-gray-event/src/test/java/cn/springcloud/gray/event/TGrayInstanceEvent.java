@@ -8,7 +8,6 @@ import cn.springlcoud.gray.event.GrayEvent;
  */
 public class TGrayInstanceEvent extends GrayEvent {
     public TGrayInstanceEvent(long timestamp, Object source) {
-        super(timestamp, source);
     }
 
     @Override

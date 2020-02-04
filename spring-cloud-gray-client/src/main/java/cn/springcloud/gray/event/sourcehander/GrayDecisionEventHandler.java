@@ -8,7 +8,6 @@ import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
 import cn.springcloud.gray.model.DecisionDefinition;
-import cn.springcloud.gray.model.PolicyDefinition;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,30 +32,28 @@ public class GrayDecisionEventHandler implements GraySourceEventHandler {
             return;
         }
 
-        if(eventMsg.getSource()==null){
+        if (eventMsg.getSource() == null) {
             throw new NullPointerException("event source is null");
         }
 
         InstanceLocalInfo instanceLocalInfo = instanceLocalInfoInitiralizer.getInstanceLocalInfo();
         if (instanceLocalInfo != null) {
-            if (StringUtils.equals(eventMsg.getServiceId(), instanceLocalInfo.getServiceId())){
+            if (StringUtils.equals(eventMsg.getServiceId(), instanceLocalInfo.getServiceId())) {
                 return;
             }
         }
 
 
-
-
         DecisionDefinitionMsg decisionDefinitionMsg = (DecisionDefinitionMsg) eventMsg.getSource();
 
-        if(Objects.equals(eventMsg.getEventType(), EventType.UPDATE)){
+        if (Objects.equals(eventMsg.getEventType(), EventType.UPDATE)) {
             DecisionDefinition decisionDefinition = new DecisionDefinition();
             decisionDefinition.setInfos(decisionDefinitionMsg.getInfos());
             decisionDefinition.setName(decisionDefinitionMsg.getName());
             decisionDefinition.setId(decisionDefinitionMsg.getId());
             grayManager.updateDecisionDefinition(
                     eventMsg.getServiceId(), eventMsg.getInstanceId(), decisionDefinitionMsg.getPolicyId(), decisionDefinition);
-        }else{
+        } else {
             grayManager.removeDecisionDefinition(
                     eventMsg.getServiceId(), eventMsg.getInstanceId(), decisionDefinitionMsg.getPolicyId(), decisionDefinitionMsg.getId());
         }

@@ -1,4 +1,4 @@
-package cn.springcloud.gray.server.event.triggering;
+package cn.springlcoud.gray.event.codec;
 
 import cn.springlcoud.gray.event.GrayEvent;
 

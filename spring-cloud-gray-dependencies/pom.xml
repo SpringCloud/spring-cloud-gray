@@ -55,6 +55,11 @@
             </dependency>
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-event</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -91,6 +96,12 @@
 
 
             <!-- gray client plugins start -->
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-event-longpolling</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
@@ -142,6 +153,12 @@
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-server-plugin-eureka</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-server-plugin-event-longpolling</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

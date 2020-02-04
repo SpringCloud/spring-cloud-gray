@@ -33,7 +33,7 @@ public class GrayClientEurekaAutoConfiguration {
         return new EurekaInstanceLocalInfoInitiralizer();
     }
 
-//    @Bean
+    //    @Bean
     public ServerExplainer<Server> serverExplainer() {
         return new EurekaServerExplainer(springClientFactory);
     }
@@ -49,7 +49,7 @@ public class GrayClientEurekaAutoConfiguration {
     @ConditionalOnProperty(value = "gray.holdout-server.enabled")
     @ConditionalOnMissingBean
     public ServerListProcessor serverListProcessor(GrayHoldoutServerProperties grayHoldoutServerProperties, EurekaClient eurekaClient) {
-        if(grayHoldoutServerProperties.isZoneAffinity()){
+        if (grayHoldoutServerProperties.isZoneAffinity()) {
             return new EurekaZoneAffinityServerListProcessor(grayHoldoutServerProperties, eurekaClient);
         }
         return new EurekaServerListProcessor(grayHoldoutServerProperties, eurekaClient);
