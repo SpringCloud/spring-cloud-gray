@@ -42,6 +42,7 @@
         <module>spring-cloud-gray-plugins</module>
         <module>spring-cloud-gray-dynamic-logic</module>
         <module>spring-cloud-gray-event</module>
+        <module>spring-cloud-gray-code-component</module>
     </modules>
 
     <licenses>
@@ -154,6 +155,11 @@
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-event</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-code-component</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
