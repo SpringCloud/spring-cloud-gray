@@ -35,6 +35,10 @@
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-code-component</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-event</artifactId>
         </dependency>
 
