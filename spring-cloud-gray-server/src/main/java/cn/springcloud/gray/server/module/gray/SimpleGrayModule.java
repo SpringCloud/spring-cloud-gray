@@ -81,7 +81,7 @@ public class SimpleGrayModule implements GrayModule {
 
         List<cn.springcloud.gray.model.GrayInstance> grayInstances = new ArrayList<>(instances.size());
         instances.forEach(instance -> {
-            if(Objects.equals(instance.getGrayStatus(), GrayStatus.CLOSE)){
+            if (Objects.equals(instance.getGrayStatus(), GrayStatus.CLOSE)) {
                 return;
             }
             cn.springcloud.gray.model.GrayInstance grayInstance = ofGrayInstanceInfo(instance);
@@ -92,7 +92,7 @@ public class SimpleGrayModule implements GrayModule {
 
     private cn.springcloud.gray.model.GrayInstance ofGrayInstanceInfo(cn.springcloud.gray.server.module.gray.domain.GrayInstance instance) {
         cn.springcloud.gray.model.GrayInstance grayInstance = ofGrayInstance(instance);
-        if(grayInstance.isGray()){
+        if (grayInstance.isGray()) {
             grayInstance.setPolicyDefinitions(ofGrayPoliciesByInstanceId(instance.getInstanceId()));
         }
         return grayInstance;
@@ -110,7 +110,8 @@ public class SimpleGrayModule implements GrayModule {
         return grayInstance;
     }
 
-    private List<PolicyDefinition> ofGrayPoliciesByInstanceId(String instanceId) {
+    @Override
+    public List<PolicyDefinition> ofGrayPoliciesByInstanceId(String instanceId) {
         List<GrayPolicy> grayPolicies = grayServerModule.listGrayPoliciesByInstanceId(instanceId);
         List<PolicyDefinition> policyDefinitions = new ArrayList<>(grayPolicies.size());
         grayPolicies.forEach(grayPolicy -> {
@@ -130,7 +131,8 @@ public class SimpleGrayModule implements GrayModule {
         return policyDefinition;
     }
 
-    private List<DecisionDefinition> ofGrayDecisionByPolicyId(Long policyId) {
+    @Override
+    public List<DecisionDefinition> ofGrayDecisionByPolicyId(Long policyId) {
         List<GrayDecision> grayDecisions = grayServerModule.listGrayDecisionsByPolicyId(policyId);
         List<DecisionDefinition> decisionDefinitions = new ArrayList<>(grayDecisions.size());
         grayDecisions.forEach(grayDecision -> {
