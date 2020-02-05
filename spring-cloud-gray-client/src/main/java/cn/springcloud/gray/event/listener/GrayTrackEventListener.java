@@ -1,7 +1,7 @@
 package cn.springcloud.gray.event.listener;
 
 import cn.springcloud.gray.local.InstanceLocalInfo;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
 import cn.springlcoud.gray.event.GrayTrackEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -13,12 +13,12 @@ import org.apache.commons.lang3.StringUtils;
 public class GrayTrackEventListener extends AbstractGrayEventListener<GrayTrackEvent> {
 
 
-    private InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer;
+    private InstanceLocalInfoObtainer instanceLocalInfoObtainer;
     private CommunicableGrayTrackHolder grayTrackHolder;
 
     public GrayTrackEventListener(
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer, CommunicableGrayTrackHolder grayTrackHolder) {
-        this.instanceLocalInfoInitiralizer = instanceLocalInfoInitiralizer;
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer, CommunicableGrayTrackHolder grayTrackHolder) {
+        this.instanceLocalInfoObtainer = instanceLocalInfoObtainer;
         this.grayTrackHolder = grayTrackHolder;
     }
 
@@ -34,7 +34,7 @@ public class GrayTrackEventListener extends AbstractGrayEventListener<GrayTrackE
 
     @Override
     protected boolean validate(GrayTrackEvent event) {
-        InstanceLocalInfo instanceLocalInfo = instanceLocalInfoInitiralizer.getInstanceLocalInfo();
+        InstanceLocalInfo instanceLocalInfo = instanceLocalInfoObtainer.getInstanceLocalInfo();
         if (!StringUtils.equals(event.getServiceId(), instanceLocalInfo.getServiceId())) {
             return false;
         }

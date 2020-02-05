@@ -3,7 +3,7 @@ package cn.springcloud.gray.client.config;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.UpdateableGrayManager;
 import cn.springcloud.gray.event.listener.*;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
 import cn.springlcoud.gray.event.client.DefaultGrayDeventPublisher;
 import cn.springlcoud.gray.event.client.GrayEventListener;
@@ -32,24 +32,24 @@ public class GrayClientEventAutoConfiguration {
 
     @Bean
     public GrayTrackEventListener grayTrackEventListener(
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer,
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             CommunicableGrayTrackHolder grayTrackHolder) {
-        return new GrayTrackEventListener(instanceLocalInfoInitiralizer, grayTrackHolder);
+        return new GrayTrackEventListener(instanceLocalInfoObtainer, grayTrackHolder);
     }
 
     @Bean
     public GrayInstanceEventListener grayInstanceEventListener(
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer,
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             GrayManager grayManager) {
-        return new GrayInstanceEventListener(grayManager, instanceLocalInfoInitiralizer);
+        return new GrayInstanceEventListener(grayManager, instanceLocalInfoObtainer);
     }
 
 
     @Bean
     public GrayPolicyEventListener grayPolicyEventListener(
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer,
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             UpdateableGrayManager grayManager) {
-        return new GrayPolicyEventListener(grayManager, instanceLocalInfoInitiralizer);
+        return new GrayPolicyEventListener(grayManager, instanceLocalInfoObtainer);
     }
 
     @Bean
@@ -59,9 +59,9 @@ public class GrayClientEventAutoConfiguration {
 
     @Bean
     public GrayDecisionEventListener grayDecisionEventListener(
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer,
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             UpdateableGrayManager grayManager) {
-        return new GrayDecisionEventListener(grayManager, instanceLocalInfoInitiralizer);
+        return new GrayDecisionEventListener(grayManager, instanceLocalInfoObtainer);
     }
 
 

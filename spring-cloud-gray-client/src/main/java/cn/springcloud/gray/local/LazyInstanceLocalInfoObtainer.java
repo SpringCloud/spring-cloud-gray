@@ -4,7 +4,7 @@ import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-public abstract class LazyInstanceLocalInfoInitiralizer implements InstanceLocalInfoInitiralizer, ApplicationContextAware {
+public abstract class LazyInstanceLocalInfoObtainer implements InstanceLocalInfoObtainer, ApplicationContextAware {
 
     protected ApplicationContext applicationContext;
     protected InstanceLocalInfo instanceLocalInfo;

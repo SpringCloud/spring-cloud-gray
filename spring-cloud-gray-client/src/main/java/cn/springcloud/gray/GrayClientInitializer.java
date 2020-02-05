@@ -1,7 +1,7 @@
 package cn.springcloud.gray;
 
 import cn.springcloud.gray.client.switcher.GraySwitcher;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
@@ -43,11 +43,11 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
     }
 
     private void loadInstanceLocalInfo() {
-        InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer = getBean("instanceLocalInfoInitiralizer", InstanceLocalInfoInitiralizer.class);
-        if (instanceLocalInfoInitiralizer == null) {
+        InstanceLocalInfoObtainer instanceLocalInfoObtainer = getBean("instanceLocalInfoInitiralizer", InstanceLocalInfoObtainer.class);
+        if (instanceLocalInfoObtainer == null) {
             return;
         }
-        GrayClientHolder.setInstanceLocalInfo(instanceLocalInfoInitiralizer.getInstanceLocalInfo());
+        GrayClientHolder.setInstanceLocalInfo(instanceLocalInfoObtainer.getInstanceLocalInfo());
     }
 
 

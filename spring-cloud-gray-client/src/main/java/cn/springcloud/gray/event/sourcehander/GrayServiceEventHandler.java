@@ -5,7 +5,7 @@ import cn.springcloud.gray.event.EventType;
 import cn.springcloud.gray.event.GrayEventMsg;
 import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.local.InstanceLocalInfo;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +18,11 @@ public class GrayServiceEventHandler implements GraySourceEventHandler {
 
     private UpdateableGrayManager grayManager;
 
-    private InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer;
+    private InstanceLocalInfoObtainer instanceLocalInfoObtainer;
 
-    public GrayServiceEventHandler(UpdateableGrayManager grayManager, InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer) {
+    public GrayServiceEventHandler(UpdateableGrayManager grayManager, InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
         this.grayManager = grayManager;
-        this.instanceLocalInfoInitiralizer = instanceLocalInfoInitiralizer;
+        this.instanceLocalInfoObtainer = instanceLocalInfoObtainer;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class GrayServiceEventHandler implements GraySourceEventHandler {
             return;
         }
 
-        InstanceLocalInfo instanceLocalInfo = instanceLocalInfoInitiralizer.getInstanceLocalInfo();
+        InstanceLocalInfo instanceLocalInfo = instanceLocalInfoObtainer.getInstanceLocalInfo();
 
         if (instanceLocalInfo == null) {
             if (instanceLocalInfo != null) {

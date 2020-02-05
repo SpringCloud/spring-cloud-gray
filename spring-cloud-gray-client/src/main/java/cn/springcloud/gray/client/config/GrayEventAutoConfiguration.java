@@ -5,7 +5,7 @@ import cn.springcloud.gray.UpdateableGrayManager;
 import cn.springcloud.gray.event.GrayEventListener;
 import cn.springcloud.gray.event.GraySourceEventListener;
 import cn.springcloud.gray.event.sourcehander.*;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -30,37 +30,37 @@ public class GrayEventAutoConfiguration {
 
     @Bean
     public GrayTrackEventHandler grayTrackEventHandler(
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer,
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             CommunicableGrayTrackHolder grayTrackHolder) {
-        return new GrayTrackEventHandler(instanceLocalInfoInitiralizer, grayTrackHolder);
+        return new GrayTrackEventHandler(instanceLocalInfoObtainer, grayTrackHolder);
     }
 
     @Bean
     public GrayInstanceEventHandler grayInstanceEventHandler(
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer,
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             GrayManager grayManager) {
-        return new GrayInstanceEventHandler(grayManager, instanceLocalInfoInitiralizer);
+        return new GrayInstanceEventHandler(grayManager, instanceLocalInfoObtainer);
     }
 
     @Bean
     public GrayDecisionEventHandler grayDecisionEventHandler(
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer,
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             UpdateableGrayManager grayManager) {
-        return new GrayDecisionEventHandler(grayManager, instanceLocalInfoInitiralizer);
+        return new GrayDecisionEventHandler(grayManager, instanceLocalInfoObtainer);
     }
 
     @Bean
     public GrayServiceEventHandler grayServiceEventHandler(
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer,
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             UpdateableGrayManager grayManager) {
-        return new GrayServiceEventHandler(grayManager, instanceLocalInfoInitiralizer);
+        return new GrayServiceEventHandler(grayManager, instanceLocalInfoObtainer);
     }
 
     @Bean
     public GrayPolicyEventHandler grayPolicyEventHandler(
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer,
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             UpdateableGrayManager grayManager) {
-        return new GrayPolicyEventHandler(grayManager, instanceLocalInfoInitiralizer);
+        return new GrayPolicyEventHandler(grayManager, instanceLocalInfoObtainer);
     }
 
 

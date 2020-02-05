@@ -25,8 +25,8 @@ public class GrayClientEurekaAutoConfiguration {
     private SpringClientFactory springClientFactory;
 
     @Bean
-    public EurekaInstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer() {
-        return new EurekaInstanceLocalInfoInitiralizer();
+    public EurekaInstanceLocalInfoObtainer instanceLocalInfoInitiralizer() {
+        return new EurekaInstanceLocalInfoObtainer();
     }
 
     //    @Bean
