@@ -3,7 +3,7 @@ package cn.springcloud.gray.client.plugin.event.longpolling;
 import cn.springcloud.gray.client.plugin.event.longpolling.configuration.properties.LongPollingProperties;
 import cn.springcloud.gray.concurrent.DefaultThreadFactory;
 import cn.springcloud.gray.local.InstanceLocalInfo;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springlcoud.gray.event.GrayEventRetrieveResult;
 import cn.springlcoud.gray.event.client.GrayEventReceiver;
 import cn.springlcoud.gray.event.longpolling.ListenResult;
@@ -29,7 +29,7 @@ public class LongPollingWorker {
     private final GrayEventReceiver grayEventReceiver;
     private LongPollingProperties longPollingProperties;
     private GrayEventRemoteClient grayEventRemoteClient;
-    private InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer;
+    private InstanceLocalInfoObtainer instanceLocalInfoObtainer;
 
     private volatile boolean stop = false;
 
@@ -38,11 +38,11 @@ public class LongPollingWorker {
             LongPollingProperties longPollingProperties,
             GrayEventRemoteClient grayEventRemoteClient,
             GrayEventReceiver grayEventReceiver,
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer) {
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
 
         this.longPollingProperties = longPollingProperties;
         this.grayEventRemoteClient = grayEventRemoteClient;
-        this.instanceLocalInfoInitiralizer = instanceLocalInfoInitiralizer;
+        this.instanceLocalInfoObtainer = instanceLocalInfoObtainer;
         this.grayEventReceiver = grayEventReceiver;
         executor = Executors.newScheduledThreadPool(1,
                 new DefaultThreadFactory("gray.client.event.longPolling"));
@@ -115,7 +115,7 @@ public class LongPollingWorker {
 
 
     private InstanceLocalInfo getInstanceLocalInfo() {
-        return instanceLocalInfoInitiralizer.getInstanceLocalInfo();
+        return instanceLocalInfoObtainer.getInstanceLocalInfo();
     }
 
     private boolean isStop() {

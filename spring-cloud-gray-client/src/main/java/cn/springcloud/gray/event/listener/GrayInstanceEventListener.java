@@ -2,7 +2,7 @@ package cn.springcloud.gray.event.listener;
 
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springlcoud.gray.event.GrayInstanceEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -14,12 +14,12 @@ import org.apache.commons.lang3.StringUtils;
 public class GrayInstanceEventListener extends AbstractGrayEventListener<GrayInstanceEvent> {
 
     private GrayManager grayManager;
-    private InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer;
+    private InstanceLocalInfoObtainer instanceLocalInfoObtainer;
 
     public GrayInstanceEventListener(
-            GrayManager grayManager, InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer) {
+            GrayManager grayManager, InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
         this.grayManager = grayManager;
-        this.instanceLocalInfoInitiralizer = instanceLocalInfoInitiralizer;
+        this.instanceLocalInfoObtainer = instanceLocalInfoObtainer;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class GrayInstanceEventListener extends AbstractGrayEventListener<GrayIns
 
     @Override
     protected boolean validate(GrayInstanceEvent event) {
-        InstanceLocalInfo instanceLocalInfo = instanceLocalInfoInitiralizer.getInstanceLocalInfo();
+        InstanceLocalInfo instanceLocalInfo = instanceLocalInfoObtainer.getInstanceLocalInfo();
         if (instanceLocalInfo != null) {
             GrayInstance grayInstance = event.getSource();
             if (StringUtils.equals(grayInstance.getServiceId(), instanceLocalInfo.getServiceId())) {

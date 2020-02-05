@@ -1,13 +1,13 @@
 package cn.springcloud.gray.client.netflix.eureka;
 
 import cn.springcloud.gray.local.InstanceLocalInfo;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import com.netflix.appinfo.EurekaInstanceConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-public class EurekaInstanceLocalInfoInitiralizer implements InstanceLocalInfoInitiralizer, ApplicationContextAware {
+public class EurekaInstanceLocalInfoObtainer implements InstanceLocalInfoObtainer, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
     private InstanceLocalInfo instanceLocalInfo;

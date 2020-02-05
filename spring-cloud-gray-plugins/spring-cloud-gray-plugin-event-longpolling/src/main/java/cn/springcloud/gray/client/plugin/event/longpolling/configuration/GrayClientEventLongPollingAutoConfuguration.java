@@ -6,7 +6,7 @@ import cn.springcloud.gray.client.plugin.event.longpolling.GrayEventLongPollingR
 import cn.springcloud.gray.client.plugin.event.longpolling.GrayEventRemoteClient;
 import cn.springcloud.gray.client.plugin.event.longpolling.configuration.properties.LongPollingProperties;
 import cn.springcloud.gray.communication.http.HttpAgent;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springlcoud.gray.event.client.GrayEventPublisher;
 import cn.springlcoud.gray.event.client.GrayEventReceiver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +39,8 @@ public class GrayClientEventLongPollingAutoConfuguration {
     public GrayEventReceiver grayEventReceiver(
             GrayEventPublisher grayEventPublisher,
             GrayEventRemoteClient grayEventRemoteClient,
-            InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer) {
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
         return new GrayEventLongPollingReceiver(
-                longPollingProperties, grayEventPublisher, grayEventRemoteClient, instanceLocalInfoInitiralizer);
+                longPollingProperties, grayEventPublisher, grayEventRemoteClient, instanceLocalInfoObtainer);
     }
 }
