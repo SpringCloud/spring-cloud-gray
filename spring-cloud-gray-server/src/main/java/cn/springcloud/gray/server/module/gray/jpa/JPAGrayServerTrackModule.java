@@ -1,10 +1,14 @@
 package cn.springcloud.gray.server.module.gray.jpa;
 
-import cn.springcloud.gray.event.*;
-import cn.springcloud.gray.model.GrayTrackDefinition;
+import cn.springcloud.gray.event.EventType;
+import cn.springcloud.gray.event.GrayEventMsg;
+import cn.springcloud.gray.event.GraySourceEventPublisher;
+import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.server.module.gray.GrayServerTrackModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
 import cn.springcloud.gray.server.service.GrayTrackService;
+import cn.springlcoud.gray.event.server.GrayEventTrigger;
+import cn.springlcoud.gray.event.server.TriggerType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +18,13 @@ import java.util.List;
 public class JPAGrayServerTrackModule implements GrayServerTrackModule {
 
     private GraySourceEventPublisher graySourceEventPublisher;
+    private GrayEventTrigger grayEventTrigger;
     private GrayTrackService grayTrackService;
 
-    public JPAGrayServerTrackModule(GraySourceEventPublisher graySourceEventPublisher, GrayTrackService grayTrackService) {
+    public JPAGrayServerTrackModule(
+            GrayEventTrigger grayEventTrigger, GraySourceEventPublisher graySourceEventPublisher, GrayTrackService grayTrackService) {
         this.graySourceEventPublisher = graySourceEventPublisher;
+        this.grayEventTrigger = grayEventTrigger;
         this.grayTrackService = grayTrackService;
     }
 
@@ -56,6 +63,7 @@ public class JPAGrayServerTrackModule implements GrayServerTrackModule {
         GrayTrack grayTrack = getGrayTrack(id);
         grayTrackService.delete(id);
         publishGrayTrackEvent(EventType.DOWN, grayTrack);
+        triggerDeleteEvent(grayTrack);
     }
 
     @Override
@@ -73,11 +81,27 @@ public class JPAGrayServerTrackModule implements GrayServerTrackModule {
         if (pre != null) {
             if (!StringUtils.equals(pre.getServiceId(), track.getServiceId()) ||
                     !StringUtils.equals(pre.getInstanceId(), track.getInstanceId())) {
-                publishGrayTrackEvent(EventType.DOWN, pre);
+                triggerDeleteEvent(pre);
             }
         }
-        publishGrayTrackEvent(EventType.UPDATE, track);
+        triggerUpdateEvent(track);
         return newRecord;
+    }
+
+    protected GrayEventTrigger getGrayEventTrigger() {
+        return grayEventTrigger;
+    }
+
+    protected void triggerEvent(TriggerType triggerType, Object source) {
+        getGrayEventTrigger().triggering(source, triggerType);
+    }
+
+    protected void triggerDeleteEvent(Object source) {
+        triggerEvent(TriggerType.DELETE, source);
+    }
+
+    protected void triggerUpdateEvent(Object source) {
+        triggerEvent(TriggerType.MODIFY, source);
     }
 
     protected void publishGrayTrackEvent(EventType eventType, GrayTrack grayTrack) {

@@ -12,6 +12,10 @@ public class DefaultGrayEventTrigger extends AbstractGrayEventTrigger {
 
     private GrayEventLogger grayEventLogger;
 
+    public DefaultGrayEventTrigger(GrayEventSender grayEventSender, GrayEventLogger grayEventLogger) {
+        this(grayEventSender, null, grayEventLogger);
+    }
+
     public DefaultGrayEventTrigger(
             GrayEventSender grayEventSender, List<EventConverter> eventConverters, GrayEventLogger grayEventLogger) {
         super(grayEventSender, eventConverters);

@@ -17,17 +17,23 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
     private GrayEventSender grayEventSender;
     private GenericRetriever<EventConverter> genericRetriever;
 
+    public AbstractGrayEventTrigger(GrayEventSender grayEventSender) {
+        this(grayEventSender, null);
+    }
 
     public AbstractGrayEventTrigger(GrayEventSender grayEventSender, List<EventConverter> eventConverters) {
         this.grayEventSender = grayEventSender;
-        this.genericRetriever = new GenericRetriever<>(eventConverters, EventConverter.class);
+        if (!Objects.isNull(eventConverters)) {
+            createEventConverterRetriever(eventConverters);
+        }
     }
+
 
     @Override
     public void triggering(Object eventSource, TriggerType triggerType) {
         GrayEvent grayEvent = convertGrayEvent(eventSource, triggerType);
         if (Objects.isNull(grayEvent)) {
-            log.warn("转换失败, grayEvent is null, eventSource:{}, triggerType:{}", eventSource, triggerType);
+//            log.warn("转换失败, grayEvent is null, eventSource:{}, triggerType:{}", eventSource, triggerType);
             return;
         }
         if (Objects.isNull(grayEvent.getTriggerType())) {
@@ -37,6 +43,11 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
     }
 
     protected abstract void logEventTrigger(Object eventSource, TriggerType triggerType, GrayEvent grayEvent);
+
+
+    public void createEventConverterRetriever(List<EventConverter> eventConverters) {
+        this.genericRetriever = new GenericRetriever<>(eventConverters, EventConverter.class);
+    }
 
     protected GrayEvent convertGrayEvent(Object eventSource, TriggerType triggerType) {
         EventConverter eventConverter = getEventConverter(eventSource.getClass());

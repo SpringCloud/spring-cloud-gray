@@ -26,7 +26,11 @@ public interface GrayModule {
 
     GrayInstance ofGrayInstance(cn.springcloud.gray.server.module.gray.domain.GrayInstance instance);
 
+    List<PolicyDefinition> ofGrayPoliciesByInstanceId(String instanceId);
+
     PolicyDefinition ofGrayPolicy(GrayPolicy grayPolicy);
+
+    List<DecisionDefinition> ofGrayDecisionByPolicyId(Long policyId);
 
     DecisionDefinition ofGrayDecision(GrayDecision grayDecision) throws IOException;
 }

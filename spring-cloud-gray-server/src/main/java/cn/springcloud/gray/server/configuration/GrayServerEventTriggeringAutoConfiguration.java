@@ -1,8 +1,14 @@
 package cn.springcloud.gray.server.configuration;
 
+import cn.springcloud.gray.server.event.triggering.GrayEventInitializer;
 import cn.springcloud.gray.server.event.triggering.GrayEventLogRetriever;
 import cn.springcloud.gray.server.event.triggering.GrayEventStorage;
+import cn.springcloud.gray.server.event.triggering.converter.GraServiceEventConverter;
+import cn.springcloud.gray.server.event.triggering.converter.GrayDecisionEventConverter;
+import cn.springcloud.gray.server.event.triggering.converter.GrayInstanceEventConverter;
+import cn.springcloud.gray.server.event.triggering.converter.GrayPolicyEventConverter;
 import cn.springcloud.gray.server.module.gray.GrayEventLogModule;
+import cn.springcloud.gray.server.module.gray.GrayModule;
 import cn.springlcoud.gray.event.codec.GrayEventCodec;
 import cn.springlcoud.gray.event.codec.JsonGrayEventCodec;
 import cn.springlcoud.gray.event.server.*;
@@ -52,8 +58,8 @@ public class GrayServerEventTriggeringAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public GrayEventTrigger grayEventTrigger(
-            GrayEventSender grayEventSender, List<EventConverter> eventConverters, GrayEventLogger grayEventLogger) {
-        return new DefaultGrayEventTrigger(grayEventSender, eventConverters, grayEventLogger);
+            GrayEventSender grayEventSender, GrayEventLogger grayEventLogger) {
+        return new DefaultGrayEventTrigger(grayEventSender, grayEventLogger);
     }
 
 
@@ -66,5 +72,32 @@ public class GrayServerEventTriggeringAutoConfiguration {
         return new GrayEventLogRetriever(grayEventLogModule, eventConverters, grayEventCodec);
     }
 
+
+    @Bean
+    public GrayEventInitializer grayEventInitializer() {
+        return new GrayEventInitializer();
+    }
+
+    @Bean
+    public GraServiceEventConverter graServiceEventConverter() {
+        return new GraServiceEventConverter();
+    }
+
+
+    @Bean
+    public GrayInstanceEventConverter grayInstanceEventConverter(GrayModule grayModule) {
+        return new GrayInstanceEventConverter(grayModule);
+    }
+
+    @Bean
+    public GrayPolicyEventConverter grayPolicyEventConverter(GrayModule grayModule) {
+        return new GrayPolicyEventConverter(grayModule);
+    }
+
+
+    @Bean
+    public GrayDecisionEventConverter grayDecisionEventConverter(GrayModule grayModule) {
+        return new GrayDecisionEventConverter(grayModule);
+    }
 
 }

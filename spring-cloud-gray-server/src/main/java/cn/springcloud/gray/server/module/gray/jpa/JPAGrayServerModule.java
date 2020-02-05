@@ -19,6 +19,8 @@ import cn.springcloud.gray.server.service.GrayDecisionService;
 import cn.springcloud.gray.server.service.GrayInstanceService;
 import cn.springcloud.gray.server.service.GrayPolicyService;
 import cn.springcloud.gray.server.service.GrayServiceService;
+import cn.springlcoud.gray.event.server.GrayEventTrigger;
+import cn.springlcoud.gray.event.server.TriggerType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +42,7 @@ public class JPAGrayServerModule implements GrayServerModule {
     private GrayDecisionService grayDecisionService;
     private GrayPolicyService grayPolicyService;
     private GraySourceEventPublisher grayEventPublisher;
+    private GrayEventTrigger grayEventTrigger;
     private GrayServerProperties grayServerProperties;
     private ServiceDiscovery serviceDiscovery;
     private ServiceManageModule serviceManageModule;
@@ -47,6 +50,7 @@ public class JPAGrayServerModule implements GrayServerModule {
     public JPAGrayServerModule(
             GrayServerProperties grayServerProperties,
             GraySourceEventPublisher grayEventPublisher,
+            GrayEventTrigger grayEventTrigger,
             ServiceDiscovery serviceDiscovery,
             GrayServiceService grayServiceService,
             GrayInstanceService grayInstanceService,
@@ -55,6 +59,7 @@ public class JPAGrayServerModule implements GrayServerModule {
             ServiceManageModule serviceManageModule) {
         this.grayServerProperties = grayServerProperties;
         this.grayEventPublisher = grayEventPublisher;
+        this.grayEventTrigger = grayEventTrigger;
         this.serviceDiscovery = serviceDiscovery;
         this.grayServiceService = grayServiceService;
         this.grayInstanceService = grayInstanceService;
@@ -83,12 +88,17 @@ public class JPAGrayServerModule implements GrayServerModule {
     @Transactional
     @Override
     public void deleteGrayService(String serviceId) {
-        List<GrayInstance> grayInstances = grayInstanceService.findByServiceId(serviceId);
+        GrayService grayService = getGrayService(serviceId);
+        if (Objects.isNull(grayService)) {
+            return;
+        }
         grayServiceService.deleteReactById(serviceId);
-        serviceManageModule.deleteSericeManeges(serviceId);
+//        List<GrayInstance> grayInstances = grayInstanceService.findByServiceId(serviceId);
 //        grayInstances.forEach(this::publishDownIntanceEvent);
+        serviceManageModule.deleteSericeManeges(serviceId);
         publishEventMsg(
                 createEventMsg(SourceType.GRAY_SERVICE, EventType.DOWN, serviceId), null);
+        triggerDeleteEvent(grayService);
     }
 
 
@@ -100,8 +110,10 @@ public class JPAGrayServerModule implements GrayServerModule {
             grayInstanceService.saveModel(instance);
             if (grayStatus == GrayStatus.OPEN) {
                 publishUpdateIntanceEvent(instance);
+                triggerUpdateEvent(instance);
             } else {
                 publishDownIntanceEvent(instance);
+                triggerDeleteEvent(instance);
             }
         }
     }
@@ -133,12 +145,15 @@ public class JPAGrayServerModule implements GrayServerModule {
                 grayServerProperties.getInstance().getNormalInstanceStatus().contains(instance.getInstanceStatus())) {
             if (Objects.equals(newRecord.getGrayStatus(), GrayStatus.OPEN)) {
                 publishUpdateIntanceEvent(newRecord);
+                triggerUpdateEvent(instance);
             } else if (oldRecord != null && Objects.equals(oldRecord.getGrayStatus(), GrayStatus.OPEN)) {
                 publishDownIntanceEvent(newRecord);
+                triggerDeleteEvent(instance);
             }
         }
         return newRecord;
     }
+
 
     @Override
     public void updateInstanceStatus(String instanceId, InstanceStatus instanceStatus) {
@@ -158,8 +173,10 @@ public class JPAGrayServerModule implements GrayServerModule {
             if (instance.getGrayStatus() == GrayStatus.OPEN) {
                 if (grayServerProperties.getInstance().getNormalInstanceStatus().contains(instanceStatus)) {
                     publishUpdateIntanceEvent(instance);
+                    triggerUpdateEvent(instance);
                 } else {
                     publishDownIntanceEvent(instance);
+                    triggerDeleteEvent(instance);
                 }
             }
         }
@@ -186,6 +203,7 @@ public class JPAGrayServerModule implements GrayServerModule {
         publishEventMsg(
                 createEventMsg(SourceType.GRAY_POLICY, EventType.UPDATE,
                         grayInstanceService.findOneModel(newRecord.getInstanceId())), newRecord);
+        triggerUpdateEvent(newRecord);
         return newRecord;
     }
 
@@ -199,6 +217,7 @@ public class JPAGrayServerModule implements GrayServerModule {
             publishEventMsg(
                     createEventMsg(SourceType.GRAY_POLICY, EventType.DOWN,
                             grayInstanceService.findOneModel(policy.getInstanceId())), policy);
+            triggerDeleteEvent(policy);
         }
     }
 
@@ -212,6 +231,7 @@ public class JPAGrayServerModule implements GrayServerModule {
         publishEventMsg(
                 createEventMsg(SourceType.GRAY_DECISION, EventType.UPDATE,
                         grayInstanceService.findOneModel(newRecord.getInstanceId())), newRecord);
+        triggerUpdateEvent(newRecord);
         return newRecord;
     }
 
@@ -224,6 +244,7 @@ public class JPAGrayServerModule implements GrayServerModule {
                     createEventMsg(SourceType.GRAY_DECISION, EventType.DOWN,
                             grayInstanceService.findOneModel(decision.getInstanceId())), decision);
 //            publishUpdateIntanceEvent(grayInstanceService.findOneModel(decision.getInstanceId()));
+            triggerDeleteEvent(decision);
         }
 
     }
@@ -268,6 +289,7 @@ public class JPAGrayServerModule implements GrayServerModule {
         }
         publishEventMsg(
                 createEventMsg(SourceType.GRAY_SERVICE, EventType.UPDATE, record.getServiceId()), record);
+        triggerUpdateEvent(record);
         return record;
     }
 
@@ -310,6 +332,22 @@ public class JPAGrayServerModule implements GrayServerModule {
         return grayEventPublisher;
     }
 
+    protected GrayEventTrigger getGrayEventTrigger() {
+        return grayEventTrigger;
+    }
+
+
+    protected void triggerEvent(TriggerType triggerType, Object source) {
+        getGrayEventTrigger().triggering(source, triggerType);
+    }
+
+    protected void triggerDeleteEvent(Object source) {
+        triggerEvent(TriggerType.DELETE, source);
+    }
+
+    protected void triggerUpdateEvent(Object source) {
+        triggerEvent(TriggerType.MODIFY, source);
+    }
 
     private void publishUpdateIntanceEvent(GrayInstance grayInstance) {
         GrayEventMsg eventMsg = createEventMsg(SourceType.GRAY_INSTANCE, EventType.UPDATE, grayInstance);
