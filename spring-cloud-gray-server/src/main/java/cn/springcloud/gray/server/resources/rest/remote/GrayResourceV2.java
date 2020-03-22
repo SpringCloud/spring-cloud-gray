@@ -1,4 +1,4 @@
-package cn.springcloud.gray.server.resources.rest;
+package cn.springcloud.gray.server.resources.rest.remote;
 
 import cn.springcloud.gray.server.module.gray.GrayModule;
 import io.swagger.annotations.Api;
@@ -14,6 +14,6 @@ public class GrayResourceV2 {
 
     @Autowired
     private GrayModule grayModule;
-
+    
 
 }

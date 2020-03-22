@@ -14,10 +14,12 @@ import java.util.Date;
 public class GrayPolicy {
 
     private Long id;
-    @ApiModelProperty("服务实例id")
-    private String instanceId;
+    @ApiModelProperty("命名空间")
+    private String namespace;
     @ApiModelProperty("策略别名")
     private String alias;
+    @ApiModelProperty("是否删除")
+    private Boolean delFlag;
     @ApiModelProperty("操作人")
     private String operator;
     @ApiModelProperty("操作时间")

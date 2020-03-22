@@ -1,0 +1,59 @@
+package cn.springcloud.gray.server.service;
+
+import cn.springcloud.gray.server.constant.AuthorityConstants;
+import cn.springcloud.gray.server.dao.mapper.ModelMapper;
+import cn.springcloud.gray.server.dao.mapper.NamespaceMapper;
+import cn.springcloud.gray.server.dao.model.NamespaceDO;
+import cn.springcloud.gray.server.dao.model.UserResourceAuthorityDO;
+import cn.springcloud.gray.server.dao.repository.NamespaceRepository;
+import cn.springcloud.gray.server.module.domain.Namespace;
+import cn.springcloud.gray.server.utils.PaginationUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRepository, NamespaceDO, String> {
+
+    @Autowired
+    private NamespaceRepository repository;
+    @Autowired
+    private NamespaceMapper mapper;
+
+    @Override
+    protected NamespaceRepository getRepository() {
+        return repository;
+    }
+
+    @Override
+    protected ModelMapper<Namespace, NamespaceDO> getModelMapper() {
+        return mapper;
+    }
+
+    public Page<Namespace> findAllByUser(String userId, Pageable pageable) {
+        Specification<NamespaceDO> specification = new Specification<NamespaceDO>() {
+            @Override
+            public Predicate toPredicate(Root<NamespaceDO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList();
+
+                if (StringUtils.isNotEmpty(userId)) {
+                    Join<NamespaceDO, UserResourceAuthorityDO> join = root.join("resourceId", JoinType.INNER);
+                    predicates.add(cb.equal(join.get("userId").as(String.class), userId));
+                    predicates.add(cb.equal(join.get("resource").as(String.class), AuthorityConstants.RESOURCE_NAMESPACE));
+                }
+                query.where(predicates.toArray(new Predicate[predicates.size()]));
+                return query.getRestriction();
+            }
+        };
+
+        Page<NamespaceDO> page = repository.findAll(specification, pageable);
+        return PaginationUtils.convert(pageable, page, mapper);
+    }
+}

@@ -22,8 +22,6 @@ public interface ServiceManageModule {
 
     Page<UserServiceAuthority> listAllServiceAuthorities(String userId, Pageable pageable);
 
-    Page<String> listAllServiceIds(String userId, Pageable pageable);
-
     ServiceOwner addServiceOwner(String serviceId);
 
     ServiceOwner insertServiceOwner(String serviceId);

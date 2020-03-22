@@ -4,13 +4,11 @@ import cn.springcloud.gray.exceptions.EventException;
 import cn.springcloud.gray.model.DecisionDefinition;
 import cn.springcloud.gray.server.module.gray.GrayModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
-import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
 import cn.springlcoud.gray.event.GrayDecisionEvent;
 import cn.springlcoud.gray.event.server.AbstrctEventConverter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * @author saleson
@@ -51,12 +49,6 @@ public class GrayDecisionEventConverter extends AbstrctEventConverter<GrayDecisi
 
     private GrayDecisionEvent toGrayDecisionEvent(GrayDecision grayDecision) {
         GrayDecisionEvent event = new GrayDecisionEvent();
-        GrayInstance grayInstance = grayModule.getGrayServerModule().getGrayInstance(grayDecision.getInstanceId());
-        if (Objects.isNull(grayInstance)) {
-            return null;
-        }
-        event.setInstanceId(grayInstance.getInstanceId());
-        event.setServiceId(grayInstance.getServiceId());
         event.setPolicyId(String.valueOf(grayDecision.getPolicyId()));
         return event;
     }

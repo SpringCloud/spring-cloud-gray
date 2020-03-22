@@ -28,4 +28,12 @@ public interface UserModule {
     String getCurrentUserId();
 
     UserInfo updateUserInfo(UserInfo userInfo);
+
+    boolean isAdmin();
+
+    boolean isAdmin(String userId);
+
+    boolean hasRole(String userId);
+
+    boolean hasRole(String userId, String role);
 }

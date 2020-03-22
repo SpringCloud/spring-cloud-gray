@@ -1,11 +1,15 @@
-package cn.springcloud.gray.server.module.user;
+package cn.springcloud.gray.server.module.user.jpa;
 
+import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.module.user.domain.UserInfo;
 import cn.springcloud.gray.server.module.user.domain.UserQuery;
 import cn.springcloud.gray.server.oauth2.Oauth2Service;
 import cn.springcloud.gray.server.service.UserService;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Objects;
 
 public class JPAUserModule implements UserModule {
 
@@ -70,5 +74,26 @@ public class JPAUserModule implements UserModule {
     @Override
     public UserInfo updateUserInfo(UserInfo userInfo) {
         return userService.updateUserInfo(userInfo);
+    }
+
+    @Override
+    public boolean isAdmin() {
+        return isAdmin(getCurrentUserId());
+    }
+
+    @Override
+    public boolean isAdmin(String userId) {
+        return hasRole(userId, UserInfo.ROLE_ADMIN);
+    }
+
+    @Override
+    public boolean hasRole(String userId) {
+        return hasRole(getCurrentUserId());
+    }
+
+    @Override
+    public boolean hasRole(String userId, String role) {
+        UserInfo userInfo = getUserInfo(userId);
+        return !Objects.isNull(userInfo) && ArrayUtils.contains(userInfo.getRoles(), role);
     }
 }

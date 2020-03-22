@@ -1,11 +1,11 @@
 package cn.springcloud.gray.server.resources.rest;
 
 import cn.springcloud.gray.api.ApiRes;
-import cn.springcloud.gray.server.module.gray.GrayModelType;
-import cn.springcloud.gray.server.module.gray.GrayServerModule;
-import cn.springcloud.gray.server.module.gray.GrayServiceIdFinder;
+import cn.springcloud.gray.server.module.NamespaceFinder;
+import cn.springcloud.gray.server.module.gray.GrayPolicyModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
-import cn.springcloud.gray.server.module.user.ServiceManageModule;
+import cn.springcloud.gray.server.module.gray.domain.GrayModelType;
+import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
@@ -31,19 +31,23 @@ public class GrayDecisionResource {
 
 
     @Autowired
-    private GrayServerModule grayServerModule;
+    private GrayPolicyModule grayPolicyModule;
     @Autowired
-    private ServiceManageModule serviceManageModule;
+    private AuthorityModule authorityModule;
     @Autowired
-    private GrayServiceIdFinder grayServiceIdFinder;
+    private NamespaceFinder namespaceFinder;
     @Autowired
     private UserModule userModule;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, params = {"policyId"})
     public ApiRes<List<GrayDecision>> list(@RequestParam("policyId") Long policyId) {
+        if (!authorityModule.hasNamespaceAuthority(
+                namespaceFinder.getNamespaceCode(GrayModelType.POLICY, policyId))) {
+            return ApiResHelper.notAuthority();
+        }
         return ApiRes.<List<GrayDecision>>builder()
                 .code(CODE_SUCCESS)
-                .data(grayServerModule.listGrayDecisionsByPolicyId(policyId))
+                .data(grayPolicyModule.listGrayDecisionsByPolicyId(policyId))
                 .build();
     }
 
@@ -51,7 +55,11 @@ public class GrayDecisionResource {
     public ResponseEntity<ApiRes<List<GrayDecision>>> page(
             @RequestParam("policyId") Long policyId,
             @ApiParam @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<GrayDecision> page = grayServerModule.listGrayDecisionsByPolicyId(policyId, pageable);
+        if (!authorityModule.hasNamespaceAuthority(
+                namespaceFinder.getNamespaceCode(GrayModelType.POLICY, policyId))) {
+            return ResponseEntity.ok(ApiResHelper.notAuthority());
+        }
+        Page<GrayDecision> page = grayPolicyModule.listGrayDecisionsByPolicyId(policyId, pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
         return new ResponseEntity<>(
                 ApiRes.<List<GrayDecision>>builder()
@@ -64,33 +72,47 @@ public class GrayDecisionResource {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ApiRes<GrayDecision> info(@PathVariable("id") Long id) {
+        if (!authorityModule.hasNamespaceAuthority(
+                namespaceFinder.getNamespaceCode(GrayModelType.DECISION, id))) {
+            return ApiResHelper.notAuthority();
+        }
         return ApiRes.<GrayDecision>builder()
                 .code(CODE_SUCCESS)
-                .data(grayServerModule.getGrayDecision(id))
+                .data(grayPolicyModule.getGrayDecision(id))
                 .build();
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ApiRes<Void> delete(@PathVariable("id") Long id) {
-        if (!serviceManageModule.hasServiceAuthority(
-                grayServiceIdFinder.getServiceId(GrayModelType.DECISION, id))) {
+        if (!authorityModule.hasNamespaceAuthority(
+                namespaceFinder.getNamespaceCode(GrayModelType.DECISION, id))) {
             return ApiResHelper.notAuthority();
         }
-        grayServerModule.deleteGrayDecision(id);
+        grayPolicyModule.deleteGrayDecision(id, userModule.getCurrentUserId());
+        return ApiRes.<Void>builder().code(CODE_SUCCESS).build();
+    }
+
+    @RequestMapping(value = "/{id}/recover", method = RequestMethod.PATCH)
+    public ApiRes<Void> recover(@PathVariable("id") Long id) {
+        if (!authorityModule.hasNamespaceAuthority(
+                namespaceFinder.getNamespaceCode(GrayModelType.DECISION, id))) {
+            return ApiResHelper.notAuthority();
+        }
+        grayPolicyModule.recoverGrayDecision(id, userModule.getCurrentUserId());
         return ApiRes.<Void>builder().code(CODE_SUCCESS).build();
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ApiRes<GrayDecision> save(@RequestBody GrayDecision grayDecision) {
-        if (!serviceManageModule.hasServiceAuthority(
-                grayServiceIdFinder.getServiceId(GrayModelType.POLICY, grayDecision.getPolicyId()))) {
+        if (!authorityModule.hasNamespaceAuthority(
+                namespaceFinder.getNamespaceCode(GrayModelType.POLICY, grayDecision.getPolicyId()))) {
             return ApiResHelper.notAuthority();
         }
         grayDecision.setOperator(userModule.getCurrentUserId());
         grayDecision.setOperateTime(new Date());
         return ApiRes.<GrayDecision>builder()
                 .code(CODE_SUCCESS)
-                .data(grayServerModule.saveGrayDecision(grayDecision))
+                .data(grayPolicyModule.saveGrayDecision(grayDecision))
                 .build();
     }
 

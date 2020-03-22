@@ -19,10 +19,7 @@ import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,8 +27,6 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
 
     @Autowired
     private GrayInstanceRepository repository;
-    @Autowired
-    private GrayPolicyService grayPolicyService;
     @Autowired
     private GrayInstanceMapper grayInstanceMapper;
 
@@ -54,7 +49,6 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
     public void deleteByServiceId(String serviceId) {
         findByServiceId(serviceId).forEach(entity -> {
             delete(entity.getInstanceId());
-            grayPolicyService.deleteByInstanceId(entity.getInstanceId());
         });
     }
 
@@ -62,9 +56,6 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
     @Transactional
     public void deleteReactById(String id) {
         delete(id);
-        grayPolicyService.findByInstanceId(id).forEach(entity -> {
-            grayPolicyService.deleteReactById(entity.getId());
-        });
     }
 
     @Override
@@ -102,7 +93,7 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
             predicates.add(predGrayStatus);
 
             CriteriaBuilder.In predInstanceStatusIn = cb.in(root.get("instanceStatus").as(String.class));
-            for (String instanceStatus : instanceStatusAry){
+            for (String instanceStatus : instanceStatusAry) {
                 predInstanceStatusIn.value(instanceStatus);
             }
             Predicate predTrayLock = cb.equal(root.get("grayLock").as(Integer.class), GrayInstance.GRAY_LOCKED);
@@ -133,5 +124,12 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
                         .toInstant());
         String[] instanceStatusAry = toArray(evictionInstanceStatus);
         return dos2models(repository.findAllByLastUpdateDateBeforeAndInstanceStatusIn(lastUpdateDate, instanceStatusAry));
+    }
+
+    public List<GrayInstance> listGrayInstances(Iterator<String> serviceIds, Collection<InstanceStatus> instanceStatusList) {
+        String[] instanceStatusAry = toArray(instanceStatusList);
+        List<GrayInstanceDO> grayInstanceDOList = repository.findAllByServiceIdInAndInstanceStatusInAndGrayLock(
+                serviceIds, instanceStatusAry, GrayInstance.GRAY_LOCKED);
+        return dos2models(grayInstanceDOList);
     }
 }

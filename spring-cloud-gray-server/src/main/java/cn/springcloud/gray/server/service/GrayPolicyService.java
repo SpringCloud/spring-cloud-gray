@@ -33,16 +33,6 @@ public class GrayPolicyService extends AbstraceCRUDService<GrayPolicy, GrayPolic
         return grayPolicyMapper;
     }
 
-    public List<GrayPolicy> findByInstanceId(String instanceId) {
-        return grayPolicyMapper.dos2models(repository.findByInstanceId(instanceId));
-    }
-
-    public void deleteByInstanceId(String instanceId) {
-        findByInstanceId(instanceId).forEach(entity -> {
-            delete(entity.getId());
-            grayDecisionService.deleteAllByPolicyId(entity.getId());
-        });
-    }
 
     @Transactional
     public void deleteReactById(Long id) {
@@ -50,8 +40,18 @@ public class GrayPolicyService extends AbstraceCRUDService<GrayPolicy, GrayPolic
         grayDecisionService.deleteAllByPolicyId(id);
     }
 
-    public Page<GrayPolicy> listGrayPoliciesByInstanceId(String instanceId, Pageable pageable) {
-        Page<GrayPolicyDO> entities = repository.findAllByInstanceId(instanceId, pageable);
+
+    public Page<GrayPolicy> listGrayPoliciesByNamespace(String namespace, Pageable pageable) {
+        Page<GrayPolicyDO> entities = repository.findAllByNamespace(namespace, pageable);
         return PaginationUtils.convert(pageable, entities, grayPolicyMapper);
+    }
+
+    public List<GrayPolicy> listGrayPoliciesByNamespace(String namespace) {
+        List<GrayPolicyDO> entities = repository.findAllByNamespace(namespace);
+        return grayPolicyMapper.dos2models(entities);
+    }
+
+    public List<GrayPolicy> findAllModel(Iterable<Long> policyIds, Boolean delFlag) {
+        return grayPolicyMapper.dos2models(repository.findAllByIdInAndDelFlag(policyIds, delFlag));
     }
 }
