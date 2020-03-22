@@ -1,7 +1,8 @@
-package cn.springcloud.gray.server.resources.rest;
+package cn.springcloud.gray.server.resources.rest.remote;
 
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayTrackDefinition;
+import cn.springcloud.gray.server.constant.Version;
 import cn.springcloud.gray.server.module.gray.GrayModule;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,7 +17,7 @@ import java.util.List;
 @Api("gray-client调用的接口")
 @RestController
 @RequestMapping("/gray")
-public class GrayResource {
+public class GrayResourceV1 {
 
 
     @Autowired
@@ -26,7 +27,7 @@ public class GrayResource {
     @ApiOperation("返回所有已经打开灰度状态的实例信息（包含决策信息）")
     @RequestMapping(value = "/instances/enable", method = RequestMethod.GET)
     public List<GrayInstance> allOpens() {
-        return grayModule.allOpenInstances();
+        return grayModule.allOpenInstances(Version.V1);
     }
 
 

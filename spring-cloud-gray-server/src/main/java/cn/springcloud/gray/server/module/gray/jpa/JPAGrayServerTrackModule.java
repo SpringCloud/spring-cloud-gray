@@ -22,7 +22,9 @@ public class JPAGrayServerTrackModule implements GrayServerTrackModule {
     private GrayTrackService grayTrackService;
 
     public JPAGrayServerTrackModule(
-            GrayEventTrigger grayEventTrigger, GraySourceEventPublisher graySourceEventPublisher, GrayTrackService grayTrackService) {
+            GrayEventTrigger grayEventTrigger,
+            GraySourceEventPublisher graySourceEventPublisher,
+            GrayTrackService grayTrackService) {
         this.graySourceEventPublisher = graySourceEventPublisher;
         this.grayEventTrigger = grayEventTrigger;
         this.grayTrackService = grayTrackService;

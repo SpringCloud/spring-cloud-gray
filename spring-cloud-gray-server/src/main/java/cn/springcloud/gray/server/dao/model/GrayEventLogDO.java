@@ -15,22 +15,22 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gray_event_log`", indexes = {@Index(columnList = "source_id"), @Index(columnList = "timestamp")})
+@Table(name = "gray_event_log", indexes = {@Index(columnList = "sourceId"), @Index(columnList = "createTime")})
 public class GrayEventLogDO {
 
     @Id
     @Column(length = 32)
     private String id;
     private String type;
-    @Column(name = "source_id", length = 64)
+    @Column(length = 64)
     private String sourceId;
-    @Column(name = "sort_mark", length = 20)
+    @Column(length = 20)
     private Long sortMark;
-    @Column(name = "content", length = 2048)
+    @Column(length = 2048)
     private String content;
-    @Column(name = "create_time")
+    @Column
     private Date createTime;
-    @Column(name = "del_flag")
+    @Column
     private Boolean delFlag;
 
 }

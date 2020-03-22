@@ -47,6 +47,9 @@ public class OAuth2Config {
 
     private static final Logger log = LoggerFactory.getLogger(OAuth2Config.class);
 
+    @Autowired
+    private AuthorizationServerTokenServices tokenServices;
+
     @Bean
     public JwtTokenStore tokenStore() {
         return new JwtTokenStore(jwtAccessTokenConverter());
@@ -73,17 +76,18 @@ public class OAuth2Config {
         return new DefaultOAuth2RequestFactory(clientDetailsService);
     }
 
+
     @Bean
-    public RefreshTokenGranter refreshTokenGranter(AuthorizationServerTokenServices tokenServices,
-                                                   ClientDetailsService clientDetailsService,
-                                                   OAuth2RequestFactory requestFactory) {
+    public RefreshTokenGranter refreshTokenGranter(
+            ClientDetailsService clientDetailsService,
+            OAuth2RequestFactory requestFactory) {
         return new RefreshTokenGranter(tokenServices, clientDetailsService, requestFactory);
     }
 
     @Bean
-    public DefaultTokenGranter defaultTokenGranter(AuthorizationServerTokenServices tokenServices,
-                                                   ClientDetailsService clientDetailsService,
-                                                   OAuth2RequestFactory requestFactory) {
+    public DefaultTokenGranter defaultTokenGranter(
+            ClientDetailsService clientDetailsService,
+            OAuth2RequestFactory requestFactory) {
         return new DefaultTokenGranter(tokenServices, clientDetailsService, requestFactory);
     }
 

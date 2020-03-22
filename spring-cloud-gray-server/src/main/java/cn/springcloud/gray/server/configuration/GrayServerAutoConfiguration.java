@@ -1,19 +1,14 @@
 package cn.springcloud.gray.server.configuration;
 
-import cn.springcloud.gray.event.GrayEventPublisher;
 import cn.springcloud.gray.server.GrayServerInitializingDestroyBean;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
-import cn.springcloud.gray.server.event.DefaultGrayEventPublisher;
 import cn.springcloud.gray.server.evictor.DefaultGrayServiceEvictor;
 import cn.springcloud.gray.server.evictor.GrayServerEvictor;
 import cn.springcloud.gray.server.evictor.NoActionGrayServerEvictor;
 import cn.springcloud.gray.server.manager.DefaultGrayServiceManager;
 import cn.springcloud.gray.server.manager.GrayServiceManager;
-import cn.springcloud.gray.server.module.gray.GrayModule;
-import cn.springcloud.gray.server.module.gray.GrayServerModule;
-import cn.springcloud.gray.server.module.gray.GrayServerTrackModule;
-import cn.springcloud.gray.server.module.gray.SimpleGrayModule;
+import cn.springcloud.gray.server.module.gray.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -75,17 +70,24 @@ public class GrayServerAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
         public GrayModule grayModule(
-                GrayServerModule grayServerModule, GrayServerTrackModule grayServerTrackModule,
+                GrayServerModule grayServerModule,
+                GrayPolicyModule grayPolicyModule,
+                GrayServerTrackModule grayServerTrackModule,
+                InstanceRouteModule instanceRouteModule,
                 @Autowired(required = false) ObjectMapper objectMapper) {
             if (objectMapper == null) {
                 objectMapper = new ObjectMapper();
             }
-            return new SimpleGrayModule(grayServerProperties, grayServerModule, grayServerTrackModule, objectMapper);
+            return new SimpleGrayModule(
+                    grayServerProperties,
+                    grayPolicyModule,
+                    grayServerModule,
+                    instanceRouteModule,
+                    grayServerTrackModule,
+                    objectMapper);
         }
 
     }
-
-
 
 
 }

@@ -2,14 +2,14 @@ package cn.springcloud.gray.server.module.gray;
 
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceStatus;
-import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
-import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.gray.domain.GrayService;
+import cn.springcloud.gray.server.module.gray.domain.query.GrayServiceQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,6 +28,8 @@ public interface GrayServerModule {
     }
 
     List<GrayInstance> listGrayInstancesByNormalInstanceStatus(Collection<InstanceStatus> instanceStatus);
+
+    List<GrayInstance> listGrayInstances(Iterator<String> serviceIds, Collection<InstanceStatus> instanceStatus);
 
     void deleteGrayService(String serviceId);
 
@@ -49,19 +51,6 @@ public interface GrayServerModule {
 
     void deleteGrayInstance(String intanceId);
 
-    GrayPolicy saveGrayPolicy(GrayPolicy grayPolicy);
-
-    void deleteGrayPolicy(Long policyId);
-
-    GrayDecision saveGrayDecision(GrayDecision grayDecision);
-
-    void deleteGrayDecision(Long decisionId);
-
-    GrayDecision getGrayDecision(Long id);
-
-    List<GrayDecision> listGrayDecisionsByPolicyId(Long policyId);
-
-
     GrayInstance getGrayInstance(String id);
 
     List<GrayService> listAllGrayServices();
@@ -75,15 +64,12 @@ public interface GrayServerModule {
         return Objects.isNull(grayService) ? "" : grayService.getContextPath();
     }
 
-    List<GrayPolicy> listGrayPoliciesByInstanceId(String instanceId);
-
     Page<GrayService> listAllGrayServices(Pageable pageable);
+
+    Page<GrayService> queryGrayServices(GrayServiceQuery query, Pageable pageable);
 
     List<GrayService> findGrayServices(Iterable<String> serviceIds);
 
-    Page<GrayPolicy> listGrayPoliciesByInstanceId(String instanceId, Pageable pageable);
-
     Page<GrayInstance> listGrayInstancesByServiceId(String serviceId, Pageable pageable);
 
-    Page<GrayDecision> listGrayDecisionsByPolicyId(Long policyId, Pageable pageable);
 }

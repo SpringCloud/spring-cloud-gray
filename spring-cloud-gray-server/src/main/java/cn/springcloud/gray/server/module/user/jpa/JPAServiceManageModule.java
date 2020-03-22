@@ -1,5 +1,7 @@
-package cn.springcloud.gray.server.module.user;
+package cn.springcloud.gray.server.module.user.jpa;
 
+import cn.springcloud.gray.server.module.user.ServiceManageModule;
+import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.module.user.domain.ServiceOwner;
 import cn.springcloud.gray.server.module.user.domain.ServiceOwnerQuery;
 import cn.springcloud.gray.server.module.user.domain.UserServiceAuthority;
@@ -72,13 +74,6 @@ public class JPAServiceManageModule implements ServiceManageModule {
         return userServiceAuthorityService.listAllServiceAuthorities(userId, pageable);
     }
 
-    @Override
-    public Page<String> listAllServiceIds(String userId, Pageable pageable) {
-        Page<UserServiceAuthority> entities = listAllServiceAuthorities(userId, pageable);
-        List<String> serviceIds = entities.getContent().stream().map(UserServiceAuthority::getServiceId).collect(Collectors.toList());
-        return new PageImpl<>(serviceIds, pageable, entities.getTotalElements());
-    }
-
     @Transactional
     @Override
     public ServiceOwner addServiceOwner(String serviceId) {
@@ -115,7 +110,7 @@ public class JPAServiceManageModule implements ServiceManageModule {
         serviceOwner.setOperator(userModule.getCurrentUserId());
         serviceOwner.setOperateTime(new Date());
         serviceOwnerService.saveModel(serviceOwner);
-        if(!hasServiceAuthority(serviceId, userId)) {
+        if (!hasServiceAuthority(serviceId, userId)) {
             addServiceAuthority(serviceId, userId);
         }
         return serviceOwner;

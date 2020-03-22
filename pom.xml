@@ -67,10 +67,12 @@
         <spring-cloud.version>Edgware.SR6</spring-cloud.version>
         <spring-cloud-alibaba-dependencies.version>1.5.0.RELEASE</spring-cloud-alibaba-dependencies.version>
         <alibaba-cloud.version>1.5.0.RELEASE</alibaba-cloud.version>
+        <spring-jcl.version>5.1.6.RELEASE</spring-jcl.version>
         <springfox.version>2.9.2</springfox.version>
         <lombok.version>1.18.8</lombok.version>
         <slf4j.version>1.7.26</slf4j.version>
         <commons-lang3.version>3.5</commons-lang3.version>
+        <commons-codec.version>1.10</commons-codec.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <guava.version>27.0.1-jre</guava.version>
         <mapstruct.version>1.1.0.Final</mapstruct.version>
@@ -292,6 +294,14 @@
 
 
             <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jcl</artifactId>
+                <version>${spring-jcl.version}</version>
+                <optional>true</optional>
+            </dependency>
+
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger-ui</artifactId>
@@ -323,11 +333,19 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+                <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons-beanutils.version}</version>
+                <optional>true</optional>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>

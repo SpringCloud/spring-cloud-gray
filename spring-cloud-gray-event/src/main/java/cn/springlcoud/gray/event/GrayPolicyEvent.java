@@ -10,7 +10,9 @@ import lombok.Data;
 @Data
 public class GrayPolicyEvent extends GrayEvent {
 
+    @Deprecated
     private String serviceId;
+    @Deprecated
     private String instanceId;
     private PolicyDefinition source;
 

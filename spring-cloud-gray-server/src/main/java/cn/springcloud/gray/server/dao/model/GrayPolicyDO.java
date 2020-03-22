@@ -11,19 +11,21 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gray_policy", indexes = {@Index(columnList = "instanceId")})
+@Table(name = "gray_policy", indexes = {@Index(columnList = "alias_name", unique = true), @Index(columnList = "namespace", unique = true)})
 public class GrayPolicyDO {
 
     @Id
     @Column(length = 20)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 64)
-    private String instanceId;
-    @Column(length = 256, name = "alias_name")
+    @Column(length = 128, name = "alias_name")
     private String alias;
+    @Column(length = 64)
+    private String namespace;
     @Column(length = 32)
     private String operator;
     @Column
     private Date operateTime;
+    @Column
+    private Boolean delFlag;
 }

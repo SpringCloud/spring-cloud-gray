@@ -9,7 +9,7 @@ public class ApiResHelper {
     public static <T> ApiRes<T> notAuthority() {
         return ApiRes.<T>builder()
                 .code(String.valueOf(HttpStatus.FORBIDDEN.value()))
-                .message("has not authority to operation this service")
+                .message("has not authority to operation this resource")
                 .build();
     }
 

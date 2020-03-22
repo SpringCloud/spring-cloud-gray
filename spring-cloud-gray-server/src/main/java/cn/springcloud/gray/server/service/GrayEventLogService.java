@@ -41,7 +41,8 @@ public class GrayEventLogService extends AbstraceCRUDService<GrayEventLog, GrayE
 
     public long getNewestSortMark() {
         Pageable pageable = new PageRequest(0, 1);
-        List<Long> newestSortMarks = repository.queryNewestSortMarks(pageable);
-        return newestSortMarks.size() > 0 ? newestSortMarks.get(0) : 0;
+//        List<Long> newestSortMarks = repository.queryNewestSortMark(pageable);
+//        return newestSortMarks.size() > 0 ? newestSortMarks.get(0) : 0;
+        return 0;
     }
 }

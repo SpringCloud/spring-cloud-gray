@@ -21,7 +21,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jcl</artifactId>
-            <version>5.1.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -40,6 +39,10 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

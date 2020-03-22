@@ -15,6 +15,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class GrayService {
 
+    @ApiModelProperty("命名空间")
+    private String namespace;
     @ApiModelProperty("服务id")
     private String serviceId;
     @ApiModelProperty("服务名称")

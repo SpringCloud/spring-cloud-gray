@@ -2,6 +2,8 @@ package cn.springcloud.gray.server.resources;
 
 import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.exceptions.NotFoundException;
+import cn.springcloud.gray.server.exception.NonAuthorityException;
+import cn.springcloud.gray.server.utils.ApiResHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,13 @@ public class ExceptionTranslator {
                 .build();
     }
 
+    @ExceptionHandler(NonAuthorityException.class)
+    @ResponseStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
+    @ResponseBody
+    public ApiRes<Void> processNonAuthorityException(NonAuthorityException ex) {
+        log.error("{}", ex.getMessage(), ex);
+        return ApiResHelper.notAuthority();
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -53,4 +62,6 @@ public class ExceptionTranslator {
                 .message(StringUtils.defaultIfEmpty(ex.getMessage(), "error"))
                 .build();
     }
+
+
 }

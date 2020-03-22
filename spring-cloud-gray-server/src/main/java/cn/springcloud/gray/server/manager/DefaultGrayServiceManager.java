@@ -48,7 +48,7 @@ public class DefaultGrayServiceManager implements GrayServiceManager {
 
 
     protected void evict() {
-        if(!grayServerProperties.getDiscovery().isEvictionEnabled()){
+        if (!grayServerProperties.getDiscovery().isEvictionEnabled()) {
             return;
         }
         grayServerEvictor.evict(getGrayServerModule());

@@ -10,7 +10,10 @@ import java.util.List;
 
 @Repository
 public interface GrayPolicyRepository extends JpaRepository<GrayPolicyDO, Long> {
-    List<GrayPolicyDO> findByInstanceId(String instanceId);
 
-    Page<GrayPolicyDO> findAllByInstanceId(String instanceId, Pageable pageable);
+    Page<GrayPolicyDO> findAllByNamespace(String namespace, Pageable pageable);
+
+    List<GrayPolicyDO> findAllByNamespace(String namespace);
+
+    List<GrayPolicyDO> findAllByIdInAndDelFlag(Iterable<Long> ids, boolean delFlag);
 }

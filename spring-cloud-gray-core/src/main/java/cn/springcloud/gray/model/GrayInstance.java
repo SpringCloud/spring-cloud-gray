@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -27,8 +28,12 @@ public class GrayInstance implements Serializable {
 
     /**
      * 类度策略组
+     * 兼容第一个版本，下一大版本将会弃用
      */
+    @Deprecated
     private List<PolicyDefinition> policyDefinitions = new CopyOnWriteArrayList<>();
+
+    private Set<String> routePolicies;
 
     private GrayStatus grayStatus;
 
