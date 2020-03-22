@@ -14,9 +14,11 @@ import java.util.List;
  */
 public interface GrayPolicyModule {
 
-    Page<GrayPolicy> listGrayPoliciesByNamespace(String namespace, Pageable pageable);
+    Page<GrayPolicy> listEnabledGrayPoliciesByNamespace(String namespace, Pageable pageable);
 
-    List<GrayPolicy> listGrayPoliciesByNamespace(String namespace);
+    List<GrayPolicy> listAllEnabledGrayPolicies();
+
+    List<GrayPolicy> listEnabledGrayPoliciesByNamespace(String namespace);
 
     Page<GrayDecision> listGrayDecisionsByPolicyId(Long policyId, Pageable pageable);
 

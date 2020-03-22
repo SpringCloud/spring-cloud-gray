@@ -13,7 +13,9 @@ public interface GrayPolicyRepository extends JpaRepository<GrayPolicyDO, Long> 
 
     Page<GrayPolicyDO> findAllByNamespace(String namespace, Pageable pageable);
 
-    List<GrayPolicyDO> findAllByNamespace(String namespace);
+    List<GrayPolicyDO> findAllByNamespaceAndDelFlag(String namespace, boolean delFlag);
+
+    List<GrayPolicyDO> findAllByDelFlag(boolean delFlag);
 
     List<GrayPolicyDO> findAllByIdInAndDelFlag(Iterable<Long> ids, boolean delFlag);
 }

@@ -81,7 +81,9 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
                 .genericModelSubstitutes(ResponseEntity.class)
                 .select()
 //                .paths(PathSelectors.any())
-                .paths(PathSelectors.ant("/gray/**"))
+                .paths(PathSelectors.ant("/**"))
+//                .paths(PathSelectors.ant("/namespace/**"))
+//                .paths(PathSelectors.ant("/authority/**"))
                 .build()
                 //2 定义了API的根路径
 //                .pathMapping("/")

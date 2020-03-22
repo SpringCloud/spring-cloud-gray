@@ -34,7 +34,7 @@ public class GrayResourceV1 {
     @ApiOperation("返回指定实例的信息（包含决策信息）")
     @RequestMapping(value = "/instance", method = RequestMethod.GET)
     public GrayInstance instance(@RequestParam("serviceId") String serviceId, @RequestParam("instanceId") String instanceId) {
-        return grayModule.getGrayInstance(serviceId, instanceId);
+        return grayModule.getGrayInstance(serviceId, instanceId, Version.V1);
     }
 
     @ApiOperation("返回指定实例的灰度追踪信息（包含决策信息）")

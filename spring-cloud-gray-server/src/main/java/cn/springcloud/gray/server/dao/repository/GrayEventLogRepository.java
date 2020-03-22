@@ -9,8 +9,5 @@ import java.util.List;
 @Repository
 public interface GrayEventLogRepository extends JpaRepository<GrayEventLogDO, String> {
 
-//    @Query(value = "select GrayEventLogDO.sortMark from GrayEventLogDO order by GrayEventLogDO.sortMark desc")
-//    List<Long> queryNewestSortMark(Pageable pageable);
-
     List<GrayEventLogDO> queryAllBySortMarkGreaterThanOrderBySortMark(long sortMark);
 }

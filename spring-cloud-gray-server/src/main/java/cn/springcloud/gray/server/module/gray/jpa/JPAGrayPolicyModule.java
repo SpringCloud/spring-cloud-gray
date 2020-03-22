@@ -30,13 +30,18 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
     }
 
     @Override
-    public Page<GrayPolicy> listGrayPoliciesByNamespace(String namespace, Pageable pageable) {
+    public Page<GrayPolicy> listEnabledGrayPoliciesByNamespace(String namespace, Pageable pageable) {
         return grayPolicyService.listGrayPoliciesByNamespace(namespace, pageable);
     }
 
     @Override
-    public List<GrayPolicy> listGrayPoliciesByNamespace(String namespace) {
-        return grayPolicyService.listGrayPoliciesByNamespace(namespace);
+    public List<GrayPolicy> listAllEnabledGrayPolicies() {
+        return grayPolicyService.listEnabledGrayPolicies();
+    }
+
+    @Override
+    public List<GrayPolicy> listEnabledGrayPoliciesByNamespace(String namespace) {
+        return grayPolicyService.listEnabledGrayPoliciesByNamespace(namespace);
     }
 
     @Override
