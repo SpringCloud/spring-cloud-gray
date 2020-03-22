@@ -25,6 +25,7 @@ public class SimpleGrayModule implements GrayModule {
     private InstanceRouteModule instanceRouteModule;
     private GrayServerTrackModule grayServerTrackModule;
     private ObjectMapper objectMapper;
+    private GrayEventLogModule grayEventLogModule;
 
     public SimpleGrayModule(
             GrayServerProperties grayServerProperties,
@@ -32,6 +33,7 @@ public class SimpleGrayModule implements GrayModule {
             GrayServerModule grayServerModule,
             InstanceRouteModule instanceRouteModule,
             GrayServerTrackModule grayServerTrackModule,
+            GrayEventLogModule grayEventLogModule,
             ObjectMapper objectMapper) {
         this.grayServerProperties = grayServerProperties;
         this.grayPolicyModule = grayPolicyModule;
@@ -39,6 +41,7 @@ public class SimpleGrayModule implements GrayModule {
         this.instanceRouteModule = instanceRouteModule;
         this.grayServerTrackModule = grayServerTrackModule;
         this.objectMapper = objectMapper;
+        this.grayEventLogModule = grayEventLogModule;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class SimpleGrayModule implements GrayModule {
     }
 
     @Override
-    public GrayInstance getGrayInstance(String serviceId, String instanceId) {
+    public GrayInstance getGrayInstance(String serviceId, String instanceId, Version version) {
         cn.springcloud.gray.server.module.gray.domain.GrayInstance grayInstance = grayServerModule.getGrayInstance(instanceId);
         if (grayInstance == null) {
             return null;
@@ -102,14 +105,7 @@ public class SimpleGrayModule implements GrayModule {
             if (Objects.equals(instance.getGrayStatus(), GrayStatus.CLOSE)) {
                 return;
             }
-            cn.springcloud.gray.model.GrayInstance grayInstance = null;
-            if (Objects.equals(version, Version.V1)) {
-                grayInstance = ofOldGrayInstanceInfo(instance);
-            } else if (Objects.equals(version, Version.V2)) {
-                grayInstance = ofGrayInstance(instance);
-                List<Long> policyIds = listPolicyIdsByInstanceId(grayInstance.getInstanceId());
-                grayInstance.setRoutePolicies(new HashSet<>(policyIds.stream().map(String::valueOf).collect(Collectors.toList())));
-            }
+            cn.springcloud.gray.model.GrayInstance grayInstance = ofGrayInstanceInfo(instance, version);
             grayInstances.add(grayInstance);
         });
         return grayInstances;
@@ -124,9 +120,21 @@ public class SimpleGrayModule implements GrayModule {
         return grayInstance;
     }
 
+    private cn.springcloud.gray.model.GrayInstance ofGrayInstanceInfo(
+            cn.springcloud.gray.server.module.gray.domain.GrayInstance instance, Version version) {
+        if (Objects.equals(version, Version.V1)) {
+            return ofOldGrayInstanceInfo(instance);
+        }
+        cn.springcloud.gray.model.GrayInstance grayInstance = ofGrayInstance(instance);
+        List<Long> policyIds = listPolicyIdsByInstanceId(grayInstance.getInstanceId());
+        grayInstance.setRoutePolicies(new HashSet<>(policyIds.stream().map(String::valueOf).collect(Collectors.toList())));
+        return grayInstance;
+    }
+
 
     @Override
-    public cn.springcloud.gray.model.GrayInstance ofGrayInstance(cn.springcloud.gray.server.module.gray.domain.GrayInstance instance) {
+    public cn.springcloud.gray.model.GrayInstance ofGrayInstance
+            (cn.springcloud.gray.server.module.gray.domain.GrayInstance instance) {
         cn.springcloud.gray.model.GrayInstance grayInstance = new cn.springcloud.gray.model.GrayInstance();
         grayInstance.setPort(instance.getPort());
         grayInstance.setServiceId(instance.getServiceId());
@@ -136,15 +144,13 @@ public class SimpleGrayModule implements GrayModule {
         return grayInstance;
     }
 
-    @Deprecated
     @Override
     public List<PolicyDefinition> ofGrayPoliciesByInstanceId(String instanceId) {
         List<Long> policyIds = listPolicyIdsByInstanceId(instanceId);
         List<GrayPolicy> grayPolicies = grayPolicyModule.findAllGrayPolicies(policyIds, false);
         List<PolicyDefinition> policyDefinitions = new ArrayList<>(grayPolicies.size());
         grayPolicies.forEach(grayPolicy -> {
-            PolicyDefinition policyDefinition = ofGrayPolicy(grayPolicy);
-            policyDefinition.setList(ofGrayDecisionByPolicyId(grayPolicy.getId()));
+            PolicyDefinition policyDefinition = ofGrayPolicyInfo(grayPolicy);
             policyDefinitions.add(policyDefinition);
         });
 
@@ -152,9 +158,25 @@ public class SimpleGrayModule implements GrayModule {
     }
 
     @Override
+    public List<PolicyDefinition> allGrayPolicies() {
+        return grayPolicyModule.listAllEnabledGrayPolicies()
+                .stream()
+                .map(this::ofGrayPolicyInfo)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<Long> listPolicyIdsByInstanceId(String instanceId) {
         List<InstanceRoutePolicy> instanceRoutePolicies = instanceRouteModule.findAllRoutePoliciesByInstanceId(instanceId, false);
         return instanceRoutePolicies.stream().map(InstanceRoutePolicy::getPolicyId).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public PolicyDefinition ofGrayPolicyInfo(GrayPolicy grayPolicy) {
+        PolicyDefinition policyDefinition = ofGrayPolicy(grayPolicy);
+        policyDefinition.setList(ofGrayDecisionByPolicyId(grayPolicy.getId()));
+        return policyDefinition;
     }
 
     @Override
@@ -194,5 +216,10 @@ public class SimpleGrayModule implements GrayModule {
         decisionDefinition.setInfos(objectMapper.readValue(grayDecision.getInfos(), new TypeReference<Map<String, String>>() {
         }));
         return decisionDefinition;
+    }
+
+    @Override
+    public long getMaxSortMark() {
+        return grayEventLogModule.getNewestSortMark();
     }
 }

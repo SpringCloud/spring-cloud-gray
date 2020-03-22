@@ -46,12 +46,17 @@ public class GrayPolicyService extends AbstraceCRUDService<GrayPolicy, GrayPolic
         return PaginationUtils.convert(pageable, entities, grayPolicyMapper);
     }
 
-    public List<GrayPolicy> listGrayPoliciesByNamespace(String namespace) {
-        List<GrayPolicyDO> entities = repository.findAllByNamespace(namespace);
+    public List<GrayPolicy> listEnabledGrayPoliciesByNamespace(String namespace) {
+        List<GrayPolicyDO> entities = repository.findAllByNamespaceAndDelFlag(namespace, false);
         return grayPolicyMapper.dos2models(entities);
     }
 
     public List<GrayPolicy> findAllModel(Iterable<Long> policyIds, Boolean delFlag) {
         return grayPolicyMapper.dos2models(repository.findAllByIdInAndDelFlag(policyIds, delFlag));
+    }
+
+    public List<GrayPolicy> listEnabledGrayPolicies() {
+        List<GrayPolicyDO> entities = repository.findAllByDelFlag(false);
+        return grayPolicyMapper.dos2models(entities);
     }
 }

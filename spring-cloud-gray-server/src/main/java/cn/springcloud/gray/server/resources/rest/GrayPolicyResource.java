@@ -43,7 +43,7 @@ public class GrayPolicyResource {
     public ApiRes<List<GrayPolicy>> listByInstanceId(@RequestParam("namespace") String namespace) {
         return ApiRes.<List<GrayPolicy>>builder()
                 .code(CODE_SUCCESS)
-                .data(grayPolicyModule.listGrayPoliciesByNamespace(namespace))
+                .data(grayPolicyModule.listEnabledGrayPoliciesByNamespace(namespace))
                 .build();
     }
 
@@ -52,7 +52,7 @@ public class GrayPolicyResource {
     public ResponseEntity<ApiRes<List<GrayPolicy>>> page(
             @RequestParam("namespace") String namespace,
             @ApiParam @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<GrayPolicy> page = grayPolicyModule.listGrayPoliciesByNamespace(namespace, pageable);
+        Page<GrayPolicy> page = grayPolicyModule.listEnabledGrayPoliciesByNamespace(namespace, pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
         ApiRes<List<GrayPolicy>> res = ApiRes.<List<GrayPolicy>>builder()
                 .code(CODE_SUCCESS)

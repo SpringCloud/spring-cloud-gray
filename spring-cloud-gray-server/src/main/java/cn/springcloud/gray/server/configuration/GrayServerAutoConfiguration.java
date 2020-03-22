@@ -74,6 +74,7 @@ public class GrayServerAutoConfiguration {
                 GrayPolicyModule grayPolicyModule,
                 GrayServerTrackModule grayServerTrackModule,
                 InstanceRouteModule instanceRouteModule,
+                GrayEventLogModule grayEventLogModule,
                 @Autowired(required = false) ObjectMapper objectMapper) {
             if (objectMapper == null) {
                 objectMapper = new ObjectMapper();
@@ -84,6 +85,7 @@ public class GrayServerAutoConfiguration {
                     grayServerModule,
                     instanceRouteModule,
                     grayServerTrackModule,
+                    grayEventLogModule,
                     objectMapper);
         }
 

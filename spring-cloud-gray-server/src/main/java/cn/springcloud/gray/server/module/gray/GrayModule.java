@@ -23,20 +23,31 @@ public interface GrayModule {
 
     List<GrayInstance> allOpenInstances(Iterator<String> serviceIds, Version version);
 
-    GrayInstance getGrayInstance(String serviceId, String instanceId);
+    default GrayInstance getGrayInstance(String serviceId, String instanceId) {
+        return getGrayInstance(serviceId, instanceId, Version.V2);
+    }
+
+    GrayInstance getGrayInstance(String serviceId, String instanceId, Version version);
 
 
     List<GrayTrackDefinition> getTrackDefinitions(String serviceId, String instanceId);
 
     GrayInstance ofGrayInstance(cn.springcloud.gray.server.module.gray.domain.GrayInstance instance);
 
+    @Deprecated
     List<PolicyDefinition> ofGrayPoliciesByInstanceId(String instanceId);
 
+    List<PolicyDefinition> allGrayPolicies();
+
     List<Long> listPolicyIdsByInstanceId(String instanceId);
+
+    PolicyDefinition ofGrayPolicyInfo(GrayPolicy grayPolicy);
 
     PolicyDefinition ofGrayPolicy(GrayPolicy grayPolicy);
 
     List<DecisionDefinition> ofGrayDecisionByPolicyId(Long policyId);
 
     DecisionDefinition ofGrayDecision(GrayDecision grayDecision) throws IOException;
+
+    long getMaxSortMark();
 }
