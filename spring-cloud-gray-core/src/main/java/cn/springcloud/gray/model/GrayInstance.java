@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 
 /**
@@ -42,5 +43,16 @@ public class GrayInstance implements Serializable {
         return grayStatus == GrayStatus.OPEN;
     }
 
+
+    public static GrayInstance copyof(GrayInstance other) {
+        GrayInstance bean = new GrayInstance();
+        bean.setPort(other.getPort());
+        bean.setHost(other.getHost());
+        bean.setGrayStatus(other.getGrayStatus());
+        bean.setInstanceId(other.getInstanceId());
+        bean.setServiceId(other.getServiceId());
+        bean.setRoutePolicies(new CopyOnWriteArraySet<>(other.getRoutePolicies()));
+        return bean;
+    }
 
 }
