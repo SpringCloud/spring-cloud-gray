@@ -1,11 +1,12 @@
 package cn.springcloud.gray.server.resources.rest.remote;
 
 import cn.springcloud.gray.api.ApiRes;
+import cn.springcloud.gray.model.GrayInfos;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayTrackDefinition;
+import cn.springcloud.gray.model.PolicyDefinition;
 import cn.springcloud.gray.server.constant.Version;
 import cn.springcloud.gray.server.module.gray.GrayModule;
-import cn.springcloud.gray.server.module.gray.domain.GrayPolicyDecision;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,14 +27,27 @@ public class GrayResourceV2 {
     @Autowired
     private GrayModule grayModule;
 
+    @ApiOperation("返回所有灰度信息")
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public ApiRes<GrayInfos> allInfos(
+            @RequestParam("serviceId") String serviceId,
+            @RequestParam("instanceId") String instanceId) {
+        GrayInfos grayInfos = new GrayInfos();
+        grayInfos.setMaxSortMark(grayModule.getMaxSortMark());
+        grayInfos.setInstances(grayModule.allOpenInstances(Version.V2));
+        grayInfos.setPolicyDecisions(grayModule.allGrayPolicies());
+        grayInfos.setTrackDefinitions(grayModule.getTrackDefinitions(serviceId, instanceId));
+        return ApiResHelper.successData(grayInfos);
+    }
+
     @ApiOperation("返回所有已经打开灰度状态的实例信息（包含决策信息）")
     @RequestMapping(value = "/instances/enable", method = RequestMethod.GET)
-    public ApiRes<List<GrayInstance>> allOpens() {
+    public ApiRes<List<GrayInstance>> allInstances() {
         return ApiResHelper.successData(grayModule.allOpenInstances(Version.V2));
     }
 
 
-    @ApiOperation("返回指定实例的信息（包含决策信息）")
+    @ApiOperation("返回指定实例的信息")
     @RequestMapping(value = "/instance", method = RequestMethod.GET)
     public ApiRes<GrayInstance> instance(
             @RequestParam("serviceId") String serviceId,
@@ -41,7 +55,7 @@ public class GrayResourceV2 {
         return ApiResHelper.successData(grayModule.getGrayInstance(serviceId, instanceId, Version.V2));
     }
 
-    @ApiOperation("返回指定实例的灰度追踪信息（包含决策信息）")
+    @ApiOperation("返回指定实例的灰度追踪信息")
     @RequestMapping(value = "/trackDefinitions", method = RequestMethod.GET)
     public ApiRes<List<GrayTrackDefinition>> trackDefinitions(
             @RequestParam("serviceId") String serviceId,
@@ -52,7 +66,7 @@ public class GrayResourceV2 {
 
     @ApiOperation("返回所有的灰度策略")
     @RequestMapping(value = "/policyDefinitions", method = RequestMethod.GET)
-    public ApiRes<List<GrayPolicyDecision>> policyDefinitions() {
+    public ApiRes<List<PolicyDefinition>> policyDefinitions() {
         return ApiResHelper.successData(grayModule.allGrayPolicies());
     }
 
