@@ -3,7 +3,6 @@ package cn.springcloud.gray.request.track;
 import cn.springcloud.gray.model.GrayTrackDefinition;
 import cn.springcloud.gray.request.GrayInfoTracker;
 import cn.springcloud.gray.request.GrayTrackInfo;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.OrderComparator;
 
 import java.util.*;
@@ -85,6 +84,11 @@ public class SimpleGrayTrackHolder implements GrayTrackHolder {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public void clearTrackDefinitions() {
+        trackDefinitions.clear();
     }
 
 

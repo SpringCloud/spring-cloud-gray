@@ -1,5 +1,6 @@
 package cn.springcloud.gray.communication;
 
+import cn.springcloud.gray.model.GrayInfos;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayTrackDefinition;
 
@@ -12,6 +13,15 @@ import java.util.List;
  */
 public interface InformationClient {
 
+
+    /**
+     * 返回所有的灰度信息
+     *
+     * @param serviceId
+     * @param instanceId
+     * @return
+     */
+    GrayInfos allInfos(String serviceId, String instanceId);
 
     /**
      * 返回在灰度中注册的所有灰度实例(不包括非灰度实例)

@@ -1,11 +1,5 @@
 package cn.springcloud.gray;
 
-import cn.springcloud.gray.decision.GrayDecision;
-import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
-import cn.springcloud.gray.decision.MultiGrayDecision;
-import cn.springcloud.gray.model.DecisionDefinition;
-import cn.springcloud.gray.model.GrayInstance;
-import cn.springcloud.gray.model.PolicyDefinition;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,15 +17,8 @@ public abstract class AbstractGrayManager implements UpdateableGrayManager {
     private static final Logger log = LoggerFactory.getLogger(AbstractGrayManager.class);
 
 
-    private GrayDecisionFactoryKeeper grayDecisionFactoryKeeper;
     private Map<String, List<RequestInterceptor>> requestInterceptors = new HashMap<>();
     private List<RequestInterceptor> communalRequestInterceptors = ListUtils.EMPTY_LIST;
-
-
-    public AbstractGrayManager(
-            GrayDecisionFactoryKeeper grayDecisionFactoryKeeper) {
-        this.grayDecisionFactoryKeeper = grayDecisionFactoryKeeper;
-    }
 
 
     @Override
@@ -42,45 +29,6 @@ public abstract class AbstractGrayManager implements UpdateableGrayManager {
         }
         return list;
     }
-
-
-    @Override
-    public List<GrayDecision> getGrayDecision(GrayInstance instance) {
-        List<PolicyDefinition> policyDefinitions = instance.getPolicyDefinitions();
-        List<GrayDecision> grayDecisions = new ArrayList<>(policyDefinitions.size());
-
-        for (PolicyDefinition policyDefinition : policyDefinitions) {
-            if (CollectionUtils.isEmpty(policyDefinition.getList())) {
-                continue;
-            }
-            GrayDecision decision = createGrayDecision(policyDefinition);
-            if (decision != null) {
-                grayDecisions.add(decision);
-            }
-        }
-
-        return grayDecisions;
-    }
-
-    @Override
-    public List<GrayDecision> getGrayDecision(String serviceId, String instanceId) {
-        return getGrayDecision(getGrayInstance(serviceId, instanceId));
-    }
-
-
-    private GrayDecision createGrayDecision(PolicyDefinition policyDefinition) {
-        try {
-            MultiGrayDecision decision = new MultiGrayDecision(GrayDecision.allow());
-            for (DecisionDefinition decisionDefinition : policyDefinition.getList()) {
-                decision = decision.and(grayDecisionFactoryKeeper.getGrayDecision(decisionDefinition));
-            }
-            return decision;
-        } catch (Exception e) {
-            log.warn(e.getMessage(), e);
-            return null;
-        }
-    }
-
 
 
     public void setRequestInterceptors(Collection<RequestInterceptor> requestInterceptors) {
@@ -104,7 +52,6 @@ public abstract class AbstractGrayManager implements UpdateableGrayManager {
         }
         this.communalRequestInterceptors = all;
         this.requestInterceptors = requestInterceptorMap;
-
     }
 
     private void putTypeAllTo(Map<String, List<RequestInterceptor>> requestInterceptorMap, List<RequestInterceptor> all) {

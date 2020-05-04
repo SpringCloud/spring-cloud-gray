@@ -6,7 +6,9 @@ package cn.springcloud.gray.refresh;
  */
 public interface Refresher {
 
-    void refresh();
+    boolean refresh();
+
+    boolean load();
 
 
     String triggerName();

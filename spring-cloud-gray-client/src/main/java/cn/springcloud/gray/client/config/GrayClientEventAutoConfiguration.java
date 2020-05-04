@@ -2,6 +2,7 @@ package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.UpdateableGrayManager;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.event.listener.*;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
@@ -48,8 +49,8 @@ public class GrayClientEventAutoConfiguration {
     @Bean
     public GrayPolicyEventListener grayPolicyEventListener(
             InstanceLocalInfoObtainer instanceLocalInfoObtainer,
-            UpdateableGrayManager grayManager) {
-        return new GrayPolicyEventListener(grayManager, instanceLocalInfoObtainer);
+            PolicyDecisionManager policyDecisionManager) {
+        return new GrayPolicyEventListener(policyDecisionManager, instanceLocalInfoObtainer);
     }
 
     @Bean
@@ -60,8 +61,8 @@ public class GrayClientEventAutoConfiguration {
     @Bean
     public GrayDecisionEventListener grayDecisionEventListener(
             InstanceLocalInfoObtainer instanceLocalInfoObtainer,
-            UpdateableGrayManager grayManager) {
-        return new GrayDecisionEventListener(grayManager, instanceLocalInfoObtainer);
+            PolicyDecisionManager policyDecisionManager) {
+        return new GrayDecisionEventListener(policyDecisionManager, instanceLocalInfoObtainer);
     }
 
 

@@ -1,6 +1,6 @@
 package cn.springcloud.gray.event.sourcehander;
 
-import cn.springcloud.gray.UpdateableGrayManager;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.event.EventType;
 import cn.springcloud.gray.event.GrayEventMsg;
 import cn.springcloud.gray.event.SourceType;
@@ -17,12 +17,12 @@ public class GrayPolicyEventHandler implements GraySourceEventHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GrayPolicyEventHandler.class);
 
-    private UpdateableGrayManager grayManager;
+    private PolicyDecisionManager policyDecisionManager;
 
     private InstanceLocalInfoObtainer instanceLocalInfoObtainer;
 
-    public GrayPolicyEventHandler(UpdateableGrayManager grayManager, InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
-        this.grayManager = grayManager;
+    public GrayPolicyEventHandler(PolicyDecisionManager policyDecisionManager, InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
+        this.policyDecisionManager = policyDecisionManager;
         this.instanceLocalInfoObtainer = instanceLocalInfoObtainer;
     }
 
@@ -46,11 +46,9 @@ public class GrayPolicyEventHandler implements GraySourceEventHandler {
         PolicyDefinition policyDefinition = (PolicyDefinition) eventMsg.getSource();
 
         if (Objects.equals(eventMsg.getEventType(), EventType.UPDATE)) {
-            grayManager.updatePolicyDefinition(
-                    eventMsg.getServiceId(), eventMsg.getInstanceId(), policyDefinition);
+            policyDecisionManager.setPolicyDefinition(policyDefinition);
         } else {
-            grayManager.removePolicyDefinition(
-                    eventMsg.getServiceId(), eventMsg.getInstanceId(), policyDefinition.getPolicyId());
+            policyDecisionManager.removePolicy(policyDefinition.getPolicyId());
         }
     }
 }

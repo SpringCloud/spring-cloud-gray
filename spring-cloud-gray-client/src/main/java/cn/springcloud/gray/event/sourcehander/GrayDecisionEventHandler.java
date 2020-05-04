@@ -1,6 +1,6 @@
 package cn.springcloud.gray.event.sourcehander;
 
-import cn.springcloud.gray.UpdateableGrayManager;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.event.DecisionDefinitionMsg;
 import cn.springcloud.gray.event.EventType;
 import cn.springcloud.gray.event.GrayEventMsg;
@@ -18,11 +18,11 @@ public class GrayDecisionEventHandler implements GraySourceEventHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GrayDecisionEventHandler.class);
 
-    private UpdateableGrayManager grayManager;
+    private PolicyDecisionManager policyDecisionManager;
     private InstanceLocalInfoObtainer instanceLocalInfoObtainer;
 
-    public GrayDecisionEventHandler(UpdateableGrayManager grayManager, InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
-        this.grayManager = grayManager;
+    public GrayDecisionEventHandler(PolicyDecisionManager policyDecisionManager, InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
+        this.policyDecisionManager = policyDecisionManager;
         this.instanceLocalInfoObtainer = instanceLocalInfoObtainer;
     }
 
@@ -51,11 +51,9 @@ public class GrayDecisionEventHandler implements GraySourceEventHandler {
             decisionDefinition.setInfos(decisionDefinitionMsg.getInfos());
             decisionDefinition.setName(decisionDefinitionMsg.getName());
             decisionDefinition.setId(decisionDefinitionMsg.getId());
-            grayManager.updateDecisionDefinition(
-                    eventMsg.getServiceId(), eventMsg.getInstanceId(), decisionDefinitionMsg.getPolicyId(), decisionDefinition);
+            policyDecisionManager.setDecisionDefinition(decisionDefinitionMsg.getPolicyId(), decisionDefinition);
         } else {
-            grayManager.removeDecisionDefinition(
-                    eventMsg.getServiceId(), eventMsg.getInstanceId(), decisionDefinitionMsg.getPolicyId(), decisionDefinitionMsg.getId());
+            policyDecisionManager.removeDecisionDefinition(decisionDefinitionMsg.getPolicyId(), decisionDefinitionMsg.getId());
         }
     }
 }

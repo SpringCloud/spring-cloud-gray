@@ -4,7 +4,9 @@ import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.ServerChooser;
 import cn.springcloud.gray.ServerListResult;
-import cn.springcloud.gray.choose.GrayPredicate;
+import cn.springcloud.gray.choose.PredicateType;
+import cn.springcloud.gray.decision.GrayDecisionInputArgs;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.RequestLocalStorage;
@@ -27,7 +29,7 @@ public class RibbonServerChooser implements ServerChooser<Server> {
 
     private RequestLocalStorage requestLocalStorage;
 
-    private GrayPredicate grayPredicate;
+    private PolicyDecisionManager policyDecisionManager;
 
     private ServerExplainer<Server> serverExplainer;
 
@@ -37,19 +39,23 @@ public class RibbonServerChooser implements ServerChooser<Server> {
     public RibbonServerChooser(
             GrayManager grayManager,
             RequestLocalStorage requestLocalStorage,
-            GrayPredicate grayPredicate,
+            PolicyDecisionManager policyDecisionManager,
             ServerExplainer<Server> serverExplainer,
             ServerListProcessor serverListProcessor) {
         this.grayManager = grayManager;
         this.requestLocalStorage = requestLocalStorage;
-        this.grayPredicate = grayPredicate;
+        this.policyDecisionManager = policyDecisionManager;
         this.serverExplainer = serverExplainer;
         this.serverListProcessor = serverListProcessor;
     }
 
     @Override
     public boolean matchGrayDecisions(ServerSpec serverSpec) {
-        return grayPredicate.apply(serverSpec);
+        GrayDecisionInputArgs decisionInputArgs = new GrayDecisionInputArgs();
+        decisionInputArgs.setServer(serverSpec);
+        decisionInputArgs.setGrayRequest(requestLocalStorage.getGrayRequest());
+
+        return policyDecisionManager.testPolicyPredicate(PredicateType.SERVER.name(), decisionInputArgs);
     }
 
     @Override
@@ -60,7 +66,7 @@ public class RibbonServerChooser implements ServerChooser<Server> {
     @Override
     public ServerListResult<Server> distinguishServerList(List<Server> servers) {
         String serviceId = getServiceId(servers);
-        if(StringUtils.isEmpty(serviceId)){
+        if (StringUtils.isEmpty(serviceId)) {
             return null;
         }
         return distinguishServerList(serviceId, servers);
@@ -79,19 +85,19 @@ public class RibbonServerChooser implements ServerChooser<Server> {
                     serverListResult.getGrayServers().stream()
                             .filter(this::matchGrayDecisions)
                             .collect(Collectors.toList()));
-        }else{
+        } else {
             serverListResult.setGrayServers(ListUtils.EMPTY_LIST);
         }
 
         return serverListResult;
     }
 
-    private String getServiceId(List<Server> servers){
+    private String getServiceId(List<Server> servers) {
         GrayRequest grayRequest = requestLocalStorage.getGrayRequest();
         if (grayRequest != null && StringUtils.isNotEmpty(grayRequest.getServiceId())) {
             return grayRequest.getServiceId();
         }
-        if(CollectionUtils.isNotEmpty(servers)) {
+        if (CollectionUtils.isNotEmpty(servers)) {
             Server server = servers.get(0);
             if (!Objects.isNull(server)) {
                 return server.getMetaInfo().getServiceIdForDiscovery();

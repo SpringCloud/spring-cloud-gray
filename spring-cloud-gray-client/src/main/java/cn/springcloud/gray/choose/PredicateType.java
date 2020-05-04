@@ -1,0 +1,9 @@
+package cn.springcloud.gray.choose;
+
+/**
+ * @author saleson
+ * @date 2020-04-08 00:20
+ */
+public enum PredicateType {
+    SERVER
+}

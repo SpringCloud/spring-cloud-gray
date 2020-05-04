@@ -43,10 +43,8 @@ public class InformationClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public InformationClient informationClient(
-            @Autowired(required = false) RestTemplate grayInformationRestTemplate,
-            GrayServerProperties grayServerProperties) {
-        InformationClient httpClient = new HttpInformationClient(grayServerProperties.getUrl(), grayInformationRestTemplate);
+    public InformationClient informationClient(HttpAgent httpAgent, GrayServerProperties grayServerProperties) {
+        InformationClient httpClient = new HttpInformationClient(httpAgent);
         if (grayServerProperties.isRetryable()) {
             return new RetryableInformationClient(Math.max(3, grayServerProperties.getRetryNumberOfRetries()), httpClient);
         } else {

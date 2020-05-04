@@ -1,7 +1,7 @@
 package cn.springcloud.gray.dynamic.decision;
 
-import cn.springcloud.gray.CachedGrayManager;
-import cn.springcloud.gray.GrayManager;
+import cn.springcloud.gray.decision.DefaultCachePolicyDecisionManager;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.dynamiclogic.DynamicLogicEvent;
 import org.springframework.context.ApplicationListener;
 
@@ -11,17 +11,17 @@ import org.springframework.context.ApplicationListener;
  */
 public class DynamicDecisionListener implements ApplicationListener<DynamicLogicEvent> {
 
-    private GrayManager grayManager;
+    private PolicyDecisionManager policyDecisionManager;
 
-    public DynamicDecisionListener(GrayManager grayManager) {
-        this.grayManager = grayManager;
+    public DynamicDecisionListener(PolicyDecisionManager policyDecisionManager) {
+        this.policyDecisionManager = policyDecisionManager;
     }
 
     @Override
     public void onApplicationEvent(DynamicLogicEvent event) {
-        if (grayManager instanceof CachedGrayManager) {
-            CachedGrayManager cachedGrayManager = (CachedGrayManager) grayManager;
-            cachedGrayManager.getGrayDecisionCache().invalidateAll();
+        if (policyDecisionManager instanceof DefaultCachePolicyDecisionManager) {
+            DefaultCachePolicyDecisionManager cachePolicyDecisionManager = (DefaultCachePolicyDecisionManager) policyDecisionManager;
+            cachePolicyDecisionManager.invalidateAllCache();
         }
     }
 }

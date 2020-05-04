@@ -25,7 +25,7 @@ public class RandomFlowRateGrayDecisionFactoryTest {
 
         GrayHttpRequest grayRequest = new GrayHttpRequest();
         grayRequest.addHeader("mark", "abc");
-        GrayDecisionInputArgs args = GrayDecisionInputArgs.builder().grayRequest(grayRequest).build();
+        DecisionInputArgs args = new GrayDecisionInputArgs().setGrayRequest(grayRequest);
 
         GrayDecision grayDecision = decisionFactory.apply(config);
         boolean val = grayDecision.test(args);
@@ -54,7 +54,7 @@ public class RandomFlowRateGrayDecisionFactoryTest {
 
         GrayHttpRequest grayRequest = new GrayHttpRequest();
         grayRequest.addHeader("mark", "abc");
-        GrayDecisionInputArgs args = GrayDecisionInputArgs.builder().grayRequest(grayRequest).build();
+        DecisionInputArgs args = new GrayDecisionInputArgs().setGrayRequest(grayRequest);
 
         GrayDecision grayDecision = decisionFactory.apply(config);
 
@@ -79,7 +79,7 @@ public class RandomFlowRateGrayDecisionFactoryTest {
 
         GrayHttpRequest grayRequest = new GrayHttpRequest();
         grayRequest.addHeader("mark", "abc");
-        GrayDecisionInputArgs args = GrayDecisionInputArgs.builder().grayRequest(grayRequest).build();
+        DecisionInputArgs args = new GrayDecisionInputArgs().setGrayRequest(grayRequest);
 
         GrayDecision grayDecision = decisionFactory.apply(config);
         int count = 0;

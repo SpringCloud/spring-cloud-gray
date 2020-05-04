@@ -23,7 +23,7 @@ public class FlowRateGrayDecisionFactoryTest {
 
         GrayHttpRequest grayRequest = new GrayHttpRequest();
         grayRequest.addHeader("mark", "abc");
-        GrayDecisionInputArgs args = GrayDecisionInputArgs.builder().grayRequest(grayRequest).build();
+        DecisionInputArgs args = new GrayDecisionInputArgs().setGrayRequest(grayRequest);
 
         GrayDecision grayDecision = decisionFactory.apply(config);
         boolean val = grayDecision.test(args);
@@ -43,7 +43,7 @@ public class FlowRateGrayDecisionFactoryTest {
 
         GrayHttpRequest grayRequest = new GrayHttpRequest();
         grayRequest.addHeader("mark", "abc");
-        GrayDecisionInputArgs args = GrayDecisionInputArgs.builder().grayRequest(grayRequest).build();
+        DecisionInputArgs args = new GrayDecisionInputArgs().setGrayRequest(grayRequest);
 
         GrayDecision grayDecision = decisionFactory.apply(config);
 
@@ -64,7 +64,7 @@ public class FlowRateGrayDecisionFactoryTest {
         config.setRate(50);
 
         GrayHttpRequest grayRequest = new GrayHttpRequest();
-        GrayDecisionInputArgs args = GrayDecisionInputArgs.builder().grayRequest(grayRequest).build();
+        DecisionInputArgs args = new GrayDecisionInputArgs().setGrayRequest(grayRequest);
 
         GrayDecision grayDecision = decisionFactory.apply(config);
         int count = 0;

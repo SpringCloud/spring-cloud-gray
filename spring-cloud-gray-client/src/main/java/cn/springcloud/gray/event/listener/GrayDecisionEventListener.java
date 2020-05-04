@@ -1,6 +1,6 @@
 package cn.springcloud.gray.event.listener;
 
-import cn.springcloud.gray.UpdateableGrayManager;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.model.DecisionDefinition;
@@ -15,27 +15,24 @@ import org.apache.commons.lang3.StringUtils;
 @Slf4j
 public class GrayDecisionEventListener extends AbstractGrayEventListener<GrayDecisionEvent> {
 
-    private UpdateableGrayManager grayManager;
+    private PolicyDecisionManager policyDecisionManager;
     private InstanceLocalInfoObtainer instanceLocalInfoObtainer;
 
-    public GrayDecisionEventListener(
-            UpdateableGrayManager grayManager, InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
-        this.grayManager = grayManager;
+    public GrayDecisionEventListener(PolicyDecisionManager policyDecisionManager, InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
+        this.policyDecisionManager = policyDecisionManager;
         this.instanceLocalInfoObtainer = instanceLocalInfoObtainer;
     }
 
     @Override
     protected void onUpdate(GrayDecisionEvent event) {
         DecisionDefinition decisionDefinition = event.getSource();
-        grayManager.updateDecisionDefinition(
-                event.getServiceId(), event.getInstanceId(), event.getPolicyId(), decisionDefinition);
+        policyDecisionManager.setDecisionDefinition(event.getPolicyId(), decisionDefinition);
     }
 
     @Override
     protected void onDelete(GrayDecisionEvent event) {
         DecisionDefinition decisionDefinition = event.getSource();
-        grayManager.removeDecisionDefinition(
-                event.getServiceId(), event.getInstanceId(), event.getPolicyId(), decisionDefinition.getId());
+        policyDecisionManager.removeDecisionDefinition(event.getPolicyId(), decisionDefinition.getId());
     }
 
 

@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -39,39 +38,12 @@ public class RestTemplateAgent implements HttpAgent {
 
 
     @Override
-    public HttpResult httpGet(String path, HttpHeaders headers, HttpParams paramValues, String encoding, long readTimeoutMs) throws IOException {
-        String url = getCompleteUrl(path, paramValues, encoding);
-        org.springframework.http.HttpHeaders httpHeaders = new org.springframework.http.HttpHeaders();
-        httpHeaders.putAll(headers.toMap());
-        HttpEntity httpEntity = new HttpEntity(httpHeaders);
-        ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.GET, httpEntity, String.class);
-        return toHttpResult(responseEntity);
-    }
-
-    @Override
-    public HttpResult httpPost(String path, HttpHeaders headers, HttpParams paramValues, String body, String encoding, long readTimeoutMs) throws IOException {
-        String url = getCompleteUrl(path, paramValues, encoding);
-        org.springframework.http.HttpHeaders httpHeaders = new org.springframework.http.HttpHeaders();
-        httpHeaders.putAll(headers.toMap());
-        HttpEntity<String> httpEntity = new HttpEntity<>(body, httpHeaders);
-        ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.POST, httpEntity, String.class);
-        return toHttpResult(responseEntity);
-    }
-
-    @Override
-    public HttpResult httpDelete(String path, HttpHeaders headers, HttpParams paramValues, String encoding, long readTimeoutMs) throws IOException {
-        String url = getCompleteUrl(path, paramValues, encoding);
-        org.springframework.http.HttpHeaders httpHeaders = new org.springframework.http.HttpHeaders();
-        httpHeaders.putAll(headers.toMap());
-        HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-        ResponseEntity<String> responseEntity = rest.exchange(url, HttpMethod.DELETE, httpEntity, String.class);
-        return toHttpResult(responseEntity);
-    }
-
-    @Override
     public HttpResult request(HttpRequest request) {
         String url = getCompleteUrl(request.getPath(), request.getParamValues(), request.getEncoding());
         org.springframework.http.HttpHeaders httpHeaders = new org.springframework.http.HttpHeaders();
+        if (Objects.nonNull(request.getHeaders())) {
+            httpHeaders.putAll(request.getHeaders().toMap());
+        }
         HttpEntity<String> httpEntity = new HttpEntity<>(request.getBody(), httpHeaders);
         ResponseEntity<String> responseEntity = rest.exchange(
                 url, HttpMethod.resolve(request.getMethod().name()), httpEntity, String.class);

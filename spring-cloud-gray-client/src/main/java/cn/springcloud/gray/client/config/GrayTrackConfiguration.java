@@ -2,14 +2,12 @@ package cn.springcloud.gray.client.config;
 
 
 import cn.springcloud.gray.client.config.properties.GrayTrackProperties;
-import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.request.GrayInfoTracker;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.track.DefaultGrayTrackHolder;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.web.GrayTrackRequestInterceptor;
 import cn.springcloud.gray.web.tracker.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -24,13 +22,11 @@ import java.util.List;
 public class GrayTrackConfiguration {
 
 
-    @Bean(initMethod = "setup")
+    @Bean()
     @ConditionalOnMissingBean
     public GrayTrackHolder grayTrackHolder(
-            GrayTrackProperties grayTrackProperties,
-            @Autowired(required = false) InformationClient informationClient,
             List<GrayInfoTracker<? extends GrayTrackInfo, ?>> trackers) {
-        return new DefaultGrayTrackHolder(grayTrackProperties, informationClient, trackers);
+        return new DefaultGrayTrackHolder(trackers, null);
     }
 
 

@@ -1,3 +1,5 @@
+org.springframework.boot.ApplicationRunner=\
+  cn.springcloud.gray.client.initialize.GrayClientSprintStartUpRunner
 # Auto Configure
 #cn.springcloud.gray.client.EnableGrayClient=\
 #  cn.springcloud.gray.client.config.GrayClientImportSelector
