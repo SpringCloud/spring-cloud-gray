@@ -1,9 +1,11 @@
 package cn.springcloud.gray;
 
 import cn.springcloud.gray.client.switcher.GraySwitcher;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.Map;
+import java.util.Timer;
 
 @Slf4j
 public class GrayClientInitializer implements ApplicationContextAware, InitializingBean {
@@ -30,6 +33,10 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
                 getBean("graySwitcher", GraySwitcher.class, new GraySwitcher.DefaultGraySwitcher()));
 
         GrayClientHolder.setServerChooser(getBean("serverChooser", ServerChooser.class));
+
+        GrayClientHolder.setGrayTrackHolder(getBean("grayTrackHolder", GrayTrackHolder.class));
+
+        GrayClientHolder.setPolicyDecisionManager(getBean("policyDecisionManager", PolicyDecisionManager.class));
 
         initGrayManagerRequestInterceptors();
 
@@ -94,4 +101,12 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         }
         grayManager.setup();
     }
+
+
+    private Timer updateTimer = new Timer("Gray-Update-Timer", true);
+    private GrayClientConfig grayClientConfig;
+    private int scheduleOpenForWorkCount = 0;
+    private int scheduleOpenForWorkLimit = 5;
+
+
 }

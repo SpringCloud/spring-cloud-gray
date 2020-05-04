@@ -21,7 +21,7 @@ public class MultiGrayDecision implements GrayDecision {
     }
 
     @Override
-    public boolean test(GrayDecisionInputArgs args) {
+    public boolean test(DecisionInputArgs args) {
         return decision.test(args);
     }
 

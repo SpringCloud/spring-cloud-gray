@@ -1,15 +1,12 @@
 package cn.springcloud.gray.decision;
 
 import cn.springcloud.gray.servernode.ServerSpec;
-import cn.springcloud.gray.request.GrayRequest;
-import lombok.*;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Getter
-@NoArgsConstructor
-@Builder
-@AllArgsConstructor
-public class GrayDecisionInputArgs {
+@Data
+@Accessors(chain = true)
+public class GrayDecisionInputArgs extends DecisionInputArgs {
 
     private ServerSpec server;
-    private GrayRequest grayRequest;
 }

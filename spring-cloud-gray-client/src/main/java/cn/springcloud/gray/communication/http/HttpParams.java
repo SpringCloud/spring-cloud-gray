@@ -15,11 +15,12 @@ public class HttpParams {
     private List<String> paramValues = new ArrayList<>(32);
 
 
-    public void addParamPair(String name, String... values) {
+    public HttpParams addParamPair(String name, String... values) {
         paramValues.add(name);
         for (String value : values) {
             paramValues.add(value);
         }
+        return this;
     }
 
     public String encodingParams(String encoding) {

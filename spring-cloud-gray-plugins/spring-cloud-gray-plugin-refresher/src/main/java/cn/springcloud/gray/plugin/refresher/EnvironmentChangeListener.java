@@ -1,8 +1,8 @@
 package cn.springcloud.gray.plugin.refresher;
 
-import cn.springcloud.gray.DefaultGrayManager;
+import cn.springcloud.gray.refresh.GrayServiceConfigurationRefresher;
+import cn.springcloud.gray.refresh.GrayTrackConfigurationRefresher;
 import cn.springcloud.gray.refresh.RefreshDriver;
-import cn.springcloud.gray.request.track.DefaultGrayTrackHolder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -38,13 +38,12 @@ public class EnvironmentChangeListener implements ApplicationListener<Environmen
 
     private void init() {
         triggerItems.add(new TriggerItem(
-                DefaultGrayManager.GRAY_MANAGER_REFRESH_TRIGGER_NAME,
+                GrayServiceConfigurationRefresher.GRAY_MANAGER_REFRESH_TRIGGER_NAME,
                 StringMatchers.prefixsAnyMatcher(
-                        "gray.load.grayInstances.", "gray.load.gray-instances.",
-                        "gray.load.grayInstances[", "gray.load.gray-instances[")));
+                        "gray.load.services.", "gray.load.services[")));
 
         triggerItems.add(new TriggerItem(
-                DefaultGrayTrackHolder.GRAY_TRACK_REFRESH_TRIGGER_NAME,
+                GrayTrackConfigurationRefresher.GRAY_TRACK_REFRESH_TRIGGER_NAME,
                 StringMatchers.prefixsAnyMatcher(
                         "gray.request.track.web.trackDefinitions.", "gray.request.track.web.track-definitions.",
                         "gray.request.track.web.trackDefinitions[", "gray.request.track.web.track-definitions[")));

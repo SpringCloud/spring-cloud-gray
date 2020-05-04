@@ -2,14 +2,14 @@ package cn.springcloud.gray.client.netflix.configuration;
 
 import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.choose.GrayPredicate;
 import cn.springcloud.gray.client.netflix.RibbonServerChooser;
 import cn.springcloud.gray.client.netflix.ribbon.RibbonServerExplainer;
-import cn.springcloud.gray.routing.connectionpoint.DefaultRoutingConnectionPoint;
-import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.client.netflix.ribbon.configuration.GrayRibbonClientsConfiguration;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
+import cn.springcloud.gray.routing.connectionpoint.DefaultRoutingConnectionPoint;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 import com.netflix.loadbalancer.Server;
@@ -39,20 +39,20 @@ public class NetflixRibbonGrayAutoConfiguration {
     public RibbonServerChooser ribbonServerChooser(
             GrayManager grayManager,
             RequestLocalStorage requestLocalStorage,
-            GrayPredicate grayPredicate,
+            PolicyDecisionManager policyDecisionManager,
             ServerExplainer<Server> serverExplainer,
-            @Autowired(required = false) ServerListProcessor serverListProcess){
-        if(serverListProcess==null){
+            @Autowired(required = false) ServerListProcessor serverListProcess) {
+        if (serverListProcess == null) {
             serverListProcess = GrayClientHolder.getServereListProcessor();
         }
         return new RibbonServerChooser(grayManager, requestLocalStorage,
-                grayPredicate, serverExplainer, serverListProcess);
+                policyDecisionManager, serverExplainer, serverListProcess);
     }
 
 
     @Bean
     @ConditionalOnMissingBean
-    public ServerExplainer<Server> ribbonServerExplainer(SpringClientFactory springClientFactory){
+    public ServerExplainer<Server> ribbonServerExplainer(SpringClientFactory springClientFactory) {
         return new RibbonServerExplainer(springClientFactory);
     }
 

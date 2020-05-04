@@ -2,22 +2,23 @@ package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.*;
 import cn.springcloud.gray.cache.CaffeineCache;
-import cn.springcloud.gray.choose.DefaultGrayPredicate;
-import cn.springcloud.gray.choose.GrayPredicate;
+import cn.springcloud.gray.choose.GrayServerPredicate;
+import cn.springcloud.gray.choose.PolicyPredicate;
 import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.*;
+import cn.springcloud.gray.client.initialize.DefaultGrayInfosInitializer;
+import cn.springcloud.gray.client.initialize.GrayInfosInitializer;
 import cn.springcloud.gray.client.switcher.EnvGraySwitcher;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.communication.InformationClient;
-import cn.springcloud.gray.decision.GrayDecision;
-import cn.springcloud.gray.decision.GrayDecisionFactoryKeeper;
+import cn.springcloud.gray.decision.*;
 import cn.springcloud.gray.local.InstanceLocalInfo;
+import cn.springcloud.gray.refresh.RefreshDriver;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
-import com.github.benmanes.caffeine.cache.CacheLoader;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,7 +27,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
@@ -53,32 +53,25 @@ public class GrayClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public GrayManager grayManager(
-            @Autowired(required = false) GrayLoadProperties grayLoadProperties,
-            GrayDecisionFactoryKeeper grayDecisionFactoryKeeper,
-            @Autowired(required = false) InformationClient informationClient) {
-
-        CacheProperties cacheProperties = grayClientProperties.getCacheProperties("grayDecision");
-//        com.github.benmanes.caffeine.cache.Cache<String, List<GrayDecision>> cache = Caffeine.newBuilder()
-//                .maximumSize(cacheProperties.getMaximumSize())
-//                .expireAfterAccess(cacheProperties.getExpireSeconds(), TimeUnit.SECONDS)
-//                .softValues()
-//                .build();
-
-        com.github.benmanes.caffeine.cache.Cache<String, List<GrayDecision>> cache = Caffeine.newBuilder()
-                .expireAfterWrite(cacheProperties.getExpireSeconds(), TimeUnit.SECONDS)
-                .initialCapacity(10)
-                .maximumSize(cacheProperties.getMaximumSize())
-                .recordStats()
-                .build();
-
-        DefaultGrayManager grayManager = new DefaultGrayManager(
-                grayClientProperties, grayLoadProperties, grayDecisionFactoryKeeper, informationClient,
-                new CaffeineCache<>(cache));
-        return grayManager;
-
-//        return new CachedDelegateGrayManager(grayManager, new CaffeineCache<>(cache));
+            GrayTrackHolder grayTrackHolder,
+            PolicyDecisionManager policyDecisionManager) {
+        return new DefaultGrayManager(grayTrackHolder, policyDecisionManager);
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public PolicyDecisionManager policyDecisionManager(GrayDecisionFactoryKeeper grayDecisionFactoryKeeper) {
+        PolicyDecisionManager policyDecisionManager = new DefaultPolicyDecisionManager(grayDecisionFactoryKeeper);
+        CacheProperties cacheProperties = grayClientProperties.getCacheProperties("policy");
+        com.github.benmanes.caffeine.cache.Cache<String, Policy> cache = Caffeine.newBuilder()
+                .expireAfterWrite(cacheProperties.getExpireSeconds(), TimeUnit.SECONDS)
+                .initialCapacity(20)
+                .maximumSize(cacheProperties.getMaximumSize())
+                .softValues()
+                .recordStats()
+                .build();
+        return new DefaultCachePolicyDecisionManager(new CaffeineCache(cache), policyDecisionManager);
+    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -114,7 +107,18 @@ public class GrayClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public GrayPredicate grayPredicate(RequestLocalStorage requestLocalStorage, GrayManager grayManager){
-        return new DefaultGrayPredicate(requestLocalStorage, grayManager);
+    public PolicyPredicate grayServerPredicate(
+            GrayManager grayManager, PolicyDecisionManager policyDecisionManager) {
+        return new GrayServerPredicate(grayManager, policyDecisionManager);
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public GrayInfosInitializer grayInfosInitializer(
+            GrayClientConfig grayClientConfig,
+            InformationClient informationClient,
+            RefreshDriver refreshDriver) {
+        return new DefaultGrayInfosInitializer(grayClientConfig, informationClient, refreshDriver);
     }
 }

@@ -1,12 +1,14 @@
 package cn.springcloud.gray;
 
-import cn.springcloud.gray.decision.GrayDecision;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -28,13 +30,22 @@ public interface GrayManager {
 
     Collection<GrayService> allGrayServices();
 
+    /**
+     * 清空所有的灰度服务信息
+     */
+    void clearAllGrayServices();
+
     GrayService getGrayService(String serviceId);
 
     GrayInstance getGrayInstance(String serviceId, String instanceId);
 
-    List<GrayDecision> getGrayDecision(GrayInstance instance);
-
-    List<GrayDecision> getGrayDecision(String serviceId, String instanceId);
+    default Collection<String> getInstanceRoutePolicies(String serviceId, String instanceId) {
+        GrayInstance grayInstance = getGrayInstance(serviceId, instanceId);
+        if (Objects.isNull(grayInstance)) {
+            return null;
+        }
+        return grayInstance.getRoutePolicies();
+    }
 
     void updateGrayInstance(GrayInstance instance);
 
@@ -57,4 +68,9 @@ public interface GrayManager {
     void setup();
 
     void shutdown();
+
+
+    GrayTrackHolder getGrayTrackHolder();
+
+    PolicyDecisionManager getPolicyDecisionManager();
 }

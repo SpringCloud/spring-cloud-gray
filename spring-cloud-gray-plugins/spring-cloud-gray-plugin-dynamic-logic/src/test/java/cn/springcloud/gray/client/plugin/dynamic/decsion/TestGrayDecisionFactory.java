@@ -19,7 +19,6 @@ public class TestGrayDecisionFactory extends AbstractGrayDecisionFactory<Dynamic
         return args -> {
             System.out.println(configBean);
             System.out.println(args.getGrayRequest());
-            System.out.println(args.getServer());
             return true;
         };
     }

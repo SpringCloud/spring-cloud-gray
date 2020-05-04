@@ -11,12 +11,12 @@ public class GrayClientProperties implements GrayClientConfig {
 
     private String runenv = "web";
 
-    private int serviceUpdateIntervalTimerInMs = 60000;
+    private int infosUpdateIntervalTimerInMs = 60000;
 
     /**
      * 实始化灰度信息的延迟时间
      */
-    private int serviceInitializeDelayTimeInMs = 40000;
+    private int infosInitializeDelayTimeInMs = 40000;
 
     private InstanceConfig instance = new InstanceConfig();
 
@@ -38,10 +38,23 @@ public class GrayClientProperties implements GrayClientConfig {
         return instance.getGrayEnrollDealyTimeInMs();
     }
 
+    @Override
+    public int getInfosUpdateIntervalTimerInMs() {
+        return infosUpdateIntervalTimerInMs;
+    }
 
     @Override
-    public int getServiceUpdateIntervalTimerInMs() {
-        return serviceUpdateIntervalTimerInMs;
+    public int getInfosInitializeDelayTimeInMs() {
+        return infosInitializeDelayTimeInMs;
+    }
+
+
+    public void setInfosUpdateIntervalTimerInMs(int infosUpdateIntervalTimerInMs) {
+        this.infosUpdateIntervalTimerInMs = infosUpdateIntervalTimerInMs;
+    }
+
+    public void setInfosInitializeDelayTimeInMs(int infosInitializeDelayTimeInMs) {
+        this.infosInitializeDelayTimeInMs = infosInitializeDelayTimeInMs;
     }
 
     public Map<String, CacheProperties> getCaches() {
@@ -59,19 +72,6 @@ public class GrayClientProperties implements GrayClientConfig {
             caches.put(key, cacheProperties);
         }
         return cacheProperties;
-    }
-
-    public void setServiceUpdateIntervalTimerInMs(int serviceUpdateIntervalTimerInMs) {
-        this.serviceUpdateIntervalTimerInMs = serviceUpdateIntervalTimerInMs;
-    }
-
-    @Override
-    public int getServiceInitializeDelayTimeInMs() {
-        return serviceInitializeDelayTimeInMs;
-    }
-
-    public void setServiceInitializeDelayTimeInMs(int serviceInitializeDelayTimeInMs) {
-        this.serviceInitializeDelayTimeInMs = serviceInitializeDelayTimeInMs;
     }
 
     public InstanceConfig getInstance() {

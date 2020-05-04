@@ -26,9 +26,11 @@ public interface GrayTrackHolder {
 
     void deleteTrackDefinition(String name);
 
+    void clearTrackDefinitions();
+
 
     default <REQ> void recordGrayTrack(GrayTrackInfo info, REQ req) {
-        if(!GrayClientHolder.getGraySwitcher().state()){
+        if (!GrayClientHolder.getGraySwitcher().state()) {
             return;
         }
         getGrayInfoTrackers().forEach(tracker -> {

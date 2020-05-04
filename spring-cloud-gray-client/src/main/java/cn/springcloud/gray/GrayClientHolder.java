@@ -1,10 +1,12 @@
 package cn.springcloud.gray;
 
 import cn.springcloud.gray.client.switcher.GraySwitcher;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 
@@ -13,6 +15,8 @@ import java.util.Objects;
 public class GrayClientHolder {
 
     private static GrayManager grayManager;
+    private static GrayTrackHolder grayTrackHolder;
+    private static PolicyDecisionManager policyDecisionManager;
     private static RequestLocalStorage requestLocalStorage;
     private static LocalStorageLifeCycle localStorageLifeCycle;
     private static ServerExplainer<?> serverExplainer;
@@ -84,6 +88,22 @@ public class GrayClientHolder {
 
     public static void setServerChooser(ServerChooser<?> serverChooser) {
         GrayClientHolder.serverChooser = serverChooser;
+    }
+
+    public static GrayTrackHolder getGrayTrackHolder() {
+        return grayTrackHolder;
+    }
+
+    public static void setGrayTrackHolder(GrayTrackHolder grayTrackHolder) {
+        GrayClientHolder.grayTrackHolder = grayTrackHolder;
+    }
+
+    public static PolicyDecisionManager getPolicyDecisionManager() {
+        return policyDecisionManager;
+    }
+
+    public static void setPolicyDecisionManager(PolicyDecisionManager policyDecisionManager) {
+        GrayClientHolder.policyDecisionManager = policyDecisionManager;
     }
 
 

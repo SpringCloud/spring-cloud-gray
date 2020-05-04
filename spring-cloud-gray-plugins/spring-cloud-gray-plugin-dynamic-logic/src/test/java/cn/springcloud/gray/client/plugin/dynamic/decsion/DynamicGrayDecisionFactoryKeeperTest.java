@@ -2,6 +2,7 @@ package cn.springcloud.gray.client.plugin.dynamic.decsion;
 
 import cn.springcloud.gray.client.plugin.dynamiclogic.FmDynamicLogicDriver;
 import cn.springcloud.gray.client.plugin.dynamiclogic.GrayDecisionDynamicManager;
+import cn.springcloud.gray.decision.DecisionInputArgs;
 import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.GrayDecisionInputArgs;
 import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
@@ -95,14 +96,13 @@ public class DynamicGrayDecisionFactoryKeeperTest {
         grayRequest.setServiceId("b");
         grayRequest.setUri(URI.create("lb://url?p=1"));
 
-        GrayDecisionInputArgs args = GrayDecisionInputArgs.builder()
-                .server(ServerSpec.builder()
+        DecisionInputArgs args = new GrayDecisionInputArgs()
+                .setServer(ServerSpec.builder()
                         .instanceId("b-a")
                         .serviceId("b")
                         .metadatas(new HashMap<>())
                         .build())
-                .grayRequest(grayRequest)
-                .build();
+                .setGrayRequest(grayRequest);
         boolean result = grayDecision.test(args);
         System.out.println(result);
     }

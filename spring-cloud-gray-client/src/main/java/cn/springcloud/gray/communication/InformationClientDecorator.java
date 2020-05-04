@@ -1,5 +1,6 @@
 package cn.springcloud.gray.communication;
 
+import cn.springcloud.gray.model.GrayInfos;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayTrackDefinition;
 
@@ -60,6 +61,21 @@ public abstract class InformationClientDecorator implements InformationClient {
         });
     }
 
+
+    @Override
+    public GrayInfos allInfos(String serviceId, String instanceId) {
+        return execute(new RequestExecutor<GrayInfos>() {
+            @Override
+            public GrayInfos execute(InformationClient delegate) {
+                return delegate.allInfos(serviceId, instanceId);
+            }
+
+            @Override
+            public RequestType getRequestType() {
+                return RequestType.ALL_GRAY_INSTANCES;
+            }
+        });
+    }
 
     @Override
     public void addGrayInstance(GrayInstance grayInstance) {

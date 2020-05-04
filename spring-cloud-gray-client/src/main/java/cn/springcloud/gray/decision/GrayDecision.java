@@ -8,7 +8,7 @@ package cn.springcloud.gray.decision;
 public interface GrayDecision {
 
 
-    boolean test(GrayDecisionInputArgs args);
+    boolean test(DecisionInputArgs args);
 
 
     static AllowGraydecision allow() {
@@ -35,7 +35,7 @@ public interface GrayDecision {
 
 
         @Override
-        public boolean test(GrayDecisionInputArgs args) {
+        public boolean test(DecisionInputArgs args) {
             return true;
         }
     }
@@ -54,7 +54,7 @@ public interface GrayDecision {
         }
 
         @Override
-        public boolean test(GrayDecisionInputArgs args) {
+        public boolean test(DecisionInputArgs args) {
             return false;
         }
     }
