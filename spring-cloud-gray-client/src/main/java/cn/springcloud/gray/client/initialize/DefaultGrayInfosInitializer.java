@@ -82,7 +82,7 @@ public class DefaultGrayInfosInitializer implements GrayInfosInitializer {
             log.error("更新灰度信息失败", e);
             return false;
         }
-        log.error("更新灰度信息成功");
+        log.info("更新灰度信息成功");
         return true;
     }
 

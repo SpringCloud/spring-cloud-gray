@@ -2,7 +2,7 @@ package cn.springcloud.gray.event.listener;
 
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
-import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springlcoud.gray.event.GrayTrackEvent;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,10 +14,10 @@ public class GrayTrackEventListener extends AbstractGrayEventListener<GrayTrackE
 
 
     private InstanceLocalInfoObtainer instanceLocalInfoObtainer;
-    private CommunicableGrayTrackHolder grayTrackHolder;
+    private GrayTrackHolder grayTrackHolder;
 
     public GrayTrackEventListener(
-            InstanceLocalInfoObtainer instanceLocalInfoObtainer, CommunicableGrayTrackHolder grayTrackHolder) {
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer, GrayTrackHolder grayTrackHolder) {
         this.instanceLocalInfoObtainer = instanceLocalInfoObtainer;
         this.grayTrackHolder = grayTrackHolder;
     }
