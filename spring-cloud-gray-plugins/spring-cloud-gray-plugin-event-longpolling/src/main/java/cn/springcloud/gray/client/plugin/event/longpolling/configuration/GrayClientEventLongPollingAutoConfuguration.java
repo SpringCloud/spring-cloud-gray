@@ -4,6 +4,7 @@ import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.bean.properties.EnableConfigurationProperties;
 import cn.springcloud.gray.client.plugin.event.longpolling.GrayEventLongPollingReceiver;
 import cn.springcloud.gray.client.plugin.event.longpolling.GrayEventRemoteClient;
+import cn.springcloud.gray.client.plugin.event.longpolling.GrayRefreshedSortMarkListener;
 import cn.springcloud.gray.client.plugin.event.longpolling.configuration.properties.LongPollingProperties;
 import cn.springcloud.gray.communication.http.HttpAgent;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
@@ -42,5 +43,10 @@ public class GrayClientEventLongPollingAutoConfuguration {
             InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
         return new GrayEventLongPollingReceiver(
                 longPollingProperties, grayEventPublisher, grayEventRemoteClient, instanceLocalInfoObtainer);
+    }
+
+    @Bean
+    public GrayRefreshedSortMarkListener grayRefreshedSortMarkListener(GrayEventReceiver grayEventReceiver) {
+        return new GrayRefreshedSortMarkListener(grayEventReceiver);
     }
 }

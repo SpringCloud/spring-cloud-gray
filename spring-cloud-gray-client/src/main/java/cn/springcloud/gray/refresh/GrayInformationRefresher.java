@@ -1,5 +1,6 @@
 package cn.springcloud.gray.refresh;
 
+import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
@@ -54,6 +55,8 @@ public class GrayInformationRefresher implements Refresher, InstanceLocalInfoAwa
         grayInfos.getInstances().forEach(grayManager::updateGrayInstance);
         grayInfos.getTrackDefinitions().forEach(grayTrackHolder::updateTrackDefinition);
         grayInfos.getPolicyDecisions().forEach(policyDecisionManager::setPolicyDefinition);
+
+        publishRefreshedEvent(grayInfos);
         return true;
     }
 
@@ -65,5 +68,11 @@ public class GrayInformationRefresher implements Refresher, InstanceLocalInfoAwa
     @Override
     public void setInstanceLocalInfo(InstanceLocalInfo instanceLocalInfo) {
         this.instanceLocalInfo = instanceLocalInfo;
+    }
+
+
+    private void publishRefreshedEvent(GrayInfos grayInfos) {
+        GrayClientHolder.getSpringEventPublisher()
+                .publishEvent(new GrayRefreshedEvent(TRIGGET_NAME, grayInfos));
     }
 }

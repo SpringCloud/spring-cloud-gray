@@ -1,5 +1,6 @@
 package cn.springcloud.gray.refresh;
 
+import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.client.config.properties.GrayLoadProperties;
 import cn.springcloud.gray.model.GrayInstance;
@@ -62,6 +63,8 @@ public class GrayServiceConfigurationRefresher implements Refresher {
         grayServicePropertiesMap.forEach((serviceId, serviceProperties) -> {
             loadGrayInstances(serviceId, serviceProperties.getInstances());
         });
+
+        publishRefreshedEvent();
     }
 
     protected boolean isLoadable() {
@@ -88,5 +91,11 @@ public class GrayServiceConfigurationRefresher implements Refresher {
     @Override
     public String triggerName() {
         return GRAY_MANAGER_REFRESH_TRIGGER_NAME;
+    }
+
+
+    private void publishRefreshedEvent() {
+        GrayClientHolder.getSpringEventPublisher()
+                .publishEvent(new GrayRefreshedEvent(GRAY_MANAGER_REFRESH_TRIGGER_NAME, grayLoadProperties.getServices()));
     }
 }

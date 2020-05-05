@@ -11,7 +11,7 @@ import cn.springlcoud.gray.event.client.GrayEventPublisher;
  */
 public class GrayEventLongPollingReceiver extends BasicGrayEventReceiver {
 
-    private volatile long currentSortMark;
+    private volatile long currentSortMark = -1;
     private GrayEventPublisher grayEventPublisher;
     private GrayEventRemoteClient grayEventRemoteClient;
     private LongPollingProperties longPollingProperties;

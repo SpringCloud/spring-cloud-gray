@@ -65,6 +65,9 @@ public class LongPollingWorker {
         if (isStop()) {
             return;
         }
+        if (grayEventReceiver.getLocationNewestSortMark() < 0) {
+            return;
+        }
         ListenResult ls = null;
         try {
             ls = listening();

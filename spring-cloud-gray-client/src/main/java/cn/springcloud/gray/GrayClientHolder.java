@@ -9,6 +9,7 @@ import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
+import cn.springcloud.gray.spring.SpringEventPublisher;
 
 import java.util.Objects;
 
@@ -24,6 +25,8 @@ public class GrayClientHolder {
     private static GraySwitcher graySwitcher = new GraySwitcher.DefaultGraySwitcher();
     private static InstanceLocalInfo instanceLocalInfo;
     private static ServerChooser<?> serverChooser;
+
+    private static SpringEventPublisher springEventPublisher;
 
     public static GrayManager getGrayManager() {
         return grayManager;
@@ -106,14 +109,11 @@ public class GrayClientHolder {
         GrayClientHolder.policyDecisionManager = policyDecisionManager;
     }
 
+    public static SpringEventPublisher getSpringEventPublisher() {
+        return springEventPublisher;
+    }
 
-    /**
-     * 获取当前remote request的service id
-     *
-     * @return
-     */
-    public static String getCurrentRequestServiceId() {
-        GrayRequest grayRequest = getRequestLocalStorage().getGrayRequest();
-        return Objects.isNull(grayRequest) ? null : grayRequest.getServiceId();
+    public static void setSpringEventPublisher(SpringEventPublisher springEventPublisher) {
+        GrayClientHolder.springEventPublisher = springEventPublisher;
     }
 }
