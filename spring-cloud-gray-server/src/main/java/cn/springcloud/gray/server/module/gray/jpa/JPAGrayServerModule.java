@@ -1,8 +1,5 @@
 package cn.springcloud.gray.server.module.gray.jpa;
 
-import cn.springcloud.gray.event.EventType;
-import cn.springcloud.gray.event.GrayEventMsg;
-import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.model.InstanceStatus;
@@ -22,13 +19,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class JPAGrayServerModule implements GrayServerModule {
-
-    private static final List<SourceType> INSTANCE_STATUS_CHECK_SOURCE_TYPES =
-            Arrays.asList(SourceType.GRAY_POLICY, SourceType.GRAY_DECISION);
 
     private GrayServiceService grayServiceService;
     private GrayInstanceService grayInstanceService;
@@ -247,38 +244,19 @@ public class JPAGrayServerModule implements GrayServerModule {
     }
 
     protected void triggerUpdateEvent(Object source) {
+        if (source instanceof GrayInstance && !isActiveGrayInstance((GrayInstance) source)) {
+            GrayInstance grayInstance = (GrayInstance) source;
+            log.info("服务{} 实例{}非灰度状态，不同步事件信息。", grayInstance.getServiceId(), grayInstance.getInstanceId());
+            return;
+        }
         triggerEvent(TriggerType.MODIFY, source);
     }
 
 
-    private GrayEventMsg createEventMsg(SourceType sourceType, EventType eventType, GrayInstance grayInstance) {
-        if (!isNeesPushEentMsg(sourceType, grayInstance)) {
-            return null;
-        }
-        return GrayEventMsg.builder()
-                .serviceId(grayInstance.getServiceId())
-                .instanceId(grayInstance.getInstanceId())
-                .eventType(eventType)
-                .sourceType(sourceType)
-                .build();
+    private boolean isActiveGrayInstance(GrayInstance grayInstance) {
+        return Objects.equals(grayInstance.getGrayStatus(), GrayStatus.OPEN)
+                && (
+                isLockGray(grayInstance) ||
+                        grayServerProperties.getInstance().getNormalInstanceStatus().contains(grayInstance.getInstanceStatus()));
     }
-
-    private boolean isNeesPushEentMsg(SourceType sourceType, GrayInstance grayInstance) {
-        if (INSTANCE_STATUS_CHECK_SOURCE_TYPES.contains(sourceType)) {
-            return Objects.equals(grayInstance.getGrayStatus(), GrayStatus.OPEN)
-                    && (
-                    isLockGray(grayInstance) ||
-                            grayServerProperties.getInstance().getNormalInstanceStatus().contains(grayInstance.getInstanceStatus()));
-        }
-        return true;
-    }
-
-    private GrayEventMsg createEventMsg(SourceType sourceType, EventType eventType, String serviceId) {
-        return GrayEventMsg.builder()
-                .serviceId(serviceId)
-                .eventType(eventType)
-                .sourceType(sourceType)
-                .build();
-    }
-
 }

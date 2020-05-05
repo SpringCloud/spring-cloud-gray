@@ -1,6 +1,5 @@
 package cn.springcloud.gray.server.configuration;
 
-import cn.springcloud.gray.event.GraySourceEventPublisher;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
 import cn.springcloud.gray.server.module.NamespaceFinder;
@@ -68,9 +67,8 @@ public class DBStorageConfiguration {
         @ConditionalOnMissingBean
         public GrayServerTrackModule grayServerTrackModule(
                 GrayEventTrigger grayEventTrigger,
-                GraySourceEventPublisher graySourceEventPublisher,
                 GrayTrackService grayTrackService) {
-            return new JPAGrayServerTrackModule(grayEventTrigger, graySourceEventPublisher, grayTrackService);
+            return new JPAGrayServerTrackModule(grayEventTrigger, grayTrackService);
         }
 
         @Bean

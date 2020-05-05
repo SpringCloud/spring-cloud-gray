@@ -1,7 +1,7 @@
 package cn.springcloud.gray.event.stream;
 
-import cn.springcloud.gray.event.GrayEventListener;
-import cn.springcloud.gray.event.GrayEventMsg;
+import cn.springlcoud.gray.event.GrayEvent;
+import cn.springlcoud.gray.event.client.GrayEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -15,22 +15,21 @@ public class StreamMessageListener {
     private static final Logger log = LoggerFactory.getLogger(StreamMessageListener.class);
 
 
-    private GrayEventListener grayEventListener;
+    private GrayEventPublisher grayEventPublisher;
 
-    public StreamMessageListener(GrayEventListener grayEventListener) {
-        this.grayEventListener = grayEventListener;
+    public StreamMessageListener(GrayEventPublisher grayEventPublisher) {
+        this.grayEventPublisher = grayEventPublisher;
     }
-
 
     /**
      * 接收灰度事件
      *
-     * @param msg 灰度事件
+     * @param event 灰度事件
      */
     @StreamListener(StreamInput.INPUT)
-    public void receive(GrayEventMsg msg) {
-        log.debug("接收到消息:{}", msg);
-        grayEventListener.onEvent(msg);
+    public void receive(GrayEvent event) {
+        log.debug("接收到消息:{}", event);
+        grayEventPublisher.publishEvent(event);
     }
 
 }

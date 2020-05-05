@@ -1,5 +1,6 @@
 package cn.springcloud.gray.refresh;
 
+import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.client.config.properties.GrayLoadProperties;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,8 @@ public class GrayTrackConfigurationRefresher implements Refresher {
     private void loadProperties() {
         grayLoadProperties.getTrackDefinitions()
                 .forEach(grayTrackHolder::updateTrackDefinition);
+
+        publishRefreshedEvent();
     }
 
 
@@ -56,5 +59,11 @@ public class GrayTrackConfigurationRefresher implements Refresher {
     @Override
     public String triggerName() {
         return GRAY_TRACK_REFRESH_TRIGGER_NAME;
+    }
+
+
+    private void publishRefreshedEvent() {
+        GrayClientHolder.getSpringEventPublisher()
+                .publishEvent(new GrayRefreshedEvent(GRAY_TRACK_REFRESH_TRIGGER_NAME, grayLoadProperties.getTrackDefinitions()));
     }
 }

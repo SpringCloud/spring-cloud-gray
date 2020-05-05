@@ -8,6 +8,7 @@ import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
+import cn.springcloud.gray.spring.SpringEventPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -31,12 +32,10 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
                 getBean("serverListProcessor", ServerListProcessor.class, new ServerListProcessor.Default()));
         GrayClientHolder.setGraySwitcher(
                 getBean("graySwitcher", GraySwitcher.class, new GraySwitcher.DefaultGraySwitcher()));
-
         GrayClientHolder.setServerChooser(getBean("serverChooser", ServerChooser.class));
-
         GrayClientHolder.setGrayTrackHolder(getBean("grayTrackHolder", GrayTrackHolder.class));
-
         GrayClientHolder.setPolicyDecisionManager(getBean("policyDecisionManager", PolicyDecisionManager.class));
+        GrayClientHolder.setSpringEventPublisher(getBean("springEventPublisher", SpringEventPublisher.class));
 
         initGrayManagerRequestInterceptors();
 

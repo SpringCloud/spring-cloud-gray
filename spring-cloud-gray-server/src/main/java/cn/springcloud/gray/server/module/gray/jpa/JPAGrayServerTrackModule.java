@@ -1,9 +1,5 @@
 package cn.springcloud.gray.server.module.gray.jpa;
 
-import cn.springcloud.gray.event.EventType;
-import cn.springcloud.gray.event.GrayEventMsg;
-import cn.springcloud.gray.event.GraySourceEventPublisher;
-import cn.springcloud.gray.event.SourceType;
 import cn.springcloud.gray.server.module.gray.GrayServerTrackModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
 import cn.springcloud.gray.server.service.GrayTrackService;
@@ -17,15 +13,12 @@ import java.util.List;
 
 public class JPAGrayServerTrackModule implements GrayServerTrackModule {
 
-    private GraySourceEventPublisher graySourceEventPublisher;
     private GrayEventTrigger grayEventTrigger;
     private GrayTrackService grayTrackService;
 
     public JPAGrayServerTrackModule(
             GrayEventTrigger grayEventTrigger,
-            GraySourceEventPublisher graySourceEventPublisher,
             GrayTrackService grayTrackService) {
-        this.graySourceEventPublisher = graySourceEventPublisher;
         this.grayEventTrigger = grayEventTrigger;
         this.grayTrackService = grayTrackService;
     }
@@ -64,7 +57,6 @@ public class JPAGrayServerTrackModule implements GrayServerTrackModule {
     public void deleteGrayTrack(Long id) {
         GrayTrack grayTrack = getGrayTrack(id);
         grayTrackService.delete(id);
-        publishGrayTrackEvent(EventType.DOWN, grayTrack);
         triggerDeleteEvent(grayTrack);
     }
 
@@ -106,17 +98,4 @@ public class JPAGrayServerTrackModule implements GrayServerTrackModule {
         triggerEvent(TriggerType.MODIFY, source);
     }
 
-    protected void publishGrayTrackEvent(EventType eventType, GrayTrack grayTrack) {
-        GrayEventMsg eventMsg = new GrayEventMsg();
-        eventMsg.setInstanceId(grayTrack.getInstanceId());
-        eventMsg.setServiceId(grayTrack.getServiceId());
-        eventMsg.setEventType(eventType);
-        eventMsg.setSourceType(SourceType.GRAY_TRACK);
-//        GrayTrackDefinition definition = new GrayTrackDefinition();
-//        definition.setName(grayTrack.getName());
-//        definition.setValue(grayTrack.getInfos());
-//        eventMsg.setSource(definition);
-//        publishGrayEvent(eventMsg);
-        graySourceEventPublisher.asyncPublishEvent(eventMsg, grayTrack);
-    }
 }

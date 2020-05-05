@@ -8,6 +8,7 @@ import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
+import cn.springcloud.gray.spring.SpringEventPublisher;
 
 public class GrayClientHolder {
 
@@ -21,6 +22,8 @@ public class GrayClientHolder {
     private static GraySwitcher graySwitcher = new GraySwitcher.DefaultGraySwitcher();
     private static InstanceLocalInfo instanceLocalInfo;
     private static ServerChooser<?> serverChooser;
+
+    private static SpringEventPublisher springEventPublisher;
 
     public static GrayManager getGrayManager() {
         return grayManager;
@@ -101,5 +104,13 @@ public class GrayClientHolder {
 
     public static void setPolicyDecisionManager(PolicyDecisionManager policyDecisionManager) {
         GrayClientHolder.policyDecisionManager = policyDecisionManager;
+    }
+
+    public static SpringEventPublisher getSpringEventPublisher() {
+        return springEventPublisher;
+    }
+
+    public static void setSpringEventPublisher(SpringEventPublisher springEventPublisher) {
+        GrayClientHolder.springEventPublisher = springEventPublisher;
     }
 }

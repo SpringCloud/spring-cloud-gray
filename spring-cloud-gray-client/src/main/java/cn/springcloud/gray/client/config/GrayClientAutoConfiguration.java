@@ -18,6 +18,7 @@ import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
+import cn.springcloud.gray.spring.SpringEventPublisher;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -49,6 +50,11 @@ public class GrayClientAutoConfiguration {
     @Autowired
     private GrayProperties grayProperties;
 
+
+    @Bean
+    public SpringEventPublisher springEventPublisher() {
+        return new SpringEventPublisher();
+    }
 
     @Bean
     @ConditionalOnMissingBean
