@@ -11,7 +11,7 @@ public class GrayClientProperties implements GrayClientConfig {
 
     private String runenv = "web";
 
-    private int infosUpdateIntervalTimerInMs = 60000;
+    private int infosUpdateIntervalTimerInMs = 0;
 
     /**
      * 实始化灰度信息的延迟时间

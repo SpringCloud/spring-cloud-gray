@@ -5,7 +5,7 @@ import cn.springcloud.gray.UpdateableGrayManager;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.event.listener.*;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
-import cn.springcloud.gray.request.track.CommunicableGrayTrackHolder;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springlcoud.gray.event.client.DefaultGrayDeventPublisher;
 import cn.springlcoud.gray.event.client.GrayEventListener;
 import cn.springlcoud.gray.event.client.GrayEventPublisher;
@@ -34,7 +34,7 @@ public class GrayClientEventAutoConfiguration {
     @Bean
     public GrayTrackEventListener grayTrackEventListener(
             InstanceLocalInfoObtainer instanceLocalInfoObtainer,
-            CommunicableGrayTrackHolder grayTrackHolder) {
+            GrayTrackHolder grayTrackHolder) {
         return new GrayTrackEventListener(instanceLocalInfoObtainer, grayTrackHolder);
     }
 

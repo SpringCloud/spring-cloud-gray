@@ -6,7 +6,6 @@ import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.refresh.*;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -51,7 +50,7 @@ public class GrayClientRefreshAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RefreshDriver refreshDriver(@Autowired List<Refresher> refreshers) {
+    public RefreshDriver refreshDriver(List<Refresher> refreshers) {
         return new SimpleRefreshDriver(refreshers);
     }
 }
