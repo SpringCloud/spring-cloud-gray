@@ -72,4 +72,7 @@ public interface GrayServerModule {
 
     Page<GrayInstance> listGrayInstancesByServiceId(String serviceId, Pageable pageable);
 
+    boolean isActiveGrayInstance(String instanceId);
+
+    boolean isActiveGrayInstance(GrayInstance grayInstance);
 }

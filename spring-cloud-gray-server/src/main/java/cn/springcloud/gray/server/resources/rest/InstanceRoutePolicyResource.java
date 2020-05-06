@@ -46,7 +46,7 @@ public class InstanceRoutePolicyResource {
 
     @GetMapping(value = "/query")
     public ResponseEntity<ApiRes<List<InstanceRoutePolicy>>> query(
-            @RequestParam InstanceRoutePolicyQuery query,
+            InstanceRoutePolicyQuery query,
             @ApiParam @PageableDefault(sort = "operateTime", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<InstanceRoutePolicy> page = instanceRouteModule.queryInstanceRoutePolicies(query, pageable);
         return PaginationUtils.generatePaginationResponseResult(page);

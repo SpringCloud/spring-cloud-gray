@@ -113,8 +113,9 @@ public class DBStorageConfiguration {
         @ConditionalOnMissingBean
         public GrayPolicyModule grayPolicyModule(
                 GrayPolicyService grayPolicyService,
-                GrayDecisionService grayDecisionService) {
-            return new JPAGrayPolicyModule(grayPolicyService, grayDecisionService);
+                GrayDecisionService grayDecisionService,
+                GrayEventTrigger grayEventTrigger) {
+            return new JPAGrayPolicyModule(grayPolicyService, grayDecisionService, grayEventTrigger);
         }
 
         @Bean

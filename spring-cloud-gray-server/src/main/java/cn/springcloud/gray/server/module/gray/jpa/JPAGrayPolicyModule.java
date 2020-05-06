@@ -6,6 +6,8 @@ import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicyDecision;
 import cn.springcloud.gray.server.service.GrayDecisionService;
 import cn.springcloud.gray.server.service.GrayPolicyService;
+import cn.springlcoud.gray.event.server.GrayEventTrigger;
+import cn.springlcoud.gray.event.server.TriggerType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +24,16 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
 
     private GrayPolicyService grayPolicyService;
     private GrayDecisionService grayDecisionService;
+    private GrayEventTrigger grayEventTrigger;
 
 
-    public JPAGrayPolicyModule(GrayPolicyService grayPolicyService, GrayDecisionService grayDecisionService) {
+    public JPAGrayPolicyModule(
+            GrayPolicyService grayPolicyService,
+            GrayDecisionService grayDecisionService,
+            GrayEventTrigger grayEventTrigger) {
         this.grayPolicyService = grayPolicyService;
         this.grayDecisionService = grayDecisionService;
+        this.grayEventTrigger = grayEventTrigger;
     }
 
     @Override
@@ -54,7 +61,7 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
     public GrayPolicy saveGrayPolicy(GrayPolicy grayPolicy) {
         setDefaultValue(grayPolicy);
         GrayPolicy newRecord = grayPolicyService.saveModel(grayPolicy);
-        //todo 加事件
+        triggerGrayEvent(TriggerType.ADD, newRecord);
         return newRecord;
     }
 
@@ -67,7 +74,7 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
             policy.setOperator(userId);
             policy.setOperateTime(new Date());
             grayPolicyService.saveModel(policy);
-            //todo 加事件
+            triggerGrayEvent(TriggerType.DELETE, policy);
         }
     }
 
@@ -80,7 +87,7 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
             policy.setOperator(userId);
             policy.setOperateTime(new Date());
             grayPolicyService.saveModel(policy);
-            //todo 加事件
+            triggerGrayEvent(TriggerType.MODIFY, policy);
         }
     }
 
@@ -89,7 +96,7 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
     public GrayDecision saveGrayDecision(GrayDecision grayDecision) {
         setDefaultValue(grayDecision);
         GrayDecision newRecord = grayDecisionService.saveModel(grayDecision);
-        //todo 加事件
+        triggerGrayEvent(TriggerType.ADD, newRecord);
         return newRecord;
     }
 
@@ -102,7 +109,7 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
             decision.setOperator(userId);
             decision.setOperateTime(new Date());
             grayDecisionService.saveModel(decision);
-            //todo 加事件
+            triggerGrayEvent(TriggerType.DELETE, decision);
         }
     }
 
@@ -115,7 +122,7 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
             decision.setOperator(userId);
             decision.setOperateTime(new Date());
             grayDecisionService.saveModel(decision);
-            //todo 加事件
+            triggerGrayEvent(TriggerType.MODIFY, decision);
         }
     }
 
@@ -140,7 +147,7 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
         }
         List<GrayDecision> grayDecisions = grayDecisionService.saveModels(policyDecision.getGrayDecisions());
 
-        //todo 加事件
+        triggerGrayEvent(TriggerType.ADD, newRecord);
         return new GrayPolicyDecision(newRecord, grayDecisions);
     }
 
@@ -152,6 +159,9 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
         return grayPolicyService.findAllModel(policyIds, delFlag);
     }
 
+    protected void triggerGrayEvent(TriggerType triggerType, Object source) {
+        grayEventTrigger.triggering(source, triggerType);
+    }
 
     private void setDefaultValue(GrayDecision decision) {
         if (Objects.isNull(decision.getDelFlag())) {

@@ -253,7 +253,17 @@ public class JPAGrayServerModule implements GrayServerModule {
     }
 
 
-    private boolean isActiveGrayInstance(GrayInstance grayInstance) {
+    @Override
+    public boolean isActiveGrayInstance(String instanceId) {
+        GrayInstance grayInstance = getGrayInstance(instanceId);
+        if (Objects.isNull(grayInstance)) {
+            return false;
+        }
+        return isActiveGrayInstance(grayInstance);
+    }
+
+    @Override
+    public boolean isActiveGrayInstance(GrayInstance grayInstance) {
         return Objects.equals(grayInstance.getGrayStatus(), GrayStatus.OPEN)
                 && (
                 isLockGray(grayInstance) ||
