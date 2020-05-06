@@ -9,7 +9,7 @@ import cn.springlcoud.gray.event.GrayEventRetrieveResult;
 public interface GrayEventReceiver {
 
 
-    void start(long sortMark);
+    void start();
 
 
     void shutdown();

@@ -42,11 +42,15 @@ public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRe
             @Override
             public Predicate toPredicate(Root<NamespaceDO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList();
-
                 if (StringUtils.isNotEmpty(userId)) {
-                    Join<NamespaceDO, UserResourceAuthorityDO> join = root.join("resourceId", JoinType.INNER);
-                    predicates.add(cb.equal(join.get("userId").as(String.class), userId));
-                    predicates.add(cb.equal(join.get("resource").as(String.class), AuthorityConstants.RESOURCE_NAMESPACE));
+                    Subquery subQuery = query.subquery(String.class);
+                    Root from = subQuery.from(UserResourceAuthorityDO.class);
+
+                    subQuery.select(from.get("resourceId").as(String.class))
+                            .where(cb.equal(from.get("userId").as(String.class), userId),
+                                    cb.equal(from.get("resource").as(String.class), AuthorityConstants.RESOURCE_NAMESPACE));
+
+                    predicates.add(cb.and((root.get("code")).in(subQuery)));
                 }
                 query.where(predicates.toArray(new Predicate[predicates.size()]));
                 return query.getRestriction();

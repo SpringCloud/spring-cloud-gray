@@ -83,6 +83,7 @@ public class GenericMatchUtils {
         if (Objects.isNull(genericType)) {
             return null;
         }
-        return genericType.getRawClass();
+        Class<?> genericCls = genericType.getRawClass();
+        return Objects.nonNull(genericCls) ? genericCls : genericType.resolve();
     }
 }

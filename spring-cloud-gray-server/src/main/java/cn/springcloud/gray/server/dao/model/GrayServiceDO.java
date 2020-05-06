@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gray_service", indexes = {@Index(columnList = "namespace", unique = true)})
+@Table(name = "gray_service", indexes = {@Index(columnList = "namespace")})
 public class GrayServiceDO {
 
     @Id

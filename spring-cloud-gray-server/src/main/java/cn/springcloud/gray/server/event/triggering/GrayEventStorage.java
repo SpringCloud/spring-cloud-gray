@@ -22,6 +22,7 @@ public class GrayEventStorage implements GrayEventLogger {
 
     public GrayEventStorage(GrayEventLogModule grayEventLogModule, GrayEventEncoder<String> grayEventEncoder) {
         this.grayEventLogModule = grayEventLogModule;
+        this.grayEventEncoder = grayEventEncoder;
     }
 
     @Override
@@ -30,8 +31,9 @@ public class GrayEventStorage implements GrayEventLogger {
         grayEventLog.setSourceId(grayEvent.getSourceId());
         grayEventLog.setType(grayEvent.getType());
         grayEventLog.setSortMark(grayEvent.getSortMark());
+//        grayEventLog.setEventClass(grayEvent.getClass().getName());
         try {
-            grayEventEncoder.encode(grayEvent);
+            grayEventLog.setContent(grayEventEncoder.encode(grayEvent));
             grayEventLogModule.persist(grayEventLog);
         } catch (IOException e) {
             log.error("存储GrayEvent失败", e);

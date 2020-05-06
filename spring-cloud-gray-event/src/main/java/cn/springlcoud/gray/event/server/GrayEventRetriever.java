@@ -1,5 +1,6 @@
 package cn.springlcoud.gray.event.server;
 
+import cn.springlcoud.gray.event.GrayEvent;
 import cn.springlcoud.gray.event.GrayEventRetrieveResult;
 
 /**
@@ -11,6 +12,7 @@ public interface GrayEventRetriever {
 
     GrayEventRetrieveResult retrieveGreaterThan(long sortMark);
 
+    Class<? extends GrayEvent> retrieveTypeClass(String type);
 
     long getNewestSortMark();
 

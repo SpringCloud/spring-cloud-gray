@@ -3,15 +3,16 @@ package cn.springcloud.gray.server.event.triggering;
 import cn.springcloud.gray.retriever.GenericRetriever;
 import cn.springcloud.gray.server.module.gray.GrayEventLogModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayEventLog;
-import cn.springlcoud.gray.event.GrayEvent;
-import cn.springlcoud.gray.event.GrayEventRetrieveResult;
+import cn.springlcoud.gray.event.*;
 import cn.springlcoud.gray.event.codec.GrayEventDecoder;
 import cn.springlcoud.gray.event.server.EventConverter;
 import cn.springlcoud.gray.event.server.GrayEventRetriever;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ public class GrayEventLogRetriever implements GrayEventRetriever {
     private GrayEventLogModule grayEventLogModule;
     private GenericRetriever<EventConverter> genericRetriever;
     private GrayEventDecoder<String> grayEventDecoder;
+    private Map<String, Class<? extends GrayEvent>> grayEventTypeClsMappings = new HashMap<>();
 
 
     public GrayEventLogRetriever(
@@ -34,6 +36,7 @@ public class GrayEventLogRetriever implements GrayEventRetriever {
         this.grayEventLogModule = grayEventLogModule;
         this.genericRetriever = new GenericRetriever<>(eventConverters, EventConverter.class, 1);
         this.grayEventDecoder = grayEventDecoder;
+        initEventTypeClsMappings();
     }
 
     @Override
@@ -44,8 +47,23 @@ public class GrayEventLogRetriever implements GrayEventRetriever {
     }
 
     @Override
+    public Class<? extends GrayEvent> retrieveTypeClass(String type) {
+        return grayEventTypeClsMappings.get(type);
+    }
+
+
+    @Override
     public long getNewestSortMark() {
         return grayEventLogModule.getNewestSortMark();
+    }
+
+
+    private void initEventTypeClsMappings() {
+        grayEventTypeClsMappings.put(GrayServiceEvent.class.getSimpleName(), GrayServiceEvent.class);
+        grayEventTypeClsMappings.put(GrayInstanceEvent.class.getSimpleName(), GrayInstanceEvent.class);
+        grayEventTypeClsMappings.put(GrayPolicyEvent.class.getSimpleName(), GrayPolicyEvent.class);
+        grayEventTypeClsMappings.put(GrayDecisionEvent.class.getSimpleName(), GrayDecisionEvent.class);
+        grayEventTypeClsMappings.put(GrayTrackEvent.class.getSimpleName(), GrayTrackEvent.class);
     }
 
 
@@ -62,10 +80,12 @@ public class GrayEventLogRetriever implements GrayEventRetriever {
     private GrayEvent toGrayEvent(GrayEventLog grayEventLog) {
         GrayEvent grayEvent = null;
         try {
-            Class<? extends GrayEvent> eventClass =
-                    (Class<? extends GrayEvent>) Class.forName(grayEventLog.getEventClass());
+//            Class<? extends GrayEvent> eventClass =
+//                    (Class<? extends GrayEvent>) Class.forName(grayEventLog.getEventClass());
+            Class<? extends GrayEvent> eventClass = retrieveTypeClass(grayEventLog.getType());
             grayEvent = grayEventDecoder.decode(grayEventLog.getContent(), eventClass);
-        } catch (ClassNotFoundException | IOException e) {
+        } catch (IOException e) {
+            //todo print error log
             log.error("");
             throw new RuntimeException(e);
         }
