@@ -67,6 +67,11 @@
         </dependency>
         <!-- 优化删除 ed -->
 
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

@@ -82,6 +82,7 @@
         <querydsl.version>4.2.1</querydsl.version>
         <fm-dynamic-compiler.version>1.0-SNAPSHOT</fm-dynamic-compiler.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
+        <hibernate-validator.version>5.3.6.Final</hibernate-validator.version>
     </properties>
 
 
@@ -404,6 +405,13 @@
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>${validation-api.version}</version>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
                 <optional>true</optional>
             </dependency>
 
