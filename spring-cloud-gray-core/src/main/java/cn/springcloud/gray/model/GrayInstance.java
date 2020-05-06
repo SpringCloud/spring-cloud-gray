@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -51,7 +52,10 @@ public class GrayInstance implements Serializable {
         bean.setGrayStatus(other.getGrayStatus());
         bean.setInstanceId(other.getInstanceId());
         bean.setServiceId(other.getServiceId());
-        bean.setRoutePolicies(new CopyOnWriteArraySet<>(other.getRoutePolicies()));
+        bean.setRoutePolicies(new CopyOnWriteArraySet<>());
+        if (Objects.nonNull(other.getRoutePolicies())) {
+            bean.getRoutePolicies().addAll(other.getRoutePolicies());
+        }
         return bean;
     }
 

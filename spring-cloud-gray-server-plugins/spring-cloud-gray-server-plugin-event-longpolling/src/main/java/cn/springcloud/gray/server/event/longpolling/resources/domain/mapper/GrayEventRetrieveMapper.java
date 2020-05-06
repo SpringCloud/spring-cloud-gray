@@ -43,7 +43,7 @@ public class GrayEventRetrieveMapper {
             eventVo.setEventClass(event.getClass().getName());
             eventVOList.add(eventVo);
         }
-
+        vo.setGrayEvents(eventVOList);
         return vo;
     }
 }

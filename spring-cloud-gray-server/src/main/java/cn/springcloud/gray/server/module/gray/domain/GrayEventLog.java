@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 public class GrayEventLog {
 
-    private String id;
+    private Long id;
     private String eventClass;
     private String type;
     private String sourceId;

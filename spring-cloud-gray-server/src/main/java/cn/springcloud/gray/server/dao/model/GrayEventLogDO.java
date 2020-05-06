@@ -19,8 +19,9 @@ import java.util.Date;
 public class GrayEventLogDO {
 
     @Id
-    @Column(length = 32)
-    private String id;
+    @Column(length = 20)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String type;
     @Column(length = 64)
     private String sourceId;

@@ -32,8 +32,7 @@ public class GrayEventLongPollingReceiver extends BasicGrayEventReceiver {
     }
 
     @Override
-    public void start(long sortMark) {
-        this.currentSortMark = sortMark;
+    public void start() {
         longPollingWorker = new LongPollingWorker(
                 longPollingProperties, grayEventRemoteClient, this, instanceLocalInfoObtainer);
     }

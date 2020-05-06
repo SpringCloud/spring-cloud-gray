@@ -30,7 +30,7 @@ public abstract class AbstrctEventConverter<SOURCE, E extends GrayEvent> impleme
     }
 
     protected void perfectDefault(E event, SOURCE source, TriggerType triggerType) {
-        if (Objects.equals(event.getSortMark(), 0)) {
+        if (Objects.equals(event.getSortMark(), 0l)) {
             event.setSortMark(System.currentTimeMillis());
         }
         if (Objects.isNull(event.getTriggerType())) {

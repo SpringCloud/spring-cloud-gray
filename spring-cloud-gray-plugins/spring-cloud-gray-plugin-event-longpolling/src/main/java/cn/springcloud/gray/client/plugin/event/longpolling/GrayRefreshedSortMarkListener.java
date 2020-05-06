@@ -15,6 +15,7 @@ import java.util.Objects;
 public class GrayRefreshedSortMarkListener implements ApplicationListener<GrayRefreshedEvent> {
 
     private GrayEventReceiver grayEventReceiver;
+    private volatile boolean longPollingEnabled = false;
 
     public GrayRefreshedSortMarkListener(GrayEventReceiver grayEventReceiver) {
         this.grayEventReceiver = grayEventReceiver;
@@ -28,5 +29,16 @@ public class GrayRefreshedSortMarkListener implements ApplicationListener<GrayRe
         }
         GrayInfos grayInfos = (GrayInfos) event.getSource();
         grayEventReceiver.setLocationNewestSortMark(grayInfos.getMaxSortMark());
+        if (!longPollingEnabled) {
+            enableLongPolling();
+        }
+    }
+
+    private synchronized void enableLongPolling() {
+        if (longPollingEnabled) {
+            return;
+        }
+        grayEventReceiver.start();
+        longPollingEnabled = true;
     }
 }

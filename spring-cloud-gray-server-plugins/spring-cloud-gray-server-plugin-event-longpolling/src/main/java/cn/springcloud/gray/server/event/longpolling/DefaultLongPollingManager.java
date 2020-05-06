@@ -30,7 +30,7 @@ public class DefaultLongPollingManager implements LongPollingManager {
         long eventSortMark = grayEvent.getSortMark();
         for (Iterator<ClientLongPolling> iter = allSubs.iterator(); iter.hasNext(); ) {
             ClientLongPolling clientLongPolling = iter.next();
-            if (clientLongPolling.getSortMark() > eventSortMark) {
+            if (clientLongPolling.getSortMark() < eventSortMark) {
                 clientLongPolling.getDeferredResult().setResult(createListenResult(ListenResult.RESULT_STATUS_HAS_NEWER));
                 iter.remove();
                 sendedCount++;

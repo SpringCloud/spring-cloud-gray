@@ -3,10 +3,7 @@ package cn.springcloud.gray.server.configuration;
 import cn.springcloud.gray.server.event.triggering.GrayEventInitializer;
 import cn.springcloud.gray.server.event.triggering.GrayEventLogRetriever;
 import cn.springcloud.gray.server.event.triggering.GrayEventStorage;
-import cn.springcloud.gray.server.event.triggering.converter.GraServiceEventConverter;
-import cn.springcloud.gray.server.event.triggering.converter.GrayDecisionEventConverter;
-import cn.springcloud.gray.server.event.triggering.converter.GrayInstanceEventConverter;
-import cn.springcloud.gray.server.event.triggering.converter.GrayPolicyEventConverter;
+import cn.springcloud.gray.server.event.triggering.converter.*;
 import cn.springcloud.gray.server.module.gray.GrayEventLogModule;
 import cn.springcloud.gray.server.module.gray.GrayModule;
 import cn.springlcoud.gray.event.codec.GrayEventCodec;
@@ -83,6 +80,10 @@ public class GrayServerEventTriggeringAutoConfiguration {
         return new GraServiceEventConverter();
     }
 
+    @Bean
+    public GraTrackEventConverter graTrackEventConverter() {
+        return new GraTrackEventConverter();
+    }
 
     @Bean
     public GrayInstanceEventConverter grayInstanceEventConverter(GrayModule grayModule) {
