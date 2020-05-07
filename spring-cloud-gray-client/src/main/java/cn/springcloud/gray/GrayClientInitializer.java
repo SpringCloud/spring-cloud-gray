@@ -1,5 +1,6 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.choose.PolicyPredicate;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
@@ -16,7 +17,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.Map;
-import java.util.Timer;
 
 @Slf4j
 public class GrayClientInitializer implements ApplicationContextAware, InitializingBean {
@@ -40,6 +40,8 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         initGrayManagerRequestInterceptors();
 
         loadInstanceLocalInfo();
+
+        registerPolicyPredicates();
     }
 
 
@@ -102,10 +104,13 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
     }
 
 
-    private Timer updateTimer = new Timer("Gray-Update-Timer", true);
-    private GrayClientConfig grayClientConfig;
-    private int scheduleOpenForWorkCount = 0;
-    private int scheduleOpenForWorkLimit = 5;
-
+    /**
+     * 往PolicyDecisionManager注册PolicyPredicate
+     */
+    private void registerPolicyPredicates() {
+        Map<String, PolicyPredicate> policyPredicates = cxt.getBeansOfType(PolicyPredicate.class);
+        PolicyDecisionManager policyDecisionManager = GrayClientHolder.getPolicyDecisionManager();
+        policyPredicates.values().forEach(policyDecisionManager::registerPolicyPredicate);
+    }
 
 }

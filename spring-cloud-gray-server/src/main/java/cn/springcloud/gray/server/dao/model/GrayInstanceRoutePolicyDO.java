@@ -18,8 +18,9 @@ import java.util.Date;
 @Table(name = "gray_instance_route_policy", indexes = {@Index(columnList = "instanceId"), @Index(columnList = "policyId")})
 public class GrayInstanceRoutePolicyDO {
     @Id
-    @Column(length = 32)
-    private String id;
+    @Column(length = 20)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(length = 64)
     private String instanceId;
     @Column(length = 20)

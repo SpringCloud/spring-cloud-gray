@@ -6,6 +6,7 @@ import cn.springcloud.gray.server.event.triggering.GrayEventStorage;
 import cn.springcloud.gray.server.event.triggering.converter.*;
 import cn.springcloud.gray.server.module.gray.GrayEventLogModule;
 import cn.springcloud.gray.server.module.gray.GrayModule;
+import cn.springcloud.gray.server.module.gray.GrayServerModule;
 import cn.springlcoud.gray.event.codec.GrayEventCodec;
 import cn.springlcoud.gray.event.codec.JsonGrayEventCodec;
 import cn.springlcoud.gray.event.server.*;
@@ -88,6 +89,11 @@ public class GrayServerEventTriggeringAutoConfiguration {
     @Bean
     public GrayInstanceEventConverter grayInstanceEventConverter(GrayModule grayModule) {
         return new GrayInstanceEventConverter(grayModule);
+    }
+
+    @Bean
+    public GrayInstanceRoutePolicyEventConverter grayInstanceRoutePolicyEventConverter(GrayServerModule grayServerModule) {
+        return new GrayInstanceRoutePolicyEventConverter(grayServerModule);
     }
 
     @Bean

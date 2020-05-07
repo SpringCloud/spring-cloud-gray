@@ -31,4 +31,9 @@ public class InstanceRoutePolicy {
     private String operator;
     @ApiModelProperty("操作时间")
     private Date operateTime;
+
+
+//    public static String generateInstanceRoutePolicyId(String instanceId, Long policyId) {
+//        return Md5Utils.md5(instanceId + "_" + policyId);
+//    }
 }

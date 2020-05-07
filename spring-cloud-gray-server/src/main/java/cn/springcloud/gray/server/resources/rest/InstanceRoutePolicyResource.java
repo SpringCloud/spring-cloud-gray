@@ -23,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,7 +61,6 @@ public class InstanceRoutePolicyResource {
                         .instanceIds(fo.getInstanceIds())
                         .policyIds(fo.getPolicyIds())
                         .operator(userModule.getCurrentUserId())
-                        .operateTime(new Date())
                         .build();
         int count = instanceRouteModule.saveInstanceRoutePolicies(instanceRoutePolicies);
         return ApiResHelper.successData(count);
@@ -73,14 +71,8 @@ public class InstanceRoutePolicyResource {
         if (!hasServiceAuthorityByInstanceId(fo.getInstanceId())) {
             return ApiResHelper.notAuthority();
         }
-        InstanceRoutePolicy instanceRoutePolicy =
-                InstanceRoutePolicy.builder()
-                        .instanceId(fo.getInstanceId())
-                        .policyId(fo.getPolicyId())
-                        .operator(userModule.getCurrentUserId())
-                        .operateTime(new Date())
-                        .build();
-        instanceRoutePolicy = instanceRouteModule.saveInstanceRoutePolicy(instanceRoutePolicy);
+        InstanceRoutePolicy instanceRoutePolicy = instanceRouteModule.addInstanceRoutePolicy(
+                fo.getInstanceId(), fo.getPolicyId(), userModule.getCurrentUserId());
         return ApiResHelper.successData(instanceRoutePolicy);
     }
 
