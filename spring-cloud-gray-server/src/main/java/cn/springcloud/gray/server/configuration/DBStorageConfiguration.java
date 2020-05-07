@@ -120,8 +120,11 @@ public class DBStorageConfiguration {
 
         @Bean
         @ConditionalOnMissingBean
-        public InstanceRouteModule instanceRouteModule(InstanceRoutePolicyService instanceRoutePolicyService) {
-            return new JPAInstanceRouteModule(instanceRoutePolicyService);
+        public InstanceRouteModule instanceRouteModule(
+                InstanceRoutePolicyService instanceRoutePolicyService,
+                GrayServerModule grayServerModule,
+                GrayEventTrigger grayEventTrigger) {
+            return new JPAInstanceRouteModule(instanceRoutePolicyService, grayServerModule, grayEventTrigger);
         }
 
         @Bean

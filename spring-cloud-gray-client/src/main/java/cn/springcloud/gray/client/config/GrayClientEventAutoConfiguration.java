@@ -45,6 +45,11 @@ public class GrayClientEventAutoConfiguration {
         return new GrayInstanceEventListener(grayManager, instanceLocalInfoObtainer);
     }
 
+    @Bean
+    public GrayInstanceRoutePolicyEventListener grayInstanceRoutePolicyEventListener(
+            GrayManager grayManager, InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
+        return new GrayInstanceRoutePolicyEventListener(grayManager, instanceLocalInfoObtainer);
+    }
 
     @Bean
     public GrayPolicyEventListener grayPolicyEventListener(

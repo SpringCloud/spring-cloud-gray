@@ -82,4 +82,9 @@ public class InstanceRoutePolicyService extends AbstraceCRUDService<InstanceRout
         List<GrayInstanceRoutePolicyDO> records = repository.findAll(specification);
         return mapper.dos2models(records);
     }
+
+
+    public InstanceRoutePolicy findByInstanceAndPolicy(String instanceId, Long policyId) {
+        return getModelMapper().do2model(repository.findFirstByInstanceIdAndPolicyId(instanceId, policyId));
+    }
 }

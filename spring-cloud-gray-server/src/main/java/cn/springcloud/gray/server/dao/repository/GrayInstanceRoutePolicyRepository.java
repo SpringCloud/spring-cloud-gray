@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GrayInstanceRoutePolicyRepository extends JpaRepository<GrayInstanceRoutePolicyDO, String>, JpaSpecificationExecutor<GrayInstanceRoutePolicyDO> {
 
+    GrayInstanceRoutePolicyDO findFirstByInstanceIdAndPolicyId(String instanceId, Long policyId);
 }

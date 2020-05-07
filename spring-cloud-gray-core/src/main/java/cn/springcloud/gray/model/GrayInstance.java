@@ -45,6 +45,15 @@ public class GrayInstance implements Serializable {
     }
 
 
+    public void addRoutePolicy(String policyId) {
+        routePolicies.add(policyId);
+    }
+
+    public void removeRoutePolicy(String policyId) {
+        routePolicies.remove(policyId);
+    }
+
+
     public static GrayInstance copyof(GrayInstance other) {
         GrayInstance bean = new GrayInstance();
         bean.setPort(other.getPort());

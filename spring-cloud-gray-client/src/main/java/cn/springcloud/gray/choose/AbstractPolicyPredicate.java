@@ -5,6 +5,7 @@ import cn.springcloud.gray.decision.Policy;
 import cn.springcloud.gray.request.GrayRequest;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author saleson
@@ -25,6 +26,9 @@ public abstract class AbstractPolicyPredicate implements PolicyPredicate {
     protected abstract List<Policy> getPolicies(DecisionInputArgs decisionInputArgs);
 
     protected boolean testPolicies(List<Policy> policies, DecisionInputArgs decisionInputArgs) {
+        if (Objects.isNull(policies) || policies.size() < 1) {
+            return false;
+        }
         for (Policy policy : policies) {
             if (!policy.predicateDecisions(decisionInputArgs)) {
                 return false;

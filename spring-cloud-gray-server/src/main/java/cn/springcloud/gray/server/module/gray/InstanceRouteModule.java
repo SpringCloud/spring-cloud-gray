@@ -17,7 +17,13 @@ public interface InstanceRouteModule {
 
     Page<InstanceRoutePolicy> queryInstanceRoutePolicies(InstanceRoutePolicyQuery query, Pageable pageable);
 
-    InstanceRoutePolicy saveInstanceRoutePolicy(InstanceRoutePolicy instanceRoutePolicy);
+    /**
+     * @param instanceId
+     * @param policyId
+     * @param operatorId 操作人id
+     * @return
+     */
+    InstanceRoutePolicy addInstanceRoutePolicy(String instanceId, Long policyId, String operatorId);
 
     void updateInstanceRoutePolicyDelFlag(String id, boolean newDelFlag, String operator);
 

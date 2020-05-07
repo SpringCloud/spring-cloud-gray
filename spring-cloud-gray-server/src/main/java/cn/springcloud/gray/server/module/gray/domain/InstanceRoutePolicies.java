@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 /**
  * @author saleson
  * @date 2020-03-01 22:09
@@ -25,6 +23,4 @@ public class InstanceRoutePolicies {
     private Long[] policyIds;
     @ApiModelProperty("操作人id")
     private String operator;
-    @ApiModelProperty("操作时间")
-    private Date operateTime;
 }
