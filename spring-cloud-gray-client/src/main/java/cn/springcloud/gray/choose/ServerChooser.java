@@ -1,6 +1,4 @@
-package cn.springcloud.gray;
-
-import cn.springcloud.gray.choose.ListChooser;
+package cn.springcloud.gray.choose;
 
 import java.util.List;
 
