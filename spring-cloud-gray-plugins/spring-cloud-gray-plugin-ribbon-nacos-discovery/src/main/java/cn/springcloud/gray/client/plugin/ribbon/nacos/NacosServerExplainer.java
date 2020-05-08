@@ -19,10 +19,12 @@ public class NacosServerExplainer implements ServerExplainer<Server> {
     }
 
     @Override
-    public ServerSpec apply(Server server) {
+    public ServerSpec<Server> apply(Server server) {
         String seviceId = getInstaceId(server);
         Map metadata = getServerMetadata(seviceId, server);
-        return ServerSpec.builder().instanceId(server.getMetaInfo().getInstanceId())
+        return ServerSpec.<Server>builder()
+                .server(server)
+                .instanceId(server.getMetaInfo().getInstanceId())
                 .serviceId(seviceId)
                 .metadatas(metadata).build();
     }

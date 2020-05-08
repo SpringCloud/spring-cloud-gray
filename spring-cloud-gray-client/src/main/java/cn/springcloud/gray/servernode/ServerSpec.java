@@ -13,13 +13,14 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServerSpec {
+public class ServerSpec<SERVER> {
 
 
     private String serviceId;
     private String instanceId;
     private URI uri;
     private Map<String, Object> metadatas = new HashMap<>();
+    private SERVER server;
 
 
     public void setMetadata(String name, Object value) {

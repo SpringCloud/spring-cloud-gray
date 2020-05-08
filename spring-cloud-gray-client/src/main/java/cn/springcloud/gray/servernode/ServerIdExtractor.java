@@ -8,6 +8,8 @@ public interface ServerIdExtractor<SERVER> {
 
     String getServiceId(Iterable<SERVER> servers);
 
+    String getSpecServiceId(Iterable<ServerSpec<SERVER>> serverSpecs);
+
     String getServiceId(SERVER server);
 
     String getInstaceId(Iterable<SERVER> servers);
