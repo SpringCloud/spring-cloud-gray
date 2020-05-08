@@ -4,6 +4,7 @@ import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.ServerChooser;
 import cn.springcloud.gray.ServerListResult;
+import cn.springcloud.gray.choose.ListChooser;
 import cn.springcloud.gray.choose.PredicateType;
 import cn.springcloud.gray.decision.GrayDecisionInputArgs;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Deprecated
 public class RibbonServerChooser implements ServerChooser<Server> {
 
     private GrayManager grayManager;
@@ -50,6 +52,26 @@ public class RibbonServerChooser implements ServerChooser<Server> {
     }
 
     @Override
+    public Server chooseServer(List<Server> servers, ListChooser<Server> chooser) {
+        ServerListResult<Server> serverListResult = distinguishAndMatchGrayServerList(servers);
+        if (serverListResult == null) {
+            return chooser.choose(servers);
+        }
+
+        if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
+            if (CollectionUtils.isNotEmpty(serverListResult.getGrayServers())) {
+                Server server = chooser.choose(serverListResult.getGrayServers());
+                if (server != null) {
+                    return server;
+                }
+            }
+        }
+
+        return chooser.choose(serverListResult.getNormalServers());
+    }
+
+
+    //    @Override
     public boolean matchGrayDecisions(ServerSpec serverSpec) {
         GrayDecisionInputArgs decisionInputArgs = new GrayDecisionInputArgs();
         decisionInputArgs.setServer(serverSpec);
@@ -58,12 +80,12 @@ public class RibbonServerChooser implements ServerChooser<Server> {
         return policyDecisionManager.testPolicyPredicate(PredicateType.SERVER.name(), decisionInputArgs);
     }
 
-    @Override
+    //    @Override
     public boolean matchGrayDecisions(Server server) {
         return matchGrayDecisions(serverExplainer.apply(server));
     }
 
-    @Override
+    //    @Override
     public ServerListResult<Server> distinguishServerList(List<Server> servers) {
         String serviceId = getServiceId(servers);
         if (StringUtils.isEmpty(serviceId)) {
@@ -73,7 +95,7 @@ public class RibbonServerChooser implements ServerChooser<Server> {
     }
 
 
-    @Override
+    //    @Override
     public ServerListResult<Server> distinguishAndMatchGrayServerList(List<Server> servers) {
         ServerListResult<Server> serverListResult = distinguishServerList(servers);
         if (serverListResult == null) {

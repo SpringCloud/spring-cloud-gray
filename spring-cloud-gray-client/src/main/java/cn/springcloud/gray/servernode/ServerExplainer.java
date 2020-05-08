@@ -1,9 +1,12 @@
 package cn.springcloud.gray.servernode;
 
-public interface ServerExplainer<INSTANCE> {
+public interface ServerExplainer<SERVER> {
 
 
-    ServerSpec apply(INSTANCE instance);
+    ServerSpec apply(SERVER server);
 
+    String getServiceId(SERVER server);
+
+    String getInstaceId(SERVER server);
 
 }

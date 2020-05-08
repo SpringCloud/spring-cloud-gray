@@ -2,6 +2,7 @@ package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.*;
 import cn.springcloud.gray.cache.CaffeineCache;
+import cn.springcloud.gray.choose.GrayInstanceSorter;
 import cn.springcloud.gray.choose.GrayServerPredicate;
 import cn.springcloud.gray.choose.PolicyPredicate;
 import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
@@ -18,6 +19,9 @@ import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
+import cn.springcloud.gray.servernode.ServerExplainer;
+import cn.springcloud.gray.servernode.ServerIdExtractor;
+import cn.springcloud.gray.servernode.ServerListProcessor;
 import cn.springcloud.gray.spring.SpringEventPublisher;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,5 +130,42 @@ public class GrayClientAutoConfiguration {
             InformationClient informationClient,
             RefreshDriver refreshDriver) {
         return new DefaultGrayInfosInitializer(grayClientConfig, informationClient, refreshDriver);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ServerChooser serverChooser(GrayInstanceSorter grayInstanceSorter) {
+        return new DefaultServerChooser(grayInstanceSorter);
+    }
+
+
+    @Bean
+    public GrayInstanceSorter grayInstanceSorter(
+            ServerIdExtractor serverServerIdExtractor,
+            GrayManager grayManager,
+            RequestLocalStorage requestLocalStorage,
+            PolicyDecisionManager policyDecisionManager,
+            ServerExplainer serverExplainer,
+            @Autowired(required = false) ServerListProcessor serverListProcessor) {
+
+        if (serverListProcessor == null) {
+            serverListProcessor = GrayClientHolder.getServereListProcessor();
+        }
+        return new GrayInstanceSorter(
+                serverServerIdExtractor,
+                grayManager,
+                requestLocalStorage,
+                policyDecisionManager,
+                serverExplainer,
+                serverListProcessor);
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ServerIdExtractor serverIdExtractor(
+            RequestLocalStorage requestLocalStorage,
+            ServerExplainer serverServerExplainer) {
+        return new DefaultServerIdextractor(requestLocalStorage, serverServerExplainer);
     }
 }
