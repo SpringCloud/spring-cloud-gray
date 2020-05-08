@@ -25,12 +25,11 @@ public class DefaultServerChooser implements ServerChooser<Object> {
             return chooser.choose(servers);
         }
 
-        if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
-            if (CollectionUtils.isNotEmpty(serverListResult.getGrayServers())) {
-                Object server = chooser.choose(serverListResult.getGrayServers());
-                if (server != null) {
-                    return server;
-                }
+        if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()
+                && CollectionUtils.isNotEmpty(serverListResult.getGrayServers())) {
+            Object server = chooser.choose(serverListResult.getGrayServers());
+            if (server != null) {
+                return server;
             }
         }
 

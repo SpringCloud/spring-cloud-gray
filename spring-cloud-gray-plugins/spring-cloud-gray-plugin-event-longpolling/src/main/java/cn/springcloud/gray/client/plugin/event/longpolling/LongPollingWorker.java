@@ -32,6 +32,9 @@ public class LongPollingWorker {
     private InstanceLocalInfoObtainer instanceLocalInfoObtainer;
 
     private volatile boolean stop = false;
+    private volatile int longpollingFailedTimes = 0;
+    private int defaultLongpollingFailedRetryTime = 1000;
+    private int maxLongpollingFailedRetryTime = 60000;
 
 
     public LongPollingWorker(
@@ -54,7 +57,7 @@ public class LongPollingWorker {
 
 
     private void execListening() {
-        execListening(1);
+        execListening(15);
     }
 
     private void execListening(long delayMs) {
@@ -72,10 +75,16 @@ public class LongPollingWorker {
         try {
             ls = listening();
         } catch (Throwable e) {
-            log.error("监听失败", e);
-            execListening(1000);
+            log.error("监听失败{}次", longpollingFailedTimes + 1, e);
+            int longpollingFailedRetryTime = (int) (defaultLongpollingFailedRetryTime * longpollingFailedTimes * 10 * 1.5);
+            longpollingFailedRetryTime = Math.max(longpollingFailedRetryTime, defaultLongpollingFailedRetryTime);
+            execListening(Math.min(longpollingFailedRetryTime, maxLongpollingFailedRetryTime));
+            longpollingFailedTimes++;
+            return;
         }
-
+        if (longpollingFailedTimes > 0) {
+            longpollingFailedTimes = 0;
+        }
         if (!Objects.isNull(ls) && Objects.equals(ls.getStatus(), ListenResult.RESULT_STATUS_HAS_NEWER)) {
             executorService.execute(this::updateNewestEvent);
         } else {

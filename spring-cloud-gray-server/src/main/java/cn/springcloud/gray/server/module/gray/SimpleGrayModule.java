@@ -55,7 +55,8 @@ public class SimpleGrayModule implements GrayModule {
         if (grayInstance == null) {
             return null;
         }
-        return ofOldGrayInstanceInfo(grayInstance);
+
+        return ofGrayInstanceInfo(grayInstance, version);
     }
 
     @Override
