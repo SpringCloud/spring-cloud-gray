@@ -1,7 +1,7 @@
-package cn.springcloud.gray;
+package cn.springcloud.gray.choose;
 
-import cn.springcloud.gray.choose.GraySorter;
-import cn.springcloud.gray.choose.ListChooser;
+import cn.springcloud.gray.GrayClientHolder;
+import cn.springcloud.gray.ServerListResult;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;

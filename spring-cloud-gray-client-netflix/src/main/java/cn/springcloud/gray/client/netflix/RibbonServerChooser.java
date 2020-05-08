@@ -2,10 +2,10 @@ package cn.springcloud.gray.client.netflix;
 
 import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.ServerChooser;
 import cn.springcloud.gray.ServerListResult;
 import cn.springcloud.gray.choose.ListChooser;
 import cn.springcloud.gray.choose.PredicateType;
+import cn.springcloud.gray.choose.ServerChooser;
 import cn.springcloud.gray.decision.GrayDecisionInputArgs;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.GrayService;

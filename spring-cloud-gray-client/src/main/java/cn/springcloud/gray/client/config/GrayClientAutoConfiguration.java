@@ -2,9 +2,7 @@ package cn.springcloud.gray.client.config;
 
 import cn.springcloud.gray.*;
 import cn.springcloud.gray.cache.CaffeineCache;
-import cn.springcloud.gray.choose.GrayInstanceSorter;
-import cn.springcloud.gray.choose.GrayServerPredicate;
-import cn.springcloud.gray.choose.PolicyPredicate;
+import cn.springcloud.gray.choose.*;
 import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.*;
 import cn.springcloud.gray.client.initialize.DefaultGrayInfosInitializer;

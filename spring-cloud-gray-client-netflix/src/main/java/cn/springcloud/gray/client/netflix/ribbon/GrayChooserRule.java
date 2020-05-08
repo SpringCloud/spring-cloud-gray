@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.netflix.ribbon;
 
 import cn.springcloud.gray.GrayClientHolder;
-import cn.springcloud.gray.ServerChooser;
+import cn.springcloud.gray.choose.ServerChooser;
 import com.google.common.base.Optional;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ZoneAvoidanceRule;
