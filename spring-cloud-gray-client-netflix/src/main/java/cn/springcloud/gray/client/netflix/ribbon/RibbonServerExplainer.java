@@ -18,9 +18,11 @@ public class RibbonServerExplainer implements ServerExplainer<Server> {
     }
 
     @Override
-    public ServerSpec apply(Server server) {
+    public ServerSpec<Server> apply(Server server) {
         Map metadata = getServerMetadata(server.getMetaInfo().getServiceIdForDiscovery(), server);
-        return ServerSpec.builder().instanceId(getInstaceId(server))
+        return ServerSpec.<Server>builder()
+                .server(server)
+                .instanceId(getInstaceId(server))
                 .serviceId(getServiceId(server))
                 .metadatas(metadata).build();
     }

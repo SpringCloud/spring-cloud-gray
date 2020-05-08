@@ -132,30 +132,38 @@ public class GrayClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ServerChooser serverChooser(GrayInstanceSorter grayInstanceSorter) {
-        return new DefaultServerChooser(grayInstanceSorter);
-    }
-
-
-    @Bean
-    public GrayInstanceSorter grayInstanceSorter(
-            ServerIdExtractor serverServerIdExtractor,
-            GrayManager grayManager,
-            RequestLocalStorage requestLocalStorage,
-            PolicyDecisionManager policyDecisionManager,
-            ServerExplainer serverExplainer,
+    public ServerChooser serverChooser(
+            GraySwitcher graySwitcher,
+            ServerIdExtractor serverIdExtractor,
+            InstanceGrayServerSorter instanceGrayServerSorter,
             @Autowired(required = false) ServerListProcessor serverListProcessor) {
 
         if (serverListProcessor == null) {
             serverListProcessor = GrayClientHolder.getServereListProcessor();
         }
-        return new GrayInstanceSorter(
+        return new DefaultServerChooser(
+                graySwitcher,
+                serverIdExtractor,
+                instanceGrayServerSorter,
+                null,
+                serverListProcessor);
+    }
+
+
+    @Bean
+    public InstanceGrayServerSorter instanceGrayServerSorter(
+            ServerIdExtractor serverServerIdExtractor,
+            GrayManager grayManager,
+            RequestLocalStorage requestLocalStorage,
+            PolicyDecisionManager policyDecisionManager,
+            ServerExplainer serverExplainer) {
+
+        return new InstanceGrayServerSorter(
                 serverServerIdExtractor,
                 grayManager,
                 requestLocalStorage,
                 policyDecisionManager,
-                serverExplainer,
-                serverListProcessor);
+                serverExplainer);
     }
 
 
