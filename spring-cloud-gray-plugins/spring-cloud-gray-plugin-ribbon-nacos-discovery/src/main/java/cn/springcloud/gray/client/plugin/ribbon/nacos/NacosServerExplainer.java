@@ -20,15 +20,26 @@ public class NacosServerExplainer implements ServerExplainer<Server> {
 
     @Override
     public ServerSpec apply(Server server) {
-        String appName = server.getMetaInfo().getAppName();
-        String seviceId = appName;
-        if(StringUtils.contains(appName, "@@")){
-            seviceId = StringUtils.split(appName, "@@")[1];
-        }
+        String seviceId = getInstaceId(server);
         Map metadata = getServerMetadata(seviceId, server);
         return ServerSpec.builder().instanceId(server.getMetaInfo().getInstanceId())
                 .serviceId(seviceId)
                 .metadatas(metadata).build();
+    }
+
+    @Override
+    public String getServiceId(Server server) {
+        return server.getMetaInfo().getInstanceId();
+    }
+
+    @Override
+    public String getInstaceId(Server server) {
+        String appName = server.getMetaInfo().getAppName();
+        String seviceId = appName;
+        if (StringUtils.contains(appName, "@@")) {
+            seviceId = StringUtils.split(appName, "@@")[1];
+        }
+        return seviceId;
     }
 
     public ServerIntrospector serverIntrospector(String serviceId) {
