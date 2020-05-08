@@ -20,20 +20,17 @@ public class DefaultServerChooser implements ServerChooser<Object> {
 
     @Override
     public Object chooseServer(List<Object> servers, ListChooser<Object> chooser) {
-        if (!GrayClientHolder.getGraySwitcher().state() || !GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
-            return chooser.choose(servers);
-        }
-
-
         ServerListResult<Object> serverListResult = graySorter.distinguishAndMatchGrayServerList(servers);
         if (serverListResult == null) {
             return chooser.choose(servers);
         }
 
-        if (CollectionUtils.isNotEmpty(serverListResult.getGrayServers())) {
-            Object server = chooser.choose(serverListResult.getGrayServers());
-            if (server != null) {
-                return server;
+        if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
+            if (CollectionUtils.isNotEmpty(serverListResult.getGrayServers())) {
+                Object server = chooser.choose(serverListResult.getGrayServers());
+                if (server != null) {
+                    return server;
+                }
             }
         }
 
