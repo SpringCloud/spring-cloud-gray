@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * 已被 {@link cn.springcloud.gray.choose.DefaultServerChooser} 替换
+ */
 @Deprecated
 public class RibbonServerChooser implements ServerChooser<Server> {
 
@@ -130,7 +133,7 @@ public class RibbonServerChooser implements ServerChooser<Server> {
 
 
     private ServerListResult<Server> distinguishServerList(String serviceId, List<Server> servers) {
-        if (!grayManager.hasGray(serviceId)) {
+        if (!grayManager.hasInstanceGray(serviceId)) {
             return null;
         }
 

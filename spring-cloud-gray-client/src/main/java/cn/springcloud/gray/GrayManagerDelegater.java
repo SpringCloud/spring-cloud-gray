@@ -1,13 +1,12 @@
 package cn.springcloud.gray;
 
-import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
 
 import java.util.Collection;
 import java.util.List;
 
-public abstract class GrayManagerDelegater implements UpdateableGrayManager, CommunicableGrayManager {
+public abstract class GrayManagerDelegater implements UpdateableGrayManager {
 
     protected GrayManager delegate;
 
@@ -16,8 +15,13 @@ public abstract class GrayManagerDelegater implements UpdateableGrayManager, Com
     }
 
     @Override
-    public boolean hasGray(String serviceId) {
-        return delegate.hasGray(serviceId);
+    public boolean hasInstanceGray(String serviceId) {
+        return delegate.hasInstanceGray(serviceId);
+    }
+
+    @Override
+    public boolean hasServiceGray(String serviceId) {
+        return delegate.hasServiceGray(serviceId);
     }
 
     @Override
@@ -79,15 +83,6 @@ public abstract class GrayManagerDelegater implements UpdateableGrayManager, Com
             ((UpdateableGrayManager) delegate).setRequestInterceptors(requestInterceptors);
         }
     }
-
-    @Override
-    public InformationClient getGrayInformationClient() {
-        if (delegate instanceof CommunicableGrayManager) {
-            return ((CommunicableGrayManager) delegate).getGrayInformationClient();
-        }
-        throw new UnsupportedOperationException("delegate不是CommunicableGrayManager的实现类");
-    }
-
 
     public void removeGrayService(String serviceId) {
         if (delegate instanceof UpdateableGrayManager) {

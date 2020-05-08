@@ -30,9 +30,15 @@ public class SimpleGrayManager extends AbstractGrayManager {
     }
 
     @Override
-    public boolean hasGray(String serviceId) {
+    public boolean hasInstanceGray(String serviceId) {
         GrayService grayService = grayServices.get(serviceId);
         return grayService != null && !grayService.getGrayInstances().isEmpty();
+    }
+
+    @Override
+    public boolean hasServiceGray(String serviceId) {
+        //todo
+        return false;
     }
 
     @Override
