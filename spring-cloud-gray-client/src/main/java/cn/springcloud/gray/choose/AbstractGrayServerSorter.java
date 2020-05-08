@@ -91,9 +91,7 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
         }
 
         //转换
-        List<ServerSpec<SERVER>> serverSpecs = servers.stream()
-                .map(serverExplainer::apply)
-                .collect(Collectors.toList());
+        List<ServerSpec<SERVER>> serverSpecs = serverExplainer.apply(servers);
 
         //区分灰度/正常
         ServerListResult<ServerSpec<SERVER>> serverSpecResult = spectServerListfunction.apply(serverSpecs);
@@ -117,7 +115,7 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
      * @return
      */
     protected boolean isNeedDistinguish(String serviceId) {
-        return StringUtils.isNotEmpty(serviceId) && grayManager.hasGray(serviceId);
+        return StringUtils.isNotEmpty(serviceId) && grayManager.hasInstanceGray(serviceId);
     }
 
 

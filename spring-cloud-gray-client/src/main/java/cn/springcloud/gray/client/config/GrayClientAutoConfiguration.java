@@ -133,7 +133,9 @@ public class GrayClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ServerChooser serverChooser(
+            GrayManager grayManager,
             GraySwitcher graySwitcher,
+            ServerExplainer serverExplainer,
             ServerIdExtractor serverIdExtractor,
             InstanceGrayServerSorter instanceGrayServerSorter,
             @Autowired(required = false) ServerListProcessor serverListProcessor) {
@@ -142,8 +144,10 @@ public class GrayClientAutoConfiguration {
             serverListProcessor = GrayClientHolder.getServereListProcessor();
         }
         return new DefaultServerChooser(
+                grayManager,
                 graySwitcher,
                 serverIdExtractor,
+                serverExplainer,
                 instanceGrayServerSorter,
                 null,
                 serverListProcessor);

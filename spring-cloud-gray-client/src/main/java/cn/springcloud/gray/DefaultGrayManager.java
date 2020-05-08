@@ -13,7 +13,12 @@ public class DefaultGrayManager extends SimpleGrayManager {
     }
 
     @Override
-    public boolean hasGray(String serviceId) {
-        return GrayClientHolder.getGraySwitcher().state() && super.hasGray(serviceId);
+    public boolean hasInstanceGray(String serviceId) {
+        return GrayClientHolder.getGraySwitcher().state() && super.hasInstanceGray(serviceId);
+    }
+
+    @Override
+    public boolean hasServiceGray(String serviceId) {
+        return GrayClientHolder.getGraySwitcher().state() && super.hasServiceGray(serviceId);
     }
 }

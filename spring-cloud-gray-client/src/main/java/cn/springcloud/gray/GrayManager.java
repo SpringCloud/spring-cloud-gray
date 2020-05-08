@@ -26,8 +26,23 @@ public interface GrayManager {
      * @param serviceId 服务ID
      * @return has gray instance if true
      */
-    boolean hasGray(String serviceId);
+    boolean hasInstanceGray(String serviceId);
 
+
+    /**
+     * 判断指定服务ID是否有Service级的灰度
+     *
+     * @param serviceId
+     * @return
+     */
+    boolean hasServiceGray(String serviceId);
+
+
+    /**
+     * 返回所有的灰度服务
+     *
+     * @return
+     */
     Collection<GrayService> allGrayServices();
 
     /**
@@ -73,4 +88,5 @@ public interface GrayManager {
     GrayTrackHolder getGrayTrackHolder();
 
     PolicyDecisionManager getPolicyDecisionManager();
+
 }
