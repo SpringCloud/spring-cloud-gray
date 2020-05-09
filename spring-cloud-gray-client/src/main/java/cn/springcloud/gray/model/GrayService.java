@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
@@ -17,7 +18,9 @@ public class GrayService {
     @Setter
     @Getter
     private String serviceId;
-    private Map<String, GrayInstance> grayInstances = new ConcurrentHashMap<>();
+    private final Map<String, GrayInstance> grayInstances = new ConcurrentHashMap<>();
+    private final RoutePolicies routePolicies = new RoutePolicies();
+    private final Map<String, RoutePolicies> multiVersionRotePolicies = new ConcurrentHashMap<>();
     private Lock lock = new ReentrantLock();
 
 
@@ -68,4 +71,11 @@ public class GrayService {
         return false;
     }
 
+    public RoutePolicies getRoutePolicies() {
+        return routePolicies;
+    }
+
+    public Map<String, RoutePolicies> getMultiVersionRotePolicies() {
+        return Collections.unmodifiableMap(multiVersionRotePolicies);
+    }
 }

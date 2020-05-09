@@ -12,13 +12,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class GrayServerPredicate extends AbstractPolicyPredicate {
+public class ServiceGrayServerPredicate extends AbstractPolicyPredicate {
 
     private GrayManager grayManager;
     private PolicyDecisionManager policyDecisionManager;
 
 
-    public GrayServerPredicate(GrayManager grayManager, PolicyDecisionManager policyDecisionManager) {
+    public ServiceGrayServerPredicate(GrayManager grayManager, PolicyDecisionManager policyDecisionManager) {
         this.grayManager = grayManager;
         this.policyDecisionManager = policyDecisionManager;
     }
@@ -36,6 +36,6 @@ public class GrayServerPredicate extends AbstractPolicyPredicate {
 
     @Override
     public String predicateType() {
-        return PredicateType.SERVER.name();
+        return PredicateType.SERVICE_SERVER.name();
     }
 }

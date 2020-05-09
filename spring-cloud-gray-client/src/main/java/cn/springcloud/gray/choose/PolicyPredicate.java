@@ -1,6 +1,9 @@
 package cn.springcloud.gray.choose;
 
 import cn.springcloud.gray.decision.DecisionInputArgs;
+import cn.springcloud.gray.decision.Policy;
+
+import java.util.Collection;
 
 /**
  * @author saleson
@@ -12,4 +15,6 @@ public interface PolicyPredicate {
     String predicateType();
 
     boolean test(DecisionInputArgs decisionInputArgs);
+
+    boolean testPolicies(Collection<Policy> policies, DecisionInputArgs decisionInputArgs);
 }

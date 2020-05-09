@@ -23,6 +23,7 @@ import cn.springcloud.gray.servernode.ServerListProcessor;
 import cn.springcloud.gray.spring.SpringEventPublisher;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -141,7 +142,8 @@ public class GrayClientAutoConfiguration {
             GraySwitcher graySwitcher,
             ServerExplainer serverExplainer,
             ServerIdExtractor serverIdExtractor,
-            InstanceGrayServerSorter instanceGrayServerSorter,
+            @Qualifier("instanceGrayServerSorter") InstanceGrayServerSorter instanceGrayServerSorter,
+            @Qualifier("serviceGrayServerSorter") ServiceGrayServerSorter serviceGrayServerSorter,
             @Autowired(required = false) ServerListProcessor serverListProcessor) {
 
         if (serverListProcessor == null) {
@@ -153,12 +155,23 @@ public class GrayClientAutoConfiguration {
                 serverIdExtractor,
                 serverExplainer,
                 instanceGrayServerSorter,
-                null,
+                serviceGrayServerSorter,
                 serverListProcessor);
     }
 
+    @Bean
+    @ConditionalOnMissingBean(name = "serviceGrayServerSorter")
+    public ServiceGrayServerSorter serviceGrayServerSorter(
+            ServerIdExtractor serverServerIdExtractor,
+            GrayManager grayManager,
+            RequestLocalStorage requestLocalStorage,
+            PolicyDecisionManager policyDecisionManager,
+            ServerExplainer serverExplainer) {
+        return new ServiceGrayServerSorter(grayManager, requestLocalStorage, policyDecisionManager, serverServerIdExtractor, serverExplainer);
+    }
 
     @Bean
+    @ConditionalOnMissingBean(name = "instanceGrayServerSorter")
     public InstanceGrayServerSorter instanceGrayServerSorter(
             ServerIdExtractor serverServerIdExtractor,
             GrayManager grayManager,

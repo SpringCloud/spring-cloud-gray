@@ -3,9 +3,12 @@ package cn.springcloud.gray.choose;
 import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.ServerListResult;
+import cn.springcloud.gray.decision.GrayDecisionInputArgs;
+import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerIdExtractor;
 import cn.springcloud.gray.servernode.ServerSpec;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,14 +24,17 @@ import java.util.stream.Collectors;
 public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSorter<SERVER> {
 
     private GrayManager grayManager;
+    private RequestLocalStorage requestLocalStorage;
     private ServerIdExtractor<SERVER> serverServerIdExtractor;
     private ServerExplainer<SERVER> serverExplainer;
 
     public AbstractGrayServerSorter(
             GrayManager grayManager,
+            RequestLocalStorage requestLocalStorage,
             ServerIdExtractor<SERVER> serverServerIdExtractor,
             ServerExplainer<SERVER> serverExplainer) {
         this.grayManager = grayManager;
+        this.requestLocalStorage = requestLocalStorage;
         this.serverServerIdExtractor = serverServerIdExtractor;
         this.serverExplainer = serverExplainer;
     }
@@ -61,12 +67,9 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
         if (Objects.isNull(serverSpecResult)) {
             return null;
         }
-        if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
-            List<ServerSpec<SERVER>> matchedGrayServers = serverSpecResult.getGrayServers()
-                    .stream()
-                    .filter(this::matchGrayDecisions)
-                    .collect(Collectors.toList());
-            serverSpecResult.setGrayServers(matchedGrayServers);
+        if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()
+                || CollectionUtils.isNotEmpty(serverSpecResult.getGrayServers())) {
+            serverSpecResult.setGrayServers(filterServerSpecAccordingToRoutePolicy(serverSpecResult.getServiceId(), serverSpecResult.getGrayServers()));
         } else {
             serverSpecResult.setGrayServers(ListUtils.EMPTY_LIST);
         }
@@ -129,13 +132,24 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
     protected abstract ServerListResult<ServerSpec<SERVER>> distinguishServerSpecList(
             String serviceId, List<ServerSpec<SERVER>> serverSpecs);
 
+
     /**
-     * 匹配策略
+     * 根据路由策略过滤并返回
      *
-     * @param serverSpec
+     * @param serviceId
+     * @param serverSpecs
      * @return
      */
-    protected abstract boolean matchGrayDecisions(ServerSpec serverSpec);
+    protected abstract List<ServerSpec<SERVER>> filterServerSpecAccordingToRoutePolicy(
+            String serviceId, List<ServerSpec<SERVER>> serverSpecs);
+
+
+    protected GrayDecisionInputArgs createDecisionInputArgs(ServerSpec serverSpec) {
+        GrayDecisionInputArgs decisionInputArgs = new GrayDecisionInputArgs();
+        decisionInputArgs.setServer(serverSpec);
+        decisionInputArgs.setGrayRequest(requestLocalStorage.getGrayRequest());
+        return decisionInputArgs;
+    }
 
     /**
      * 获取serviceId
@@ -170,5 +184,9 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
 
     public ServerExplainer<SERVER> getServerExplainer() {
         return serverExplainer;
+    }
+
+    public RequestLocalStorage getRequestLocalStorage() {
+        return requestLocalStorage;
     }
 }

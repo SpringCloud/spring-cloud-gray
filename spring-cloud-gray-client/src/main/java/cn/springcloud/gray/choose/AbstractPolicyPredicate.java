@@ -4,6 +4,7 @@ import cn.springcloud.gray.decision.DecisionInputArgs;
 import cn.springcloud.gray.decision.Policy;
 import cn.springcloud.gray.request.GrayRequest;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +26,8 @@ public abstract class AbstractPolicyPredicate implements PolicyPredicate {
 
     protected abstract List<Policy> getPolicies(DecisionInputArgs decisionInputArgs);
 
-    protected boolean testPolicies(List<Policy> policies, DecisionInputArgs decisionInputArgs) {
+    @Override
+    public boolean testPolicies(Collection<Policy> policies, DecisionInputArgs decisionInputArgs) {
         if (Objects.isNull(policies) || policies.size() < 1) {
             return false;
         }

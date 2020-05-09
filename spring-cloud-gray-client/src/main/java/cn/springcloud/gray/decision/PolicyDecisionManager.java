@@ -4,6 +4,10 @@ import cn.springcloud.gray.choose.PolicyPredicate;
 import cn.springcloud.gray.model.DecisionDefinition;
 import cn.springcloud.gray.model.PolicyDefinition;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author saleson
  * @date 2020-04-07 22:10
@@ -12,6 +16,10 @@ public interface PolicyDecisionManager {
 
 
     Policy getPolicy(String policyId);
+
+    default List<Policy> getPolicies(Collection<String> policyIds) {
+        return policyIds.stream().map(this::getPolicy).collect(Collectors.toList());
+    }
 
 
     PolicyInfo removePolicy(String policyId);
