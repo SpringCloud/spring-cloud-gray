@@ -3,12 +3,10 @@ package cn.springcloud.gray;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
+import cn.springcloud.gray.model.RoutePolicies;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -57,9 +55,26 @@ public interface GrayManager {
     default Collection<String> getInstanceRoutePolicies(String serviceId, String instanceId) {
         GrayInstance grayInstance = getGrayInstance(serviceId, instanceId);
         if (Objects.isNull(grayInstance)) {
-            return null;
+            return Collections.EMPTY_SET;
         }
         return grayInstance.getRoutePolicies();
+    }
+
+
+    default RoutePolicies getServiceRoutePolicies(String serviceId) {
+        GrayService grayService = getGrayService(serviceId);
+        if (Objects.isNull(grayService)) {
+            return null;
+        }
+        return grayService.getRoutePolicies();
+    }
+
+    default Map<String, RoutePolicies> getMultiVersionRoutePolicies(String serviceId) {
+        GrayService grayService = getGrayService(serviceId);
+        if (Objects.isNull(grayService)) {
+            return Collections.EMPTY_MAP;
+        }
+        return grayService.getMultiVersionRotePolicies();
     }
 
     void updateGrayInstance(GrayInstance instance);

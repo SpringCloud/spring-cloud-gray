@@ -12,14 +12,13 @@ import cn.springcloud.gray.servernode.ServerSpec;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author saleson
  * @date 2020-05-08 20:15
  */
 public class InstanceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<SERVER> {
-
-    private RequestLocalStorage requestLocalStorage;
 
     private PolicyDecisionManager policyDecisionManager;
 
@@ -30,8 +29,7 @@ public class InstanceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<S
             PolicyDecisionManager policyDecisionManager,
             ServerExplainer<SERVER> serverExplainer) {
 
-        super(grayManager, serverServerIdExtractor, serverExplainer);
-        this.requestLocalStorage = requestLocalStorage;
+        super(grayManager, requestLocalStorage, serverServerIdExtractor, serverExplainer);
         this.policyDecisionManager = policyDecisionManager;
     }
 
@@ -54,11 +52,27 @@ public class InstanceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<S
     }
 
     @Override
-    protected boolean matchGrayDecisions(ServerSpec serverSpec) {
-        GrayDecisionInputArgs decisionInputArgs = new GrayDecisionInputArgs();
-        decisionInputArgs.setServer(serverSpec);
-        decisionInputArgs.setGrayRequest(requestLocalStorage.getGrayRequest());
+    protected List<ServerSpec<SERVER>> filterServerSpecAccordingToRoutePolicy(
+            String serviceId, List<ServerSpec<SERVER>> serverSpecs) {
 
+        return serverSpecs.stream()
+                .filter(this::matchGrayDecisions)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 匹配策略
+     *
+     * @param serverSpec
+     * @return
+     */
+    protected boolean matchGrayDecisions(ServerSpec serverSpec) {
+        GrayDecisionInputArgs decisionInputArgs = createDecisionInputArgs(serverSpec);
+        return matchGrayDecisions(decisionInputArgs);
+    }
+
+
+    protected boolean matchGrayDecisions(GrayDecisionInputArgs decisionInputArgs) {
         return policyDecisionManager.testPolicyPredicate(PredicateType.SERVER.name(), decisionInputArgs);
     }
 

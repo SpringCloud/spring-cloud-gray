@@ -21,6 +21,7 @@ public class ServerSpec<SERVER> {
     private URI uri;
     private Map<String, Object> metadatas = new HashMap<>();
     private SERVER server;
+    private String version;
 
 
     public void setMetadata(String name, Object value) {
