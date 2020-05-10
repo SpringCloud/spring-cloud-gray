@@ -10,6 +10,8 @@ import cn.springcloud.gray.server.module.gray.*;
 import cn.springcloud.gray.server.module.gray.jpa.*;
 import cn.springcloud.gray.server.module.jpa.JPANamespaceFinder;
 import cn.springcloud.gray.server.module.jpa.JPANamespaceModule;
+import cn.springcloud.gray.server.module.route.policy.RoutePolicyModule;
+import cn.springcloud.gray.server.module.route.policy.jpa.JPARoutePolicyModule;
 import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.module.user.UserModule;
@@ -120,11 +122,12 @@ public class DBStorageConfiguration {
 
         @Bean
         @ConditionalOnMissingBean
-        public InstanceRouteModule instanceRouteModule(
-                InstanceRoutePolicyService instanceRoutePolicyService,
-                GrayServerModule grayServerModule,
-                GrayEventTrigger grayEventTrigger) {
-            return new JPAInstanceRouteModule(instanceRoutePolicyService, grayServerModule, grayEventTrigger);
+        public RoutePolicyModule instanceRouteModule(
+                RoutePolicyRecordService routePolicyRecordService,
+                GrayEventTrigger grayEventTrigger,
+                NamespaceFinder namespaceFinder,
+                AuthorityModule authorityModule) {
+            return new JPARoutePolicyModule(routePolicyRecordService, grayEventTrigger, namespaceFinder, authorityModule);
         }
 
         @Bean

@@ -9,6 +9,7 @@ import cn.springcloud.gray.server.evictor.NoActionGrayServerEvictor;
 import cn.springcloud.gray.server.manager.DefaultGrayServiceManager;
 import cn.springcloud.gray.server.manager.GrayServiceManager;
 import cn.springcloud.gray.server.module.gray.*;
+import cn.springcloud.gray.server.module.route.policy.RoutePolicyModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -73,7 +74,7 @@ public class GrayServerAutoConfiguration {
                 GrayServerModule grayServerModule,
                 GrayPolicyModule grayPolicyModule,
                 GrayServerTrackModule grayServerTrackModule,
-                InstanceRouteModule instanceRouteModule,
+                RoutePolicyModule routePolicyModule,
                 GrayEventLogModule grayEventLogModule,
                 @Autowired(required = false) ObjectMapper objectMapper) {
             if (objectMapper == null) {
@@ -83,7 +84,7 @@ public class GrayServerAutoConfiguration {
                     grayServerProperties,
                     grayPolicyModule,
                     grayServerModule,
-                    instanceRouteModule,
+                    routePolicyModule,
                     grayServerTrackModule,
                     grayEventLogModule,
                     objectMapper);

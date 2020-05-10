@@ -19,9 +19,21 @@ import org.hibernate.validator.constraints.NotEmpty;
 @AllArgsConstructor
 @ApiModel
 public class InstanceRoutePoliciesFO {
-    @NotEmpty(message = "实例id不能为空")
-    @ApiModelProperty("实例id")
-    private String[] instanceIds;
+
+    @NotEmpty(message = "类型不能为空")
+    @ApiModelProperty(value = "类型,如SERVICE_ROUTE, INSTANCE_ROUTE, SERVICE_MULTI_VER_ROUTE", example = "INSTANCE_ROUTE")
+    private String type;
+    /**
+     * 模块id，用于搜索索引，如果serviceId
+     */
+    @NotEmpty(message = "模块Id不能为空")
+    private String moduleId;
+    /**
+     * 路由的资源，如：serviceId, instanceId, service version
+     */
+    @NotEmpty(message = "路由的资源不能为空")
+    private String[] resources;
+
     @NotEmpty(message = "策略id不能为空")
     @ApiModelProperty("策略id")
     private Long[] policyIds;

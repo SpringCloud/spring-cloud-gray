@@ -21,7 +21,9 @@ public class JPANamespaceFinder implements NamespaceFinder {
     private GrayPolicyService grayPolicyService;
     private GrayDecisionService grayDecisionService;
 
-    private Map<GrayModelType, Function<Object, String>> getFunctions = new HashMap<>();
+    private Map<GrayModelType, Class<?>> modelTypeClassMappings = new HashMap<>();
+
+    private Map<Class<?>, Function<Object, String>> getFunctions = new HashMap<>();
 
 
     public JPANamespaceFinder(
@@ -39,16 +41,33 @@ public class JPANamespaceFinder implements NamespaceFinder {
     }
 
     public void init() {
-        getFunctions.put(GrayModelType.TRACK, this::findByTrack);
-        getFunctions.put(GrayModelType.INSTANCE, this::findByInstance);
-        getFunctions.put(GrayModelType.POLICY, this::findByPolicy);
-        getFunctions.put(GrayModelType.DECISION, this::findByDecision);
+
+        modelTypeClassMappings.put(GrayModelType.SERVICE, GrayService.class);
+        modelTypeClassMappings.put(GrayModelType.INSTANCE, GrayInstance.class);
+        modelTypeClassMappings.put(GrayModelType.TRACK, GrayTrack.class);
+        modelTypeClassMappings.put(GrayModelType.POLICY, GrayPolicy.class);
+        modelTypeClassMappings.put(GrayModelType.DECISION, GrayDecision.class);
+
+        getFunctions.put(GrayService.class, this::findByService);
+        getFunctions.put(GrayInstance.class, this::findByInstance);
+        getFunctions.put(GrayTrack.class, this::findByTrack);
+        getFunctions.put(GrayPolicy.class, this::findByPolicy);
+        getFunctions.put(GrayDecision.class, this::findByDecision);
     }
 
 
     @Override
     public String getNamespaceCode(GrayModelType grayModelType, Object id) {
-        Function<Object, String> function = getFunctions.get(grayModelType);
+        Class<?> modelCls = modelTypeClassMappings.get(grayModelType);
+        if (modelCls == null) {
+            return "";
+        }
+        return getNamespaceCode(modelCls, id);
+    }
+
+    @Override
+    public String getNamespaceCode(Class<?> modelCls, Object id) {
+        Function<Object, String> function = getFunctions.get(modelCls);
         if (function == null) {
             return "";
         }
@@ -91,4 +110,5 @@ public class JPANamespaceFinder implements NamespaceFinder {
         }
         return findByPolicy(grayDecision.getPolicyId());
     }
+
 }

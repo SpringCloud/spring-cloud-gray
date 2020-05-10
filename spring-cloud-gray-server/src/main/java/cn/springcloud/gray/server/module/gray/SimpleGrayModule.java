@@ -3,10 +3,13 @@ package cn.springcloud.gray.server.module.gray;
 import cn.springcloud.gray.model.*;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.constant.Version;
+import cn.springcloud.gray.server.module.domain.DelFlag;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
-import cn.springcloud.gray.server.module.gray.domain.InstanceRoutePolicy;
+import cn.springcloud.gray.server.module.route.policy.RoutePolicyModule;
+import cn.springcloud.gray.server.module.route.policy.domain.RoutePolicyRecord;
+import cn.springcloud.gray.server.module.route.policy.domain.query.RoutePolicyQuery;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +25,7 @@ public class SimpleGrayModule implements GrayModule {
     private GrayServerProperties grayServerProperties;
     private GrayPolicyModule grayPolicyModule;
     private GrayServerModule grayServerModule;
-    private InstanceRouteModule instanceRouteModule;
+    private RoutePolicyModule routePolicyModule;
     private GrayServerTrackModule grayServerTrackModule;
     private ObjectMapper objectMapper;
     private GrayEventLogModule grayEventLogModule;
@@ -31,14 +34,14 @@ public class SimpleGrayModule implements GrayModule {
             GrayServerProperties grayServerProperties,
             GrayPolicyModule grayPolicyModule,
             GrayServerModule grayServerModule,
-            InstanceRouteModule instanceRouteModule,
+            RoutePolicyModule routePolicyModule,
             GrayServerTrackModule grayServerTrackModule,
             GrayEventLogModule grayEventLogModule,
             ObjectMapper objectMapper) {
         this.grayServerProperties = grayServerProperties;
         this.grayPolicyModule = grayPolicyModule;
         this.grayServerModule = grayServerModule;
-        this.instanceRouteModule = instanceRouteModule;
+        this.routePolicyModule = routePolicyModule;
         this.grayServerTrackModule = grayServerTrackModule;
         this.objectMapper = objectMapper;
         this.grayEventLogModule = grayEventLogModule;
@@ -168,8 +171,13 @@ public class SimpleGrayModule implements GrayModule {
 
     @Override
     public List<Long> listPolicyIdsByInstanceId(String instanceId) {
-        List<InstanceRoutePolicy> instanceRoutePolicies = instanceRouteModule.findAllRoutePoliciesByInstanceId(instanceId, false);
-        return instanceRoutePolicies.stream().map(InstanceRoutePolicy::getPolicyId).collect(Collectors.toList());
+        RoutePolicyQuery query = RoutePolicyQuery.builder()
+                .type(RoutePolicyType.INSTANCE_ROUTE.name())
+                .resource(instanceId)
+                .delFlag(DelFlag.UNDELETE)
+                .build();
+        List<RoutePolicyRecord> instanceRoutePolicies = routePolicyModule.findAllRoutePolicies(query);
+        return instanceRoutePolicies.stream().map(RoutePolicyRecord::getPolicyId).collect(Collectors.toList());
     }
 
 

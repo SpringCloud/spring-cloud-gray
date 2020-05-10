@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.dao.mapper;
 
-import cn.springcloud.gray.server.dao.model.GrayInstanceRoutePolicyDO;
-import cn.springcloud.gray.server.module.gray.domain.InstanceRoutePolicy;
+import cn.springcloud.gray.server.dao.model.RoutePolicyRecordDO;
+import cn.springcloud.gray.server.module.route.policy.domain.RoutePolicyRecord;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 
@@ -9,6 +9,6 @@ import org.mapstruct.NullValueCheckStrategy;
         componentModel = "spring",
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )
-public interface InstanceRoutePolicyMapper extends ModelMapper<InstanceRoutePolicy, GrayInstanceRoutePolicyDO> {
+public interface InstanceRoutePolicyMapper extends ModelMapper<RoutePolicyRecord, RoutePolicyRecordDO> {
 
 }
