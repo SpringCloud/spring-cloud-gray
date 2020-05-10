@@ -49,25 +49,6 @@ public class RoutePolicyEventListener extends AbstractGrayEventListener<RoutePol
     }
 
 
-    @Override
-    protected void onUpdate(RoutePolicyEvent event) {
-        invokeConsumerFunc(getUpdateConsumerFunc(event.getType()), event);
-    }
-
-    @Override
-    protected void onDelete(RoutePolicyEvent event) {
-        invokeConsumerFunc(getDeleteConsumerFunc(event.getType()), event);
-    }
-
-
-    @Override
-    protected boolean validate(RoutePolicyEvent event) {
-//        InstanceLocalInfo instanceLocalInfo = instanceLocalInfoObtainer.getInstanceLocalInfo();
-//        return instanceLocalInfo == null || !StringUtils.equals(event.getServiceId(), instanceLocalInfo.getServiceId());
-        return true;
-    }
-
-
     public void addUpdateConsumerFunc(String type, Consumer<RoutePolicyEvent> consumer) {
         addConsumerFunc(UPDATE_CONSUMER_PREFIX + type, consumer);
     }
@@ -83,6 +64,23 @@ public class RoutePolicyEventListener extends AbstractGrayEventListener<RoutePol
     public Consumer<RoutePolicyEvent> getDeleteConsumerFunc(String type) {
         return getConsumerFunc(DELETE_CONSUMER_PREFIX + type);
     }
+
+    @Override
+    protected void onUpdate(RoutePolicyEvent event) {
+        invokeConsumerFunc(getUpdateConsumerFunc(event.getType()), event);
+    }
+
+    @Override
+    protected void onDelete(RoutePolicyEvent event) {
+        invokeConsumerFunc(getDeleteConsumerFunc(event.getType()), event);
+    }
+
+
+    @Override
+    protected boolean validate(RoutePolicyEvent event) {
+        return true;
+    }
+
 
     protected void invokeConsumerFunc(Consumer<RoutePolicyEvent> consumer, RoutePolicyEvent event) {
         if (Objects.isNull(consumer)) {
@@ -104,19 +102,38 @@ public class RoutePolicyEventListener extends AbstractGrayEventListener<RoutePol
 
     private void invokeModifyServiceRouteEvent(RoutePolicyEvent event) {
         invokeAndFilterSelfService(event.getRoutePolicy(), routePolicy -> {
-
+            GrayService grayService = grayManager.getGrayService(routePolicy.getModuleId());
+            if (Objects.isNull(grayService)) {
+                log.warn("没有找到GrayService, serviceId:{}", routePolicy.getModuleId());
+                return;
+            }
+            grayService.getRoutePolicies().addData(String.valueOf(routePolicy.getPolicyId()));
         });
     }
 
     private void invokeDeleteServiceRouteEvent(RoutePolicyEvent event) {
         invokeAndFilterSelfService(event.getRoutePolicy(), routePolicy -> {
-
+            GrayService grayService = grayManager.getGrayService(routePolicy.getModuleId());
+            if (Objects.isNull(grayService)) {
+                log.warn("没有找到GrayService, serviceId:{}", routePolicy.getModuleId());
+                return;
+            }
+            grayService.getRoutePolicies().removeData(String.valueOf(routePolicy.getPolicyId()));
         });
     }
 
     private void invokeModifyServiceMultiVersionRouteEvent(RoutePolicyEvent event) {
         invokeAndFilterSelfService(event.getRoutePolicy(), routePolicy -> {
-
+            GrayService grayService = grayManager.getGrayService(routePolicy.getModuleId());
+            if (Objects.isNull(grayService)) {
+                log.warn("没有找到GrayService, serviceId:{}", routePolicy.getModuleId());
+                return;
+            }
+            DataSet<String> routePolicies = grayService.getVersionRotePolicies(routePolicy.getResource());
+            if (Objects.isNull(routePolicies)) {
+                routePolicies = grayService.createVersionRoutePolicies(routePolicy.getResource());
+            }
+            routePolicies.addData(String.valueOf(routePolicy.getPolicyId()));
         });
     }
 
@@ -133,7 +150,6 @@ public class RoutePolicyEventListener extends AbstractGrayEventListener<RoutePol
                 return;
             }
             routePolicies.removeData(String.valueOf(routePolicy.getPolicyId()));
-
         });
 
     }
