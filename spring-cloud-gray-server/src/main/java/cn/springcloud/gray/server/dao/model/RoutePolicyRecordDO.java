@@ -15,14 +15,20 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gray_instance_route_policy", indexes = {@Index(columnList = "instanceId"), @Index(columnList = "policyId")})
-public class GrayInstanceRoutePolicyDO {
+@Table(name = "route_policy_record", indexes = {@Index(columnList = "moduleId,resource"), @Index(columnList = "policyId"), @Index(columnList = "namespace")})
+public class RoutePolicyRecordDO {
     @Id
     @Column(length = 20)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(length = 64)
-    private String instanceId;
+    private String namespace;
+    @Column(length = 32)
+    private String type;
+    @Column(length = 64)
+    private String moduleId;
+    @Column(length = 64)
+    private String resource;
     @Column(length = 20)
     private Long policyId;
     @Column

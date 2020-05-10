@@ -92,8 +92,8 @@ public class GrayServerEventTriggeringAutoConfiguration {
     }
 
     @Bean
-    public GrayInstanceRoutePolicyEventConverter grayInstanceRoutePolicyEventConverter(GrayServerModule grayServerModule) {
-        return new GrayInstanceRoutePolicyEventConverter(grayServerModule);
+    public GrayRoutePolicyEventConverter grayInstanceRoutePolicyEventConverter(GrayServerModule grayServerModule) {
+        return new GrayRoutePolicyEventConverter(grayServerModule);
     }
 
     @Bean
