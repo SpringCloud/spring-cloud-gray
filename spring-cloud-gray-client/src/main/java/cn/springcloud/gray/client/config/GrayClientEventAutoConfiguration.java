@@ -46,9 +46,10 @@ public class GrayClientEventAutoConfiguration {
     }
 
     @Bean
-    public GrayInstanceRoutePolicyEventListener grayInstanceRoutePolicyEventListener(
+    @ConditionalOnMissingBean(name = "routePolicyEventListener")
+    public RoutePolicyEventListener routePolicyEventListener(
             GrayManager grayManager, InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
-        return new GrayInstanceRoutePolicyEventListener(grayManager, instanceLocalInfoObtainer);
+        return new RoutePolicyEventListener(grayManager, instanceLocalInfoObtainer);
     }
 
     @Bean
