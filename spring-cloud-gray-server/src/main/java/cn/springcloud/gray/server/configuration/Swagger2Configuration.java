@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
@@ -21,6 +22,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * Created by saleson on 2017/7/6.
@@ -77,6 +80,7 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
     public Docket createRestApi() {
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
+                .globalOperationParameters(buildGlobalOperationParameters())
                 .forCodeGeneration(true)
                 .genericModelSubstitutes(ResponseEntity.class)
                 .select()
@@ -182,5 +186,19 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
                         .code(401)
                         .message("")
                         .build());
+    }
+
+
+    private List<Parameter> buildGlobalOperationParameters() {
+        List<Parameter> parameters = newArrayList();
+        parameters.add(new ParameterBuilder()
+                .name("ns")
+                .description("namespace")
+                .modelRef(new ModelRef("string"))
+                .parameterType("query")
+                .required(false)
+                .defaultValue("")
+                .build());
+        return parameters;
     }
 }
