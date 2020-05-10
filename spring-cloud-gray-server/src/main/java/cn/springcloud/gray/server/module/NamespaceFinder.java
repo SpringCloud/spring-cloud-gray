@@ -6,5 +6,7 @@ public interface NamespaceFinder {
 
     String getNamespaceCode(GrayModelType grayModelType, Object id);
 
+    String getNamespaceCode(Class<?> modelCls, Object id);
+
     boolean hasResource(String namespace);
 }
