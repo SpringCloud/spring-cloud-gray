@@ -105,6 +105,9 @@ public class OAuth2Config {
     @EnableResourceServer
     public static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
+        public String[] permitPathPatterns = {"/gray/user/login", "/gray/user/login", "/gray/instances/enable",
+                "/gray/instances", "/gray/trackDefinitions", "/gray/v1/**", "/gray/v2/**"};
+
         @Autowired
         private TokenStore tokenStore;
 
@@ -112,19 +115,22 @@ public class OAuth2Config {
         public void configure(HttpSecurity http) throws Exception {
             http.formLogin().and()
                     .authorizeRequests()
-                    .antMatchers("/gray/user/login").permitAll()
-                    .antMatchers("/gray/user/login").permitAll()
-                    .antMatchers("/gray/instances/enable").permitAll()
-                    .antMatchers("/gray/instances").permitAll()
-                    .antMatchers("/gray/trackDefinitions").permitAll()
+//                    .antMatchers("/gray/user/login").permitAll()
+//                    .antMatchers("/gray/user/login").permitAll()
+//                    .antMatchers("/gray/instances/enable").permitAll()
+//                    .antMatchers("/gray/instances").permitAll()
+//                    .antMatchers("/gray/trackDefinitions").permitAll()
+//                    .antMatchers("/gray/v1/**", "/gray/v2/**").permitAll()
+                    .antMatchers(permitPathPatterns).permitAll()
 
-                    .antMatchers(HttpMethod.OPTIONS, "/gray/**").permitAll()
-                    .antMatchers("/gray/service/**").authenticated()
-                    .antMatchers("/gray/policy/**").authenticated()
-                    .antMatchers("/gray/decision/**").authenticated()
-                    .antMatchers("/gray/discover/**").authenticated()
-                    .antMatchers("/gray/track/**").authenticated()
-                    .anyRequest().permitAll()
+                    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                    .antMatchers("/gray/service/**").authenticated()
+//                    .antMatchers("/gray/policy/**").authenticated()
+//                    .antMatchers("/gray/decision/**").authenticated()
+//                    .antMatchers("/gray/discover/**").authenticated()
+//                    .antMatchers("/gray/track/**").authenticated()
+//                    .antMatchers("/route/**").authenticated()
+                    .anyRequest().authenticated()
                     .and()
                     .csrf().disable();
         }

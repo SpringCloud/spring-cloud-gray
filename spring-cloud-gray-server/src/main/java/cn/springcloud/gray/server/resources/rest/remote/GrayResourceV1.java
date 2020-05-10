@@ -16,7 +16,7 @@ import java.util.List;
 
 @Api("gray-client调用的接口")
 @RestController
-@RequestMapping("/gray")
+@RequestMapping({"/gray", "/gray/v1"})
 public class GrayResourceV1 {
 
 
