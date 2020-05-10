@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -74,6 +75,20 @@ public class GrayService {
 
     public DataSet<String> getRoutePolicies() {
         return routePolicies;
+    }
+
+    public synchronized DataSet<String> createVersionRoutePolicies(String version) {
+        DataSet<String> versionRoutePolicies = getVersionRotePolicies(version);
+        if (Objects.nonNull(versionRoutePolicies)) {
+            return versionRoutePolicies;
+        }
+        versionRoutePolicies = new DataSet<>();
+        multiVersionRotePolicies.put(version, versionRoutePolicies);
+        return versionRoutePolicies;
+    }
+
+    public DataSet<String> getVersionRotePolicies(String version) {
+        return multiVersionRotePolicies.get(version);
     }
 
     public Map<String, DataSet<String>> getMultiVersionRotePolicies() {
