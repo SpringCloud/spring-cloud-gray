@@ -1,12 +1,12 @@
 package cn.springcloud.gray.choose;
 
+import cn.springcloud.gray.DataSet;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.ServerListResult;
 import cn.springcloud.gray.decision.GrayDecisionInputArgs;
 import cn.springcloud.gray.decision.Policy;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.GrayService;
-import cn.springcloud.gray.model.RoutePolicies;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerIdExtractor;
@@ -42,7 +42,7 @@ public class ServiceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<SE
         GrayManager grayManager = getGrayManager();
         GrayService grayService = grayManager.getGrayService(serviceId);
         if (Objects.nonNull(grayService) && !grayService.getRoutePolicies().isEmpty()) {
-            serverSpecList = filterServiceGrayPolicies(grayService.getRoutePolicies().getPolicyIds(), serverSpecs);
+            serverSpecList = filterServiceGrayPolicies(grayService.getRoutePolicies().getDatas(), serverSpecs);
         }
 
         Collection<String> multiVersions = grayService.getMultiVersionRotePolicies().keySet();
@@ -95,16 +95,16 @@ public class ServiceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<SE
      */
     private List<ServerSpec<SERVER>> filterServerSpecAccordingToRoutePolicy(
             GrayService grayService, PolicyPredicate policyPredicate, List<ServerSpec<SERVER>> serverSpecs) {
-        Map<String, RoutePolicies> multiVersionRoutePoliciesMap = grayService.getMultiVersionRotePolicies();
+        Map<String, DataSet<String>> multiVersionRoutePoliciesMap = grayService.getMultiVersionRotePolicies();
         Map<String, List<Policy>> multiVersionPolicies = new HashMap<>();
         return serverSpecs.stream().filter(serverSpec -> {
             String version = serverSpec.getVersion();
             List<Policy> policies = multiVersionPolicies.get(version);
             if (Objects.isNull(policies)) {
                 policies = Collections.EMPTY_LIST;
-                RoutePolicies routePolicies = multiVersionRoutePoliciesMap.get(version);
+                DataSet<String> routePolicies = multiVersionRoutePoliciesMap.get(version);
                 if (Objects.nonNull(routePolicies)) {
-                    policies = policyDecisionManager.getPolicies(routePolicies.getPolicyIds());
+                    policies = policyDecisionManager.getPolicies(routePolicies.getDatas());
                 }
                 multiVersionPolicies.put(version, policies);
             }
