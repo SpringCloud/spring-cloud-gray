@@ -3,7 +3,6 @@ package cn.springcloud.gray;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
-import cn.springcloud.gray.model.RoutePolicies;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 
 import java.util.*;
@@ -61,7 +60,7 @@ public interface GrayManager {
     }
 
 
-    default RoutePolicies getServiceRoutePolicies(String serviceId) {
+    default DataSet<String> getServiceRoutePolicies(String serviceId) {
         GrayService grayService = getGrayService(serviceId);
         if (Objects.isNull(grayService)) {
             return null;
@@ -69,7 +68,7 @@ public interface GrayManager {
         return grayService.getRoutePolicies();
     }
 
-    default Map<String, RoutePolicies> getMultiVersionRoutePolicies(String serviceId) {
+    default Map<String, DataSet<String>> getMultiVersionRoutePolicies(String serviceId) {
         GrayService grayService = getGrayService(serviceId);
         if (Objects.isNull(grayService)) {
             return Collections.EMPTY_MAP;

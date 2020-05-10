@@ -1,5 +1,6 @@
 package cn.springcloud.gray.model;
 
+import cn.springcloud.gray.DataSet;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,8 +20,8 @@ public class GrayService {
     @Getter
     private String serviceId;
     private final Map<String, GrayInstance> grayInstances = new ConcurrentHashMap<>();
-    private final RoutePolicies routePolicies = new RoutePolicies();
-    private final Map<String, RoutePolicies> multiVersionRotePolicies = new ConcurrentHashMap<>();
+    private final DataSet<String> routePolicies = new DataSet<>();
+    private final Map<String, DataSet<String>> multiVersionRotePolicies = new ConcurrentHashMap<>();
     private Lock lock = new ReentrantLock();
 
 
@@ -71,11 +72,11 @@ public class GrayService {
         return false;
     }
 
-    public RoutePolicies getRoutePolicies() {
+    public DataSet<String> getRoutePolicies() {
         return routePolicies;
     }
 
-    public Map<String, RoutePolicies> getMultiVersionRotePolicies() {
+    public Map<String, DataSet<String>> getMultiVersionRotePolicies() {
         return Collections.unmodifiableMap(multiVersionRotePolicies);
     }
 }

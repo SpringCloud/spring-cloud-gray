@@ -1,9 +1,13 @@
 package cn.springcloud.gray.event.listener;
 
+import cn.springcloud.gray.DataSet;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
-import cn.springcloud.gray.model.*;
+import cn.springcloud.gray.model.GrayInstance;
+import cn.springcloud.gray.model.GrayService;
+import cn.springcloud.gray.model.RoutePolicy;
+import cn.springcloud.gray.model.RoutePolicyType;
 import cn.springlcoud.gray.event.RoutePolicyEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -123,12 +127,12 @@ public class RoutePolicyEventListener extends AbstractGrayEventListener<RoutePol
                 log.warn("没有找到GrayService, serviceId:{}", routePolicy.getModuleId());
                 return;
             }
-            RoutePolicies routePolicies = grayService.getMultiVersionRotePolicies().get(routePolicy.getResource());
+            DataSet<String> routePolicies = grayService.getMultiVersionRotePolicies().get(routePolicy.getResource());
             if (Objects.isNull(routePolicies)) {
                 log.warn("没有找到GrayService版本 '{} -- {}'路由策略列表", routePolicy.getModuleId(), routePolicy.getResource());
                 return;
             }
-            routePolicies.removePolicyId(String.valueOf(routePolicy.getPolicyId()));
+            routePolicies.removeData(String.valueOf(routePolicy.getPolicyId()));
 
         });
 
