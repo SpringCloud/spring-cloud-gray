@@ -14,4 +14,5 @@ public class GrayInfos {
     private List<GrayTrackDefinition> trackDefinitions;
     private List<PolicyDefinition> policyDecisions;
     private List<GrayInstance> instances;
+    private List<ServiceRouteInfo> serviceRouteInfos;
 }

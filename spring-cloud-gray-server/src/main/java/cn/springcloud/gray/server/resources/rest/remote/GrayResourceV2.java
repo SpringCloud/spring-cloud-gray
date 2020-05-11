@@ -37,6 +37,7 @@ public class GrayResourceV2 {
         grayInfos.setInstances(grayModule.allOpenInstances(Version.V2));
         grayInfos.setPolicyDecisions(grayModule.allGrayPolicies());
         grayInfos.setTrackDefinitions(grayModule.getTrackDefinitions(serviceId, instanceId));
+        grayInfos.setServiceRouteInfos(grayModule.listAllGrayServiceRouteInfosExcludeSpecial(serviceId));
         return ApiResHelper.successData(grayInfos);
     }
 
