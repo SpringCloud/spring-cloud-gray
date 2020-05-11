@@ -67,12 +67,12 @@ public class RoutePolicyEventListener extends AbstractGrayEventListener<RoutePol
 
     @Override
     protected void onUpdate(RoutePolicyEvent event) {
-        invokeConsumerFunc(getUpdateConsumerFunc(event.getType()), event);
+        invokeConsumerFunc(getUpdateConsumerFunc(event.getRoutePolicyType()), event);
     }
 
     @Override
     protected void onDelete(RoutePolicyEvent event) {
-        invokeConsumerFunc(getDeleteConsumerFunc(event.getType()), event);
+        invokeConsumerFunc(getDeleteConsumerFunc(event.getRoutePolicyType()), event);
     }
 
 
@@ -190,7 +190,7 @@ public class RoutePolicyEventListener extends AbstractGrayEventListener<RoutePol
 
     private boolean isLocalSelfService(String serviceId) {
         InstanceLocalInfo instanceLocalInfo = instanceLocalInfoObtainer.getInstanceLocalInfo();
-        return instanceLocalInfo == null || !StringUtils.equals(serviceId, instanceLocalInfo.getServiceId());
+        return instanceLocalInfo == null || StringUtils.equals(serviceId, instanceLocalInfo.getServiceId());
     }
 
 }

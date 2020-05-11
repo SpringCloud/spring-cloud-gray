@@ -13,6 +13,7 @@ import cn.springcloud.gray.servernode.ServerIdExtractor;
 import cn.springcloud.gray.servernode.ServerSpec;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,14 +47,14 @@ public class ServiceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<SE
         }
 
         Collection<String> multiVersions = grayService.getMultiVersionRotePolicies().keySet();
-        if (CollectionUtils.isNotEmpty(multiVersions)) {
+        if (CollectionUtils.isEmpty(multiVersions)) {
             return new ServerListResult<>(serviceId, Collections.EMPTY_LIST, serverSpecList);
         }
 
         List<ServerSpec<SERVER>> grayServerSpecs = new ArrayList<>(serverSpecList.size());
         List<ServerSpec<SERVER>> normalServerSpecs = new ArrayList<>(serverSpecList.size());
         serverSpecList.forEach(serverSpec -> {
-            if (multiVersions.contains(serverSpec.getVersion())) {
+            if (StringUtils.isNotEmpty(serverSpec.getVersion()) && multiVersions.contains(serverSpec.getVersion())) {
                 grayServerSpecs.add(serverSpec);
             } else {
                 normalServerSpecs.add(serverSpec);

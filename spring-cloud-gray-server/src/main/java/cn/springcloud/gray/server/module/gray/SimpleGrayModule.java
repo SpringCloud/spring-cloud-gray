@@ -305,7 +305,7 @@ public class SimpleGrayModule implements GrayModule {
 
     private void parseAndSetRoutePolicyRecord(RoutePolicyRecord routePolicyRecord, ServiceRouteInfo serviceRouteInfo) {
         Consumer2<ServiceRouteInfo, RoutePolicyRecord> consumer =
-                routePolicyRecordTransferSetConsumers.get(routePolicyRecord.getResource());
+                routePolicyRecordTransferSetConsumers.get(routePolicyRecord.getType());
         if (Objects.isNull(consumer)) {
             log.warn("没有找到type为'{}'的Consumer2<GrayServiceRouteInfo, RoutePolicyRecord>", routePolicyRecord.getType());
             return;

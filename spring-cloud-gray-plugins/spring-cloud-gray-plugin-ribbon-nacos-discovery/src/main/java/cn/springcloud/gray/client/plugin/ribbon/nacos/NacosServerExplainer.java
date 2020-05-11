@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.plugin.ribbon.nacos;
 
 import cn.springcloud.gray.servernode.ServerExplainer;
-import cn.springcloud.gray.servernode.ServerSpec;
+import cn.springcloud.gray.servernode.VersionExtractor;
 import com.netflix.loadbalancer.Server;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.netflix.ribbon.DefaultServerIntrospector;
@@ -13,20 +13,27 @@ import java.util.Map;
 public class NacosServerExplainer implements ServerExplainer<Server> {
 
     private SpringClientFactory springClientFactory;
+    private VersionExtractor<Server> versionExtractor;
 
-    public NacosServerExplainer(SpringClientFactory springClientFactory) {
+    public NacosServerExplainer(SpringClientFactory springClientFactory, VersionExtractor<Server> versionExtractor) {
         this.springClientFactory = springClientFactory;
+        this.versionExtractor = versionExtractor;
     }
 
+//    @Override
+//    public ServerSpec<Server> apply(Server server) {
+//        String seviceId = getInstaceId(server);
+//        Map metadata = getServerMetadata(seviceId, server);
+//        return ServerSpec.<Server>builder()
+//                .server(server)
+//                .instanceId(server.getMetaInfo().getInstanceId())
+//                .serviceId(seviceId)
+//                .metadata(metadata).build();
+//    }
+
     @Override
-    public ServerSpec<Server> apply(Server server) {
-        String seviceId = getInstaceId(server);
-        Map metadata = getServerMetadata(seviceId, server);
-        return ServerSpec.<Server>builder()
-                .server(server)
-                .instanceId(server.getMetaInfo().getInstanceId())
-                .serviceId(seviceId)
-                .metadatas(metadata).build();
+    public VersionExtractor getVersionExtractor() {
+        return versionExtractor;
     }
 
     @Override
@@ -42,6 +49,11 @@ public class NacosServerExplainer implements ServerExplainer<Server> {
             seviceId = StringUtils.split(appName, "@@")[1];
         }
         return seviceId;
+    }
+
+    @Override
+    public Map getMetadata(Server server) {
+        return getServerMetadata(getServiceId(server), server);
     }
 
     public ServerIntrospector serverIntrospector(String serviceId) {

@@ -5,5 +5,5 @@ package cn.springcloud.gray.choose;
  * @date 2020-04-08 00:20
  */
 public enum PredicateType {
-    SERVER, SERVICE_SERVER, SERVICE_MULTI_VERSION_SERVER
+    SIMPLE, SERVER, SERVICE_SERVER, SERVICE_MULTI_VERSION_SERVER
 }

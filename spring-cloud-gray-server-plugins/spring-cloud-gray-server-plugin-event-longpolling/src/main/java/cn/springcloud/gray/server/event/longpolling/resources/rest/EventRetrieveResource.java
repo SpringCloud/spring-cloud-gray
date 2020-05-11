@@ -25,7 +25,7 @@ import org.springframework.web.context.request.async.DeferredResult;
  */
 @Api("gray-client调用的接口")
 @RestController
-@RequestMapping("/gray/event")
+@RequestMapping("/gray/v2/event")
 public class EventRetrieveResource {
 
     @Autowired

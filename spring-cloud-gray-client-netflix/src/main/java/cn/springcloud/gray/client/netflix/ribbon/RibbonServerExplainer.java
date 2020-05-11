@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.netflix.ribbon;
 
 import cn.springcloud.gray.servernode.ServerExplainer;
-import cn.springcloud.gray.servernode.ServerSpec;
+import cn.springcloud.gray.servernode.VersionExtractor;
 import com.netflix.loadbalancer.Server;
 import org.springframework.cloud.netflix.ribbon.DefaultServerIntrospector;
 import org.springframework.cloud.netflix.ribbon.ServerIntrospector;
@@ -12,19 +12,16 @@ import java.util.Map;
 public class RibbonServerExplainer implements ServerExplainer<Server> {
 
     private SpringClientFactory springClientFactory;
+    private VersionExtractor<Server> versionExtractor;
 
-    public RibbonServerExplainer(SpringClientFactory springClientFactory) {
+    public RibbonServerExplainer(SpringClientFactory springClientFactory, VersionExtractor<Server> versionExtractor) {
         this.springClientFactory = springClientFactory;
+        this.versionExtractor = versionExtractor;
     }
 
     @Override
-    public ServerSpec<Server> apply(Server server) {
-        Map metadata = getServerMetadata(server.getMetaInfo().getServiceIdForDiscovery(), server);
-        return ServerSpec.<Server>builder()
-                .server(server)
-                .instanceId(getInstaceId(server))
-                .serviceId(getServiceId(server))
-                .metadatas(metadata).build();
+    public VersionExtractor getVersionExtractor() {
+        return versionExtractor;
     }
 
     @Override
@@ -35,6 +32,11 @@ public class RibbonServerExplainer implements ServerExplainer<Server> {
     @Override
     public String getInstaceId(Server server) {
         return server.getMetaInfo().getInstanceId();
+    }
+
+    @Override
+    public Map getMetadata(Server server) {
+        return getServerMetadata(server.getMetaInfo().getServiceIdForDiscovery(), server);
     }
 
     public ServerIntrospector serverIntrospector(String serviceId) {

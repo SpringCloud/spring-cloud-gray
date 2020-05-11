@@ -8,6 +8,7 @@ import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.routing.connectionpoint.DefaultRoutingConnectionPoint;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.servernode.ServerExplainer;
+import cn.springcloud.gray.servernode.VersionExtractor;
 import com.netflix.loadbalancer.Server;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -32,8 +33,9 @@ public class NetflixRibbonGrayAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ServerExplainer<Server> ribbonServerExplainer(SpringClientFactory springClientFactory) {
-        return new RibbonServerExplainer(springClientFactory);
+    public ServerExplainer<Server> ribbonServerExplainer(
+            SpringClientFactory springClientFactory, VersionExtractor<Server> versionExtractor) {
+        return new RibbonServerExplainer(springClientFactory, versionExtractor);
     }
 
 }

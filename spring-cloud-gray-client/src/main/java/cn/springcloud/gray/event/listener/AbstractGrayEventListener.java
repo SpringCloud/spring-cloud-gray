@@ -40,6 +40,6 @@ public abstract class AbstractGrayEventListener<E extends GrayEvent> implements 
     }
 
     protected void printEvent(String msg, E event) {
-        log.info(msg + " {} - {} : {}", event.getType(), event.getSourceId(), event);
+        log.info(msg + "[{}] {} - {} : {}", event.getTriggerType(), event.getType(), event.getSourceId(), event);
     }
 }

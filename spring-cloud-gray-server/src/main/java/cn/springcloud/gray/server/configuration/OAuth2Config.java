@@ -105,8 +105,12 @@ public class OAuth2Config {
     @EnableResourceServer
     public static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-        public String[] permitPathPatterns = {"/gray/user/login", "/gray/user/login", "/gray/instances/enable",
-                "/gray/instances", "/gray/trackDefinitions", "/gray/v1/**", "/gray/v2/**"};
+        public String[] permitPathPatterns = {
+                "/**.html", "/**.js", "/**.css", "/**.png",
+                "/swagger-resources/**", "/v2/api-docs",
+                "/gray/user/login", "/gray/user/login", "/gray/instances/enable",
+                "/gray/instances", "/gray/trackDefinitions", "/gray/v1/**", "/gray/v2/**"
+        };
 
         @Autowired
         private TokenStore tokenStore;

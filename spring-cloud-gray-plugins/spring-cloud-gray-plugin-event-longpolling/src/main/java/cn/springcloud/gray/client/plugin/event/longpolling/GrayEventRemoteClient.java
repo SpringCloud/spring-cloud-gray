@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GrayEventRemoteClient {
 
-    private static final String PATH_LISTENING_STATUS = "/gray/event/longpolling";
-    private static final String PATH_RETRIEVE_NEWEST_EVENTS = "/gray/event/retrieve";
+    private static final String PATH_LISTENING_STATUS = "/gray/v2/event/longpolling";
+    private static final String PATH_RETRIEVE_NEWEST_EVENTS = "/gray/v2/event/retrieve";
 
     private HttpAgent httpAgent;
     private ObjectMapper objectMapper;
