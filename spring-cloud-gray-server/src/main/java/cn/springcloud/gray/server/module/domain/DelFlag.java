@@ -38,4 +38,11 @@ public enum DelFlag {
         return del ? DELELTED : UNDELETE;
     }
 
+    public static Boolean getDel(DelFlag delFlag) {
+        if (Objects.isNull(delFlag) || Objects.equals(delFlag, ALL)) {
+            return null;
+        }
+        return delFlag.getDel();
+    }
+
 }

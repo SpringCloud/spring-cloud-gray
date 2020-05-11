@@ -6,6 +6,7 @@ import cn.springcloud.gray.client.netflix.eureka.*;
 import cn.springcloud.gray.servernode.InstanceDiscoveryClient;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
+import cn.springcloud.gray.servernode.VersionExtractor;
 import com.netflix.discovery.EurekaClient;
 import com.netflix.loadbalancer.Server;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,8 @@ public class GrayClientEurekaAutoConfiguration {
     }
 
     //    @Bean
-    public ServerExplainer<Server> serverExplainer() {
-        return new EurekaServerExplainer(springClientFactory);
+    public ServerExplainer<Server> serverExplainer(VersionExtractor versionExtractor) {
+        return new EurekaServerExplainer(springClientFactory, versionExtractor);
     }
 
 

@@ -4,9 +4,11 @@ import cn.springcloud.gray.server.dao.mapper.InstanceRoutePolicyMapper;
 import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.model.RoutePolicyRecordDO;
 import cn.springcloud.gray.server.dao.repository.RoutePolicyRecordRepository;
+import cn.springcloud.gray.server.module.domain.DelFlag;
 import cn.springcloud.gray.server.module.route.policy.domain.RoutePolicyRecord;
 import cn.springcloud.gray.server.module.route.policy.domain.query.RoutePolicyQuery;
 import cn.springcloud.gray.server.utils.PaginationUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class RoutePolicyRecordService extends AbstraceCRUDService<RoutePolicyRecord, RoutePolicyRecordRepository, RoutePolicyRecordDO, Long> {
     @Autowired
@@ -72,11 +75,11 @@ public class RoutePolicyRecordService extends AbstraceCRUDService<RoutePolicyRec
                 if (StringUtils.isNotEmpty(irpQuery.getResource())) {
                     predicates.add(cb.equal(root.get("resource").as(String.class), irpQuery.getResource()));
                 }
-                if (Objects.isNull(irpQuery.getPolicyId())) {
+                if (Objects.nonNull(irpQuery.getPolicyId())) {
                     predicates.add(cb.equal(root.get("policyId").as(Long.class), irpQuery.getPolicyId()));
                 }
-                if (Objects.isNull(irpQuery.getDelFlag())) {
-                    predicates.add(cb.equal(root.get("delFlag").as(Boolean.class), irpQuery.getDelFlag()));
+                if (Objects.nonNull(DelFlag.getDel(irpQuery.getDelFlag()))) {
+                    predicates.add(cb.equal(root.get("delFlag").as(Boolean.class), irpQuery.getDelFlag().getDel()));
                 }
                 query.where(predicates.toArray(new Predicate[predicates.size()]));
                 return query.getRestriction();

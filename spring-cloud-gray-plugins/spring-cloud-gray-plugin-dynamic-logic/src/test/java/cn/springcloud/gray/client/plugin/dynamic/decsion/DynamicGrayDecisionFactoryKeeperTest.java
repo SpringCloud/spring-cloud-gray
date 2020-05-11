@@ -100,7 +100,7 @@ public class DynamicGrayDecisionFactoryKeeperTest {
                 .setServer(ServerSpec.builder()
                         .instanceId("b-a")
                         .serviceId("b")
-                        .metadatas(new HashMap<>())
+                        .metadata(new HashMap<>())
                         .build())
                 .setGrayRequest(grayRequest);
         boolean result = grayDecision.test(args);

@@ -131,8 +131,8 @@ public class JPARoutePolicyModule implements RoutePolicyModule {
         }
 
         Predicate3<String, String, RoutePolicy> authorityPredicate = getResourceAuthorityPredicate(routePolicy.getType());
-        if (Objects.nonNull(authorityPredicate)) {
-            log.error("没有找到Type为'{}'的权限断言器");
+        if (Objects.isNull(authorityPredicate)) {
+            log.error("没有找到Type为'{}'的权限断言器", routePolicy.getType());
             return false;
         }
         return authorityPredicate.test(ns, userId, routePolicy);
@@ -141,12 +141,12 @@ public class JPARoutePolicyModule implements RoutePolicyModule {
 
     @Override
     public void registerResourceAuthorityPredicate(String type, Predicate3<String, String, RoutePolicy> predicate) {
-        authorityPredicate.put(type, predicate);
+        authorityPredicate.put(type.toLowerCase(), predicate);
     }
 
     @Override
     public Predicate3<String, String, RoutePolicy> getResourceAuthorityPredicate(String type) {
-        return authorityPredicate.get(type);
+        return authorityPredicate.get(type.toLowerCase());
     }
 
 
@@ -194,6 +194,7 @@ public class JPARoutePolicyModule implements RoutePolicyModule {
             String ns, String type, String moduleId, String resource, Long policyId, String operatorId) {
         return RoutePolicyRecord.builder()
                 .type(type)
+                .namespace(ns)
                 .moduleId(moduleId)
                 .resource(resource)
                 .policyId(policyId)

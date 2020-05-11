@@ -17,13 +17,12 @@ import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
-import cn.springcloud.gray.servernode.ServerExplainer;
-import cn.springcloud.gray.servernode.ServerIdExtractor;
-import cn.springcloud.gray.servernode.ServerListProcessor;
+import cn.springcloud.gray.servernode.*;
 import cn.springcloud.gray.spring.SpringEventPublisher;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -118,11 +117,32 @@ public class GrayClientAutoConfiguration {
         return new GrayClientInitializer();
     }
 
+
     @Bean
-    @ConditionalOnMissingBean
-    public PolicyPredicate grayServerPredicate(
+    @ConditionalOnMissingBean(name = "simplePolicyPredicate")
+    public SimplePolicyPredicate simplePolicyPredicate() {
+        return new SimplePolicyPredicate();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "grayServerPredicate")
+    public GrayServerPredicate grayServerPredicate(
             GrayManager grayManager, PolicyDecisionManager policyDecisionManager) {
         return new GrayServerPredicate(grayManager, policyDecisionManager);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "serviceGrayServerPredicate")
+    public ServiceGrayServerPredicate serviceGrayServerPredicate(
+            GrayManager grayManager, PolicyDecisionManager policyDecisionManager) {
+        return new ServiceGrayServerPredicate(grayManager, policyDecisionManager);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "serviceMultiVersionGrayServerPredicate")
+    public ServiceMultiVersionGrayServerPredicate serviceMultiVersionGrayServerPredicate(
+            GrayManager grayManager, PolicyDecisionManager policyDecisionManager) {
+        return new ServiceMultiVersionGrayServerPredicate(grayManager, policyDecisionManager);
     }
 
 
@@ -194,5 +214,13 @@ public class GrayClientAutoConfiguration {
             RequestLocalStorage requestLocalStorage,
             ServerExplainer serverServerExplainer) {
         return new DefaultServerIdextractor(requestLocalStorage, serverServerExplainer);
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public VersionExtractor versionExtractor(
+            @Value("${gray.client.instance.metadata.version-field:version}") String versionField) {
+        return new MetadataVersionExtractor(versionField);
     }
 }

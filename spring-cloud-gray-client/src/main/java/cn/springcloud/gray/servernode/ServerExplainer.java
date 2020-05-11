@@ -1,6 +1,7 @@
 package cn.springcloud.gray.servernode;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -10,6 +11,8 @@ import java.util.stream.Collectors;
  */
 public interface ServerExplainer<SERVER> {
 
+    VersionExtractor getVersionExtractor();
+
 
     /**
      * 将SERVER转换成{@link ServerSpec}
@@ -17,7 +20,16 @@ public interface ServerExplainer<SERVER> {
      * @param server
      * @return
      */
-    ServerSpec<SERVER> apply(SERVER server);
+    default ServerSpec<SERVER> apply(SERVER server) {
+        Map metadata = getMetadata(server);
+        return ServerSpec.<SERVER>builder()
+                .server(server)
+                .instanceId(getInstaceId(server))
+                .serviceId(getServiceId(server))
+                .metadata(metadata)
+                .version(getVersion(server, metadata))
+                .build();
+    }
 
     /**
      * 将SERVER转换成{@link ServerSpec}
@@ -57,5 +69,22 @@ public interface ServerExplainer<SERVER> {
      * @return
      */
     String getInstaceId(SERVER server);
+
+    /**
+     * 获取server的metadata
+     *
+     * @param server
+     * @return
+     */
+    Map getMetadata(SERVER server);
+
+
+    default String getVersion(SERVER server) {
+        return getVersion(server, getMetadata(server));
+    }
+
+    default String getVersion(SERVER server, Map metadata) {
+        return getVersionExtractor().getVersion(getServiceId(server), server, metadata);
+    }
 
 }

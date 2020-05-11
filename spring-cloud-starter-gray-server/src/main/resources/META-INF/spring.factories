@@ -6,4 +6,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.springcloud.gray.server.configuration.GrayServerEventTriggeringAutoConfiguration,\
   cn.springcloud.gray.server.configuration.GrayServerEventAutoConfiguration,\
   cn.springcloud.gray.server.configuration.OAuth2Config,\
-  cn.springcloud.gray.server.configuration.ClientRemoteConfiguration
+  cn.springcloud.gray.server.configuration.ClientRemoteConfiguration,\
+  cn.springcloud.gray.server.configuration.GrayServerInitializeConfiguration

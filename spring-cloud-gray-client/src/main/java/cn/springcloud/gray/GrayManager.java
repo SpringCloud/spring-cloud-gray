@@ -95,6 +95,11 @@ public interface GrayManager {
         return grayService.getMultiVersionRotePolicies();
     }
 
+    default DataSet<String> getServiceVersionRoutePolicies(String serviceId, String version) {
+        Map<String, DataSet<String>> multiVersionRotePolicies = getMultiVersionRoutePolicies(serviceId);
+        return multiVersionRotePolicies.get(version);
+    }
+
     void updateGrayInstance(GrayInstance instance);
 
     default void updateServiceRouteInfo(ServiceRouteInfo serviceRouteInfo) {

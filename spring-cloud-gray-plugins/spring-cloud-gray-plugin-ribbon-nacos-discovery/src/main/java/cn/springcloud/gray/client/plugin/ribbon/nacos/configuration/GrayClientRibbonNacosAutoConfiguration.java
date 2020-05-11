@@ -1,11 +1,8 @@
 package cn.springcloud.gray.client.plugin.ribbon.nacos.configuration;
 
-import cn.springcloud.gray.client.config.properties.GrayHoldoutServerProperties;
 import cn.springcloud.gray.client.plugin.ribbon.nacos.NacosServerExplainer;
-import cn.springcloud.gray.client.plugin.ribbon.nacos.NacosServerListProcessor;
 import cn.springcloud.gray.servernode.ServerExplainer;
-import cn.springcloud.gray.servernode.ServerListProcessor;
-import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
+import cn.springcloud.gray.servernode.VersionExtractor;
 import com.alibaba.cloud.nacos.ribbon.NacosServerList;
 import com.netflix.loadbalancer.Server;
 import com.netflix.ribbon.Ribbon;
@@ -30,8 +27,9 @@ public class GrayClientRibbonNacosAutoConfiguration {
 
 
     @Bean
-    public ServerExplainer<Server> serverExplainer(SpringClientFactory springClientFactory){
-        return new NacosServerExplainer(springClientFactory);
+    public ServerExplainer<Server> serverExplainer(
+            SpringClientFactory springClientFactory, VersionExtractor<Server> versionExtractor) {
+        return new NacosServerExplainer(springClientFactory, versionExtractor);
     }
 
 }
