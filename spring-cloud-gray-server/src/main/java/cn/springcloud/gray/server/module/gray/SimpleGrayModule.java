@@ -1,5 +1,6 @@
 package cn.springcloud.gray.server.module.gray;
 
+import cn.springcloud.gray.function.Consumer2;
 import cn.springcloud.gray.model.*;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.constant.Version;
@@ -13,7 +14,8 @@ import cn.springcloud.gray.server.module.route.policy.domain.query.RoutePolicyQu
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -30,6 +32,9 @@ public class SimpleGrayModule implements GrayModule {
     private ObjectMapper objectMapper;
     private GrayEventLogModule grayEventLogModule;
 
+
+    private Map<String, Consumer2<ServiceRouteInfo, RoutePolicyRecord>> routePolicyRecordTransferSetConsumers = new HashMap<>();
+
     public SimpleGrayModule(
             GrayServerProperties grayServerProperties,
             GrayPolicyModule grayPolicyModule,
@@ -45,6 +50,7 @@ public class SimpleGrayModule implements GrayModule {
         this.grayServerTrackModule = grayServerTrackModule;
         this.objectMapper = objectMapper;
         this.grayEventLogModule = grayEventLogModule;
+        this.init();
     }
 
     @Override
@@ -231,4 +237,94 @@ public class SimpleGrayModule implements GrayModule {
     public long getMaxSortMark() {
         return grayEventLogModule.getNewestSortMark();
     }
+
+    @Override
+    public List<ServiceRouteInfo> listAllGrayServiceRouteInfosExcludeSpecial(String serviceId) {
+        List<RoutePolicyRecord> routePolicyRecords = findAllServiceRoutePolicyRecords(null);
+        List<RoutePolicyRecord> filteredRoutePolicyRecords = routePolicyRecords.stream()
+                .filter(routePolicyRecord -> !Objects.equals(routePolicyRecord.getModuleId(), serviceId))
+                .collect(Collectors.toList());
+        return transferGrayServiceRouteInfoList(filteredRoutePolicyRecords);
+    }
+
+    @Override
+    public List<ServiceRouteInfo> listAllGrayServiceRouteInfos(String serviceId) {
+        List<RoutePolicyRecord> routePolicyRecords = findAllServiceRoutePolicyRecords(serviceId);
+        return transferGrayServiceRouteInfoList(routePolicyRecords);
+    }
+
+    @Override
+    public List<ServiceRouteInfo> listAllGrayServiceRouteInfos() {
+        List<RoutePolicyRecord> routePolicyRecords = findAllServiceRoutePolicyRecords(null);
+        return transferGrayServiceRouteInfoList(routePolicyRecords);
+    }
+
+    protected void init() {
+        initRoutePolicyRecordTransferSetConsumers();
+    }
+
+    protected List<ServiceRouteInfo> transferGrayServiceRouteInfoList(List<RoutePolicyRecord> routePolicyRecords) {
+        Map<String, ServiceRouteInfo> serviceRouteInfoMap = transferGrayServiceRouteInfos(routePolicyRecords);
+        return new ArrayList<>(serviceRouteInfoMap.values());
+    }
+
+    protected Map<String, ServiceRouteInfo> transferGrayServiceRouteInfos(List<RoutePolicyRecord> routePolicyRecords) {
+        Map<String, ServiceRouteInfo> serviceRouteInfoMap = new HashMap<>();
+        for (RoutePolicyRecord routePolicyRecord : routePolicyRecords) {
+            String serviceId = routePolicyRecord.getModuleId();
+            ServiceRouteInfo serviceRouteInfo = serviceRouteInfoMap.get(serviceId);
+            if (Objects.isNull(serviceRouteInfo)) {
+                serviceRouteInfo = ServiceRouteInfo.builder()
+                        .serviceId(serviceId)
+                        .routePolicies(new LinkedHashSet<>())
+                        .multiVersionRoutePolicies(new HashMap<>())
+                        .build();
+                serviceRouteInfoMap.put(serviceId, serviceRouteInfo);
+            }
+            parseAndSetRoutePolicyRecord(routePolicyRecord, serviceRouteInfo);
+        }
+        return serviceRouteInfoMap;
+    }
+
+
+    private void initRoutePolicyRecordTransferSetConsumers() {
+        routePolicyRecordTransferSetConsumers.put(RoutePolicyType.SERVICE_ROUTE.name(), (serviceRouteInfo, routePolicyRecord) -> {
+            serviceRouteInfo.getRoutePolicies().add(String.valueOf(routePolicyRecord.getPolicyId()));
+        });
+
+        routePolicyRecordTransferSetConsumers.put(RoutePolicyType.SERVICE_MULTI_VER_ROUTE.name(), (serviceRouteInfo, routePolicyRecord) -> {
+            Set<String> versionRoutePolicies =
+                    serviceRouteInfo.getMultiVersionRoutePolicies().get(routePolicyRecord.getResource());
+            if (Objects.isNull(versionRoutePolicies)) {
+                versionRoutePolicies = new LinkedHashSet<>();
+                serviceRouteInfo.getMultiVersionRoutePolicies().put(routePolicyRecord.getResource(), versionRoutePolicies);
+            }
+            versionRoutePolicies.add(String.valueOf(routePolicyRecord.getPolicyId()));
+        });
+    }
+
+    private void parseAndSetRoutePolicyRecord(RoutePolicyRecord routePolicyRecord, ServiceRouteInfo serviceRouteInfo) {
+        Consumer2<ServiceRouteInfo, RoutePolicyRecord> consumer =
+                routePolicyRecordTransferSetConsumers.get(routePolicyRecord.getResource());
+        if (Objects.isNull(consumer)) {
+            log.warn("没有找到type为'{}'的Consumer2<GrayServiceRouteInfo, RoutePolicyRecord>", routePolicyRecord.getType());
+            return;
+        }
+        consumer.accept(serviceRouteInfo, routePolicyRecord);
+    }
+
+    private List<RoutePolicyRecord> findAllServiceRoutePolicyRecords(String serviceId) {
+        RoutePolicyQuery query = RoutePolicyQuery.builder()
+                .delFlag(DelFlag.UNDELETE)
+                .type(RoutePolicyType.SERVICE_ROUTE.name())
+                .build();
+        if (StringUtils.isNotEmpty(serviceId)) {
+            query.setModuleId(serviceId);
+        }
+        List<RoutePolicyRecord> serviceRoutePolicyRecords = routePolicyModule.findAllRoutePolicies(query);
+        query.setType(RoutePolicyType.SERVICE_MULTI_VER_ROUTE.name());
+        List<RoutePolicyRecord> versionRoutePolicyRecords = routePolicyModule.findAllRoutePolicies(query);
+        return ListUtils.union(serviceRoutePolicyRecords, versionRoutePolicyRecords);
+    }
+
 }

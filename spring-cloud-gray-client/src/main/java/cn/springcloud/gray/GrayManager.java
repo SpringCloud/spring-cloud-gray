@@ -3,6 +3,7 @@ package cn.springcloud.gray;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
+import cn.springcloud.gray.model.ServiceRouteInfo;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 
 import java.util.*;
@@ -32,7 +33,23 @@ public interface GrayManager {
      * @param serviceId
      * @return
      */
-    boolean hasServiceGray(String serviceId);
+    default boolean hasServiceGray(String serviceId) {
+        GrayService grayService = getGrayService(serviceId);
+        if (Objects.isNull(grayService)) {
+            return false;
+        }
+
+        if (!grayService.getRoutePolicies().isEmpty()) {
+            return true;
+        }
+
+        for (DataSet<String> value : grayService.getMultiVersionRotePolicies().values()) {
+            if (!value.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     /**
@@ -48,6 +65,8 @@ public interface GrayManager {
     void clearAllGrayServices();
 
     GrayService getGrayService(String serviceId);
+
+    GrayService createGrayService(String serviceId);
 
     GrayInstance getGrayInstance(String serviceId, String instanceId);
 
@@ -77,6 +96,17 @@ public interface GrayManager {
     }
 
     void updateGrayInstance(GrayInstance instance);
+
+    default void updateServiceRouteInfo(ServiceRouteInfo serviceRouteInfo) {
+        GrayService grayService = getGrayService(serviceRouteInfo.getServiceId());
+        if (Objects.isNull(grayService)) {
+            grayService = createGrayService(serviceRouteInfo.getServiceId());
+        }
+        grayService.getRoutePolicies().addDatas(serviceRouteInfo.getRoutePolicies());
+        for (Map.Entry<String, Set<String>> stringSetEntry : serviceRouteInfo.getMultiVersionRoutePolicies().entrySet()) {
+            grayService.getOrCreateVersionRotePolicies(stringSetEntry.getKey()).addDatas(stringSetEntry.getValue());
+        }
+    }
 
     void closeGray(GrayInstance instance);
 

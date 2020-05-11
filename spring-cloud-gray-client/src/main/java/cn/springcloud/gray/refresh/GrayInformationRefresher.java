@@ -55,6 +55,7 @@ public class GrayInformationRefresher implements Refresher, InstanceLocalInfoAwa
         grayInfos.getInstances().forEach(grayManager::updateGrayInstance);
         grayInfos.getTrackDefinitions().forEach(grayTrackHolder::updateTrackDefinition);
         grayInfos.getPolicyDecisions().forEach(policyDecisionManager::setPolicyDefinition);
+        grayInfos.getServiceRouteInfos().forEach(grayManager::updateServiceRouteInfo);
 
         publishRefreshedEvent(grayInfos);
         return true;

@@ -91,6 +91,14 @@ public class GrayService {
         return multiVersionRotePolicies.get(version);
     }
 
+    public DataSet<String> getOrCreateVersionRotePolicies(String version) {
+        DataSet<String> versionRoutePolicies = multiVersionRotePolicies.get(version);
+        if (Objects.isNull(versionRoutePolicies)) {
+            versionRoutePolicies = createVersionRoutePolicies(version);
+        }
+        return versionRoutePolicies;
+    }
+
     public Map<String, DataSet<String>> getMultiVersionRotePolicies() {
         return Collections.unmodifiableMap(multiVersionRotePolicies);
     }

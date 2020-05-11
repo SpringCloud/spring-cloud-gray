@@ -1,9 +1,6 @@
 package cn.springcloud.gray.server.module.gray;
 
-import cn.springcloud.gray.model.DecisionDefinition;
-import cn.springcloud.gray.model.GrayInstance;
-import cn.springcloud.gray.model.GrayTrackDefinition;
-import cn.springcloud.gray.model.PolicyDefinition;
+import cn.springcloud.gray.model.*;
 import cn.springcloud.gray.server.constant.Version;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
@@ -50,4 +47,10 @@ public interface GrayModule {
     DecisionDefinition ofGrayDecision(GrayDecision grayDecision) throws IOException;
 
     long getMaxSortMark();
+
+    List<ServiceRouteInfo> listAllGrayServiceRouteInfosExcludeSpecial(String serviceId);
+
+    List<ServiceRouteInfo> listAllGrayServiceRouteInfos(String serviceId);
+
+    List<ServiceRouteInfo> listAllGrayServiceRouteInfos();
 }

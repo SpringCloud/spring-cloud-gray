@@ -4,6 +4,7 @@ import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
+import cn.springcloud.gray.model.ServiceRouteInfo;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -36,12 +38,6 @@ public class SimpleGrayManager extends AbstractGrayManager {
     }
 
     @Override
-    public boolean hasServiceGray(String serviceId) {
-        //todo
-        return false;
-    }
-
-    @Override
     public Collection<GrayService> allGrayServices() {
         return Collections.unmodifiableCollection(grayServices.values());
     }
@@ -54,6 +50,32 @@ public class SimpleGrayManager extends AbstractGrayManager {
     @Override
     public GrayService getGrayService(String serviceId) {
         return grayServices.get(serviceId);
+    }
+
+    @Override
+    public GrayService createGrayService(String serviceId) {
+        lock.lock();
+        try {
+            GrayService grayService = grayServices.get(serviceId);
+            if (Objects.isNull(grayService)) {
+                grayService = new GrayService();
+                grayService.setServiceId(serviceId);
+                grayServices.put(serviceId, grayService);
+            }
+            return grayService;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public void updateServiceRouteInfo(ServiceRouteInfo serviceRouteInfo) {
+        lock.lock();
+        try {
+            super.updateServiceRouteInfo(serviceRouteInfo);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
