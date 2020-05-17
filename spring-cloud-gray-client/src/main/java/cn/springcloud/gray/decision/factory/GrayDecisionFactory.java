@@ -12,7 +12,8 @@ public interface GrayDecisionFactory<C> {
 
 
     default String name() {
-        return NameUtils.normalizeDecisionFactoryName(getClass());
+//        return NameUtils.normalizeDecisionFactoryName(getClass());
+        return NameUtils.normalizeName(getClass(), GrayDecisionFactory.class);
     }
 
     default C newConfig() {
