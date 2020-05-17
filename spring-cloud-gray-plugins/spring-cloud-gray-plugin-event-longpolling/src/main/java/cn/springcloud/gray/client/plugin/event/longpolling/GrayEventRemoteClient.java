@@ -1,7 +1,11 @@
 package cn.springcloud.gray.client.plugin.event.longpolling;
 
 import cn.springcloud.gray.api.ApiRes;
-import cn.springcloud.gray.communication.http.*;
+import cn.springcloud.gray.communication.http.HttpAgent;
+import cn.springcloud.gray.http.HttpMethod;
+import cn.springcloud.gray.http.HttpParams;
+import cn.springcloud.gray.http.HttpRequest;
+import cn.springcloud.gray.http.HttpResult;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayTrackDefinition;
 import cn.springlcoud.gray.event.GrayEvent;

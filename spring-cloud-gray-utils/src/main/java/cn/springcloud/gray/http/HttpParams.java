@@ -1,4 +1,4 @@
-package cn.springcloud.gray.communication.http;
+package cn.springcloud.gray.http;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

@@ -1,5 +1,8 @@
 package cn.springcloud.gray.communication.http;
 
+import cn.springcloud.gray.http.HttpParams;
+import cn.springcloud.gray.http.HttpRequest;
+import cn.springcloud.gray.http.HttpResult;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
