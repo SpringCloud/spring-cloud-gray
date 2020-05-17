@@ -1,6 +1,6 @@
 package cn.springcloud.gray.retriever;
 
-import cn.springcloud.gray.utils.GenericMatchUtils;
+import cn.springcloud.gray.utils.GenericUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.collections.ListUtils;
@@ -95,7 +95,7 @@ public class GenericRetriever<FUNC> {
      * @return
      */
     protected boolean supportsEvent(FUNC function, Class<?> genericTargetCls) {
-        return GenericMatchUtils.match(function, genericDefineSuperCls, genericTargetCls, genericIndex);
+        return GenericUtils.match(function, genericDefineSuperCls, genericTargetCls, genericIndex);
     }
 
 

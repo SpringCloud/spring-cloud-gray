@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author saleson
  * @date 2020-01-31 15:05
  */
-public class GenericMatchUtils {
+public class GenericUtils {
 
 
     /**
