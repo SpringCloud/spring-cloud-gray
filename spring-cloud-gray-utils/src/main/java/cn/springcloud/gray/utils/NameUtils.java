@@ -1,6 +1,6 @@
 package cn.springcloud.gray.utils;
 
-import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
+//import cn.springcloud.gray.decision.factory.GrayDecisionFactory;
 
 public class NameUtils {
 
@@ -19,11 +19,11 @@ public class NameUtils {
     }
 
 
-    public static String normalizeDecisionFactoryName(
-            Class<? extends GrayDecisionFactory> clazz) {
-        return removeGarbage(clazz.getSimpleName()
-                .replace(GrayDecisionFactory.class.getSimpleName(), ""));
-    }
+//    public static String normalizeDecisionFactoryName(
+//            Class<? extends GrayDecisionFactory> clazz) {
+//        return removeGarbage(clazz.getSimpleName()
+//                .replace(GrayDecisionFactory.class.getSimpleName(), ""));
+//    }
 
     public static <T> String normalizeName(
             Class<? extends T> clazz, Class<T> cls) {
