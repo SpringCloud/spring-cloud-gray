@@ -1,4 +1,4 @@
-package cn.springcloud.gray.communication.http;
+package cn.springcloud.gray.http;
 
 import org.apache.commons.collections.MapUtils;
 import org.springframework.util.LinkedMultiValueMap;

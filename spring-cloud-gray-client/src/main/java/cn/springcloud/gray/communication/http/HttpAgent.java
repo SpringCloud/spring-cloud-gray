@@ -1,5 +1,7 @@
 package cn.springcloud.gray.communication.http;
 
+import cn.springcloud.gray.http.*;
+
 import java.io.IOException;
 
 /**
