@@ -20,6 +20,7 @@ import org.springframework.validation.Validator;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ConfigurationUtils {
 
@@ -80,7 +81,9 @@ public class ConfigurationUtils {
         if (rawValue != null && rawValue.startsWith("#{") && entryValue.endsWith("}")) {
             // assume it's spel
             StandardEvaluationContext context = new StandardEvaluationContext();
-            context.setBeanResolver(new BeanFactoryResolver(beanFactory));
+            if (Objects.nonNull(beanFactory)) {
+                context.setBeanResolver(new BeanFactoryResolver(beanFactory));
+            }
             Expression expression = parser.parseExpression(entryValue,
                     new TemplateParserContext());
             context.lookupVariable("api");
