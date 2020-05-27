@@ -14,12 +14,12 @@ public class DataSet<D> {
     private Set<D> datas = new ConcurrentSkipListSet<>();
 
 
-    public void addData(D data) {
-        datas.add(data);
+    public boolean addData(D data) {
+        return datas.add(data);
     }
 
-    public void addDatas(Collection<D> datas) {
-        this.datas.addAll(datas);
+    public boolean addDatas(Collection<D> datas) {
+        return this.datas.addAll(datas);
     }
 
     public boolean removeData(D data) {

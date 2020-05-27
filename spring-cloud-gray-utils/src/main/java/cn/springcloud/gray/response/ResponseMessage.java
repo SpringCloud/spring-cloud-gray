@@ -2,7 +2,7 @@ package cn.springcloud.gray.response;
 
 /**
  * @author saleson
- * @date 2020-05-17 15:56
+ * @date 2020-05-26 12:28
  */
 public interface ResponseMessage<BODY> {
 

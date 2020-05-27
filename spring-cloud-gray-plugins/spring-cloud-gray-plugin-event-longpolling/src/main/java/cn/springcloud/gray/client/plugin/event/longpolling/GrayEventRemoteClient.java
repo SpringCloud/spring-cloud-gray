@@ -124,15 +124,19 @@ public class GrayEventRemoteClient {
     private GrayEventRetrieveResult toGrayEventRetrieveResult(GrayEventRetrieveVO retrieveVO) {
         List<GrayEvent> events = ListUtils.EMPTY_LIST;
         if (CollectionUtils.isNotEmpty(retrieveVO.getGrayEvents())) {
-            events = retrieveVO.getGrayEvents().stream().map(eventVO -> {
-                try {
-                    GrayEvent grayEvent = toGrayEvent(eventVO);
-                    return grayEvent;
-                } catch (Exception e) {
-                    log.error("[toGrayEvent] 转换失败:{}", eventVO, e);
-                    return null;
-                }
-            }).filter(event -> !Objects.isNull(event)).collect(Collectors.toList());
+            events = retrieveVO.getGrayEvents()
+                    .stream()
+                    .map(eventVO -> {
+                        try {
+                            GrayEvent grayEvent = toGrayEvent(eventVO);
+                            return grayEvent;
+                        } catch (Exception e) {
+                            log.error("[toGrayEvent] 转换失败:{}", eventVO, e);
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
         }
         GrayEventRetrieveResult retrieveResult = new GrayEventRetrieveResult(events);
         if (!Objects.isNull(retrieveVO.getMaxSortMark())) {

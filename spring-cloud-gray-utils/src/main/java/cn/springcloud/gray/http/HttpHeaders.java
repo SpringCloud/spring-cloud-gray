@@ -1,12 +1,11 @@
 package cn.springcloud.gray.http;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.LinkedMultiValueMap;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author saleson
@@ -31,6 +30,19 @@ public class HttpHeaders {
 
     public Map<String, List<String>> toMap() {
         return MapUtils.unmodifiableMap(headers);
+    }
+
+
+    public Set<String> getHeaderNames() {
+        return headers.keySet();
+    }
+
+    public String getHaderValue(String name) {
+        List<String> values = headers.get(name);
+        if (CollectionUtils.isEmpty(values)) {
+            return "";
+        }
+        return StringUtils.join(values, ";");
     }
 
     @Override
