@@ -1,6 +1,7 @@
 package cn.springcloud.gray;
 
 import cn.springcloud.gray.choose.ServerChooser;
+import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
@@ -23,6 +24,7 @@ public class GrayClientHolder {
     private static GraySwitcher graySwitcher = new GraySwitcher.DefaultGraySwitcher();
     private static InstanceLocalInfo instanceLocalInfo;
     private static ServerChooser<?> serverChooser;
+    private static LoadBalancerFactory loadBalancerFactory;
 
     private static SpringEventPublisher springEventPublisher;
 
@@ -113,5 +115,13 @@ public class GrayClientHolder {
 
     public static void setSpringEventPublisher(SpringEventPublisher springEventPublisher) {
         GrayClientHolder.springEventPublisher = springEventPublisher;
+    }
+
+    public static LoadBalancerFactory getLoadBalancerFactory() {
+        return loadBalancerFactory;
+    }
+
+    public static void setLoadBalancerFactory(LoadBalancerFactory loadBalancerFactory) {
+        GrayClientHolder.loadBalancerFactory = loadBalancerFactory;
     }
 }

@@ -4,6 +4,7 @@ import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.choose.ServerChooser;
 import cn.springcloud.gray.choose.loadbalance.LoadBalancer;
 import cn.springcloud.gray.choose.loadbalance.RoundRobinLoadBalancer;
+import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ZoneAvoidanceRule;
 
@@ -53,7 +54,8 @@ public class GrayLoadBalanceFairPossibleRule extends ZoneAvoidanceRule {
     protected LoadBalancer getGroupLoadBalancer(String group) {
         LoadBalancer loadBalancer = loadBalancers.get(group);
         if (Objects.isNull(loadBalancer)) {
-            loadBalancer = new RoundRobinLoadBalancer();
+            LoadBalancerFactory loadBalancerFactory = GrayClientHolder.getLoadBalancerFactory();
+            loadBalancer = Objects.nonNull(loadBalancer) ? loadBalancerFactory.create() : new RoundRobinLoadBalancer();
             loadBalancers.put(group, loadBalancer);
         }
         return loadBalancer;

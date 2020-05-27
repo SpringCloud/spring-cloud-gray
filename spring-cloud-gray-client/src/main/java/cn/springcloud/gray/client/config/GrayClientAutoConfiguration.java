@@ -3,6 +3,8 @@ package cn.springcloud.gray.client.config;
 import cn.springcloud.gray.*;
 import cn.springcloud.gray.cache.CaffeineCache;
 import cn.springcloud.gray.choose.*;
+import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
+import cn.springcloud.gray.choose.loadbalance.factory.RoundRobinLoadBalancerFactory;
 import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.*;
 import cn.springcloud.gray.client.initialize.DefaultGrayInfosInitializer;
@@ -244,5 +246,12 @@ public class GrayClientAutoConfiguration {
     public VersionExtractor versionExtractor(
             @Value("${gray.client.instance.metadata.version-field:version}") String versionField) {
         return new MetadataVersionExtractor(versionField);
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public LoadBalancerFactory loadBalancerFactory() {
+        return new RoundRobinLoadBalancerFactory();
     }
 }

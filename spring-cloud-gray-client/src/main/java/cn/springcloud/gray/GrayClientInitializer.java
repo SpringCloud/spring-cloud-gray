@@ -2,6 +2,7 @@ package cn.springcloud.gray;
 
 import cn.springcloud.gray.choose.PolicyPredicate;
 import cn.springcloud.gray.choose.ServerChooser;
+import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
@@ -37,6 +38,7 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         GrayClientHolder.setGrayTrackHolder(getBean("grayTrackHolder", GrayTrackHolder.class));
         GrayClientHolder.setPolicyDecisionManager(getBean("policyDecisionManager", PolicyDecisionManager.class));
         GrayClientHolder.setSpringEventPublisher(getBean("springEventPublisher", SpringEventPublisher.class));
+        GrayClientHolder.setLoadBalancerFactory(getBean("loadBalancerFactory", LoadBalancerFactory.class));
 
         initGrayManagerRequestInterceptors();
 
