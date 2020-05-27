@@ -3,6 +3,7 @@ package cn.springcloud.gray.client.netflix;
 import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.ServerListResult;
+import cn.springcloud.gray.choose.ChooseGroup;
 import cn.springcloud.gray.choose.ListChooser;
 import cn.springcloud.gray.choose.PredicateType;
 import cn.springcloud.gray.choose.ServerChooser;
@@ -58,19 +59,19 @@ public class RibbonServerChooser implements ServerChooser<Server> {
     public Server chooseServer(List<Server> servers, ListChooser<Server> chooser) {
         ServerListResult<Server> serverListResult = distinguishAndMatchGrayServerList(servers);
         if (serverListResult == null) {
-            return chooser.choose(servers);
+            return chooser.choose(ChooseGroup.ALL, servers);
         }
 
         if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
             if (CollectionUtils.isNotEmpty(serverListResult.getGrayServers())) {
-                Server server = chooser.choose(serverListResult.getGrayServers());
+                Server server = chooser.choose(ChooseGroup.GRAY, serverListResult.getGrayServers());
                 if (server != null) {
                     return server;
                 }
             }
         }
 
-        return chooser.choose(serverListResult.getNormalServers());
+        return chooser.choose(ChooseGroup.NORMAL, serverListResult.getNormalServers());
     }
 
 
@@ -138,6 +139,9 @@ public class RibbonServerChooser implements ServerChooser<Server> {
         }
 
         GrayService grayService = grayManager.getGrayService(serviceId);
+        if (Objects.nonNull(grayService)) {
+            return null;
+        }
         List<Server> serverList = serverListProcessor.process(serviceId, servers);
         List<Server> grayServers = new ArrayList<>(grayService.getGrayInstances().size());
         List<Server> normalServers = new ArrayList<>(Math.min(servers.size(), grayService.getGrayInstances().size()));

@@ -47,7 +47,7 @@ public class DefaultServerChooser implements ServerChooser<Object> {
     @Override
     public Object chooseServer(List<Object> servers, ListChooser<Object> chooser) {
         if (!graySwitcher.state()) {
-            return chooser.choose(servers);
+            return chooser.choose(ChooseGroup.ALL, servers);
         }
 
         String serviceId = serverIdExtractor.getServiceId(servers);
@@ -77,18 +77,18 @@ public class DefaultServerChooser implements ServerChooser<Object> {
     protected Object chooseInstanceServer(List<Object> servers, ListChooser<Object> chooser) {
         ServerListResult<Object> serverListResult = instanceGrayServerSorter.distinguishAndMatchGrayServerList(servers);
         if (serverListResult == null) {
-            return chooser.choose(servers);
+            return chooser.choose(ChooseGroup.ALL, servers);
         }
 
         if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()
                 && CollectionUtils.isNotEmpty(serverListResult.getGrayServers())) {
-            Object server = chooser.choose(serverListResult.getGrayServers());
+            Object server = chooser.choose(ChooseGroup.GRAY, serverListResult.getGrayServers());
             if (server != null) {
                 return server;
             }
         }
 
-        return chooser.choose(serverListResult.getNormalServers());
+        return chooser.choose(ChooseGroup.NORMAL, serverListResult.getNormalServers());
     }
 
     /**
@@ -125,15 +125,15 @@ public class DefaultServerChooser implements ServerChooser<Object> {
         ServerListResult<ServerSpec<Object>> serverSpecsListResult =
                 instanceGrayServerSorter.distinguishAndMatchGrayServerSpecList(serverSpecs);
         if (serverSpecsListResult == null) {
-            return chooseSpecServer(serverSpecs, chooser);
+            return chooseSpecServer(ChooseGroup.ALL, serverSpecs, chooser);
         }
 
         Object server = null;
         if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
-            server = chooseSpecServer(serverSpecsListResult.getGrayServers(), chooser);
+            server = chooseSpecServer(ChooseGroup.GRAY, serverSpecsListResult.getGrayServers(), chooser);
         }
         if (Objects.isNull(server)) {
-            server = chooseSpecServer(serverSpecsListResult.getNormalServers(), chooser);
+            server = chooseSpecServer(ChooseGroup.NORMAL, serverSpecsListResult.getNormalServers(), chooser);
         }
         return server;
     }
@@ -141,13 +141,14 @@ public class DefaultServerChooser implements ServerChooser<Object> {
     /**
      * 选择Server
      *
+     * @param chooseGroup
      * @param serverSpecs
      * @param chooser
      * @return
      */
-    protected Object chooseSpecServer(List<ServerSpec<Object>> serverSpecs, ListChooser<Object> chooser) {
+    protected Object chooseSpecServer(ChooseGroup chooseGroup, List<ServerSpec<Object>> serverSpecs, ListChooser<Object> chooser) {
         List<Object> servers = collectServers(serverSpecs);
-        return chooser.choose(servers);
+        return chooser.choose(chooseGroup, servers);
     }
 
 

@@ -1,18 +1,26 @@
 package cn.springcloud.gray.client.netflix.resttemplate;
 
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
+import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
+import cn.springcloud.gray.commons.GrayRequestHelper;
+import cn.springcloud.gray.request.GrayHttpRequest;
+import cn.springcloud.gray.response.http.HttpResponseMessage;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectPointContext;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
-import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
-import cn.springcloud.gray.request.GrayHttpRequest;
 import cn.springcloud.gray.utils.WebUtils;
+import lombok.SneakyThrows;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Objects;
 
 
 /**
@@ -31,6 +39,7 @@ public class GrayClientHttpRequestIntercptor implements ClientHttpRequestInterce
         this.routingConnectionPoint = routingConnectionPoint;
     }
 
+    @SneakyThrows
     @Override
     public ClientHttpResponse intercept(
             HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
@@ -50,7 +59,13 @@ public class GrayClientHttpRequestIntercptor implements ClientHttpRequestInterce
                 .interceptroType(GrayNetflixClientConstants.INTERCEPTRO_TYPE_RESTTEMPLATE)
                 .grayRequest(grayRequest).build();
 
-        return routingConnectionPoint.execute(connectPointContext, () -> execution.execute(request, body));
+        GrayRequestHelper.setPreviousServerInfoToHttpHeaderByInstanceLocalInfo(grayRequest);
+        if (true) {
+            throw new IllegalAccessException("df");
+        }
+
+        return routingConnectionPoint.executeOrMock(
+                connectPointContext, () -> execution.execute(request, body), this::mockResultConvert);
 
 //        try {
 //            ribbonConnectionPoint.executeConnectPoint(connectPointContext);
@@ -61,5 +76,19 @@ public class GrayClientHttpRequestIntercptor implements ClientHttpRequestInterce
 //        } finally {
 //            ribbonConnectionPoint.shutdownconnectPoint(connectPointContext);
 //        }
+    }
+
+
+    protected ClientHttpResponse mockResultConvert(Object message) {
+        HttpResponseMessage httpResponseMessage = HttpResponseMessage.toHttpResponseMessage(message);
+        HttpStatus httpStatus = HttpStatus.valueOf(httpResponseMessage.getStatusCode());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.putAll(httpResponseMessage.getHeaders().toMap());
+        byte[] bodyBytes = httpResponseMessage.getBodyBytes();
+        if (Objects.isNull(bodyBytes)) {
+            bodyBytes = new byte[0];
+        }
+        InputStream bodyStream = new ByteArrayInputStream(bodyBytes);
+        return new SimpleClientHttpResponse(httpStatus, httpHeaders, bodyStream);
     }
 }

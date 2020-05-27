@@ -12,6 +12,7 @@ import cn.springcloud.gray.servernode.ServerSpec;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -37,11 +38,14 @@ public class InstanceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<S
     protected ServerListResult<ServerSpec<SERVER>> distinguishServerSpecList(
             String serviceId, List<ServerSpec<SERVER>> serverSpecs) {
         GrayService grayService = getGrayManager().getGrayService(serviceId);
+        if (Objects.isNull(grayService)) {
+            return null;
+        }
         List<ServerSpec<SERVER>> grayServers = new ArrayList<>(grayService.getGrayInstances().size());
         List<ServerSpec<SERVER>> normalServers = new ArrayList<>(Math.min(serverSpecs.size(), grayService.getGrayInstances().size()));
 
         for (ServerSpec<SERVER> serverSpec : serverSpecs) {
-            if (grayService.getGrayInstance(serverSpec.getInstanceId()) != null) {
+            if (Objects.nonNull(grayService.getGrayInstance(serverSpec.getInstanceId()))) {
                 grayServers.add(serverSpec);
             } else {
                 normalServers.add(serverSpec);

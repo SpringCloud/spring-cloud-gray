@@ -6,6 +6,7 @@ import com.google.common.base.Optional;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ZoneAvoidanceRule;
 
+
 public class GrayChooserRule extends ZoneAvoidanceRule {
 
     private ServerChooser<Server> serverChooser;
@@ -16,7 +17,7 @@ public class GrayChooserRule extends ZoneAvoidanceRule {
 
     @Override
     public Server choose(Object key) {
-        return serverChooser.chooseServer(getLoadBalancer().getAllServers(), servers -> {
+        return serverChooser.chooseServer(getLoadBalancer().getAllServers(), (group, servers) -> {
             Optional<Server> server = getPredicate().chooseRoundRobinAfterFiltering(servers, key);
             if (server.isPresent()) {
                 return server.get();
