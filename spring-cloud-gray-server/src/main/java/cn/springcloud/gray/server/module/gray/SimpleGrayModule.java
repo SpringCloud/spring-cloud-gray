@@ -137,7 +137,10 @@ public class SimpleGrayModule implements GrayModule {
         }
         cn.springcloud.gray.model.GrayInstance grayInstance = ofGrayInstance(instance);
         List<Long> policyIds = listPolicyIdsByInstanceId(grayInstance.getInstanceId());
-        grayInstance.setRoutePolicies(new HashSet<>(policyIds.stream().map(String::valueOf).collect(Collectors.toList())));
+        Set<String> routePolicies = policyIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.toSet());
+        grayInstance.setRoutePolicies(routePolicies);
         return grayInstance;
     }
 
