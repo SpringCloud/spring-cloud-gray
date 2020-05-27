@@ -12,11 +12,15 @@ import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.*;
 import cn.springcloud.gray.local.InstanceLocalInfo;
+import cn.springcloud.gray.mock.MockManager;
+import cn.springcloud.gray.mock.NoOpMockManager;
 import cn.springcloud.gray.refresh.RefreshDriver;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.ThreadLocalRequestStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
+import cn.springcloud.gray.routing.connectionpoint.DefaultRoutingConnectionPoint;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.servernode.*;
 import cn.springcloud.gray.spring.SpringEventPublisher;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -31,20 +35,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@EnableConfigurationProperties(
-        {GrayProperties.class,
-                GrayClientProperties.class,
-                GrayServerProperties.class,
-                GrayRequestProperties.class,
-                GrayLoadProperties.class,
-                GrayHoldoutServerProperties.class})
-@ConditionalOnProperty(value = "gray.enabled")
-@Import({InformationClientConfiguration.class,
+@EnableConfigurationProperties({
+        GrayProperties.class,
+        GrayClientProperties.class,
+        GrayChooseProperties.class,
+        GrayServerProperties.class,
+        GrayRequestProperties.class,
+        GrayLoadProperties.class,
+        GrayHoldoutServerProperties.class
+})
+@Import({
+        InformationClientConfiguration.class,
         GrayDecisionFactoryConfiguration.class,
-        GrayTrackConfiguration.class})
+        GrayTrackConfiguration.class
+})
+@ConditionalOnProperty(value = "gray.enabled")
 public class GrayClientAutoConfiguration {
 
 
@@ -205,6 +214,19 @@ public class GrayClientAutoConfiguration {
                 requestLocalStorage,
                 policyDecisionManager,
                 serverExplainer);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public RoutingConnectionPoint ribbonConnectionPoint(
+            GrayManager grayManager,
+            RequestLocalStorage requestLocalStorage,
+            LocalStorageLifeCycle localStorageLifeCycle,
+            @Autowired(required = false) MockManager mockManager) {
+        if (Objects.isNull(mockManager)) {
+            mockManager = new NoOpMockManager();
+        }
+        return new DefaultRoutingConnectionPoint(grayManager, requestLocalStorage, localStorageLifeCycle, mockManager);
     }
 
 

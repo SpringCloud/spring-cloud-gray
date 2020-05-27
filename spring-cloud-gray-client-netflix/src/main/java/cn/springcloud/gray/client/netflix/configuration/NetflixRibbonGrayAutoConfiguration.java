@@ -3,10 +3,6 @@ package cn.springcloud.gray.client.netflix.configuration;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.client.netflix.ribbon.RibbonServerExplainer;
 import cn.springcloud.gray.client.netflix.ribbon.configuration.GrayRibbonClientsConfiguration;
-import cn.springcloud.gray.request.LocalStorageLifeCycle;
-import cn.springcloud.gray.request.RequestLocalStorage;
-import cn.springcloud.gray.routing.connectionpoint.DefaultRoutingConnectionPoint;
-import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.VersionExtractor;
 import com.netflix.loadbalancer.Server;
@@ -21,14 +17,6 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnBean(GrayManager.class)
 @RibbonClients(defaultConfiguration = GrayRibbonClientsConfiguration.class)
 public class NetflixRibbonGrayAutoConfiguration {
-
-
-    @Bean
-    @ConditionalOnMissingBean
-    public RoutingConnectionPoint ribbonConnectionPoint(
-            GrayManager grayManager, RequestLocalStorage requestLocalStorage, LocalStorageLifeCycle localStorageLifeCycle) {
-        return new DefaultRoutingConnectionPoint(grayManager, requestLocalStorage, localStorageLifeCycle);
-    }
 
 
     @Bean

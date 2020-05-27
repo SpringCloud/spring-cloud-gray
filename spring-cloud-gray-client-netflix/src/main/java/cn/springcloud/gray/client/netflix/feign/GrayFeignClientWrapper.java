@@ -1,10 +1,12 @@
 package cn.springcloud.gray.client.netflix.feign;
 
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
+import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
+import cn.springcloud.gray.commons.GrayRequestHelper;
+import cn.springcloud.gray.request.GrayHttpRequest;
+import cn.springcloud.gray.response.http.HttpResponseMessage;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectPointContext;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
-import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
-import cn.springcloud.gray.request.GrayHttpRequest;
 import cn.springcloud.gray.utils.WebUtils;
 import feign.Client;
 import feign.Request;
@@ -12,6 +14,8 @@ import feign.Response;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Map;
+import java.util.Objects;
 
 class GrayFeignClientWrapper implements Client {
 
@@ -45,7 +49,13 @@ class GrayFeignClientWrapper implements Client {
         RoutingConnectPointContext connectPointContext = RoutingConnectPointContext.builder()
                 .interceptroType(GrayNetflixClientConstants.INTERCEPTRO_TYPE_FEIGN)
                 .grayRequest(grayRequest).build();
-        return routingConnectionPoint.execute(connectPointContext, () -> delegate.execute(request, options));
+
+        GrayRequestHelper.setPreviousServerInfoToHttpHeaderByInstanceLocalInfo(grayRequest);
+
+        return routingConnectionPoint.executeOrMock(
+                connectPointContext,
+                () -> delegate.execute(request, options),
+                result -> mockResultConvert(request, result));
 
 //        try {
 //            ribbonConnectionPoint.executeConnectPoint(connectPointContext);
@@ -69,5 +79,21 @@ class GrayFeignClientWrapper implements Client {
 
     GrayRequestProperties getGrayRequestProperties() {
         return grayRequestProperties;
+    }
+
+    private Response mockResultConvert(Request request, Object mockResult) {
+        HttpResponseMessage httpResponseMessage = HttpResponseMessage.toHttpResponseMessage(mockResult);
+        byte[] bodyBytes = httpResponseMessage.getBodyBytes();
+        if (Objects.isNull(bodyBytes)) {
+            bodyBytes = new byte[0];
+        }
+
+        Map headers = httpResponseMessage.getHeaders().toMap();
+        return Response.builder()
+                .body(bodyBytes)
+                .status(httpResponseMessage.getStatusCode())
+                .headers(headers)
+                .request(request)
+                .build();
     }
 }

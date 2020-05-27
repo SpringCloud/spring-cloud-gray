@@ -65,12 +65,7 @@ public class GrayService {
     }
 
     public boolean hasGrayInstance() {
-        for (GrayInstance grayInstance : getGrayInstances()) {
-            if (grayInstance.isGray()) {
-                return true;
-            }
-        }
-        return false;
+        return !grayInstances.isEmpty();
     }
 
     public DataSet<String> getRoutePolicies() {

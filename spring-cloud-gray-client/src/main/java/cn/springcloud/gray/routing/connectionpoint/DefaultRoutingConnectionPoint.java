@@ -2,6 +2,9 @@ package cn.springcloud.gray.routing.connectionpoint;
 
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.RequestInterceptor;
+import cn.springcloud.gray.mock.GrayReuqestMockInfo;
+import cn.springcloud.gray.mock.MockManager;
+import cn.springcloud.gray.model.HandleRuleType;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
@@ -14,14 +17,28 @@ public class DefaultRoutingConnectionPoint implements RoutingConnectionPoint {
     private GrayManager grayManager;
     private RequestLocalStorage requestLocalStorage;
     private LocalStorageLifeCycle localStorageLifeCycle;
+    private MockManager mockManager;
 
     public DefaultRoutingConnectionPoint(
             GrayManager grayManager,
             RequestLocalStorage requestLocalStorage,
-            LocalStorageLifeCycle localStorageLifeCycle) {
+            LocalStorageLifeCycle localStorageLifeCycle,
+            MockManager mockManager) {
         this.grayManager = grayManager;
         this.requestLocalStorage = requestLocalStorage;
         this.localStorageLifeCycle = localStorageLifeCycle;
+        this.mockManager = mockManager;
+    }
+
+    @Override
+    public Object excuteMockHandle(RoutingConnectPointContext connectPointContext) {
+        if (!mockManager.isEnableMock(HandleRuleType.MOCK_SERVER_CLIENT_REPSONSE.code())) {
+            return null;
+        }
+        GrayReuqestMockInfo mockInfo = GrayReuqestMockInfo.builder()
+                .grayRequest(connectPointContext.getGrayRequest())
+                .build();
+        return mockManager.predicateAndExcuteMockHandle(HandleRuleType.MOCK_SERVER_CLIENT_REPSONSE.code(), mockInfo);
     }
 
     @Override
