@@ -27,6 +27,9 @@ public class GrayHttpRequest extends GrayRequest {
         });
     }
 
+    public void setParameters(String name, Collection<String> values) {
+        parameters.put(name, new ArrayList<>(values));
+    }
 
     public void addParameters(Map<String, ? extends Collection<String>> parameters) {
         if (CollectionUtils.isEmpty(parameters)) {
@@ -43,8 +46,13 @@ public class GrayHttpRequest extends GrayRequest {
         values.add(value);
     }
 
+
     public void setHeader(String name, String... values) {
-        headers.put(name, new LinkedList(Arrays.asList(values)));
+        setHeader(name, new LinkedList(Arrays.asList(values)));
+    }
+
+    public void setHeader(String name, List<String> values) {
+        headers.put(name, values);
     }
 
 

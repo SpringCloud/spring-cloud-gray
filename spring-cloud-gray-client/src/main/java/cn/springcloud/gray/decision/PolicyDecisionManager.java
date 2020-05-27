@@ -6,6 +6,7 @@ import cn.springcloud.gray.model.PolicyDefinition;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -18,7 +19,10 @@ public interface PolicyDecisionManager {
     Policy getPolicy(String policyId);
 
     default List<Policy> getPolicies(Collection<String> policyIds) {
-        return policyIds.stream().map(this::getPolicy).collect(Collectors.toList());
+        return policyIds.stream()
+                .map(this::getPolicy)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
 

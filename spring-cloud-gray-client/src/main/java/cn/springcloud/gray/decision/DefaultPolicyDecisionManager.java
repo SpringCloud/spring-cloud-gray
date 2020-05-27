@@ -53,7 +53,7 @@ public class DefaultPolicyDecisionManager implements PolicyDecisionManager {
 
     @Override
     public void clearAllPolicy() {
-
+        policyInfos.clear();
     }
 
     @Override

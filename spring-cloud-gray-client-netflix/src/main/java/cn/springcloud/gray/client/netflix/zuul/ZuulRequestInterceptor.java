@@ -7,6 +7,7 @@ import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.HttpGrayTrackRecordDevice;
 import cn.springcloud.gray.request.HttpGrayTrackRecordHelper;
 import com.netflix.zuul.context.RequestContext;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -89,9 +90,10 @@ public class ZuulRequestInterceptor implements RequestInterceptor {
 
         @Override
         public void record(String name, List<String> values) {
-            for (String v : values) {
-                context.getZuulRequestHeaders().put(name, v);
-            }
+            context.getZuulRequestHeaders().put(name, StringUtils.join(values, ";"));
+//            for (String v : values) {
+//                context.getZuulRequestHeaders().put(name, v);
+//            }
         }
     }
 

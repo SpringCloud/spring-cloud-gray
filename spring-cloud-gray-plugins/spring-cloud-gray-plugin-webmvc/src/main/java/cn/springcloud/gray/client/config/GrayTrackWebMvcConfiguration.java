@@ -24,6 +24,8 @@ import javax.servlet.Filter;
 @ConditionalOnProperty(value = "gray.client.runenv", havingValue = "web", matchIfMissing = true)
 public class GrayTrackWebMvcConfiguration {
 
+    public static final int FILTER_BASE_ORDER = FilterRegistrationBean.LOWEST_PRECEDENCE - 10000;
+
     @Autowired
     private GrayTrackProperties grayTrackProperties;
 
@@ -51,7 +53,7 @@ public class GrayTrackWebMvcConfiguration {
         //过滤器名称
         registration.setName("GrayTrackFilter");
         //过滤器顺序
-        registration.setOrder(FilterRegistrationBean.LOWEST_PRECEDENCE);
+        registration.setOrder(FILTER_BASE_ORDER);
         return registration;
     }
 
@@ -59,7 +61,7 @@ public class GrayTrackWebMvcConfiguration {
     //    @Configuration
     @ConditionalOnProperty(value = {"gray.hystrix.threadTransmitStrategy"}, havingValue = "HYSTRIX_REQUEST_LOCAL_STORAGE")
     @Import(HystrixGrayTrackWebConfiguration.class)
-    public static class HystrixRequestLocalStorageConfiguration{
+    public static class HystrixRequestLocalStorageConfiguration {
         @Bean
         public RequestLocalStorage requestLocalStorage() {
             return new HystrixRequestLocalStorage();

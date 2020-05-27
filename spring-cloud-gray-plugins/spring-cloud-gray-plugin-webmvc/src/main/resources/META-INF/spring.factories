@@ -3,4 +3,5 @@
 #  cn.springcloud.gray.client.config.GrayClientImportSelector
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.springcloud.gray.client.config.GrayClientWebAutoConfiguration,\
-  cn.springcloud.gray.client.config.GrayTrackWebMvcConfiguration
+  cn.springcloud.gray.client.config.GrayTrackWebMvcConfiguration,\
+  cn.springcloud.gray.client.config.GrayMockWebAutoConfiguration
