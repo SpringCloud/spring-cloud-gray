@@ -11,18 +11,19 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
-#    region: sh
-#    availability-zones:
-#      sh: xuhui
+    #    region: sh
+    #    availability-zones:
+    #      sh: xuhui
     serviceUrl:
       defaultZone: http://localhost:20001/eureka/
-#      xuhui: http://localhost:20001/eureka/
+  #      xuhui: http://localhost:20001/eureka/
   instance:
     instanceId: ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
     prefer-ip-address: true
     metadata-map:
-#      zone: gray3
+      version: v3
+      #      zone: gray3
       instanceId: s
 #    initial-status: starting
