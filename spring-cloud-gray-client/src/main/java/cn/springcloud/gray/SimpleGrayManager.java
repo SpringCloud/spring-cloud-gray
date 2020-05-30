@@ -124,11 +124,9 @@ public class SimpleGrayManager extends AbstractGrayManager {
 
         GrayService service = grayServices.get(instance.getServiceId());
         if (service == null) {
-            if (service == null) {
-                service = new GrayService();
-                service.setServiceId(instance.getServiceId());
-                grayServices.put(service.getServiceId(), service);
-            }
+            service = new GrayService();
+            service.setServiceId(instance.getServiceId());
+            grayServices.put(service.getServiceId(), service);
         }
         log.debug("添加灰度实例, serviceId:{}, instanceId:{}", instance.getServiceId(), instance.getInstanceId());
         service.setGrayInstance(instance);
