@@ -135,7 +135,7 @@ public class ServiceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<SE
 
         List<Policy> policies = policyDecisionManager.getPolicies(grayPolicies);
         if (CollectionUtils.isEmpty(policies)) {
-            log.error("没有找到灰度的策略, policyIds:{}, service级的筛选跳过", grayPolicies);
+            log.error("没有找到灰度的策略, matchingPolicyIds:{}, service级的筛选跳过", grayPolicies);
             return serverSpecs;
         }
 

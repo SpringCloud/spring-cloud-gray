@@ -1,5 +1,6 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.changed.notify.ChangedNotifyDriver;
 import cn.springcloud.gray.choose.ServerChooser;
 import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
@@ -30,6 +31,8 @@ public class GrayClientHolder {
     private static LoadBalancerFactory loadBalancerFactory;
 
     private static SpringEventPublisher springEventPublisher;
+
+    private static ChangedNotifyDriver changedNotifyDriver;
 
     public static GrayManager getGrayManager() {
         return grayManager;
@@ -126,5 +129,13 @@ public class GrayClientHolder {
 
     public static void setLoadBalancerFactory(LoadBalancerFactory loadBalancerFactory) {
         GrayClientHolder.loadBalancerFactory = loadBalancerFactory;
+    }
+
+    public static ChangedNotifyDriver getChangedNotifyDriver() {
+        return changedNotifyDriver;
+    }
+
+    public static void setChangedNotifyDriver(ChangedNotifyDriver changedNotifyDriver) {
+        GrayClientHolder.changedNotifyDriver = changedNotifyDriver;
     }
 }

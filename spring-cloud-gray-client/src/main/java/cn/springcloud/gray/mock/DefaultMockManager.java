@@ -59,12 +59,12 @@ public class DefaultMockManager implements MockManager {
 
     @Override
     public boolean isEnableMock() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnableMock(String mockRuleType) {
-        return false;
+        return true;
     }
 
     @Override
@@ -112,10 +112,10 @@ public class DefaultMockManager implements MockManager {
         }
 
         for (HandleRuleInfo handleRuleInfo : handleRuleInfos) {
-            List<Policy> policies = getPolicies(handleRuleInfo.getRoutePolicies().getDatas());
+            List<Policy> policies = getPolicies(handleRuleInfo.getMatchingPolicies().getDatas());
             if (policyPredicate.testPolicies(policies, decisionInputArgs)
-                    && StringUtils.isNotEmpty(handleRuleInfo.getHandleInfo())) {
-                return handleRuleInfo.getHandleInfo();
+                    && StringUtils.isNotEmpty(handleRuleInfo.getHandleOption())) {
+                return handleRuleInfo.getHandleOption();
             }
         }
 

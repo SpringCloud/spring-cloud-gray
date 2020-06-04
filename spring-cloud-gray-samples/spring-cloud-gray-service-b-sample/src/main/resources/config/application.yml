@@ -62,6 +62,8 @@ hystrix:
 
 
 gray:
+  mock:
+    enabled: true
 
   enabled: true
   hystrix:

@@ -14,4 +14,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   cn.springcloud.gray.client.config.GrayClientEventAutoConfiguration,\
   cn.springcloud.gray.client.config.GrayClientBeanPostProcessorConfiguration,\
   cn.springcloud.gray.client.config.GrayClientMockAutoConfiguration,\
-  cn.springcloud.gray.client.config.GrayConcurrnetConfiguration
+  cn.springcloud.gray.client.config.GrayConcurrnetConfiguration,\
+  cn.springcloud.gray.client.config.ChangedNotifyAutoConfiguration

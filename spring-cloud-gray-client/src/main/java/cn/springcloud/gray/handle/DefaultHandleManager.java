@@ -1,5 +1,7 @@
 package cn.springcloud.gray.handle;
 
+import cn.springcloud.gray.changed.notify.ChangedNotifyDriver;
+import cn.springcloud.gray.changed.notify.ChangedType;
 import cn.springcloud.gray.model.HandleActionDefinition;
 import cn.springcloud.gray.model.HandleDefinition;
 
@@ -14,11 +16,19 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultHandleManager implements HandleManager {
 
     private Map<String, HandleInfo> handleInfoMap = new ConcurrentHashMap<>();
+    private ChangedNotifyDriver notifyDriver;
 
+    public DefaultHandleManager(ChangedNotifyDriver notifyDriver) {
+        this.notifyDriver = notifyDriver;
+    }
 
     @Override
     public HandleInfo removeHandleInfo(String handleId) {
-        return handleInfoMap.remove(handleId);
+        HandleInfo old = handleInfoMap.remove(handleId);
+        if (Objects.nonNull(old)) {
+            publishHandleInfoChanged(ChangedType.DELETED, old);
+        }
+        return old;
     }
 
     @Override
@@ -28,17 +38,21 @@ public class DefaultHandleManager implements HandleManager {
 
     @Override
     public void clearAllHandleInfos() {
+        notifyDriver.clearAll(HandleInfo.class);
         handleInfoMap.clear();
     }
 
     @Override
     public void addHandleInfo(HandleInfo handleInfo) {
-        handleInfoMap.put(handleInfo.getId(), handleInfo);
+        HandleInfo old = handleInfoMap.put(handleInfo.getId(), handleInfo);
+        publishHandleInfoChanged(Objects.isNull(old) ? ChangedType.ADDED : ChangedType.UPDATED, handleInfo);
     }
 
     @Override
     public void addHandleDefinition(HandleDefinition handleDefinition) {
-
+        HandleInfo handleInfo = new HandleInfo(handleDefinition.getId(), handleDefinition.getType());
+        handleDefinition.getHandleActionDefinitions().forEach(handleInfo::addHandleActionDefinition);
+        addHandleInfo(handleInfo);
     }
 
     @Override
@@ -48,6 +62,7 @@ public class DefaultHandleManager implements HandleManager {
             return;
         }
         handleInfo.addHandleActionDefinition(handleActionDefinition);
+        publishHandleInfoChanged(ChangedType.UPDATED, handleInfo);
     }
 
     @Override
@@ -56,6 +71,13 @@ public class DefaultHandleManager implements HandleManager {
         if (Objects.isNull(handleInfo)) {
             return null;
         }
-        return handleInfo.removeHandleActionDefinition(actionId);
+        HandleActionDefinition old = handleInfo.removeHandleActionDefinition(actionId);
+        publishHandleInfoChanged(ChangedType.UPDATED, handleInfo);
+        return old;
+    }
+
+    @Override
+    public void publishHandleInfoChanged(ChangedType changedType, HandleInfo handleInfo) {
+        notifyDriver.chaned(changedType, handleInfo);
     }
 }

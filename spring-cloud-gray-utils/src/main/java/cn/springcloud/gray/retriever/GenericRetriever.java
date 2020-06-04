@@ -16,18 +16,27 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GenericRetriever<FUNC> {
 
     private final Map<RetrieverCacheKey, FuncRetriever> retrieverCache = new ConcurrentHashMap<>(64);
+//    private com.github.benmanes.caffeine.cache.Cache<RetrieverCacheKey, FuncRetriever> retrieverCache = Caffeine.newBuilder()
+//            .initialCapacity(20)
+//            .softValues()
+//            .recordStats()
+//            .build();
 
     private List<FUNC> funcList;
     private Class<?> genericDefineSuperCls;
     private int genericIndex = 0;
 
 
+    public GenericRetriever(Class<?> genericDefineSuperCls) {
+        this(new ArrayList<>(), genericDefineSuperCls);
+    }
+
     public GenericRetriever(List<FUNC> funcList, Class<?> genericDefineSuperCls) {
         this(funcList, genericDefineSuperCls, 0);
     }
 
     public GenericRetriever(List<FUNC> funcList, Class<?> genericDefineSuperCls, int genericIndex) {
-        this.funcList = funcList;
+        this.funcList = new ArrayList<>(funcList);
         this.genericDefineSuperCls = genericDefineSuperCls;
         this.genericIndex = genericIndex;
     }
@@ -87,6 +96,25 @@ public class GenericRetriever<FUNC> {
     }
 
 
+    public void addFunction(FUNC func) {
+        funcList.add(func);
+        invalidateCache();
+    }
+
+    public void addFunctions(FUNC... funcs) {
+        addFunctions(Arrays.asList(funcs));
+    }
+
+    public void addFunctions(Collection<FUNC> funcs) {
+        funcList.addAll(funcs);
+        invalidateCache();
+    }
+
+    public void invalidateCache() {
+        retrieverCache.clear();
+    }
+
+
     /**
      * 判断功能对象是否符合对象类型
      *
@@ -123,24 +151,24 @@ public class GenericRetriever<FUNC> {
     private List<FUNC> retrieveFunctions(RetrieverCacheKey cacheKey, Class genericTargetCls) {
         FuncRetriever funcRetriever = retrieverCache.get(cacheKey);
         if (Objects.isNull(funcRetriever)) {
-            synchronized (this) {
-                funcRetriever = retrieverCache.get(cacheKey);
-                if (!Objects.isNull(funcRetriever)) {
-                    return funcRetriever.getFunctions();
-                }
-                funcRetriever = new FuncRetriever();
-                List<FUNC> listeners =
-                        retrieveGrayEventListeners(genericTargetCls, funcRetriever);
-                retrieverCache.put(cacheKey, funcRetriever);
-                return listeners;
-            }
+//            synchronized (this) {
+//            funcRetriever = retrieverCache.get(cacheKey);
+//            if (!Objects.isNull(funcRetriever)) {
+//                return funcRetriever.getFunctions();
+//            }
+            funcRetriever = new FuncRetriever();
+            List<FUNC> listeners =
+                    retrieveGrayEventListeners(genericTargetCls, funcRetriever);
+            retrieverCache.putIfAbsent(cacheKey, funcRetriever);
+            return listeners;
         }
+//        }
         return funcRetriever.getFunctions();
     }
 
 
     private List<FUNC> retrieveGrayEventListeners(Class<?> genericTargetCls, FuncRetriever funcRetriever) {
-        List<FUNC> funcs = new ArrayList<>(funcList.size() / 2);
+        List<FUNC> funcs = new ArrayList<>();
         for (FUNC func : funcList) {
             if (supportsEvent(func, genericTargetCls)) {
                 funcs.add(func);

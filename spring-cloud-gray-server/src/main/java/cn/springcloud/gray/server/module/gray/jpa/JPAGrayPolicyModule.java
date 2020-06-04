@@ -91,6 +91,11 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
         }
     }
 
+    @Override
+    public GrayPolicy getGrayPolicy(Long policyId) {
+        return grayPolicyService.findOneModel(policyId);
+    }
+
     @Transactional
     @Override
     public GrayDecision saveGrayDecision(GrayDecision grayDecision) {

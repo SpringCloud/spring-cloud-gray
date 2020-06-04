@@ -4,6 +4,8 @@ import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.client.config.properties.GrayLoadProperties;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
+import cn.springcloud.gray.handle.HandleManager;
+import cn.springcloud.gray.handle.HandleRuleManager;
 import cn.springcloud.gray.refresh.*;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -43,8 +45,10 @@ public class GrayClientRefreshAutoConfiguration {
             GrayManager grayManager,
             GrayTrackHolder grayTrackHolder,
             PolicyDecisionManager policyDecisionManager,
+            HandleManager handleManager,
+            HandleRuleManager handleRuleManager,
             InformationClient informationClient) {
-        return new GrayInformationRefresher(grayManager, grayTrackHolder, policyDecisionManager, informationClient);
+        return new GrayInformationRefresher(grayManager, grayTrackHolder, policyDecisionManager, handleManager, handleRuleManager, informationClient);
     }
 
 

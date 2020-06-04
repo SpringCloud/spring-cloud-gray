@@ -8,8 +8,16 @@ import cn.springcloud.gray.server.evictor.GrayServerEvictor;
 import cn.springcloud.gray.server.evictor.NoActionGrayServerEvictor;
 import cn.springcloud.gray.server.manager.DefaultGrayServiceManager;
 import cn.springcloud.gray.server.manager.GrayServiceManager;
+import cn.springcloud.gray.server.module.HandleModule;
+import cn.springcloud.gray.server.module.HandleRuleModule;
 import cn.springcloud.gray.server.module.gray.*;
+import cn.springcloud.gray.server.module.jpa.JPAHandleModule;
+import cn.springcloud.gray.server.module.jpa.JPAHandleRuleModule;
 import cn.springcloud.gray.server.module.route.policy.RoutePolicyModule;
+import cn.springcloud.gray.server.service.HandleActionService;
+import cn.springcloud.gray.server.service.HandleRuleService;
+import cn.springcloud.gray.server.service.HandleService;
+import cn.springlcoud.gray.event.server.GrayEventTrigger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -76,7 +84,9 @@ public class GrayServerAutoConfiguration {
                 GrayServerTrackModule grayServerTrackModule,
                 RoutePolicyModule routePolicyModule,
                 GrayEventLogModule grayEventLogModule,
-                @Autowired(required = false) ObjectMapper objectMapper) {
+                @Autowired(required = false) ObjectMapper objectMapper,
+                HandleModule handleModule,
+                HandleRuleModule handleRuleModule) {
             if (objectMapper == null) {
                 objectMapper = new ObjectMapper();
             }
@@ -87,10 +97,27 @@ public class GrayServerAutoConfiguration {
                     routePolicyModule,
                     grayServerTrackModule,
                     grayEventLogModule,
-                    objectMapper);
+                    objectMapper,
+                    handleModule,
+                    handleRuleModule);
         }
 
     }
 
+
+    @Bean
+    @ConditionalOnMissingBean
+    public HandleModule handleModule(
+            HandleService handleService,
+            HandleActionService handleActionService,
+            GrayEventTrigger grayEventTrigger) {
+        return new JPAHandleModule(handleService, handleActionService, grayEventTrigger);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public HandleRuleModule handleRuleModule(HandleRuleService handleRuleService, GrayEventTrigger grayEventTrigger) {
+        return new JPAHandleRuleModule(handleRuleService, grayEventTrigger);
+    }
 
 }

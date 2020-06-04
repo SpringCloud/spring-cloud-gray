@@ -15,4 +15,6 @@ public class GrayInfos {
     private List<PolicyDefinition> policyDecisions;
     private List<GrayInstance> instances;
     private List<ServiceRouteInfo> serviceRouteInfos;
+    private List<HandleDefinition> handleDefinitions;
+    private List<HandleRuleDefinition> handleRuleDefinitions;
 }

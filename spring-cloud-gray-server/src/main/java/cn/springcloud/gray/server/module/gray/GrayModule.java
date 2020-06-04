@@ -2,6 +2,9 @@ package cn.springcloud.gray.server.module.gray;
 
 import cn.springcloud.gray.model.*;
 import cn.springcloud.gray.server.constant.Version;
+import cn.springcloud.gray.server.module.domain.Handle;
+import cn.springcloud.gray.server.module.domain.HandleAction;
+import cn.springcloud.gray.server.module.domain.HandleRule;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
@@ -53,4 +56,16 @@ public interface GrayModule {
     List<ServiceRouteInfo> listAllGrayServiceRouteInfos(String serviceId);
 
     List<ServiceRouteInfo> listAllGrayServiceRouteInfos();
+
+    HandleDefinition toHandleDefinition(Handle handle);
+
+    HandleActionDefinition toHandleActionDefinition(HandleAction handleAction);
+
+    List<HandleDefinition> listAllEnabledHandles();
+
+    HandleRuleDefinition toHandleRuleDefinition(HandleRule handleRule);
+
+    List<HandleRuleDefinition> listAllEnabledHandleRules(String moduleId, String resource);
+
+
 }

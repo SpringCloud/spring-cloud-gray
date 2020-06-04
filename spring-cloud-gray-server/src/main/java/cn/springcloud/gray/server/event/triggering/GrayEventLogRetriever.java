@@ -65,6 +65,9 @@ public class GrayEventLogRetriever implements GrayEventRetriever {
         grayEventTypeClsMappings.put(GrayDecisionEvent.class.getSimpleName(), GrayDecisionEvent.class);
         grayEventTypeClsMappings.put(GrayTrackEvent.class.getSimpleName(), GrayTrackEvent.class);
         grayEventTypeClsMappings.put(RoutePolicyEvent.class.getSimpleName(), RoutePolicyEvent.class);
+        grayEventTypeClsMappings.put(HandleEvent.class.getSimpleName(), HandleEvent.class);
+        grayEventTypeClsMappings.put(HandleActionEvent.class.getSimpleName(), HandleActionEvent.class);
+        grayEventTypeClsMappings.put(HandleRuleEvent.class.getSimpleName(), HandleRuleEvent.class);
     }
 
 

@@ -4,7 +4,13 @@ import cn.springcloud.gray.function.Consumer2;
 import cn.springcloud.gray.model.*;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.constant.Version;
+import cn.springcloud.gray.server.module.HandleModule;
+import cn.springcloud.gray.server.module.HandleRuleModule;
 import cn.springcloud.gray.server.module.domain.DelFlag;
+import cn.springcloud.gray.server.module.domain.Handle;
+import cn.springcloud.gray.server.module.domain.HandleAction;
+import cn.springcloud.gray.server.module.domain.HandleRule;
+import cn.springcloud.gray.server.module.domain.query.HandleRuleQuery;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
@@ -31,6 +37,8 @@ public class SimpleGrayModule implements GrayModule {
     private GrayServerTrackModule grayServerTrackModule;
     private ObjectMapper objectMapper;
     private GrayEventLogModule grayEventLogModule;
+    private HandleModule handleModule;
+    private HandleRuleModule handleRuleModule;
 
 
     private Map<String, Consumer2<ServiceRouteInfo, RoutePolicyRecord>> routePolicyRecordTransferSetConsumers = new HashMap<>();
@@ -42,7 +50,9 @@ public class SimpleGrayModule implements GrayModule {
             RoutePolicyModule routePolicyModule,
             GrayServerTrackModule grayServerTrackModule,
             GrayEventLogModule grayEventLogModule,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            HandleModule handleModule,
+            HandleRuleModule handleRuleModule) {
         this.grayServerProperties = grayServerProperties;
         this.grayPolicyModule = grayPolicyModule;
         this.grayServerModule = grayServerModule;
@@ -50,6 +60,8 @@ public class SimpleGrayModule implements GrayModule {
         this.grayServerTrackModule = grayServerTrackModule;
         this.objectMapper = objectMapper;
         this.grayEventLogModule = grayEventLogModule;
+        this.handleModule = handleModule;
+        this.handleRuleModule = handleRuleModule;
         this.init();
     }
 
@@ -262,6 +274,72 @@ public class SimpleGrayModule implements GrayModule {
         return transferGrayServiceRouteInfoList(routePolicyRecords);
     }
 
+    @Override
+    public HandleDefinition toHandleDefinition(Handle handle) {
+        HandleDefinition handleDefinition = handle2Definition(handle);
+        List<HandleAction> handleActions = handleModule.listEnabledHandleActionsByHandleId(handle.getId());
+        Set<HandleActionDefinition> handleActionDefinitions = handleActions.stream()
+                .map(this::toHandleActionDefinition)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        handleDefinition.setHandleActionDefinitions(handleActionDefinitions);
+        return handleDefinition;
+    }
+
+    @Override
+    public HandleActionDefinition toHandleActionDefinition(HandleAction handleAction) {
+        HandleActionDefinition definition = new HandleActionDefinition();
+        definition.setId(String.valueOf(handleAction.getId()));
+        definition.setActionName(handleAction.getActionName());
+        definition.setOrder(handleAction.getOrder());
+        if (StringUtils.isEmpty(handleAction.getInfos())) {
+            return null;
+        }
+        try {
+            definition.setInfos(objectMapper.readValue(handleAction.getInfos(), new TypeReference<Map<String, String>>() {
+            }));
+        } catch (IOException e) {
+            log.error("解决HandleAction.infos失败，{}", handleAction, e);
+            return null;
+        }
+        return definition;
+    }
+
+    @Override
+    public List<HandleDefinition> listAllEnabledHandles() {
+        return handleModule.findAllEnabledHandles().stream()
+                .map(this::toHandleDefinition)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public HandleRuleDefinition toHandleRuleDefinition(HandleRule handleRule) {
+        HandleRuleDefinition definition = new HandleRuleDefinition();
+        definition.setId(String.valueOf(handleRule.getId()));
+        definition.setHandleOption(handleRule.getHandleOption());
+        definition.setType(handleRule.getType());
+        definition.setOrder(handleRule.getOrder());
+        Set<String> matchingPolicyIds = new HashSet<>(handleRule.getMatchingPolicyIds().length);
+        for (Long matchingPolicyId : handleRule.getMatchingPolicyIds()) {
+            matchingPolicyIds.add(String.valueOf(matchingPolicyId));
+        }
+        definition.setMatchingPolicyIds(matchingPolicyIds);
+        return definition;
+    }
+
+    @Override
+    public List<HandleRuleDefinition> listAllEnabledHandleRules(String moduleId, String resource) {
+        HandleRuleQuery handleRuleQuery = new HandleRuleQuery();
+        handleRuleQuery.setDelFlag(DelFlag.UNDELETE);
+        handleRuleQuery.setResource(resource);
+        handleRuleQuery.setModuleId(moduleId);
+        return handleRuleModule.findHandleRules(handleRuleQuery)
+                .stream()
+                .map(this::toHandleRuleDefinition)
+                .collect(Collectors.toList());
+    }
+
     protected void init() {
         initRoutePolicyRecordTransferSetConsumers();
     }
@@ -328,6 +406,15 @@ public class SimpleGrayModule implements GrayModule {
         query.setType(RoutePolicyType.SERVICE_MULTI_VER_ROUTE.name());
         List<RoutePolicyRecord> versionRoutePolicyRecords = routePolicyModule.findAllRoutePolicies(query);
         return ListUtils.union(serviceRoutePolicyRecords, versionRoutePolicyRecords);
+    }
+
+
+    private HandleDefinition handle2Definition(Handle handle) {
+        HandleDefinition handleDefinition = new HandleDefinition();
+        handleDefinition.setType(handle.getType());
+        handleDefinition.setName(handle.getName());
+        handleDefinition.setId(String.valueOf(handle.getId()));
+        return handleDefinition;
     }
 
 }
