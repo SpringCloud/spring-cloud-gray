@@ -1,5 +1,7 @@
 package cn.springcloud.gray.handle;
 
+import cn.springcloud.gray.changed.notify.ChangedNotifyDriver;
+import cn.springcloud.gray.changed.notify.ChangedType;
 import cn.springcloud.gray.model.HandleRuleDefinition;
 
 import java.util.*;
@@ -16,6 +18,11 @@ public class DefaultHandleRuleManager implements HandleRuleManager {
 
     private Map<String, HandleRuleInfo> handleRuleInfos = new ConcurrentHashMap<>();
 
+    private ChangedNotifyDriver changedNotifyDriver;
+
+    public DefaultHandleRuleManager(ChangedNotifyDriver changedNotifyDriver) {
+        this.changedNotifyDriver = changedNotifyDriver;
+    }
 
     @Override
     public List<HandleRuleInfo> getHandleRuleTypeInfos(String handleRuleType) {
@@ -47,13 +54,13 @@ public class DefaultHandleRuleManager implements HandleRuleManager {
     }
 
     @Override
-    public synchronized void addHandleRuleInfo(HandleRuleInfo handleRuleInfo) {
+    public synchronized void putHandleRuleInfo(HandleRuleInfo handleRuleInfo) {
         handleRuleInfos.put(handleRuleInfo.getId(), handleRuleInfo);
         resetHandleRuleInfos(handleRuleInfo.getType());
     }
 
     @Override
-    public synchronized void addHandleRuleInfos(HandleRuleInfo... handleRuleInfos) {
+    public synchronized void putHandleRuleInfos(HandleRuleInfo... handleRuleInfos) {
         Set<String> types = new HashSet<>();
         for (HandleRuleInfo handleRuleInfo : handleRuleInfos) {
             types.add(handleRuleInfo.getType());
@@ -63,35 +70,43 @@ public class DefaultHandleRuleManager implements HandleRuleManager {
     }
 
     @Override
-    public void addHandleRuleDefinition(HandleRuleDefinition handleRuleDefinition) {
-        addHandleRuleInfo(toHandleRuleInfo(handleRuleDefinition));
+    public void putHandleRuleDefinition(HandleRuleDefinition handleRuleDefinition) {
+        putHandleRuleInfo(toHandleRuleInfo(handleRuleDefinition));
     }
 
     @Override
-    public void addHandleRuleDefinitions(HandleRuleDefinition... handleRuleDefinitions) {
+    public void putHandleRuleDefinitions(HandleRuleDefinition... handleRuleDefinitions) {
         HandleRuleInfo[] handleRuleInfos = new HandleRuleInfo[handleRuleDefinitions.length];
         for (int i = 0; i < handleRuleDefinitions.length; i++) {
             handleRuleInfos[i] = toHandleRuleInfo(handleRuleDefinitions[i]);
         }
-        addHandleRuleInfos(handleRuleInfos);
+        putHandleRuleInfos(handleRuleInfos);
     }
 
     @Override
     public boolean addHandleRuleRoutePolicy(String handleRuleId, String policyId) {
-        HandleRuleInfo handleRuleInfo = handleRuleInfos.remove(handleRuleId);
+        HandleRuleInfo handleRuleInfo = getHandleInfo(handleRuleId);
         if (Objects.isNull(handleRuleInfo)) {
             return false;
         }
-        return handleRuleInfo.getRoutePolicies().addData(policyId);
+        boolean opr = handleRuleInfo.getMatchingPolicies().addData(policyId);
+        if (opr) {
+            publishChanged(ChangedType.UPDATED, handleRuleInfo);
+        }
+        return opr;
     }
 
     @Override
     public boolean removeHandleRuleRoutePolicy(String handleRuleId, String policyId) {
-        HandleRuleInfo handleRuleInfo = handleRuleInfos.remove(handleRuleId);
+        HandleRuleInfo handleRuleInfo = getHandleInfo(handleRuleId);
         if (Objects.isNull(handleRuleInfo)) {
             return false;
         }
-        return handleRuleInfo.getRoutePolicies().removeData(policyId);
+        boolean opr = handleRuleInfo.getMatchingPolicies().removeData(policyId);
+        if (opr) {
+            publishChanged(ChangedType.UPDATED, handleRuleInfo);
+        }
+        return opr;
     }
 
 
@@ -110,11 +125,15 @@ public class DefaultHandleRuleManager implements HandleRuleManager {
     private HandleRuleInfo toHandleRuleInfo(HandleRuleDefinition handleRuleDefinition) {
         HandleRuleInfo handleRuleInfo = new HandleRuleInfo(handleRuleDefinition.getId());
         handleRuleInfo.setType(handleRuleDefinition.getType());
-        handleRuleInfo.setHandleInfo(handleRuleDefinition.getHandleInfo());
-        handleRuleInfo.getRoutePolicies().addDatas(handleRuleDefinition.getPolicyIds());
+        handleRuleInfo.setHandleOption(handleRuleDefinition.getHandleOption());
+        handleRuleInfo.getMatchingPolicies().addDatas(handleRuleDefinition.getMatchingPolicyIds());
         handleRuleInfo.setOrder(handleRuleDefinition.getOrder());
         return handleRuleInfo;
     }
 
+
+    protected void publishChanged(ChangedType changedType, HandleRuleInfo handleInfo) {
+        changedNotifyDriver.chaned(changedType, handleInfo);
+    }
 
 }

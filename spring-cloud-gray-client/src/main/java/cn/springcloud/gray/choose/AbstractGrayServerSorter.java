@@ -85,8 +85,8 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
      * @return
      */
     protected ServerListResult<SERVER> distinguishOrMatchServerList(
-            List<SERVER> servers, Function<List<ServerSpec<SERVER>>,
-            ServerListResult<ServerSpec<SERVER>>> spectServerListfunction) {
+            List<SERVER> servers,
+            Function<List<ServerSpec<SERVER>>, ServerListResult<ServerSpec<SERVER>>> spectServerListfunction) {
 
         String serviceId = getServiceId(servers);
         if (!isNeedDistinguish(serviceId)) {
@@ -118,7 +118,7 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
      * @return
      */
     protected boolean isNeedDistinguish(String serviceId) {
-        return StringUtils.isNotEmpty(serviceId) && grayManager.hasInstanceGray(serviceId);
+        return StringUtils.isNotEmpty(serviceId) && (grayManager.hasServiceGray(serviceId) || grayManager.hasInstanceGray(serviceId));
     }
 
 

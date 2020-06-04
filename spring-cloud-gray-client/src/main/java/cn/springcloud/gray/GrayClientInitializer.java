@@ -1,5 +1,7 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.changed.notify.ChangedListener;
+import cn.springcloud.gray.changed.notify.ChangedNotifyDriver;
 import cn.springcloud.gray.choose.PolicyPredicate;
 import cn.springcloud.gray.choose.ServerChooser;
 import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
@@ -45,6 +47,8 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         loadInstanceLocalInfo();
 
         registerPolicyPredicates();
+
+        initChangedNotifyDriver();
     }
 
 
@@ -114,6 +118,13 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         Map<String, PolicyPredicate> policyPredicates = cxt.getBeansOfType(PolicyPredicate.class);
         PolicyDecisionManager policyDecisionManager = GrayClientHolder.getPolicyDecisionManager();
         policyPredicates.values().forEach(policyDecisionManager::registerPolicyPredicate);
+    }
+
+
+    private void initChangedNotifyDriver() {
+        ChangedNotifyDriver changedNotifyDriver = getBean("changedNotifyDriver", ChangedNotifyDriver.class);
+        changedNotifyDriver.registerListeners(cxt.getBeansOfType(ChangedListener.class).values());
+        GrayClientHolder.setChangedNotifyDriver(changedNotifyDriver);
     }
 
 }

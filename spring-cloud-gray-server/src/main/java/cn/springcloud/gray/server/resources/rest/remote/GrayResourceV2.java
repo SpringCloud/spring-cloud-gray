@@ -1,10 +1,7 @@
 package cn.springcloud.gray.server.resources.rest.remote;
 
 import cn.springcloud.gray.api.ApiRes;
-import cn.springcloud.gray.model.GrayInfos;
-import cn.springcloud.gray.model.GrayInstance;
-import cn.springcloud.gray.model.GrayTrackDefinition;
-import cn.springcloud.gray.model.PolicyDefinition;
+import cn.springcloud.gray.model.*;
 import cn.springcloud.gray.server.constant.Version;
 import cn.springcloud.gray.server.module.gray.GrayModule;
 import cn.springcloud.gray.server.utils.ApiResHelper;
@@ -38,6 +35,8 @@ public class GrayResourceV2 {
         grayInfos.setPolicyDecisions(grayModule.allGrayPolicies());
         grayInfos.setTrackDefinitions(grayModule.getTrackDefinitions(serviceId, instanceId));
         grayInfos.setServiceRouteInfos(grayModule.listAllGrayServiceRouteInfosExcludeSpecial(serviceId));
+        grayInfos.setHandleDefinitions(grayModule.listAllEnabledHandles());
+        grayInfos.setHandleRuleDefinitions(grayModule.listAllEnabledHandleRules(serviceId, instanceId));
         return ApiResHelper.successData(grayInfos);
     }
 
@@ -76,4 +75,20 @@ public class GrayResourceV2 {
     public ApiRes<Long> getMaxSortMark() {
         return ApiResHelper.successData(grayModule.getMaxSortMark());
     }
+
+    @ApiOperation("返回所有的处理定义")
+    @RequestMapping(value = "/handleDefinitions", method = RequestMethod.GET)
+    public ApiRes<List<HandleDefinition>> listAllEnabledHandles() {
+        return ApiResHelper.successData(grayModule.listAllEnabledHandles());
+    }
+
+    @ApiOperation("返回所有的处理规则定义")
+    @RequestMapping(value = "/handleRuleDefinitions", method = RequestMethod.GET)
+    public ApiRes<List<HandleRuleDefinition>> listAllEnabledHandleRules(
+            @RequestParam("serviceId") String serviceId,
+            @RequestParam("instanceId") String instanceId) {
+        return ApiResHelper.successData(grayModule.listAllEnabledHandleRules(serviceId, instanceId));
+    }
+
+
 }

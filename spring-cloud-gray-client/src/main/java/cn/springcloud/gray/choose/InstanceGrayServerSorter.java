@@ -38,7 +38,7 @@ public class InstanceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<S
     protected ServerListResult<ServerSpec<SERVER>> distinguishServerSpecList(
             String serviceId, List<ServerSpec<SERVER>> serverSpecs) {
         GrayService grayService = getGrayManager().getGrayService(serviceId);
-        if (Objects.isNull(grayService)) {
+        if (Objects.isNull(grayService) || !grayService.hasGrayInstance()) {
             return null;
         }
         List<ServerSpec<SERVER>> grayServers = new ArrayList<>(grayService.getGrayInstances().size());

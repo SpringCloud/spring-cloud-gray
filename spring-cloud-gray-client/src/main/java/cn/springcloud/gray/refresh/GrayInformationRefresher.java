@@ -4,6 +4,8 @@ import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
+import cn.springcloud.gray.handle.HandleManager;
+import cn.springcloud.gray.handle.HandleRuleManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.local.InstanceLocalInfoAware;
 import cn.springcloud.gray.model.GrayInfos;
@@ -24,16 +26,22 @@ public class GrayInformationRefresher implements Refresher, InstanceLocalInfoAwa
     private PolicyDecisionManager policyDecisionManager;
     private InformationClient informationClient;
     private InstanceLocalInfo instanceLocalInfo;
+    private HandleManager handleManager;
+    private HandleRuleManager handleRuleManager;
 
 
     public GrayInformationRefresher(
             GrayManager grayManager,
             GrayTrackHolder grayTrackHolder,
             PolicyDecisionManager policyDecisionManager,
+            HandleManager handleManager,
+            HandleRuleManager handleRuleManager,
             InformationClient informationClient) {
         this.grayManager = grayManager;
         this.grayTrackHolder = grayTrackHolder;
         this.policyDecisionManager = policyDecisionManager;
+        this.handleManager = handleManager;
+        this.handleRuleManager = handleRuleManager;
         this.informationClient = informationClient;
     }
 
@@ -42,6 +50,8 @@ public class GrayInformationRefresher implements Refresher, InstanceLocalInfoAwa
         grayTrackHolder.clearTrackDefinitions();
         grayManager.clearAllGrayServices();
         policyDecisionManager.clearAllPolicy();
+        handleManager.clearAllHandleInfos();
+        handleRuleManager.clearHandleRuleInfos();
         return load();
     }
 
@@ -56,7 +66,8 @@ public class GrayInformationRefresher implements Refresher, InstanceLocalInfoAwa
         grayInfos.getTrackDefinitions().forEach(grayTrackHolder::updateTrackDefinition);
         grayInfos.getPolicyDecisions().forEach(policyDecisionManager::setPolicyDefinition);
         grayInfos.getServiceRouteInfos().forEach(grayManager::updateServiceRouteInfo);
-
+        grayInfos.getHandleDefinitions().forEach(handleManager::addHandleDefinition);
+        grayInfos.getHandleRuleDefinitions().forEach(handleRuleManager::putHandleRuleDefinition);
         publishRefreshedEvent(grayInfos);
         return true;
     }

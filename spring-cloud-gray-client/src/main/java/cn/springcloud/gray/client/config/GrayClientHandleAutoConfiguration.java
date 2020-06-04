@@ -1,5 +1,6 @@
 package cn.springcloud.gray.client.config;
 
+import cn.springcloud.gray.changed.notify.ChangedNotifyDriver;
 import cn.springcloud.gray.handle.DefaultHandleManager;
 import cn.springcloud.gray.handle.DefaultHandleRuleManager;
 import cn.springcloud.gray.handle.HandleManager;
@@ -19,15 +20,15 @@ public class GrayClientHandleAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public HandleManager handleManager() {
-        return new DefaultHandleManager();
+    public HandleManager handleManager(ChangedNotifyDriver changedNotifyDriver) {
+        return new DefaultHandleManager(changedNotifyDriver);
     }
 
 
     @Bean
     @ConditionalOnMissingBean
-    public HandleRuleManager handleRuleManager() {
-        return new DefaultHandleRuleManager();
+    public HandleRuleManager handleRuleManager(ChangedNotifyDriver changedNotifyDriver) {
+        return new DefaultHandleRuleManager(changedNotifyDriver);
     }
 
 

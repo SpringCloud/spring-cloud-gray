@@ -14,9 +14,9 @@ public class HandleRuleInfo implements Comparable<HandleRuleInfo> {
 
     private final String id;
     private String type;
-    private final DataSet<String> routePolicies = new DataSet<>();
+    private final DataSet<String> matchingPolicies = new DataSet<>();
 
-    private String handleInfo;
+    private String handleOption;
     private int order;
 
 

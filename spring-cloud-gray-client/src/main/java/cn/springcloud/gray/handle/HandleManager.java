@@ -1,5 +1,6 @@
 package cn.springcloud.gray.handle;
 
+import cn.springcloud.gray.changed.notify.ChangedType;
 import cn.springcloud.gray.model.HandleActionDefinition;
 import cn.springcloud.gray.model.HandleDefinition;
 
@@ -29,5 +30,8 @@ public interface HandleManager {
 
 
     HandleActionDefinition removeHandleActionDefinition(String handleId, String actionId);
+
+
+    void publishHandleInfoChanged(ChangedType changedType, HandleInfo handleInfo);
 
 }

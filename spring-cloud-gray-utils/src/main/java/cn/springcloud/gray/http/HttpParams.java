@@ -2,7 +2,6 @@ package cn.springcloud.gray.http;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +38,22 @@ public class HttpParams {
         return sb.toString();
     }
 
+    public String toQueryString() {
+        StringBuilder sb = new StringBuilder();
+        if (null == paramValues) {
+            return null;
+        }
+
+        for (Iterator<String> iter = paramValues.iterator(); iter.hasNext(); ) {
+            sb.append(iter.next()).append("=");
+            sb.append(iter.next());
+            if (iter.hasNext()) {
+                sb.append("&");
+            }
+        }
+        return sb.toString();
+    }
+
 
     private String encodeParameter(String param, String encoding) {
         try {
@@ -51,6 +66,6 @@ public class HttpParams {
 
     @Override
     public String toString() {
-        return encodingParams(Charset.defaultCharset().displayName());
+        return toQueryString();
     }
 }

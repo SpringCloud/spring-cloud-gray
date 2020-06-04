@@ -9,7 +9,9 @@ import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.handle.HandleManager;
 import cn.springcloud.gray.handle.HandleRuleManager;
 import cn.springcloud.gray.mock.*;
+import cn.springcloud.gray.mock.factory.HttpResponseMockActionFactory;
 import cn.springcloud.gray.mock.factory.MockActionFactory;
+import cn.springcloud.gray.mock.factory.PauseMockActionFactory;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -81,6 +83,25 @@ public class GrayClientMockAutoConfiguration {
                     .build();
 
             return new DefaultMockManager(handleManager, handleRuleManager, mockDriver, requestLocalStorage, policyDecisionManager, serverExplainer, new CaffeineCache(cache));
+        }
+
+
+        @Bean
+        @ConditionalOnMissingBean(name = "mockHandleChangedListener")
+        public MockHandleChangedListener mockHandleChangedListener(MockManager mockManager) {
+            return new MockHandleChangedListener(mockManager);
+        }
+
+
+        @Bean
+        public PauseMockActionFactory pauseMockActionFactory() {
+            return new PauseMockActionFactory();
+        }
+
+
+        @Bean
+        public HttpResponseMockActionFactory httpResponseMockActionFactory() {
+            return new HttpResponseMockActionFactory();
         }
     }
 

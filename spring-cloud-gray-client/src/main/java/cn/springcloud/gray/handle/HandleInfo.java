@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class HandleInfo {
 
     private final String id;
-    private final String type;
+    private String type;
     private Map<String, HandleActionDefinition> handleActionDefinitions = new ConcurrentHashMap();
 
     public HandleInfo(String id, String type) {
@@ -47,6 +47,10 @@ public class HandleInfo {
 
     public String getType() {
         return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Map<String, HandleActionDefinition> getHandleActionDefinitionMap() {

@@ -77,34 +77,58 @@ public class GrayServerEventTriggeringAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "graServiceEventConverter")
     public GraServiceEventConverter graServiceEventConverter() {
         return new GraServiceEventConverter();
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "graTrackEventConverter")
     public GraTrackEventConverter graTrackEventConverter() {
         return new GraTrackEventConverter();
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "grayInstanceEventConverter")
     public GrayInstanceEventConverter grayInstanceEventConverter(GrayModule grayModule) {
         return new GrayInstanceEventConverter(grayModule);
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "grayInstanceRoutePolicyEventConverter")
     public GrayRoutePolicyEventConverter grayInstanceRoutePolicyEventConverter(GrayServerModule grayServerModule) {
         return new GrayRoutePolicyEventConverter(grayServerModule);
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "grayPolicyEventConverter")
     public GrayPolicyEventConverter grayPolicyEventConverter(GrayModule grayModule) {
         return new GrayPolicyEventConverter(grayModule);
     }
 
 
     @Bean
+    @ConditionalOnMissingBean(name = "grayDecisionEventConverter")
     public GrayDecisionEventConverter grayDecisionEventConverter(GrayModule grayModule) {
         return new GrayDecisionEventConverter(grayModule);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "handleActionEventConverter")
+    public HandleActionEventConverter handleActionEventConverter(GrayModule grayModule) {
+        return new HandleActionEventConverter(grayModule);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "handleEventConverter")
+    public HandleEventConverter handleEventConverter() {
+        return new HandleEventConverter();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "handleRuleEventConverter")
+    public HandleRuleEventConverter handleRuleEventConverter(GrayModule grayModule) {
+        return new HandleRuleEventConverter(grayModule);
     }
 
 }

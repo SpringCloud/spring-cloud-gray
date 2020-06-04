@@ -15,6 +15,7 @@ public class HandleDefinition implements Serializable {
 
 
     private String id;
+    private String name;
 
     /**
      * 处理类型: 比如Mock

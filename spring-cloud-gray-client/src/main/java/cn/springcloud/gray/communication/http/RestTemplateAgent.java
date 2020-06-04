@@ -66,7 +66,7 @@ public class RestTemplateAgent implements HttpAgent {
         StringBuilder url = new StringBuilder();
         url.append(baseUrl).append(path);
         if (!Objects.isNull(paramValues)) {
-            url.append("?").append(paramValues.encodingParams(encoding));
+            url.append("?").append(paramValues.toQueryString());
         }
         return url.toString();
     }

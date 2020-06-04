@@ -22,14 +22,14 @@ public interface HandleRuleManager {
     void clearHandleRuleInfos();
 
 
-    void addHandleRuleInfo(HandleRuleInfo handleRuleInfo);
+    void putHandleRuleInfo(HandleRuleInfo handleRuleInfo);
 
-    void addHandleRuleInfos(HandleRuleInfo... handleRuleInfos);
+    void putHandleRuleInfos(HandleRuleInfo... handleRuleInfos);
 
 
-    void addHandleRuleDefinition(HandleRuleDefinition handleRuleDefinition);
+    void putHandleRuleDefinition(HandleRuleDefinition handleRuleDefinition);
 
-    void addHandleRuleDefinitions(HandleRuleDefinition... handleRuleDefinitions);
+    void putHandleRuleDefinitions(HandleRuleDefinition... handleRuleDefinitions);
 
 
     boolean addHandleRuleRoutePolicy(String handleRuleId, String policyId);

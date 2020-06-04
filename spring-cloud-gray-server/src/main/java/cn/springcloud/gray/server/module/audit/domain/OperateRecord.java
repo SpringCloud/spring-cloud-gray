@@ -28,5 +28,5 @@ public class OperateRecord {
     /**
      * 操作结论, 0:failed, 1: scuuessed
      */
-    private int operateState;
+    private Integer operateState = OPERATE_STATE_FAILED;
 }

@@ -28,6 +28,8 @@ public interface GrayPolicyModule {
 
     void recoverGrayPolicy(Long policyId, String userId);
 
+    GrayPolicy getGrayPolicy(Long policyId);
+
     GrayDecision saveGrayDecision(GrayDecision grayDecision);
 
     void deleteGrayDecision(Long decisionId, String userId);

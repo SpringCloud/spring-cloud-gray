@@ -12,7 +12,7 @@ import java.util.Set;
 public class HandleRuleDefinition {
     private String id;
     private String type;
-    private Set<String> policyIds;
-    private String handleInfo;
+    private Set<String> matchingPolicyIds;
+    private String handleOption;
     private int order;
 }
