@@ -5,7 +5,9 @@ import cn.springcloud.gray.ServerChooser;
 import com.google.common.base.Optional;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ZoneAvoidanceRule;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GrayChooserRule extends ZoneAvoidanceRule {
 
     private ServerChooser<Server> serverChooser;
