@@ -16,13 +16,18 @@ public class GrayChooserRule extends ZoneAvoidanceRule {
 
     @Override
     public Server choose(Object key) {
-        return serverChooser.chooseServer(getLoadBalancer().getAllServers(), servers -> {
-            Optional<Server> server = getPredicate().chooseRoundRobinAfterFiltering(servers, key);
-            if (server.isPresent()) {
-                return server.get();
-            } else {
-                return null;
-            }
-        });
+        try {
+            return serverChooser.chooseServer(getLoadBalancer().getAllServers(), servers -> {
+                Optional<Server> server = getPredicate().chooseRoundRobinAfterFiltering(servers, key);
+                if (server.isPresent()) {
+                    return server.get();
+                } else {
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            log.warn("gray choose server occur exception:{}, execute super method.", e.getMessage(), e);
+            return super.choose(key);
+        }
     }
 }
