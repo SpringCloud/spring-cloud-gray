@@ -5,8 +5,10 @@ import cn.springcloud.gray.choose.ServerChooser;
 import cn.springcloud.gray.choose.loadbalance.LoadBalancer;
 import cn.springcloud.gray.choose.loadbalance.RoundRobinLoadBalancer;
 import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
+import cn.springcloud.gray.client.switcher.GraySwitcher;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ZoneAvoidanceRule;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
@@ -19,20 +21,34 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author saleson
  * @date 2020-05-27 23:03
  */
+@Slf4j
 public class GrayLoadBalanceFairPossibleRule extends ZoneAvoidanceRule {
 
     private ServerChooser<Server> serverChooser;
+    private GraySwitcher graySwitcher;
     private Map<String, LoadBalancer> loadBalancers = new ConcurrentHashMap<>();
 
     public GrayLoadBalanceFairPossibleRule() {
         serverChooser = GrayClientHolder.getServerChooser();
+        graySwitcher = GrayClientHolder.getGraySwitcher();
     }
 
     @Override
     public Server choose(Object key) {
-        return serverChooser.chooseServer(
-                getLoadBalancer().getAllServers(),
-                (group, servers) -> choose(key, group, servers));
+        if (!graySwitcher.state()) {
+            log.debug("灰度未开启，从servers列表按Ribbon默认的负载逻辑挑选实例");
+            return super.choose(key);
+        }
+
+
+        try {
+            return serverChooser.chooseServer(
+                    getLoadBalancer().getAllServers(),
+                    (group, servers) -> choose(key, group, servers));
+        } catch (Exception e) {
+            log.warn("gray choose server occur exception:{}, execute super method.", e.getMessage(), e);
+            return super.choose(key);
+        }
     }
 
     protected Server choose(Object key, String group, List<Server> servers) {
