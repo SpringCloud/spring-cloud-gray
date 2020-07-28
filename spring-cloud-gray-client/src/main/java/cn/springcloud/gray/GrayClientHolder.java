@@ -6,12 +6,15 @@ import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
+import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 import cn.springcloud.gray.spring.SpringEventPublisher;
+
+import java.util.Objects;
 
 public class GrayClientHolder {
 
@@ -134,5 +137,17 @@ public class GrayClientHolder {
 
     public static void setChangedNotifyDriver(ChangedNotifyDriver changedNotifyDriver) {
         GrayClientHolder.changedNotifyDriver = changedNotifyDriver;
+    }
+
+
+
+    /**
+     * 获取当前remote request的service id
+     *
+     * @return
+     */
+    public static String getCurrentRequestServiceId() {
+        GrayRequest grayRequest = getRequestLocalStorage().getGrayRequest();
+        return Objects.isNull(grayRequest) ? null : grayRequest.getServiceId();
     }
 }

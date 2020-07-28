@@ -33,25 +33,28 @@ public class NacosServerListProcessor extends AbstractServerListProcessor<Server
         List<InstanceStatus> statusList = getHoldoutInstanceStatus(serviceId);
         List<Server> holdoutServers = getInstances(serviceId).stream().filter(instance -> statusList.contains(getInstanceStatus(instance)))
                 .map(NacosServer::new).collect(Collectors.toList());
-        if(CollectionUtils.isEmpty(holdoutServers)){
+        if (CollectionUtils.isEmpty(holdoutServers)) {
+            log.debug("没有找到 {} 服务处于{}状态的实例，返回原实例列表", serviceId, statusList);
             return servers;
         }
-        return ListUtils.union(servers, holdoutServers);
+        List<Server> newServers = ListUtils.union(servers, holdoutServers);
+        log.debug("通过破窗能力，{} 服务实例列表新增{}个实例，新列表:{}", serviceId, holdoutServers.size(), newServers);
+        return newServers;
     }
 
 
-    private InstanceStatus getInstanceStatus(Instance instance){
-        if(!instance.isEnabled()){
+    private InstanceStatus getInstanceStatus(Instance instance) {
+        if (!instance.isEnabled()) {
             return InstanceStatus.DOWN;
         }
-        if(!instance.isHealthy()){
+        if (!instance.isHealthy()) {
             return InstanceStatus.OUT_OF_SERVICE;
         }
         return InstanceStatus.UP;
     }
 
 
-    private List<Instance> getInstances(String serviceId){
+    private List<Instance> getInstances(String serviceId) {
         try {
             return namingService.getAllInstances(serviceId);
         } catch (NacosException e) {

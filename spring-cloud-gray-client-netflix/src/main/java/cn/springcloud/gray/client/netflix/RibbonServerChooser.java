@@ -16,6 +16,7 @@ import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 import cn.springcloud.gray.servernode.ServerSpec;
 import com.netflix.loadbalancer.Server;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  * 已被 {@link cn.springcloud.gray.choose.DefaultServerChooser} 替换
  */
 @Deprecated
+@Slf4j
 public class RibbonServerChooser implements ServerChooser<Server> {
 
     private GrayManager grayManager;
@@ -107,11 +109,15 @@ public class RibbonServerChooser implements ServerChooser<Server> {
         }
 
         if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
-            serverListResult.setGrayServers(
-                    serverListResult.getGrayServers().stream()
-                            .filter(this::matchGrayDecisions)
-                            .collect(Collectors.toList()));
+            log.debug("开始匹配{}服务的灰度实例", serverListResult.getServiceId());
+            List<Server> matchedGrayServers = serverListResult.getGrayServers().stream()
+                    .filter(this::matchGrayDecisions)
+                    .collect(Collectors.toList());
+            log.debug("{} 服务共有{}个灰度实例，本次匹配到{}个",
+                    serverListResult.getServiceId(), serverListResult.getGrayServers().size(), matchedGrayServers.size());
+            serverListResult.setGrayServers(matchedGrayServers);
         } else {
+            log.debug("grayRouting未打开,将{}服务的灰度实例清空,使之路由到正常实例", serverListResult.getServiceId());
             serverListResult.setGrayServers(ListUtils.EMPTY_LIST);
         }
 
@@ -135,11 +141,13 @@ public class RibbonServerChooser implements ServerChooser<Server> {
 
     private ServerListResult<Server> distinguishServerList(String serviceId, List<Server> servers) {
         if (!grayManager.hasInstanceGray(serviceId)) {
+            log.debug("当前灰度开关未打开，或服务 '{}'没有相关灰度策略,返回null", serviceId);
             return null;
         }
 
         GrayService grayService = grayManager.getGrayService(serviceId);
         if (Objects.nonNull(grayService)) {
+            log.debug("服务 '{}'没有相关灰度策略,返回null", serviceId);
             return null;
         }
         List<Server> serverList = serverListProcessor.process(serviceId, servers);
@@ -154,6 +162,7 @@ public class RibbonServerChooser implements ServerChooser<Server> {
             }
         }
 
+        log.debug("区分服务实例灰度状态: 服务 {} 实例数:{total: {}, gray:{}, normal:{}}", serviceId, servers.size(), grayServers.size(), normalServers.size());
         return new ServerListResult<>(serviceId, grayServers, normalServers);
     }
 }
