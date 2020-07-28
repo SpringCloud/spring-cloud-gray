@@ -12,8 +12,9 @@ public class GrayDecisionDelegater implements GrayDecision {
         this.delegate = delegate;
     }
 
+
     @Override
-    public boolean test(GrayDecisionInputArgs args) {
+    public boolean test(DecisionInputArgs args) {
         return delegate.test(args);
     }
 }
