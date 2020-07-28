@@ -12,7 +12,7 @@
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-gray</artifactId>
     <packaging>pom</packaging>
-    <version>A.1.1.5.SNAPSHOT</version>
+    <version>A.1.1.5</version>
     <url>https://github.com/SpringCloud/spring-cloud-gray</url>
     <organization>
         <name>Spring Cloud中国社区</name>
@@ -56,6 +56,16 @@
         <developerConnection>scm:git:git@github.com:SpringCloud/spring-cloud-gray.git</developerConnection>
     </scm>
 
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>http://maven.zmops.cc:8081/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://maven.zmops.cc:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -163,8 +173,6 @@
                 <artifactId>spring-cloud-starter-gray-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-
 
 
             <!-- gray client plugins start -->
