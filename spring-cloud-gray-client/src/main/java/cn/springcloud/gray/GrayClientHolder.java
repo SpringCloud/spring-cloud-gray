@@ -138,4 +138,16 @@ public class GrayClientHolder {
     public static void setChangedNotifyDriver(ChangedNotifyDriver changedNotifyDriver) {
         GrayClientHolder.changedNotifyDriver = changedNotifyDriver;
     }
+
+
+
+    /**
+     * 获取当前remote request的service id
+     *
+     * @return
+     */
+    public static String getCurrentRequestServiceId() {
+        GrayRequest grayRequest = getRequestLocalStorage().getGrayRequest();
+        return Objects.isNull(grayRequest) ? null : grayRequest.getServiceId();
+    }
 }
