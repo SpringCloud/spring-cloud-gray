@@ -47,15 +47,28 @@ public class EurekaServerListProcessor implements ServerListProcessor<Server>, E
 
     @Override
     public List<Server> process(String serviceId, List<Server> servers) {
-        if (!grayHoldoutServerProperties.isEnabled() || CollectionUtils.isEmpty(grayHoldoutServerProperties.getServices().get(serviceId))) {
+
+        if (!grayHoldoutServerProperties.isEnabled()) {
+            log.debug("破窗开关未打开，返回原实例列表");
             return servers;
         }
+
+
+        List<InstanceStatus> holdoutStatus = grayHoldoutServerProperties.getServices().get(serviceId);
+        if (CollectionUtils.isEmpty(holdoutStatus)) {
+            log.debug("未设置服务 {} 的破窗实例状态，返回原实例列表", serviceId);
+            return servers;
+        }
+
+
+        String cacheKey = serviceId + ";" + StringUtils.join(holdoutStatus, ",");
 
         List<Server> serverList = null;
 
         if (grayHoldoutServerProperties.isCacheable()) {
-            serverList = serversMap.get(serviceId);
+            serverList = serversMap.get(cacheKey);
             if (CollectionUtils.isNotEmpty(serverList)) {
+                log.debug("通过破窗能力，{} 服务从缓存中获取新的实例列表{}", serviceId, serverList);
                 return serverList;
             }
         }
@@ -66,8 +79,9 @@ public class EurekaServerListProcessor implements ServerListProcessor<Server>, E
             serverList = ListUtils.union(servers, unUpServers);
         }
         if (grayHoldoutServerProperties.isCacheable()) {
-            serversMap.put(serviceId, serverList);
+            serversMap.put(cacheKey, serverList);
         }
+        log.debug("通过破窗能力，{} 服务实例列表新增{}个实例，新列表:{}", serviceId, unUpServers.size(), serverList);
         return serverList;
     }
 
