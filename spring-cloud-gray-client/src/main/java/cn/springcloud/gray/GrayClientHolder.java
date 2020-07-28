@@ -2,10 +2,13 @@ package cn.springcloud.gray;
 
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.local.InstanceLocalInfo;
+import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
+
+import java.util.Objects;
 
 public class GrayClientHolder {
 
@@ -81,5 +84,16 @@ public class GrayClientHolder {
 
     public static void setServerChooser(ServerChooser<?> serverChooser) {
         GrayClientHolder.serverChooser = serverChooser;
+    }
+
+
+    /**
+     * 获取当前remote request的service id
+     *
+     * @return
+     */
+    public static String getCurrentRequestServiceId() {
+        GrayRequest grayRequest = getRequestLocalStorage().getGrayRequest();
+        return Objects.isNull(grayRequest) ? null : grayRequest.getServiceId();
     }
 }
