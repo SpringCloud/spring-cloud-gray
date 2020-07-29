@@ -40,7 +40,6 @@ public class GrayLoadBalanceFairPossibleRule extends ZoneAvoidanceRule {
             return super.choose(key);
         }
 
-
         try {
             return serverChooser.chooseServer(
                     getLoadBalancer().getAllServers(),
@@ -57,7 +56,9 @@ public class GrayLoadBalanceFairPossibleRule extends ZoneAvoidanceRule {
             return null;
         }
         LoadBalancer loadBalancer = getGroupLoadBalancer(group);
-        return loadBalancer.choose(eligible);
+        Server server = loadBalancer.choose(eligible);
+        log.debug("使用{} 负载均衡器挑选到实例{}", loadBalancer.getClass(), server);
+        return server;
     }
 
     /**
