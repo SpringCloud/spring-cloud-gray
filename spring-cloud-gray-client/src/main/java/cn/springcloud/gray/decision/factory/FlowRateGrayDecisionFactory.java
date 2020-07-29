@@ -5,6 +5,8 @@ import cn.springcloud.gray.request.GrayHttpRequest;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
@@ -17,6 +19,7 @@ import java.util.function.BiFunction;
  * 按(value(type,feild)+salt)%100， &lt; rate的将放量。
  * 从以上的逻辑中实现按百分比灰度放量.
  */
+@Slf4j
 public class FlowRateGrayDecisionFactory extends AbstractGrayDecisionFactory<FlowRateGrayDecisionFactory.Config> {
 
     public static final String FIELD_SCOPE_HTTP_HEADER = "HttpHeader";
@@ -38,11 +41,16 @@ public class FlowRateGrayDecisionFactory extends AbstractGrayDecisionFactory<Flo
             GrayHttpRequest grayHttpRequest = (GrayHttpRequest) args.getGrayRequest();
             String value = getFieldValue(grayHttpRequest, configBean);
             if (StringUtils.isEmpty(value)) {
+                log.debug("[FlowRateGrayDecision] serviceId:{}, uri:{}, decisionConfig:{}, testResult:{}",
+                        grayHttpRequest.getServiceId(), grayHttpRequest.getUri(), configBean, false);
                 return false;
             }
             int hashcode = Math.abs((value + StringUtils.defaultString(configBean.getSalt())).hashCode());
             int mod = hashcode % 100;
-            return mod <= configBean.getRate();
+            boolean b = mod <= configBean.getRate();
+            log.debug("[FlowRateGrayDecision] serviceId:{}, uri:{}, decisionConfig:{}, mod:{}, testResult:{}",
+                    grayHttpRequest.getServiceId(), grayHttpRequest.getUri(), configBean, mod, b);
+            return b;
         };
     }
 
@@ -96,6 +104,7 @@ public class FlowRateGrayDecisionFactory extends AbstractGrayDecisionFactory<Flo
 
     @Setter
     @Getter
+    @ToString
     public static class Config {
         private String type;
         private String field;
