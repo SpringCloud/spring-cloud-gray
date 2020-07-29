@@ -8,6 +8,7 @@ import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerIdExtractor;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 import cn.springcloud.gray.servernode.ServerSpec;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Objects;
  * @author saleson
  * @date 2020-05-08 21:02
  */
+@Slf4j
 public class DefaultServerChooser implements ServerChooser<Object> {
 
     private GrayManager grayManager;
@@ -47,23 +49,29 @@ public class DefaultServerChooser implements ServerChooser<Object> {
     @Override
     public Object chooseServer(List<Object> servers, ListChooser<Object> chooser) {
         if (!graySwitcher.state()) {
+            log.debug("灰度未开启，从servers列表挑选");
             return chooser.choose(ChooseGroup.ALL, servers);
         }
 
         String serviceId = serverIdExtractor.getServiceId(servers);
         List<Object> serverList = serverListProcessor.process(serviceId, servers);
 
-        //如果有service级的灰度
-        if (grayManager.hasServiceGray(serviceId)) {
-            List<ServerSpec<Object>> serverSpecs = serverExplainer.apply(servers);
-            ServerListResult<ServerSpec<Object>> serviceServerSpecListResult =
-                    serviceGrayServerSorter.distinguishAndMatchGrayServerSpecList(serverSpecs);
-            if (Objects.nonNull(serviceServerSpecListResult)) {
-                return chooseServiceSpecServer(serviceServerSpecListResult, chooser);
-            }
+        if (!grayManager.hasServiceGray(serviceId)) {
+            log.debug("{} 服务没有相关灰度策略, 从serverList列表挑选, serverList.size={}", serviceId, serverList.size());
+            return chooseInstanceServer(serverList, chooser);
         }
 
-        return chooseInstanceServer(serverList, chooser);
+
+        List<ServerSpec<Object>> serverSpecs = serverExplainer.apply(servers);
+        ServerListResult<ServerSpec<Object>> serviceServerSpecListResult =
+                serviceGrayServerSorter.distinguishAndMatchGrayServerSpecList(serverSpecs);
+
+        if (Objects.isNull(serviceServerSpecListResult)) {
+            log.debug("区分 {} 服务灰度列表和正常列表失败, 从serverList列表挑选, serverList.size={}", serviceId, serverList.size());
+            return chooseInstanceServer(serverList, chooser);
+        }
+
+        return chooseServiceSpecServer(serviceServerSpecListResult, chooser);
     }
 
 
@@ -102,9 +110,11 @@ public class DefaultServerChooser implements ServerChooser<Object> {
         Object server = null;
         if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
             server = chooseInstanceSpecServer(serviceServerSpecListResult.getGrayServers(), chooser);
+            log.debug("从{}服务的灰度实例列表中挑选到 {}", serviceServerSpecListResult.getServiceId(), server);
         }
         if (Objects.isNull(server)) {
             server = chooseInstanceSpecServer(serviceServerSpecListResult.getNormalServers(), chooser);
+            log.debug("从{}服务的正常实例列表中挑选到 {}", serviceServerSpecListResult.getServiceId(), server);
         }
         return server;
     }
