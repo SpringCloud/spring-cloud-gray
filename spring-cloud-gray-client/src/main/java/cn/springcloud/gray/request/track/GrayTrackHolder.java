@@ -5,7 +5,7 @@ import cn.springcloud.gray.model.GrayTrackDefinition;
 import cn.springcloud.gray.request.GrayInfoTracker;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.TrackArgs;
-import cn.springcloud.gray.utils.LogUtifls;
+import cn.springcloud.gray.utils.LogUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +42,7 @@ public interface GrayTrackHolder {
                 try {
                     tracker.call(args);
                 } catch (Exception e) {
-                    LogUtifls.logger(GrayTrackHolder.class).error(e.getMessage());
+                    LogUtils.logger(GrayTrackHolder.class).error(e.getMessage());
                 }
             }
         });
