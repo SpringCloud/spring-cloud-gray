@@ -7,7 +7,6 @@ import cn.springcloud.gray.server.service.NamespaceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -51,19 +50,13 @@ public class JPANamespaceModule implements NamespaceModule {
 
     @Override
     public boolean deleteNamespace(String code) {
-        if (!namespaceFinder.hasResource(code)) {
+        Namespace record = namespaceService.findOneModel(code);
+        if (Objects.isNull(record) || !namespaceFinder.hasResource(code)) {
             return false;
         }
-        namespaceService.delete(code);
+        record.setDelFlag(true);
+        namespaceService.saveModel(record);
         return true;
     }
 
-    private void setDefault(Namespace namespace) {
-        if (Objects.isNull(namespace.getCreateTime())) {
-            namespace.setCreateTime(new Date());
-        }
-        if (Objects.isNull(namespace.getDelFlag())) {
-            namespace.setDelFlag(false);
-        }
-    }
 }

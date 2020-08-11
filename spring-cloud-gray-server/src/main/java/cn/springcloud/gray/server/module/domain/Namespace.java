@@ -20,5 +20,5 @@ public class Namespace {
 
     private Date createTime;
 
-    private String creater;
+    private String creator;
 }

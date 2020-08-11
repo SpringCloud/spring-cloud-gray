@@ -34,6 +34,6 @@ public class NamespaceDO {
     private Date createTime;
 
     @Column(length = 32)
-    private String creater;
+    private String creator;
 
 }

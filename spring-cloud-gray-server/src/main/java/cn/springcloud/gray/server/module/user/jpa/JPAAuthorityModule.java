@@ -234,6 +234,9 @@ public class JPAAuthorityModule implements AuthorityModule {
         if (Objects.isNull(record.getOperateTime())) {
             record.setOperateTime(new Date());
         }
+        if (Objects.isNull(record.getAuthorityFlag())) {
+            record.setAuthorityFlag(ResourceAuthorityFlag.ADMIN);
+        }
     }
 
     private void setDefault(AuthorityDetail record) {
