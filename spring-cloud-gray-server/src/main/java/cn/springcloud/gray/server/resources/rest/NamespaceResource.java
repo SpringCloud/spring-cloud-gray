@@ -6,10 +6,12 @@ import cn.springcloud.gray.server.module.domain.Namespace;
 import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.resources.domain.fo.NamespaceFO;
+import cn.springcloud.gray.server.resources.domain.vo.NamespaceVO;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author saleson
@@ -55,12 +58,12 @@ public class NamespaceResource {
 
     @ApiOperation("分页获取namespace信息")
     @RequestMapping(value = "/page", method = RequestMethod.GET)
-    public ResponseEntity<ApiRes<List<Namespace>>> page(
+    public ResponseEntity<ApiRes<List<NamespaceVO>>> page(
             @ApiParam @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Namespace> page = namespaceModule.listAll(userModule.getCurrentUserId(), pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
         return new ResponseEntity<>(
-                ApiResHelper.successData(page.getContent()),
+                ApiResHelper.successData(toNamespaceVOs(page.getContent(), userModule.getCurrentUserId())),
                 headers,
                 HttpStatus.OK);
     }
@@ -68,7 +71,7 @@ public class NamespaceResource {
 
     @ApiOperation("新建namespace")
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ApiRes<Namespace> save(@RequestBody NamespaceFO fo) {
+    public ApiRes<NamespaceVO> save(@RequestBody NamespaceFO fo) {
         if (!Objects.isNull(namespaceModule.getInfo(fo.getCode()))) {
             ApiResHelper.failed("资源已存在");
         }
@@ -79,14 +82,14 @@ public class NamespaceResource {
         namespace.setCreator(userModule.getCurrentUserId());
         namespace.setCreateTime(new Date());
         namespace = namespaceModule.addNamespace(namespace);
-        return ApiResHelper.successData(namespace);
+        return ApiResHelper.successData(toNamespaceVO(namespace, userModule.getCurrentUserId()));
     }
 
 
     @ApiOperation("删除namespace")
-    @RequestMapping(value = "/{code}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{code}", method = RequestMethod.DELETE)
     public ApiRes<Void> delete(@PathVariable("code") String code) {
-        if (!Objects.isNull(namespaceModule.getInfo(code))) {
+        if (Objects.isNull(namespaceModule.getInfo(code))) {
             return ApiResHelper.notFound();
         }
         if (!authorityModule.hasNamespaceAuthority(code)) {
@@ -96,8 +99,47 @@ public class NamespaceResource {
             return ApiResHelper.success();
         }
 
-        return ApiResHelper.failed("");
+        return ApiResHelper.failed("删除失败，没有找到记录或该Namespace下仍有资源");
     }
 
+
+    @ApiOperation("设置默认namespace")
+    @RequestMapping(value = "/{code}/default", method = RequestMethod.PUT)
+    public ApiRes<Void> setDefault(@PathVariable("code") String code) {
+        if (Objects.isNull(namespaceModule.getInfo(code))) {
+            return ApiResHelper.notFound();
+        }
+        if (!authorityModule.hasNamespaceAuthority(code)) {
+            return ApiResHelper.notAuthority();
+        }
+        if (!namespaceModule.setDefaultNamespace(userModule.getCurrentUserId(), code)) {
+            return ApiResHelper.failed("操作失败，没有找到记录或该Namespace下仍有资源");
+        }
+        return ApiResHelper.success();
+    }
+
+    @ApiOperation("获取默认namespace")
+    @RequestMapping(value = "/default", method = RequestMethod.GET)
+    public ApiRes<Void> getDefault() {
+        String nscode = namespaceModule.getDefaultNamespace(userModule.getCurrentUserId());
+        return ApiResHelper.success(nscode);
+    }
+
+
+    private NamespaceVO toNamespaceVO(Namespace namespace, String userId) {
+        NamespaceVO vo = NamespaceVO.of(namespace);
+        String defaultCode = namespaceModule.getDefaultNamespace(userId);
+        vo.setDefault(StringUtils.equals(defaultCode, vo.getCode()));
+        return vo;
+    }
+
+    private List<NamespaceVO> toNamespaceVOs(List<Namespace> namespaces, String userId) {
+        String defaultCode = namespaceModule.getDefaultNamespace(userId);
+        return namespaces.stream().map(namespace -> {
+            NamespaceVO vo = NamespaceVO.of(namespace);
+            vo.setDefault(StringUtils.equals(defaultCode, vo.getCode()));
+            return vo;
+        }).collect(Collectors.toList());
+    }
 
 }

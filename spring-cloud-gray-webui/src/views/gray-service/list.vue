@@ -151,6 +151,7 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
+        namespace: 'test',
         page: 1,
         size: 10
       },
