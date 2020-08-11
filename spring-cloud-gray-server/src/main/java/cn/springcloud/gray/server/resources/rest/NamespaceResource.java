@@ -76,10 +76,27 @@ public class NamespaceResource {
         namespace.setCode(fo.getCode());
         namespace.setName(fo.getName());
         namespace.setDelFlag(false);
-        namespace.setCreater(userModule.getCurrentUserId());
+        namespace.setCreator(userModule.getCurrentUserId());
         namespace.setCreateTime(new Date());
         namespace = namespaceModule.addNamespace(namespace);
         return ApiResHelper.successData(namespace);
+    }
+
+
+    @ApiOperation("删除namespace")
+    @RequestMapping(value = "/{code}", method = RequestMethod.POST)
+    public ApiRes<Void> delete(@PathVariable("code") String code) {
+        if (!Objects.isNull(namespaceModule.getInfo(code))) {
+            return ApiResHelper.notFound();
+        }
+        if (!authorityModule.hasNamespaceAuthority(code)) {
+            return ApiResHelper.notAuthority();
+        }
+        if (namespaceModule.deleteNamespace(code)) {
+            return ApiResHelper.success();
+        }
+
+        return ApiResHelper.failed("");
     }
 
 

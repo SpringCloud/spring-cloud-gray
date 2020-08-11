@@ -34,7 +34,7 @@ public class ResourceAuthorityResource {
     private UserModule userModule;
 
 
-    @GetMapping(value = "/query")
+    @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<UserResourceAuthority>>> query(
             @RequestParam UserResourceAuthorityQuery query,
             @ApiParam @PageableDefault(sort = "operateTime", direction = Sort.Direction.DESC) Pageable pageable) {
