@@ -50,7 +50,7 @@ export function mockXHR() {
   }
 
   for (const i of mocks) {
-    Mock.mock(new RegExp(i.url), i.type || 'get', XHR2ExpressReqWrap(i.mock))
+    Mock.mock(new RegExp(i.url), i.type || 'get', XHR2ExpressReqWrap(i.response))
   }
 }
 
@@ -66,5 +66,5 @@ const responseFake = (url, type, respond) => {
 }
 
 export default mocks.map(route => {
-  return responseFake(route.url, route.type, route.mock)
+  return responseFake(route.url, route.type, route.response)
 })

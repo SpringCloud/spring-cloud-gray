@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface UserResourceAuthorityRepository extends JpaRepository<UserResourceAuthorityDO, Long>, JpaSpecificationExecutor<UserResourceAuthorityDO> {
 
     UserResourceAuthorityDO findFirstByUserIdAndResourceAndResourceId(String userId, String resource, String resourceId);
+
+    UserResourceAuthorityDO findFirstByUserIdAndResourceAndAuthorityFlagAndDelFlag(String userId, String resource, Integer authorityFlag, boolean delFlag);
 }

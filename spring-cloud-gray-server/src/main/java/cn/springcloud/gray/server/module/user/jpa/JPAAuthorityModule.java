@@ -10,6 +10,7 @@ import cn.springcloud.gray.server.module.user.domain.UserResourceAuthority;
 import cn.springcloud.gray.server.module.user.domain.UserResourceAuthorityQuery;
 import cn.springcloud.gray.server.service.AuthorityService;
 import cn.springcloud.gray.server.service.UserResourceAuthorityService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,14 +26,17 @@ public class JPAAuthorityModule implements AuthorityModule {
     private UserResourceAuthorityService userResourceAuthorityService;
     private AuthorityService authorityService;
     private UserModule userModule;
+    private ApplicationEventPublisher eventPublisher;
 
     public JPAAuthorityModule(
+            ApplicationEventPublisher eventPublisher,
             UserResourceAuthorityService userResourceAuthorityService,
             AuthorityService authorityService,
             UserModule userModule) {
         this.userResourceAuthorityService = userResourceAuthorityService;
         this.authorityService = authorityService;
         this.userModule = userModule;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -186,7 +190,6 @@ public class JPAAuthorityModule implements AuthorityModule {
     @Override
     public boolean hasResourceAuthority(String resource, String resourceId) {
         return hasResourceAuthority(userModule.getCurrentUserId(), resource, resourceId);
-
     }
 
     @Override
@@ -225,6 +228,11 @@ public class JPAAuthorityModule implements AuthorityModule {
     @Override
     public UserResourceAuthority getUserResourceAuthority(Long id) {
         return userResourceAuthorityService.findOneModel(id);
+    }
+
+    @Override
+    public String firstAuthorityResourceId(String userId, String resourceNamespace) {
+        return userResourceAuthorityService.firstAuthorityResourceId(userId, resourceNamespace);
     }
 
     private void setDefault(UserResourceAuthority record) {

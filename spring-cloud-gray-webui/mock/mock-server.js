@@ -7,9 +7,9 @@ const mockDir = path.join(process.cwd(), 'mock')
 
 function registerRoutes(app) {
   let mockLastIndex
-  const { default: mocks } = require('./index.js')
+  const {default: mocks} = require('./index.js')
   for (const mock of mocks) {
-    app[mock.type](mock.url, mock.mock)
+    app[mock.type](mock.url, mock.response)
     mockLastIndex = app._router.stack.length
   }
   const mockRoutesLength = Object.keys(mocks).length

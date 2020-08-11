@@ -4,6 +4,7 @@ import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.mapper.UserResourceAuthorityMapper;
 import cn.springcloud.gray.server.dao.model.UserResourceAuthorityDO;
 import cn.springcloud.gray.server.dao.repository.UserResourceAuthorityRepository;
+import cn.springcloud.gray.server.module.domain.ResourceAuthorityFlag;
 import cn.springcloud.gray.server.module.user.domain.UserResourceAuthority;
 import cn.springcloud.gray.server.module.user.domain.UserResourceAuthorityQuery;
 import cn.springcloud.gray.server.utils.PaginationUtils;
@@ -52,16 +53,16 @@ public class UserResourceAuthorityService extends AbstraceCRUDService<UserResour
                 if (StringUtils.isNotEmpty(uraQuery.getUserId())) {
                     predicates.add(cb.equal(root.get("userId").as(String.class), uraQuery.getUserId()));
                 }
-                if (Objects.isNull(uraQuery.getResource())) {
-                    predicates.add(cb.equal(root.get("resource").as(Long.class), uraQuery.getResource()));
+                if (Objects.nonNull(uraQuery.getResource())) {
+                    predicates.add(cb.equal(root.get("resource").as(String.class), uraQuery.getResource()));
                 }
-                if (Objects.isNull(uraQuery.getResourceId())) {
-                    predicates.add(cb.equal(root.get("resourceId").as(Long.class), uraQuery.getResourceId()));
+                if (Objects.nonNull(uraQuery.getResourceId())) {
+                    predicates.add(cb.equal(root.get("resourceId").as(String.class), uraQuery.getResourceId()));
                 }
-                if (Objects.isNull(uraQuery.getAuthorityFlag())) {
+                if (Objects.nonNull(uraQuery.getAuthorityFlag())) {
                     predicates.add(cb.equal(root.get("authorityFlag").as(Integer.class), uraQuery.getAuthorityFlag().getFlag()));
                 }
-                if (Objects.isNull(uraQuery.getDelFlag())) {
+                if (Objects.nonNull(uraQuery.getDelFlag())) {
                     predicates.add(cb.equal(root.get("delFlag").as(Boolean.class), uraQuery.getDelFlag()));
                 }
                 query.where(predicates.toArray(new Predicate[predicates.size()]));
@@ -71,5 +72,16 @@ public class UserResourceAuthorityService extends AbstraceCRUDService<UserResour
 
         Page<UserResourceAuthorityDO> page = repository.findAll(specification, pageable);
         return PaginationUtils.convert(pageable, page, mapper);
+    }
+
+    public String firstAuthorityResourceId(String userId, String resource) {
+        UserResourceAuthorityDO record = repository.findFirstByUserIdAndResourceAndAuthorityFlagAndDelFlag(
+                userId, resource, ResourceAuthorityFlag.OWNER.getFlag(), false);
+        if (Objects.nonNull(record)) {
+            return record.getResourceId();
+        }
+        record = repository.findFirstByUserIdAndResourceAndAuthorityFlagAndDelFlag(
+                userId, resource, ResourceAuthorityFlag.ADMIN.getFlag(), false);
+        return Objects.nonNull(record) ? record.getResourceId() : null;
     }
 }

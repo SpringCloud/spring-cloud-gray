@@ -3,8 +3,10 @@ package cn.springcloud.gray.server.service;
 import cn.springcloud.gray.server.constant.AuthorityConstants;
 import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import cn.springcloud.gray.server.dao.mapper.NamespaceMapper;
+import cn.springcloud.gray.server.dao.model.DefaultNamespaceDO;
 import cn.springcloud.gray.server.dao.model.NamespaceDO;
 import cn.springcloud.gray.server.dao.model.UserResourceAuthorityDO;
+import cn.springcloud.gray.server.dao.repository.DefaultNamespaceRepository;
 import cn.springcloud.gray.server.dao.repository.NamespaceRepository;
 import cn.springcloud.gray.server.module.domain.Namespace;
 import cn.springcloud.gray.server.utils.PaginationUtils;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRepository, NamespaceDO, String> {
@@ -26,6 +29,9 @@ public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRe
     private NamespaceRepository repository;
     @Autowired
     private NamespaceMapper mapper;
+    @Autowired
+    private DefaultNamespaceRepository defaultNamespaceRepository;
+
 
     @Override
     protected NamespaceRepository getRepository() {
@@ -48,7 +54,9 @@ public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRe
 
                     subQuery.select(from.get("resourceId").as(String.class))
                             .where(cb.equal(from.get("userId").as(String.class), userId),
-                                    cb.equal(from.get("resource").as(String.class), AuthorityConstants.RESOURCE_NAMESPACE));
+                                    cb.equal(from.get("resource").as(String.class), AuthorityConstants.RESOURCE_NAMESPACE),
+                                    cb.equal(from.get("delFlag").as(Boolean.class), false)
+                            );
 
                     predicates.add(cb.and((root.get("code")).in(subQuery)));
                 }
@@ -59,5 +67,19 @@ public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRe
 
         Page<NamespaceDO> page = repository.findAll(specification, pageable);
         return PaginationUtils.convert(pageable, page, mapper);
+    }
+
+
+    public boolean setDefaultNamespace(String userId, String nsCode) {
+        DefaultNamespaceDO defaultNamespaceDO = new DefaultNamespaceDO();
+        defaultNamespaceDO.setNsCode(nsCode);
+        defaultNamespaceDO.setUserId(userId);
+        defaultNamespaceRepository.save(defaultNamespaceDO);
+        return true;
+    }
+
+    public String getDefaultNamespace(String userId) {
+        DefaultNamespaceDO defaultNamespaceDO = defaultNamespaceRepository.getOne(userId);
+        return Objects.nonNull(defaultNamespaceDO) ? defaultNamespaceDO.getNsCode() : null;
     }
 }

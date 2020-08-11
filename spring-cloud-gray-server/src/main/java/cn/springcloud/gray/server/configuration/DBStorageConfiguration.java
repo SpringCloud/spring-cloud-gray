@@ -6,6 +6,7 @@ import cn.springcloud.gray.server.module.NamespaceFinder;
 import cn.springcloud.gray.server.module.NamespaceModule;
 import cn.springcloud.gray.server.module.audit.OperateAuditModule;
 import cn.springcloud.gray.server.module.audit.jpa.JPAOperateAuditModule;
+import cn.springcloud.gray.server.module.event.listener.UserResourceAuthorityEventListener;
 import cn.springcloud.gray.server.module.gray.*;
 import cn.springcloud.gray.server.module.gray.jpa.*;
 import cn.springcloud.gray.server.module.jpa.JPANamespaceFinder;
@@ -26,6 +27,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -133,10 +135,11 @@ public class DBStorageConfiguration {
         @Bean
         @ConditionalOnMissingBean
         public AuthorityModule authorityModule(
+                ApplicationEventPublisher eventPublisher,
                 UserResourceAuthorityService userResourceAuthorityService,
                 AuthorityService authorityService,
                 UserModule userModule) {
-            return new JPAAuthorityModule(userResourceAuthorityService, authorityService, userModule);
+            return new JPAAuthorityModule(eventPublisher, userResourceAuthorityService, authorityService, userModule);
         }
 
 
@@ -157,10 +160,15 @@ public class DBStorageConfiguration {
 
         @Bean
         @ConditionalOnMissingBean
-        public NamespaceModule namespaceModule(NamespaceService namespaceService, NamespaceFinder namespaceFinder) {
-            return new JPANamespaceModule(namespaceService, namespaceFinder);
+        public NamespaceModule namespaceModule(NamespaceService namespaceService, NamespaceFinder namespaceFinder, AuthorityModule authorityModule) {
+            return new JPANamespaceModule(namespaceService, namespaceFinder, authorityModule);
         }
 
+
+        @Bean
+        public UserResourceAuthorityEventListener userResourceAuthorityEventListener(NamespaceModule namespaceModule, AuthorityModule authorityModule) {
+            return new UserResourceAuthorityEventListener(namespaceModule, authorityModule);
+        }
     }
 
 

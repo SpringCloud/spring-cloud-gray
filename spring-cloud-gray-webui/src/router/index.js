@@ -105,6 +105,47 @@ export const constantRoutes = [
   },
 /* eslint-disable */
   {
+    path: '/authority',
+    name: 'Authority',
+    component: Layout,
+    hidden: true,
+    alwaysShow: false, // will always show the root menu
+    redirect: '/ns',
+    meta: {
+      title: 'Authority',
+      icon: '',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'users',
+        component: () => import('@/views/authority/users'),
+        name: '用户权限',
+        meta: { title: '用户权限', icon: '', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/ns',
+    name: 'Namespace',
+    component: Layout,
+    alwaysShow: true, // will always show the root menu
+    redirect: '/ns',
+    meta: {
+      title: 'Namespace',
+      icon: 'table',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/ns/list'),
+        name: 'NS列表',
+        meta: { title: 'NS列表', icon: 'table', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/gray/service',
     name: '灰度服务',
     component: Layout,

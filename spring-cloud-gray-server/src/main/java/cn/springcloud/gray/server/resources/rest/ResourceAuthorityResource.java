@@ -36,8 +36,8 @@ public class ResourceAuthorityResource {
 
     @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<UserResourceAuthority>>> query(
-            @RequestParam UserResourceAuthorityQuery query,
-            @ApiParam @PageableDefault(sort = "operateTime", direction = Sort.Direction.DESC) Pageable pageable) {
+            @ApiParam @PageableDefault(sort = "operateTime", direction = Sort.Direction.DESC) Pageable pageable,
+            UserResourceAuthorityQuery query) {
 //        if (StringUtils.isNotEmpty(query.getResource())
 //                && !authorityModule.hasAuthorityCurrentUser(query.getResource())) {
 //            return ResponseEntity.ok(ApiResHelper.notAuthority());
@@ -53,6 +53,9 @@ public class ResourceAuthorityResource {
         UserResourceAuthority userResourceAuthority = authorityModule.getUserResourceAuthority(id);
         if (Objects.isNull(userResourceAuthority)) {
             return ApiResHelper.notFound();
+        }
+        if (Objects.equals(userResourceAuthority.getAuthorityFlag(), ResourceAuthorityFlag.OWNER)) {
+            return ApiResHelper.failed("Owner不可被删除");
         }
         if (!authorityModule.hasResourceAuthority(userResourceAuthority.getResource(),
                 userResourceAuthority.getResourceId(), ResourceAuthorityFlag.OWNER)) {
@@ -87,6 +90,7 @@ public class ResourceAuthorityResource {
         }
         UserResourceAuthority userResourceAuthority = new UserResourceAuthority();
         userResourceAuthority.setId(id);
+        userResourceAuthority.setUserId(fo.getUserId());
         userResourceAuthority.setResource(fo.getResource());
         userResourceAuthority.setResourceId(fo.getResourceId());
         userResourceAuthority.setAuthorityFlag(fo.getAuthorityFlag());

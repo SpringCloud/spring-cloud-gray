@@ -61,4 +61,6 @@ public interface AuthorityModule {
     void updateUserResourceAuthorityDelFlag(Long id, boolean newDelFlag, String operator);
 
     UserResourceAuthority getUserResourceAuthority(Long id);
+
+    String firstAuthorityResourceId(String userId, String resourceNamespace);
 }

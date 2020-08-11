@@ -22,5 +22,9 @@ public interface NamespaceModule {
 
     boolean deleteNamespace(String id);
 
+    boolean setDefaultNamespace(String userId, String nsCode);
+
+    String getDefaultNamespace(String userId);
+
 
 }
