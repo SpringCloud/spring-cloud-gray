@@ -2,6 +2,8 @@ package cn.springcloud.gray.server.resources.rest;
 
 import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.model.RoutePolicy;
+import cn.springcloud.gray.server.module.gray.GrayPolicyModule;
+import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.route.policy.RoutePolicyModule;
 import cn.springcloud.gray.server.module.route.policy.domain.RoutePolicyRecord;
 import cn.springcloud.gray.server.module.route.policy.domain.RouteResourcePolicies;
@@ -10,21 +12,25 @@ import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.resources.domain.fo.InstanceRoutePoliciesFO;
 import cn.springcloud.gray.server.resources.domain.fo.InstanceRoutePolicyFO;
+import cn.springcloud.gray.server.resources.domain.vo.RoutePolicyRecordVO;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
-import cn.springcloud.gray.server.utils.SessionUtils;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author saleson
@@ -39,14 +45,25 @@ public class RoutePolicyResource {
     private RoutePolicyModule routePolicyModule;
     @Autowired
     private UserModule userModule;
+    @Autowired
+    private GrayPolicyModule grayPolicyModule;
 
 
-    @GetMapping(value = "/query")
-    public ResponseEntity<ApiRes<List<RoutePolicyRecord>>> query(
+    @GetMapping(value = "/page")
+    public ResponseEntity<ApiRes<List<RoutePolicyRecordVO>>> query(
             RoutePolicyQuery query,
             @ApiParam @PageableDefault(sort = "operateTime", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<RoutePolicyRecord> page = routePolicyModule.queryRoutePolicies(query, pageable);
-        return PaginationUtils.generatePaginationResponseResult(page);
+
+        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
+        ApiRes<List<RoutePolicyRecordVO>> data = ApiRes.<List<RoutePolicyRecordVO>>builder()
+                .code(ApiRes.CODE_SUCCESS)
+                .data(toRoutePolicyRecordVOList(page.getContent()))
+                .build();
+        return new ResponseEntity<>(
+                data,
+                headers,
+                HttpStatus.OK);
     }
 
     @PostMapping(value = "/addNews")
@@ -66,7 +83,7 @@ public class RoutePolicyResource {
     }
 
     @PostMapping(value = "/save")
-    public ApiRes<RoutePolicyRecord> save(@Validated @RequestBody InstanceRoutePolicyFO fo) {
+    public ApiRes<RoutePolicyRecordVO> save(@Validated @RequestBody InstanceRoutePolicyFO fo) {
         RoutePolicy routePolicy = RoutePolicy.builder()
                 .type(fo.getType())
                 .moduleId(fo.getModuleId())
@@ -75,12 +92,14 @@ public class RoutePolicyResource {
                 .build();
 
         String curUserId = userModule.getCurrentUserId();
-        if (!routePolicyModule.hasResourceAuthority(SessionUtils.currentNamespace(), curUserId, routePolicy)) {
+        if (!routePolicyModule.hasResourceAuthority(fo.getNamespace(), curUserId, routePolicy)) {
             return ApiResHelper.notAuthority();
         }
+
         RoutePolicyRecord routePolicyRecord =
-                routePolicyModule.addRoutePolicy(SessionUtils.currentNamespace(), routePolicy, curUserId);
-        return ApiResHelper.successData(routePolicyRecord);
+                routePolicyModule.addRoutePolicy(fo.getNamespace(), routePolicy, curUserId);
+
+        return ApiResHelper.successData(toRoutePolicyRecordVO(routePolicyRecord));
     }
 
 
@@ -116,5 +135,32 @@ public class RoutePolicyResource {
         return ApiRes.<Void>builder().code("0").build();
     }
 
+
+    private RoutePolicyRecordVO toRoutePolicyRecordVO(RoutePolicyRecord routePolicyRecord) {
+        RoutePolicyRecordVO vo = RoutePolicyRecordVO.of(routePolicyRecord);
+        GrayPolicy grayPolicy = grayPolicyModule.getGrayPolicy(vo.getPolicyId());
+        if (Objects.nonNull(grayPolicy)) {
+            vo.setPolicyAlias(grayPolicy.getAlias());
+        }
+        return vo;
+    }
+
+    private List<RoutePolicyRecordVO> toRoutePolicyRecordVOList(List<RoutePolicyRecord> routePolicyRecords) {
+        List<Long> policyIds = routePolicyRecords.stream()
+                .map(RoutePolicyRecord::getPolicyId)
+                .collect(Collectors.toList());
+        Map<Long, GrayPolicy> policyMap = grayPolicyModule.listAllGrayPolicies(policyIds)
+                .stream()
+                .collect(Collectors.toMap(GrayPolicy::getId, p -> p, (o, n) -> n));
+        return routePolicyRecords.stream().map(policy -> {
+            RoutePolicyRecordVO vo = RoutePolicyRecordVO.of(policy);
+            GrayPolicy grayPolicy = policyMap.get(vo.getPolicyId());
+            if (Objects.nonNull(grayPolicy)) {
+                vo.setPolicyAlias(grayPolicy.getAlias());
+            }
+            return vo;
+        }).collect(Collectors.toList());
+
+    }
 
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +45,11 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
     @Override
     public List<GrayPolicy> listAllEnabledGrayPolicies() {
         return grayPolicyService.listEnabledGrayPolicies();
+    }
+
+    @Override
+    public List<GrayPolicy> listAllGrayPolicies(Collection<Long> policyIds) {
+        return grayPolicyService.findAllModel(policyIds);
     }
 
     @Override

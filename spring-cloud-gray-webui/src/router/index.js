@@ -184,6 +184,39 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/routingPolicy',
+    name: 'RoutingPolicy',
+    component: Layout,
+    hidden: true,
+    alwaysShow: false, // will always show the root menu
+    redirect: '/routingPolicy',
+    meta: {
+      title: 'RoutingPolicy',
+      icon: '',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'serviceGrayPolicys',
+        component: () => import('@/views/routing-policy/service-gray-policy-list'),
+        name: '服务灰度策略',
+        meta: {title: '服务灰度策略', icon: '', noCache: true}
+      },
+      {
+        path: 'serviceMultiVersionGrayPolicys',
+        component: () => import('@/views/routing-policy/service-multiversion-gray-policy-list'),
+        name: '服务多版本策略',
+        meta: {title: '服务多版本策略', icon: '', noCache: true}
+      },
+      {
+        path: 'instanceGrayPolicyList',
+        component: () => import('@/views/routing-policy/instance-gray-policy-list'),
+        name: '实例灰度策略',
+        meta: {title: '实例灰度策略', icon: '', noCache: true}
+      }
+    ]
+  },
+  {
     path: '/gray/service',
     name: '灰度服务',
     component: Layout,

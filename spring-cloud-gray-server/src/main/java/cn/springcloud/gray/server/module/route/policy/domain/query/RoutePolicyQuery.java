@@ -1,5 +1,6 @@
 package cn.springcloud.gray.server.module.route.policy.domain.query;
 
+import cn.springcloud.gray.model.RoutePolicy;
 import cn.springcloud.gray.server.module.domain.DelFlag;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,4 +31,14 @@ public class RoutePolicyQuery {
     private Long policyId;
     @ApiModelProperty("是否删除")
     private DelFlag delFlag;
+
+
+    public static RoutePolicyQuery of(RoutePolicy routePolicy) {
+        RoutePolicyQuery query = new RoutePolicyQuery();
+        query.setModuleId(routePolicy.getModuleId());
+        query.setType(routePolicy.getType());
+        query.setPolicyId(routePolicy.getPolicyId());
+        query.setResource(routePolicy.getResource());
+        return query;
+    }
 }
