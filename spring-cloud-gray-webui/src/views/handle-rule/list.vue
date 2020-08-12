@@ -4,6 +4,16 @@
       <el-select ref="" v-model="listQuery.namespace" placeholder="请选择">
         <el-option v-for="item in nsList" :key="item.code" :label="item.name" :value="item.code" />
       </el-select>
+
+      <!--<el-input v-model="listQuery.type" placeholder="Type" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />-->
+      <!--<el-input v-model="listQuery.moduleId" placeholder="Module Id" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />-->
+      <!--<el-input v-model="listQuery.resource" placeholder="Resource" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />-->
+
+      <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px" @change="handleFilter">
+        <el-option :key="`mock_server_client_response`" :label="`MOCK_SERVER_CLIENT_RESPONSE`" :value="`mock_server_client_response`" />
+        <el-option :key="`mock_application_response`" :label="`MOCK_APPLICATION_RESPONSE`" :value="`mock_application_response`" />
+      </el-select>
+
       <el-select v-model="listQuery.delFlag" placeholder="Status" clearable class="filter-item" style="width: 130px" @change="handleFilter">
         <el-option :key="`ALL`" :label="`全部`" :value="`ALL`" />
         <el-option :key="`UNDELETE`" :label="`启用`" :value="`UNDELETE`" />
@@ -36,16 +46,36 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Alias" align="center">
+      <el-table-column label="Type" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.alias }}</span>
+          <span>{{ scope.row.type }}</span>
         </template>
       </el-table-column>
-      <!--<el-table-column label="Instance Id" align="center">
+      <el-table-column label="Module Id" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.instanceId }}</span>
+          <span>{{ scope.row.moduleId }}</span>
         </template>
-      </el-table-column>-->
+      </el-table-column>
+      <el-table-column label="Resource" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.resource }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Handle Option" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.handleOptionAlias }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Matching Policys" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.matchingPolicys }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Order" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.order }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="Operator" prop="operator" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.operator }}</span>
@@ -61,9 +91,9 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <router-link :to="'/policy/grayPolicys/decision/'+row.id">
+          <router-link :to="`/policy/handle/action?handleId=${row.id}`">
             <el-button size="mini" type="success">
-              决策
+              动作
             </el-button>
           </router-link>
           <el-button v-if="!row.delFlag" size="mini" type="danger" @click="handleDelete(row)">
@@ -80,8 +110,30 @@
 
     <el-dialog :title="textMap[dialogStatus] + '  ' + temp.id" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Alias" prop="alias">
-          <el-input v-model="temp.alias" />
+        <el-form-item v-if="dialogStatus=='create'" label="Type" prop="type">
+          <el-select v-model="temp.type" placeholder="Type" clearable>
+            <el-option :key="`mock_server_client_response`" :label="`MOCK_SERVER_CLIENT_RESPONSE`" :value="`mock_server_client_response`" />
+            <el-option :key="`mock_application_response`" :label="`MOCK_APPLICATION_RESPONSE`" :value="`mock_application_response`" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Module Id" prop="moduleId">
+          <el-input v-model="temp.moduleId" />
+        </el-form-item>
+        <el-form-item label="Resource" prop="resource">
+          <el-input v-model="temp.resource" />
+        </el-form-item>
+        <el-form-item label="Matching Policys" prop="matchingPolicyIds">
+          <el-select ref="" v-model="temp.matchingPolicyIds" multiple placeholder="请选择">
+            <el-option v-for="item in policyList" :key="item.id" :label="item.alias" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Handle Option" prop="handleOption">
+          <el-select ref="" v-model="temp.handleOption" placeholder="请选择">
+            <el-option v-for="item in handleList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Order" prop="order">
+          <el-input v-model="temp.order" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -108,8 +160,7 @@
 
 <script>
 import { getDefaultNamespace } from '@/utils/ns'
-import { getData, recoverRecord } from '@/api/api-request'
-import { fetchList, deletePolicy, createPolicy, updatePolicy } from '@/api/gray-policy'
+import { fetchList, deleteRecord, recoverRecord, createRecord, updateRecord, getData } from '@/api/api-request'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -135,17 +186,27 @@ export default {
         page: 1,
         limit: 10,
         namespace: getDefaultNamespace(),
+        type: '',
+        moduleId: '',
+        resource: '',
         delFlag: 'UNDELETE'
       },
+      policyList: [],
+      handleList: [],
       nsList: [],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
       temp: {
-        id: undefined,
+        id: '',
+        moduleId: '',
+        resource: '',
+        matchingPolicyIds: [],
         namespace: '',
-        alias: ''
+        handleOption: '',
+        order: '',
+        type: ''
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -156,7 +217,12 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        alias: [{ required: true, message: 'Alias is required', trigger: 'change' }]
+        moduleId: [{ required: true, message: 'Module Id is required', trigger: 'change' }],
+        resource: [{ required: true, message: 'Resource Id is required', trigger: 'change' }],
+        handleOption: [{ required: true, message: 'Handle Option Id is required', trigger: 'change' }],
+        order: [{ required: true, message: 'Order Id is required', trigger: 'change' }],
+        matchingPolicyIds: [{ required: true, message: 'Matching Policys Id is required', trigger: 'change' }],
+        type: [{ required: true, message: 'Type is required', trigger: 'change' }]
       },
       downloadLoading: false,
       tempRoute: {}
@@ -166,8 +232,6 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
     this.getNamespaceList()
     this.getList()
-    /** this.setTagsViewTitle()
-    this.setPageTitle() */
   },
   methods: {
     getNamespaceList() {
@@ -175,20 +239,9 @@ export default {
         this.nsList = response.data
       })
     },
-    setPageTitle() {
-      const title = '灰度策略'
-      document.title = `${title} - ${this.listQuery.instanceId}`
-    },
-    setTagsViewTitle() {
-      const title = '灰度策略'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.listQuery.instanceId}` })
-      this.$store.dispatch('tagsView/updateVisitedView', route)
-      console.log(route)
-      console.log(this.$store.dispatch)
-    },
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchList('/handleRule/page', this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
 
@@ -225,13 +278,32 @@ export default {
     },
     resetTemp() {
       this.temp = {
-        id: undefined,
+        id: '',
+        moduleId: '',
+        resource: '',
+        matchingPolicyIds: [],
+        handleOption: '',
+        order: '',
         namespace: this.listQuery.namespace,
-        alias: ''
+        type: this.listQuery.type
       }
+    },
+    resetPolicyList() {
+      const params = { 'namespace': this.temp.namespace }
+      getData('/gray/policy/list', params).then(response => {
+        this.policyList = response.data
+      })
+    },
+    resetHandleList() {
+      const params = { 'namespace': this.temp.namespace }
+      getData('/handle/listAll', params).then(response => {
+        this.handleList = response.data
+      })
     },
     handleCreate() {
       this.resetTemp()
+      this.resetPolicyList()
+      this.resetHandleList()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -242,8 +314,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.namespace = this.listQuery.namespace
-          createPolicy(this.temp).then(response => {
+          createRecord('/handleRule/', this.temp).then(response => {
             this.list.unshift(response.data)
             this.dialogFormVisible = false
             this.$notify({
@@ -258,6 +329,20 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
+      this.resetPolicyList()
+      this.resetHandleList()
+      this.temp.matchingPolicys = undefined
+      const matchingPolicyIds = []
+      for (var x = 0; x < row.matchingPolicys.length; x++) {
+        const policy = row.matchingPolicys[x]
+        matchingPolicyIds.push(policy.policyId)
+      }
+      this.temp.matchingPolicyIds = matchingPolicyIds
+      console.log(this.temp.matchingPolicyIds)
+      if (!row.handleOption === false) {
+        this.temp.handleOption = parseInt(row.handleOption)
+      }
+
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -270,7 +355,7 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updatePolicy(tempData).then(response => {
+          updateRecord('/handleRule/', tempData).then(response => {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
                 const index = this.list.indexOf(v)
@@ -295,7 +380,7 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(async() => {
-        deletePolicy(row.id).then(() => {
+        deleteRecord('/handleRule/' + row.id).then(() => {
           this.dialogFormVisible = false
           this.getList()
           this.$notify({
@@ -313,12 +398,12 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(async() => {
-        recoverRecord(`/gray/policy/${row.id}/recover`).then(() => {
+        recoverRecord('/handleRule/' + row.id + '/recover').then(() => {
           this.dialogFormVisible = false
           this.getList()
           this.$notify({
             title: 'Success',
-            message: 'Delete Successfully',
+            message: 'Recover Successfully',
             type: 'success',
             duration: 2000
           })

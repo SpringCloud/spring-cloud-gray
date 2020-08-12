@@ -29,6 +29,8 @@ public class HandleRuleVO {
     private List<MatchingPolicyVO> matchingPolicys;
     @ApiModelProperty("处理选项")
     private String handleOption;
+    @ApiModelProperty("处理选项别名")
+    private String handleOptionAlias;
     @ApiModelProperty("排序字段，值越小，优先级越高")
     private int order;
     @ApiModelProperty("是否删除")

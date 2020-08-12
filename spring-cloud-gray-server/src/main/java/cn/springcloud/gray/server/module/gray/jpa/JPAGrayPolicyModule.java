@@ -4,6 +4,8 @@ import cn.springcloud.gray.server.module.gray.GrayPolicyModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicyDecision;
+import cn.springcloud.gray.server.module.gray.domain.query.GrayDecisionQuery;
+import cn.springcloud.gray.server.module.gray.domain.query.GrayPolicyQuery;
 import cn.springcloud.gray.server.service.GrayDecisionService;
 import cn.springcloud.gray.server.service.GrayPolicyService;
 import cn.springlcoud.gray.event.server.GrayEventTrigger;
@@ -168,6 +170,16 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
             return grayPolicyService.findAllModel(policyIds);
         }
         return grayPolicyService.findAllModel(policyIds, delFlag);
+    }
+
+    @Override
+    public Page<GrayPolicy> queryGrayPolicies(GrayPolicyQuery query, Pageable pageable) {
+        return grayPolicyService.queryGrayPolicies(query, pageable);
+    }
+
+    @Override
+    public Page<GrayDecision> queryGrayDecisions(GrayDecisionQuery query, Pageable pageable) {
+        return grayDecisionService.queryGrayDecisions(query, pageable);
     }
 
     protected void triggerGrayEvent(TriggerType triggerType, Object source) {

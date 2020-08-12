@@ -4,12 +4,17 @@ import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.module.HandleModule;
 import cn.springcloud.gray.server.module.domain.Handle;
 import cn.springcloud.gray.server.module.domain.HandleAction;
+import cn.springcloud.gray.server.module.domain.query.HandleActionQuery;
 import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.resources.domain.fo.HandleActionFO;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import cn.springcloud.gray.server.utils.SessionUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +23,13 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static cn.springcloud.gray.api.ApiRes.CODE_SUCCESS;
@@ -32,19 +40,21 @@ import static cn.springcloud.gray.api.ApiRes.CODE_SUCCESS;
  */
 @RestController
 @RequestMapping("/handle/action")
+@Slf4j
 public class HandleActionResource {
     @Autowired
     private HandleModule handleModule;
     @Autowired
     private AuthorityModule authorityModule;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
 
     @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<HandleAction>>> page(
-            @RequestParam("handleId") Long handleId,
+            @Validated HandleActionQuery query,
             @ApiParam @PageableDefault(sort = "order", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        Page<HandleAction> page = handleModule.listHandleActionsByHandleId(handleId, pageable);
+        Page<HandleAction> page = handleModule.listHandleActions(query, pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
         return new ResponseEntity<>(
                 ApiRes.<List<HandleAction>>builder()
@@ -72,7 +82,7 @@ public class HandleActionResource {
         if (Objects.nonNull(apiRes)) {
             return apiRes;
         }
-        handleModule.recoverHandle(id, SessionUtils.currentUserId());
+        handleModule.recoverHandleAction(id, SessionUtils.currentUserId());
         return ApiRes.<Void>builder().code(CODE_SUCCESS).build();
     }
 
@@ -82,6 +92,16 @@ public class HandleActionResource {
         if (Objects.nonNull(apiRes)) {
             return apiRes;
         }
+        if (StringUtils.isNotEmpty(handleActionFO.getInfos())) {
+            try {
+                objectMapper.readValue(handleActionFO.getInfos(), new TypeReference<Map<String, String>>() {
+                });
+            } catch (IOException e) {
+                log.warn("解析HandleActionFO.infos失败，{}", handleActionFO, e);
+                return ApiResHelper.failed("infos须为json");
+            }
+        }
+
         HandleAction handleAction = handleModule.getHandleAction(handleActionFO.getId());
         if (Objects.isNull(handleAction)) {
             handleAction = new HandleAction();

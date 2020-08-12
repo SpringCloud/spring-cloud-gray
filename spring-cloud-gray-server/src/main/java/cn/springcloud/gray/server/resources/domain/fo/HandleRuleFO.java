@@ -15,6 +15,7 @@ public class HandleRuleFO {
 
     @ApiModelProperty("id")
     private Long id;
+    private String namespace;
     @ApiModelProperty("规则类型，区分处理规则")
     private String type;
     @ApiModelProperty("模块id，用于搜索索引，如果serviceId")

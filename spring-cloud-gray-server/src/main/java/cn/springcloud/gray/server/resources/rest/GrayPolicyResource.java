@@ -6,6 +6,7 @@ import cn.springcloud.gray.server.module.gray.GrayPolicyModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayModelType;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicyDecision;
+import cn.springcloud.gray.server.module.gray.domain.query.GrayPolicyQuery;
 import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.utils.ApiResHelper;
@@ -19,6 +20,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -50,9 +52,9 @@ public class GrayPolicyResource {
 
     @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<GrayPolicy>>> page(
-            @RequestParam("namespace") String namespace,
+            @Validated GrayPolicyQuery query,
             @ApiParam @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<GrayPolicy> page = grayPolicyModule.listEnabledGrayPoliciesByNamespace(namespace, pageable);
+        Page<GrayPolicy> page = grayPolicyModule.queryGrayPolicies(query, pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
         ApiRes<List<GrayPolicy>> res = ApiRes.<List<GrayPolicy>>builder()
                 .code(CODE_SUCCESS)

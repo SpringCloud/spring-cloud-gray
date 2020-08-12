@@ -18,6 +18,8 @@ public class HandleFO {
     private Long id;
     @ApiModelProperty("处理名称")
     private String name;
+    @ApiModelProperty("命名空间")
+    private String namespace;
 
     /**
      * 处理类型: 比如Mock
@@ -30,6 +32,7 @@ public class HandleFO {
     public void fillToHandle(Handle handle) {
         handle.setName(name);
         handle.setType(type);
+        handle.setNamespace(namespace);
     }
 
 
