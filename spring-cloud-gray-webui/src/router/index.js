@@ -139,8 +139,8 @@ export const constantRoutes = [
       {
         path: 'list',
         component: () => import('@/views/ns/list'),
-        name: 'NS列表',
-        meta: {title: 'NS列表', icon: 'table', noCache: true}
+        name: 'Namespace列表',
+        meta: {title: 'Namespace列表', icon: 'table', noCache: true}
       }
     ]
   },
