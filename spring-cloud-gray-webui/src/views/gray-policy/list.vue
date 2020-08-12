@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import { getDefaultNamespace } from '@/utils/ns'
 import { getData } from '@/api/api-request'
 import { fetchList, deletePolicy, createPolicy, updatePolicy } from '@/api/gray-policy'
 import waves from '@/directive/waves' // waves directive
@@ -125,7 +126,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        namespace: 'test'
+        namespace: getDefaultNamespace()
       },
       nsList: [],
       calendarTypeOptions,

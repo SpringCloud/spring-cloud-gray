@@ -153,6 +153,7 @@
 </template>
 
 <script>
+import { getDefaultNamespace } from '@/utils/ns'
 import { getData } from '@/api/api-request'
 import { fetchList, createService, updateService, deleteService } from '@/api/gray-service'
 import waves from '@/directive/waves' // waves directive
@@ -170,7 +171,7 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        namespace: 'test',
+        namespace: getDefaultNamespace(),
         page: 1,
         size: 10
       },
