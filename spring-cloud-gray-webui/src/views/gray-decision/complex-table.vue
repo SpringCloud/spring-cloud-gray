@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-select v-model="listQuery.delFlag" placeholder="Status" clearable class="filter-item" style="width: 130px" @change="handleFilter">
+        <el-option :key="`ALL`" :label="`全部`" :value="`ALL`" />
+        <el-option :key="`UNDELETE`" :label="`启用`" :value="`UNDELETE`" />
+        <el-option :key="`DELELTED`" :label="`删除`" :value="`DELELTED`" />
+      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         Refresh
       </el-button>
@@ -62,8 +67,11 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(row)">
+          <el-button v-if="!row.delFlag" size="mini" type="danger" @click="handleDelete(row)">
             Delete
+          </el-button>
+          <el-button v-if="row.delFlag" size="mini" type="primary" @click="handleRecover(row)">
+            恢复
           </el-button>
         </template>
       </el-table-column>
@@ -127,6 +135,7 @@
 </template>
 
 <script>
+import { recoverRecord } from '@/api/api-request'
 import { fetchList, deleteDecision, createDecision, updateDecision } from '@/api/gray-decision'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -165,7 +174,8 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        policyId: this.$route.params.policyId || ''
+        policyId: this.$route.params.policyId || '',
+        delFlag: 'UNDELETE'
       },
       options: [{
         value: 'HttpHeader',
@@ -415,13 +425,25 @@ export default {
       }).then(async() => {
         deleteDecision(row.id).then(() => {
           this.dialogFormVisible = false
-          for (const v of this.list) {
-            if (v.id === row.id) {
-              const index = this.list.indexOf(v)
-              this.list.splice(index, 1)
-              break
-            }
-          }
+          this.getList()
+          this.$notify({
+            title: 'Success',
+            message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      })
+    },
+    handleRecover(row) {
+      this.$confirm('Confirm to recover the record?', 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async() => {
+        recoverRecord(`/gray/decision/${row.id}/recover`).then(() => {
+          this.dialogFormVisible = false
+          this.getList()
           this.$notify({
             title: 'Success',
             message: 'Delete Successfully',

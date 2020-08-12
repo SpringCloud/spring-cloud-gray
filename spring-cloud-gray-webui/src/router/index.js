@@ -170,14 +170,21 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        path: 'handles',
-        component: () => import('@/views/gray-policy/list'),
+        path: 'handle',
+        component: () => import('@/views/handle/list'),
+        name: '处理策略',
+        meta: {title: '处理策略', icon: 'table', noCache: true}
+      },
+      {
+        path: 'handle/action',
+        component: () => import('@/views/handle/actions'),
         name: '处理动作',
+        hidden: true,
         meta: {title: '处理动作', icon: 'table', noCache: true}
       },
       {
         path: 'handleRules',
-        component: () => import('@/views/gray-policy/list'),
+        component: () => import('@/views/handle-rule/list'),
         name: '处理规则',
         meta: {title: '处理规则', icon: 'table', noCache: true}
       }

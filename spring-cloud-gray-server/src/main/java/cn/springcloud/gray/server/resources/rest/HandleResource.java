@@ -18,6 +18,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -38,10 +39,18 @@ public class HandleResource {
     @Autowired
     private AuthorityModule authorityModule;
 
+    @GetMapping(value = "/listAll")
+    public ApiRes<List<Handle>> page(@Validated HandleQuery query) {
+        List<Handle> records = handleModule.queryHandles(query);
+        return ApiRes.<List<Handle>>builder()
+                .code(CODE_SUCCESS)
+                .data(records)
+                .build();
+    }
 
     @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<Handle>>> page(
-            HandleQuery query,
+            @Validated HandleQuery query,
             @ApiParam @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<Handle> page = handleModule.queryHandles(query, pageable);
@@ -56,7 +65,7 @@ public class HandleResource {
     }
 
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ApiRes<Void> delete(@PathVariable("id") Long id) {
         Handle handle = handleModule.getHandle(id);
         if (Objects.isNull(handle)) {
@@ -88,13 +97,14 @@ public class HandleResource {
         if (Objects.isNull(handle)) {
             handle = new Handle();
             handle.setId(handleFO.getId());
-            handle.setNamespace(SessionUtils.currentNamespace());
+            handle.setNamespace(handleFO.getNamespace());
+            handle.setType(handleFO.getType());
             handle.setDelFlag(false);
         }
         if (!authorityModule.hasNamespaceAuthority(handle.getNamespace())) {
             return ApiResHelper.notAuthority();
         }
-        handleFO.fillToHandle(handle);
+        handle.setName(handleFO.getName());
         handle.setOperator(SessionUtils.currentUserId());
         handle.setOperateTime(new Date());
 

@@ -15,18 +15,22 @@ import org.springframework.beans.factory.annotation.Autowired;
         componentModel = "spring",
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )
-public abstract class HandleRuleModuleVOMapper implements VOMapper<HandleRule, HandleRuleVO> {
+public abstract class HandleRuleVOMapper implements VOMapper<HandleRule, HandleRuleVO> {
 
     @Autowired
     protected MatchingPolicyVOMapper matchingPolicyVOMapper;
+    @Autowired
+    protected HandleRuleVOMapHelper handleRuleVOMapHelper;
 
     @Override
     @Mapping(expression = "java(matchingPolicyVOMapper.toMatchingPolicyVOs(handleRule.getMatchingPolicyIds()))", target = "matchingPolicys")
+    @Mapping(expression = "java(handleRuleVOMapHelper.parseHandleOptionAlias(handleRule.getHandleOption()))", target = "handleOptionAlias")
     public abstract HandleRuleVO toVO(HandleRule handleRule);
 
 
 //    private List<MatchingPolicyVO> toMatchingPolicyVOs(Long[] policyIds) {
 //        return matchingPolicyVOMapper.toMatchingPolicyVOs(policyIds);
 //    }
+
 
 }

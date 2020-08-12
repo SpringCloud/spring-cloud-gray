@@ -3,6 +3,8 @@ package cn.springcloud.gray.server.module.gray;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicyDecision;
+import cn.springcloud.gray.server.module.gray.domain.query.GrayDecisionQuery;
+import cn.springcloud.gray.server.module.gray.domain.query.GrayPolicyQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -46,4 +48,8 @@ public interface GrayPolicyModule {
     GrayPolicyDecision newGrayPolicy(GrayPolicyDecision policyDecision);
 
     List<GrayPolicy> findAllGrayPolicies(Iterable<Long> policyIds, Boolean delFlag);
+
+    Page<GrayPolicy> queryGrayPolicies(GrayPolicyQuery query, Pageable pageable);
+
+    Page<GrayDecision> queryGrayDecisions(GrayDecisionQuery query, Pageable pageable);
 }

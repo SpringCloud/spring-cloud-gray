@@ -6,7 +6,7 @@ import cn.springcloud.gray.server.module.domain.HandleRule;
 import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.resources.domain.fo.HandleRuleFO;
 import cn.springcloud.gray.server.resources.domain.fo.HandleRuleQueryFO;
-import cn.springcloud.gray.server.resources.domain.mapper.HandleRuleModuleVOMapper;
+import cn.springcloud.gray.server.resources.domain.mapper.HandleRuleVOMapper;
 import cn.springcloud.gray.server.resources.domain.vo.HandleRuleVO;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
@@ -40,7 +40,7 @@ public class HandleRuleResource {
     @Autowired
     private HandleRuleModule handleRuleModule;
     @Autowired
-    private HandleRuleModuleVOMapper handleRuleModuleVOMapper;
+    private HandleRuleVOMapper handleRuleVOMapper;
     @Autowired
     private AuthorityModule authorityModule;
 
@@ -57,14 +57,14 @@ public class HandleRuleResource {
         return new ResponseEntity<>(
                 ApiRes.<List<HandleRuleVO>>builder()
                         .code(CODE_SUCCESS)
-                        .data(handleRuleModuleVOMapper.toVOs(page.getContent()))
+                        .data(handleRuleVOMapper.toVOs(page.getContent()))
                         .build(),
                 headers,
                 HttpStatus.OK);
     }
 
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ApiRes<Void> delete(@PathVariable("id") Long id) {
         HandleRule handleRule = handleRuleModule.getHandleRule(id);
         if (Objects.isNull(handleRule)) {
@@ -96,7 +96,7 @@ public class HandleRuleResource {
         if (Objects.isNull(handleRule)) {
             handleRule = new HandleRule();
             handleRule.setId(handleRuleFO.getId());
-            handleRule.setNamespace(SessionUtils.currentNamespace());
+            handleRule.setNamespace(handleRuleFO.getNamespace());
             handleRule.setDelFlag(false);
         }
         if (!authorityModule.hasNamespaceAuthority(handleRule.getNamespace())) {
@@ -108,7 +108,7 @@ public class HandleRuleResource {
 
         return ApiRes.<HandleRuleVO>builder()
                 .code(CODE_SUCCESS)
-                .data(handleRuleModuleVOMapper.toVO(handleRuleModule.saveHandleRule(handleRule)))
+                .data(handleRuleVOMapper.toVO(handleRuleModule.saveHandleRule(handleRule)))
                 .build();
     }
 

@@ -5,6 +5,7 @@ import cn.springcloud.gray.server.module.domain.DelFlag;
 import cn.springcloud.gray.server.module.domain.Handle;
 import cn.springcloud.gray.server.module.domain.HandleAction;
 import cn.springcloud.gray.server.module.domain.HandleDetailInfos;
+import cn.springcloud.gray.server.module.domain.query.HandleActionQuery;
 import cn.springcloud.gray.server.module.domain.query.HandleQuery;
 import cn.springcloud.gray.server.service.HandleActionService;
 import cn.springcloud.gray.server.service.HandleService;
@@ -37,6 +38,11 @@ public class JPAHandleModule implements HandleModule {
     @Override
     public Page<Handle> queryHandles(HandleQuery handleQuery, Pageable pageable) {
         return handleService.findAllModels(handleQuery, pageable);
+    }
+
+    @Override
+    public List<Handle> queryHandles(HandleQuery handleQuery) {
+        return handleService.findAllModels(handleQuery);
     }
 
     @Override
@@ -208,6 +214,11 @@ public class JPAHandleModule implements HandleModule {
     @Override
     public Page<HandleAction> listHandleActionsByHandleId(Long handleId, Pageable pageable) {
         return handleActionService.findAllModelsByHandleId(handleId, pageable);
+    }
+
+    @Override
+    public Page<HandleAction> listHandleActions(HandleActionQuery query, Pageable pageable) {
+        return handleActionService.listHandleActions(query, pageable);
     }
 
     @Override

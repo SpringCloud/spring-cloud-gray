@@ -5,6 +5,7 @@ import cn.springcloud.gray.server.module.NamespaceFinder;
 import cn.springcloud.gray.server.module.gray.GrayPolicyModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import cn.springcloud.gray.server.module.gray.domain.GrayModelType;
+import cn.springcloud.gray.server.module.gray.domain.query.GrayDecisionQuery;
 import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.utils.ApiResHelper;
@@ -18,6 +19,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -53,13 +55,13 @@ public class GrayDecisionResource {
 
     @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<GrayDecision>>> page(
-            @RequestParam("policyId") Long policyId,
+            @Validated GrayDecisionQuery query,
             @ApiParam @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         if (!authorityModule.hasNamespaceAuthority(
-                namespaceFinder.getNamespaceCode(GrayModelType.POLICY, policyId))) {
+                namespaceFinder.getNamespaceCode(GrayModelType.POLICY, query.getPolicyId()))) {
             return ResponseEntity.ok(ApiResHelper.notAuthority());
         }
-        Page<GrayDecision> page = grayPolicyModule.listGrayDecisionsByPolicyId(policyId, pageable);
+        Page<GrayDecision> page = grayPolicyModule.queryGrayDecisions(query, pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
         return new ResponseEntity<>(
                 ApiRes.<List<GrayDecision>>builder()
