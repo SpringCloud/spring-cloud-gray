@@ -1,6 +1,0 @@
-projectKey=spring-cloud-gray
-serverUrl=http://localhost:9000
-serverVersion=7.2.1.14109
-dashboardUrl=http://localhost:9000/dashboard?id=spring-cloud-gray
-ceTaskId=AW1fVWzFgy-FX-x1vcRc
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AW1fVWzFgy-FX-x1vcRc
