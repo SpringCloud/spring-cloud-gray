@@ -112,6 +112,7 @@
 </template>
 
 <script>
+import { getDefaultNamespace } from '@/utils/ns'
 import { fetchList, createRecord, deleteRecord, recoverRecord, getData } from '@/api/api-request'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -133,7 +134,7 @@ export default {
         type: 'INSTANCE_ROUTE',
         moduleId: this.$route.query.moduleId,
         resource: this.$route.query.resource,
-        ns: this.$route.query.ns || 'test',
+        ns: this.$route.query.ns || getDefaultNamespace(),
         delFlag: 'UNDELETE'
       },
       policyList: [],
