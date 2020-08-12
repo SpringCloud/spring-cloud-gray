@@ -328,22 +328,29 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
+      this.temp = {
+        id: row.id,
+        moduleId: row.moduleId,
+        resource: row.resource,
+        matchingPolicyIds: [],
+        handleOption: row.handleOption,
+        order: row.order,
+        namespace: row.namespace,
+        type: row.type
+      }
       this.resetPolicyList()
-      this.resetHandleList()
       this.temp.matchingPolicys = undefined
-      const matchingPolicyIds = []
+      this.temp.matchingPolicyIds = []
       for (var x = 0; x < row.matchingPolicys.length; x++) {
         const policy = row.matchingPolicys[x]
-        matchingPolicyIds.push(policy.policyId)
+        this.temp.matchingPolicyIds.push(policy.policyId)
       }
-      this.temp.matchingPolicyIds = matchingPolicyIds
-      console.log(this.temp.matchingPolicyIds)
+
+      this.resetHandleList()
       if (!row.handleOption === false) {
         this.temp.handleOption = parseInt(row.handleOption)
       }
 
-      this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
