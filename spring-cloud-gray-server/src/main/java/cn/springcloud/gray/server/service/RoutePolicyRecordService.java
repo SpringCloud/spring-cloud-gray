@@ -12,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +55,17 @@ public class RoutePolicyRecordService extends AbstraceCRUDService<RoutePolicyRec
         return dos2models(repository.findAll(specification));
     }
 
+
+    public RoutePolicyRecord findFirstAscByDelFlag(RoutePolicyQuery irpQuery) {
+        Specification<RoutePolicyRecordDO> specification = createSpecification(irpQuery);
+        Pageable pageable = new PageRequest(
+                0, 1, new Sort(new Sort.Order(Sort.Direction.ASC, "delFlag")));
+        Page<RoutePolicyRecordDO> page = repository.findAll(specification, pageable);
+        if (!page.hasContent()) {
+            return null;
+        }
+        return do2model(page.getContent().get(0));
+    }
 
     public RoutePolicyRecord find(String type, String moduleId, String resource, Long policyId) {
         return getModelMapper().do2model(

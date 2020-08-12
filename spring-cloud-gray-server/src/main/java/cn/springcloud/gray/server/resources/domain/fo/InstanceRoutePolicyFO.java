@@ -21,6 +21,9 @@ import javax.validation.constraints.NotNull;
 @ApiModel
 public class InstanceRoutePolicyFO {
 
+    @NotEmpty(message = "namespace不能为空")
+    @ApiModelProperty("命名空间")
+    private String namespace;
     @NotEmpty(message = "类型不能为空")
     @ApiModelProperty("类型,如service_route, instance_route, service_multi_ver_route")
     private String type;

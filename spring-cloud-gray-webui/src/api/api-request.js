@@ -38,6 +38,16 @@ export function deleteRecord(url, id) {
   })
 }
 
+export function recoverRecord(url, id) {
+  if (id) {
+    url = url + escape(id)
+  }
+  return request({
+    url: url,
+    method: 'patch'
+  })
+}
+
 export function putData(url, data) {
   return request({
     url: url,

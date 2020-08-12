@@ -6,6 +6,7 @@ import cn.springcloud.gray.server.module.gray.domain.GrayPolicyDecision;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,6 +18,8 @@ public interface GrayPolicyModule {
     Page<GrayPolicy> listEnabledGrayPoliciesByNamespace(String namespace, Pageable pageable);
 
     List<GrayPolicy> listAllEnabledGrayPolicies();
+
+    List<GrayPolicy> listAllGrayPolicies(Collection<Long> policyIds);
 
     List<GrayPolicy> listEnabledGrayPoliciesByNamespace(String namespace);
 

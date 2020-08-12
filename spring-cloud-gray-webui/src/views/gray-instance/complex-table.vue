@@ -82,7 +82,7 @@
           <el-button type="primary" size="mini" class="list-button" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <router-link :to="'/gray/instance/policy?instanceId='+escapeStr(row.instanceId)">
+          <router-link :to="`/routingPolicy/instanceGrayPolicyList?ns=${ns}&moduleId=${row.serviceId}&resource=${escapeStr(row.instanceId)}`">
             <el-button size="mini" type="success" class="list-button">
               策略
             </el-button>
@@ -228,6 +228,7 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      ns: this.$route.query.ns,
       listQuery: {
         page: 1,
         limit: 20,

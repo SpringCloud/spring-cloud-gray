@@ -60,12 +60,24 @@ public class JPARoutePolicyModule implements RoutePolicyModule {
 
     @Override
     public RoutePolicyRecord addRoutePolicy(String ns, RoutePolicy routePolicy, String operatorId) {
-        RoutePolicyRecord routePolicyRecord = createRoutePolicyRecord(ns, routePolicy, operatorId);
-        int state = saveRoutePolicyRecord(routePolicyRecord);
-        if (state > 0) {
-            triggerGrayEvent(TriggerType.ADD, routePolicyRecord);
+        RoutePolicyQuery query = RoutePolicyQuery.of(routePolicy);
+        query.setNs(ns);
+        RoutePolicyRecord routePolicyRecord = routePolicyRecordService.findFirstAscByDelFlag(query);
+        if (Objects.isNull(routePolicyRecord)) {
+            routePolicyRecord = createRoutePolicyRecord(ns, routePolicy, operatorId);
+            int state = saveRoutePolicyRecord(routePolicyRecord);
+            if (state > 0) {
+                triggerGrayEvent(TriggerType.ADD, routePolicyRecord);
+            }
+            return routePolicyRecord;
+        }
+
+        if (Objects.isNull(routePolicyRecord.getDelFlag()) || routePolicyRecord.getDelFlag()) {
+            updateRoutePolicyDelFlag(routePolicyRecord.getId(), false, operatorId);
+            return routePolicyRecordService.findOneModel(routePolicyRecord.getId());
         }
         return routePolicyRecord;
+
     }
 
 

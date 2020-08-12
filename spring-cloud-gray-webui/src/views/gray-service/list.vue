@@ -69,19 +69,36 @@
       </el-table-column>
       <el-table-column label="Actions" align="center" width="280" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            Edit
-          </el-button>
-          <router-link :to="'/gray/instance?serviceId='+row.serviceId">
-            <el-button size="mini" type="success" class="list-button">
+          <el-dropdown trigger="click">
+            <el-button size="mini" type="primary" style="width:80px" class="list-button">
+              编辑
+              <i class="el-icon-arrow-down" />
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="handleUpdate(row)">修改</el-dropdown-item>
+              <el-dropdown-item @click.native="handleDelete(row)">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <el-dropdown trigger="click">
+            <el-button size="mini" type="info" style="width:80px" class="list-button">
               实例
+              <i class="el-icon-arrow-down" />
             </el-button>
-          </router-link>
-          <router-link :to="'/gray/service/discovery-instances/'+row.serviceId+'?serviceId='+row.serviceId">
-            <el-button size="mini" type="success" class="list-button">
-              在线实例
+            <el-dropdown-menu slot="dropdown">
+              <router-link :to="`/gray/instance?ns=${row.namespace}&serviceId=${row.serviceId}`"><el-dropdown-item>实例列表</el-dropdown-item></router-link>
+              <router-link :to="'/gray/service/discovery-instances/'+row.serviceId+'?serviceId='+row.serviceId"><el-dropdown-item>在线实例</el-dropdown-item></router-link>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <el-dropdown trigger="click">
+            <el-button size="mini" type="danger" style="width:80px" class="list-button">
+              灰度
+              <i class="el-icon-arrow-down" />
             </el-button>
-          </router-link>
+            <el-dropdown-menu slot="dropdown">
+              <router-link :to="`/routingPolicy/serviceGrayPolicys?ns=${row.namespace}&resource=${row.serviceId}`"><el-dropdown-item>服务灰度</el-dropdown-item></router-link>
+              <router-link :to="`/routingPolicy/serviceMultiVersionGrayPolicys?ns=${row.namespace}&moduleId=${row.serviceId}`"><el-dropdown-item>多版本灰度</el-dropdown-item></router-link>
+            </el-dropdown-menu>
+          </el-dropdown>
           <router-link :to="'/gray/trackor?serviceId='+row.serviceId">
             <el-button size="mini" type="success" class="list-button">
               追踪
@@ -92,9 +109,6 @@
               权限
             </el-button>
           </router-link>
-          <el-button size="mini" type="danger" class="list-button" @click="handleDelete(row)">
-            Delete
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
