@@ -1,8 +1,12 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-select ref="" v-model="listQuery.namespace" placeholder="请选择">
+        <el-option v-for="item in nsList" :key="item.code" :label="item.name" :value="item.code" />
+      </el-select>
+
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        Refresh
+        Search
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         Add
@@ -52,7 +56,7 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <router-link :to="'/gray/instance/policy/decision/'+row.id">
+          <router-link :to="'/policy/grayPolicys/decision/'+row.id">
             <el-button size="mini" type="success">
               决策
             </el-button>
@@ -95,6 +99,7 @@
 </template>
 
 <script>
+import { getData } from '@/api/api-request'
 import { fetchList, deletePolicy, createPolicy, updatePolicy } from '@/api/gray-policy'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -120,15 +125,16 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        instanceId: unescape(this.$route.query.instanceId || '')
+        namespace: 'test'
       },
+      nsList: [],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
       temp: {
         id: undefined,
-        instanceId: unescape(this.$route.query.instanceId || ''),
+        namespace: '',
         alias: ''
       },
       dialogFormVisible: false,
@@ -148,11 +154,17 @@ export default {
   },
   created() {
     this.tempRoute = Object.assign({}, this.$route)
+    this.getNamespaceList()
     this.getList()
-    this.setTagsViewTitle()
-    this.setPageTitle()
+    /** this.setTagsViewTitle()
+    this.setPageTitle() */
   },
   methods: {
+    getNamespaceList() {
+      getData('/namespace/listAll').then(response => {
+        this.nsList = response.data
+      })
+    },
     setPageTitle() {
       const title = '灰度策略'
       document.title = `${title} - ${this.listQuery.instanceId}`
@@ -202,10 +214,9 @@ export default {
       this.handleFilter()
     },
     resetTemp() {
-      const instanceId = this.listQuery.instanceId
       this.temp = {
         id: undefined,
-        instanceId: instanceId,
+        namespace: this.listQuery.namespace,
         alias: ''
       }
     },
@@ -221,7 +232,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
+          this.temp.namespace = this.listQuery.namespace
           createPolicy(this.temp).then(response => {
             this.list.unshift(response.data)
             this.dialogFormVisible = false

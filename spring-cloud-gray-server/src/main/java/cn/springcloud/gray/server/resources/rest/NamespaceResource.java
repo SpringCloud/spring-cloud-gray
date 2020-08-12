@@ -6,6 +6,7 @@ import cn.springcloud.gray.server.module.domain.Namespace;
 import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.resources.domain.fo.NamespaceFO;
+import cn.springcloud.gray.server.resources.domain.vo.NamespaceOptionVO;
 import cn.springcloud.gray.server.resources.domain.vo.NamespaceVO;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
@@ -53,6 +54,14 @@ public class NamespaceResource {
             return ApiResHelper.notAuthority();
         }
         return ApiResHelper.successData(namespace);
+    }
+
+
+    @ApiOperation("分页获取namespace信息")
+    @RequestMapping(value = "/listAll", method = RequestMethod.GET)
+    public ApiRes<List<NamespaceOptionVO>> listAll() {
+        List<Namespace> namespaces = namespaceModule.listAll(userModule.getCurrentUserId());
+        return ApiResHelper.successData(NamespaceOptionVO.of(namespaces));
     }
 
 

@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gray_policy", indexes = {@Index(columnList = "alias_name", unique = true), @Index(columnList = "namespace", unique = true)})
+@Table(name = "gray_policy", indexes = {@Index(columnList = "alias_name", unique = true), @Index(columnList = "namespace")})
 public class GrayPolicyDO {
 
     @Id

@@ -12,6 +12,7 @@ import cn.springcloud.gray.utils.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -46,6 +47,11 @@ public class JPANamespaceModule implements NamespaceModule {
     @Override
     public Page<Namespace> listAll(Pageable pageable) {
         return namespaceService.findAllModels(pageable);
+    }
+
+    @Override
+    public List<Namespace> listAll(String userId) {
+        return namespaceService.findAllByUser(userId);
     }
 
     @Override

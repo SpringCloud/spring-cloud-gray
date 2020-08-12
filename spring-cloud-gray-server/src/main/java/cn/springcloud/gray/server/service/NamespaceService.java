@@ -44,7 +44,34 @@ public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRe
     }
 
     public Page<Namespace> findAllByUser(String userId, Pageable pageable) {
-        Specification<NamespaceDO> specification = new Specification<NamespaceDO>() {
+        Specification<NamespaceDO> specification = createSpecificationByUserId(userId);
+        Page<NamespaceDO> page = repository.findAll(specification, pageable);
+        return PaginationUtils.convert(pageable, page, mapper);
+    }
+
+    public List<Namespace> findAllByUser(String userId) {
+        Specification<NamespaceDO> specification = createSpecificationByUserId(userId);
+        List<NamespaceDO> list = repository.findAll(specification);
+        return dos2models(list);
+    }
+
+
+    public boolean setDefaultNamespace(String userId, String nsCode) {
+        DefaultNamespaceDO defaultNamespaceDO = new DefaultNamespaceDO();
+        defaultNamespaceDO.setNsCode(nsCode);
+        defaultNamespaceDO.setUserId(userId);
+        defaultNamespaceRepository.save(defaultNamespaceDO);
+        return true;
+    }
+
+    public String getDefaultNamespace(String userId) {
+        DefaultNamespaceDO defaultNamespaceDO = defaultNamespaceRepository.getOne(userId);
+        return Objects.nonNull(defaultNamespaceDO) ? defaultNamespaceDO.getNsCode() : null;
+    }
+
+
+    private Specification<NamespaceDO> createSpecificationByUserId(String userId) {
+        return new Specification<NamespaceDO>() {
             @Override
             public Predicate toPredicate(Root<NamespaceDO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList();
@@ -64,22 +91,5 @@ public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRe
                 return query.getRestriction();
             }
         };
-
-        Page<NamespaceDO> page = repository.findAll(specification, pageable);
-        return PaginationUtils.convert(pageable, page, mapper);
-    }
-
-
-    public boolean setDefaultNamespace(String userId, String nsCode) {
-        DefaultNamespaceDO defaultNamespaceDO = new DefaultNamespaceDO();
-        defaultNamespaceDO.setNsCode(nsCode);
-        defaultNamespaceDO.setUserId(userId);
-        defaultNamespaceRepository.save(defaultNamespaceDO);
-        return true;
-    }
-
-    public String getDefaultNamespace(String userId) {
-        DefaultNamespaceDO defaultNamespaceDO = defaultNamespaceRepository.getOne(userId);
-        return Objects.nonNull(defaultNamespaceDO) ? defaultNamespaceDO.getNsCode() : null;
     }
 }
