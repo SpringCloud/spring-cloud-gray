@@ -38,9 +38,10 @@ public class SimpleEventTypeRegistry implements EventTypeRegistry {
 
     private Class<? extends GrayEvent> parseEventClass(String eventClass) throws ClassNotFoundException {
         Class<?> cls = ClassUtils.getClass(eventClass);
-        if (!cls.isAssignableFrom(GrayEvent.class)) {
+        if (!GrayEvent.class.isAssignableFrom(cls)) {
             throw new ClassCastException(eventClass + " can not cast to " + GrayEvent.class);
         }
         return (Class<? extends GrayEvent>) cls;
     }
+
 }
