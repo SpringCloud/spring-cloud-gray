@@ -129,9 +129,9 @@ public class NamespaceResource {
 
     @ApiOperation("获取默认namespace")
     @RequestMapping(value = "/default", method = RequestMethod.GET)
-    public ApiRes<Void> getDefault() {
+    public ApiRes<String> getDefault() {
         String nscode = namespaceModule.getDefaultNamespace(userModule.getCurrentUserId());
-        return ApiResHelper.success(nscode);
+        return ApiResHelper.successData(nscode);
     }
 
 

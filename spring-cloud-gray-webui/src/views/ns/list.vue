@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import { setDefaultNamespace } from '@/utils/ns'
 import { fetchList, createRecord, deleteRecord, putData } from '@/api/api-request'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -240,6 +241,7 @@ export default {
             }
           }
           row.default = true
+          setDefaultNamespace(row.code)
           this.$notify({
             title: 'Success',
             message: 'Delete Successfully',
