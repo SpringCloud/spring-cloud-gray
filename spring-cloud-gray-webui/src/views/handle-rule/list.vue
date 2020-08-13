@@ -63,12 +63,17 @@
       </el-table-column>
       <el-table-column label="Handle Option" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.handleOptionAlias }}</span>
+          <router-link :to="`/policy/handle/action?handleId=${scope.row.handleOption}`">
+            <span class="link-type">{{ scope.row.handleOptionAlias }}</span>
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column label="Matching Policys" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.matchingPolicys }}</span>
+          <router-link v-for="(item, index) in scope.row.matchingPolicys" :key="item.policyId" :to="`/policy/handle/action?handleId=${item.policyId}`">
+            <span class="link-type">{{ item.policyName }}</span> <span v-if="(index + 1) < scope.row.matchingPolicys.length"> | </span>
+            <!--<el-tag>{{ item.policyName }}</el-tag>-->
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column label="Order" align="center">
@@ -91,15 +96,10 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <router-link :to="`/policy/handle/action?handleId=${row.id}`">
-            <el-button size="mini" type="success">
-              动作
-            </el-button>
-          </router-link>
           <el-button v-if="!row.delFlag" size="mini" type="danger" @click="handleDelete(row)">
-            Delete
+            删除
           </el-button>
-          <el-button v-if="row.delFlag" size="mini" type="primary" @click="handleRecover(row)">
+          <el-button v-if="row.delFlag" size="mini" type="success" @click="handleRecover(row)">
             恢复
           </el-button>
         </template>
