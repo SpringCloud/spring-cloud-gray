@@ -27,12 +27,15 @@ public class GrayEventLogRetriever implements GrayEventRetriever {
     private GenericRetriever<EventConverter> genericRetriever;
     private GrayEventDecoder<String> grayEventDecoder;
     private Map<String, Class<? extends GrayEvent>> grayEventTypeClsMappings = new HashMap<>();
+    private EventTypeRegistry eventTypeRegistry;
 
 
     public GrayEventLogRetriever(
+            EventTypeRegistry eventTypeRegistry,
             GrayEventLogModule grayEventLogModule,
             List<EventConverter> eventConverters,
             GrayEventDecoder<String> grayEventDecoder) {
+        this.eventTypeRegistry = eventTypeRegistry;
         this.grayEventLogModule = grayEventLogModule;
         this.genericRetriever = new GenericRetriever<>(eventConverters, EventConverter.class, 1);
         this.grayEventDecoder = grayEventDecoder;
@@ -48,7 +51,8 @@ public class GrayEventLogRetriever implements GrayEventRetriever {
 
     @Override
     public Class<? extends GrayEvent> retrieveTypeClass(String type) {
-        return grayEventTypeClsMappings.get(type);
+        Class<? extends GrayEvent> cls = grayEventTypeClsMappings.get(type);
+        return Objects.isNull(cls) ? eventTypeRegistry.lookup(type) : cls;
     }
 
 
