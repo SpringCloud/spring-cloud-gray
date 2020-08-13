@@ -164,6 +164,7 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
+              this.$store.dispatch('ns/initDefault')
             })
             .catch(() => {
               this.loading = false
