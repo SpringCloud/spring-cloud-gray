@@ -1,8 +1,7 @@
 package cn.springcloud.gray.server.configuration;
 
-import cn.springcloud.gray.server.event.triggering.GrayEventInitializer;
-import cn.springcloud.gray.server.event.triggering.GrayEventLogRetriever;
-import cn.springcloud.gray.server.event.triggering.GrayEventStorage;
+import cn.springcloud.gray.server.configuration.properties.GrayServerEventProperties;
+import cn.springcloud.gray.server.event.triggering.*;
 import cn.springcloud.gray.server.event.triggering.converter.*;
 import cn.springcloud.gray.server.module.gray.GrayEventLogModule;
 import cn.springcloud.gray.server.module.gray.GrayModule;
@@ -27,6 +26,9 @@ import java.util.Objects;
 @Configuration
 public class GrayServerEventTriggeringAutoConfiguration {
 
+
+    @Autowired
+    private GrayServerEventProperties grayServerEventProperties;
 
     @Bean
     @ConditionalOnMissingBean
@@ -60,14 +62,20 @@ public class GrayServerEventTriggeringAutoConfiguration {
         return new DefaultGrayEventTrigger(grayEventSender, grayEventLogger);
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public EventTypeRegistry eventTypeRegistry() throws ClassNotFoundException {
+        return new DefaultEventTypeRegistry(grayServerEventProperties);
+    }
 
     @Bean
     @ConditionalOnMissingBean
     public GrayEventRetriever grayEventRetriever(
+            EventTypeRegistry eventTypeRegistry,
             GrayEventLogModule grayEventLogModule,
             List<EventConverter> eventConverters,
             GrayEventCodec grayEventCodec) {
-        return new GrayEventLogRetriever(grayEventLogModule, eventConverters, grayEventCodec);
+        return new GrayEventLogRetriever(eventTypeRegistry, grayEventLogModule, eventConverters, grayEventCodec);
     }
 
 
