@@ -46,7 +46,7 @@ public class ServiceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<SE
             serverSpecList = filterServiceGrayPolicies(grayService.getRoutePolicies().getDatas(), serverSpecs);
         }
 
-        Collection<String> multiVersions = grayService.getMultiVersionRotePolicies().keySet();
+        Collection<String> multiVersions = getMultiVersions(grayService);
         if (CollectionUtils.isEmpty(multiVersions)) {
             return new ServerListResult<>(serviceId, Collections.EMPTY_LIST, serverSpecList);
         }
@@ -63,6 +63,17 @@ public class ServiceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<SE
         return new ServerListResult<>(serviceId, grayServerSpecs, normalServerSpecs);
     }
 
+    private Collection<String> getMultiVersions(GrayService grayService) {
+        Map<String, DataSet<String>> map = grayService.getMultiVersionRotePolicies();
+        Set<String> versions = new HashSet<>(map.size());
+        map.forEach((k, v) -> {
+            if (!v.isEmpty()) {
+                versions.add(k);
+            }
+        });
+        return versions;
+    }
+
     @Override
     protected List<ServerSpec<SERVER>> filterServerSpecAccordingToRoutePolicy(
             String serviceId, List<ServerSpec<SERVER>> serverSpecs) {
@@ -75,7 +86,7 @@ public class ServiceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<SE
         if (Objects.isNull(policyPredicate)) {
             log.error("没有找到灰度策略断言器, predicateType:{}, service级的筛选跳过",
                     PredicateType.SERVICE_MULTI_VERSION_SERVER.name());
-            return serverSpecs;
+            return serverSpecs; //todo 评估是否过滤掉Gray list
         }
 
         GrayService grayService = getGrayManager().getGrayService(serviceId);
@@ -110,8 +121,7 @@ public class ServiceGrayServerSorter<SERVER> extends AbstractGrayServerSorter<SE
                 multiVersionPolicies.put(version, policies);
             }
 
-            return CollectionUtils.isEmpty(policies)
-                    || policyPredicate.testPolicies(policies, createDecisionInputArgs(serverSpec));
+            return !CollectionUtils.isEmpty(policies) && policyPredicate.testPolicies(policies, createDecisionInputArgs(serverSpec));
         }).collect(Collectors.toList());
     }
 
