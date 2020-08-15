@@ -5,6 +5,7 @@ import org.apache.commons.collections.SetUtils;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author saleson
@@ -139,5 +140,11 @@ public class StringUtils {
 
     public static boolean isNotEmpty(final CharSequence cs) {
         return !isEmpty(cs);
+    }
+
+
+    public static String generateUUID() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid.replaceAll("-", "");
     }
 }

@@ -1,5 +1,7 @@
 package cn.springlcoud.gray.event.server;
 
+import cn.springcloud.gray.keeper.ListKeeper;
+import cn.springcloud.gray.keeper.SyncListKeeper;
 import cn.springcloud.gray.retriever.GenericRetriever;
 import cn.springlcoud.gray.event.GrayEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
 
     private GrayEventSender grayEventSender;
     private GenericRetriever<EventConverter> genericRetriever;
+    private ListKeeper<GrayEventObserver> grayEventObservers = new SyncListKeeper<>();
 
     public AbstractGrayEventTrigger(GrayEventSender grayEventSender) {
         this(grayEventSender, null);
@@ -32,6 +35,8 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
     @Override
     public void triggering(Object eventSource, TriggerType triggerType) {
         GrayEvent grayEvent = convertGrayEvent(eventSource, triggerType);
+        noticeObservers(GrayEventObserveState.CREATED, grayEvent);
+
         if (Objects.isNull(grayEvent)) {
 //            log.warn("转换失败, grayEvent is null, eventSource:{}, triggerType:{}", eventSource, triggerType);
             return;
@@ -40,6 +45,8 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
             grayEvent.setTriggerType(triggerType);
         }
         grayEventSender.send(grayEvent);
+
+        noticeObservers(GrayEventObserveState.SENT, grayEvent);
     }
 
     protected abstract void logEventTrigger(Object eventSource, TriggerType triggerType, GrayEvent grayEvent);
@@ -47,6 +54,23 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
 
     public void createEventConverterRetriever(List<EventConverter> eventConverters) {
         this.genericRetriever = new GenericRetriever<>(eventConverters, EventConverter.class);
+    }
+
+
+    public void addObserver(GrayEventObserver observer) {
+        grayEventObservers.add(observer);
+    }
+
+    public void removeObserver(GrayEventObserver observer) {
+        grayEventObservers.remove(observer);
+    }
+
+    public List<GrayEventObserver> getObservers() {
+        return grayEventObservers.values();
+    }
+
+    protected void noticeObservers(GrayEventObserveState observeState, GrayEvent grayEvent) {
+        getObservers().forEach(observer -> observer.observe(observeState, grayEvent));
     }
 
     protected GrayEvent convertGrayEvent(Object eventSource, TriggerType triggerType) {

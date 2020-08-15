@@ -4,6 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author saleson
  * @date 2020-05-10 18:38
@@ -65,6 +69,12 @@ public class SpringApplicationContextUtils {
             log.warn("没有从spring容器中找到name为'{}', class为'{}'的Bean", beanName, cls);
             return null;
         }
+    }
+
+
+    public static <T> List<T> getBeans(ApplicationContext cxt, Class<T> cls) {
+        Map<String, T> beanMap = cxt.getBeansOfType(cls);
+        return new ArrayList<>(beanMap.values());
     }
 
 

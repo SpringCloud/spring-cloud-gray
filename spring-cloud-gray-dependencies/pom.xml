@@ -100,6 +100,11 @@
             </dependency>
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-server-cluster</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-starter-gray-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -181,6 +186,12 @@
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-server-plugin-nacos-discovery</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-server-cluster-http-synchro-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- gray server plugins end -->

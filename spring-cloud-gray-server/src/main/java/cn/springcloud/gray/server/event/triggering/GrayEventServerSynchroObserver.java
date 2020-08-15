@@ -1,0 +1,35 @@
+package cn.springcloud.gray.server.event.triggering;
+
+import cn.springcloud.gray.server.clustering.synchro.ServerSynchronizer;
+import cn.springcloud.gray.server.clustering.synchro.SynchData;
+import cn.springcloud.gray.server.clustering.synchro.SynchroDataTypeConstants;
+import cn.springlcoud.gray.event.GrayEvent;
+import cn.springlcoud.gray.event.server.GrayEventObserveState;
+import cn.springlcoud.gray.event.server.GrayEventObserver;
+
+import java.util.Objects;
+
+/**
+ * @author saleson
+ * @date 2020-08-16 04:32
+ */
+public class GrayEventServerSynchroObserver implements GrayEventObserver {
+
+    private ServerSynchronizer serverSynchronizer;
+
+    public GrayEventServerSynchroObserver(ServerSynchronizer serverSynchronizer) {
+        this.serverSynchronizer = serverSynchronizer;
+    }
+
+    @Override
+    public void observe(GrayEventObserveState observeState, GrayEvent grayEvent) {
+        if (!Objects.equals(GrayEventObserveState.SENT, observeState)) {
+            return;
+        }
+
+        SynchData synchData = new SynchData();
+        synchData.setDataType(SynchroDataTypeConstants.GRAY_EVENT);
+        synchData.setData(grayEvent);
+        serverSynchronizer.broadcast(synchData);
+    }
+}
