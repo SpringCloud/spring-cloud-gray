@@ -104,8 +104,8 @@ public class RoutePolicyEventListener extends AbstractGrayEventListener<RoutePol
         invokeAndFilterSelfService(event.getRoutePolicy(), routePolicy -> {
             GrayService grayService = grayManager.getGrayService(routePolicy.getModuleId());
             if (Objects.isNull(grayService)) {
-                log.warn("没有找到GrayService, serviceId:{}", routePolicy.getModuleId());
-                return;
+                log.warn("没有找到GrayService, serviceId:{}, 创建GrayService", routePolicy.getModuleId());
+                grayService = grayManager.createGrayService(routePolicy.getModuleId());
             }
             grayService.getRoutePolicies().addData(String.valueOf(routePolicy.getPolicyId()));
         });
