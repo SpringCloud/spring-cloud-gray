@@ -3,13 +3,16 @@ package cn.springlcoud.gray.event;
 import cn.springlcoud.gray.event.server.TriggerType;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author saleson
  * @date 2020-01-30 12:41
  */
 @Data
-public abstract class GrayEvent {
+public abstract class GrayEvent implements Serializable {
 
+    private static final long serialVersionUID = -1040335939179513841L;
     private long timestamp;
 
     private long sortMark;

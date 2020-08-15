@@ -24,6 +24,11 @@
 
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-server-cluster-http-synchro-plugin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-server-plugin-event-longpolling</artifactId>
         </dependency>
 

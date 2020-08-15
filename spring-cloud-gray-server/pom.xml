@@ -41,6 +41,10 @@
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-event</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-server-cluster</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

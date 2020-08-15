@@ -1,5 +1,6 @@
 package cn.springcloud.gray.server.configuration;
 
+import cn.springcloud.gray.server.clustering.synchro.ServerSynchronizer;
 import cn.springcloud.gray.server.configuration.properties.GrayServerEventProperties;
 import cn.springcloud.gray.server.event.triggering.*;
 import cn.springcloud.gray.server.event.triggering.converter.*;
@@ -137,6 +138,11 @@ public class GrayServerEventTriggeringAutoConfiguration {
     @ConditionalOnMissingBean(name = "handleRuleEventConverter")
     public HandleRuleEventConverter handleRuleEventConverter(GrayModule grayModule) {
         return new HandleRuleEventConverter(grayModule);
+    }
+
+    @Bean
+    public GrayEventServerSynchroObserver grayEventServerSynchroObserver(ServerSynchronizer serverSynchronizer) {
+        return new GrayEventServerSynchroObserver(serverSynchronizer);
     }
 
 }
