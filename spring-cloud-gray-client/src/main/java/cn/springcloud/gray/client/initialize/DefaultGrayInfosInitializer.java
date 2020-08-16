@@ -52,13 +52,7 @@ public class DefaultGrayInfosInitializer implements GrayInfosInitializer {
             return;
         }
         scheduleOpenForWorkCount++;
-
-        updateTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                openForWork();
-            }
-        }, getGrayClientConfig().getInfosInitializeDelayTimeInMs());
+        openForWork();
     }
 
     public void openForWork() {
@@ -69,6 +63,11 @@ public class DefaultGrayInfosInitializer implements GrayInfosInitializer {
             if (timerMs > 0) {
                 updateTimer.schedule(new DefaultGrayInfosInitializer.UpdateTask(), timerMs, timerMs);
             } else if (!t) {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+
+                }
                 scheduleOpenForWork();
             }
         }
