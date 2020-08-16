@@ -1,5 +1,6 @@
 package cn.springcloud.gray.server.configuration.properties;
 
+import cn.springcloud.gray.concurrent.ExecutorConcurrentStrategy;
 import cn.springcloud.gray.server.clustering.PeerNode;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,4 +16,12 @@ import java.util.List;
 @ConfigurationProperties(prefix = "gray.server.cluster")
 public class ClusterProperties {
     private List<PeerNode> peerNodes = new ArrayList<>();
+    private SynchroProperties synchro = new SynchroProperties();
+
+    @Data
+    public class SynchroProperties {
+        private ExecutorConcurrentStrategy executorConcurrentStrategy = new ExecutorConcurrentStrategy();
+
+    }
+
 }

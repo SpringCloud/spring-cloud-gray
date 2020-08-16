@@ -13,6 +13,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author saleson
@@ -24,20 +28,27 @@ public class HttpServerSynchronizer implements ServerSynchronizer {
     private int peerNodeSynchronizeRetryTimes;
     private RestTemplate rest;
     private ServerCluster serverCluster;
-
+    private ExecutorService executorService;
 
     public HttpServerSynchronizer(ServerCluster serverCluster) {
-        this(new RestTemplate(), serverCluster);
+        this(serverCluster, new ThreadPoolExecutor(10, 10,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>(10)));
     }
 
-    public HttpServerSynchronizer(RestTemplate rest, ServerCluster serverCluster) {
-        this(3, rest, serverCluster);
+    public HttpServerSynchronizer(ServerCluster serverCluster, ExecutorService executorService) {
+        this(new RestTemplate(), serverCluster, executorService);
     }
 
-    public HttpServerSynchronizer(int peerNodeSynchronizeRetryTimes, RestTemplate rest, ServerCluster serverCluster) {
+    public HttpServerSynchronizer(RestTemplate rest, ServerCluster serverCluster, ExecutorService executorService) {
+        this(3, rest, serverCluster, executorService);
+    }
+
+    public HttpServerSynchronizer(int peerNodeSynchronizeRetryTimes, RestTemplate rest, ServerCluster serverCluster, ExecutorService executorService) {
         this.peerNodeSynchronizeRetryTimes = peerNodeSynchronizeRetryTimes;
         this.rest = rest;
         this.serverCluster = serverCluster;
+        this.executorService = executorService;
     }
 
     @Override
@@ -46,13 +57,14 @@ public class HttpServerSynchronizer implements ServerSynchronizer {
         if (ArrayUtils.isEmpty(peerNodes)) {
             return;
         }
-        //todo 计划改为异步
-        if (StringUtils.isEmpty(synchData.getId())) {
-            synchData.setId(StringUtils.defaultString(synchData.getDataType()) +
-                    cn.springcloud.gray.utils.StringUtils.generateUUID());
-        }
+        executorService.execute(() -> {
+            if (StringUtils.isEmpty(synchData.getId())) {
+                synchData.setId(StringUtils.defaultString(synchData.getDataType()) +
+                        cn.springcloud.gray.utils.StringUtils.generateUUID());
+            }
 
-        broadcastSynchData(synchData, peerNodes);
+            broadcastSynchData(synchData, peerNodes);
+        });
     }
 
     private void broadcastSynchData(SynchData synchData, String[] peerNodes) {
