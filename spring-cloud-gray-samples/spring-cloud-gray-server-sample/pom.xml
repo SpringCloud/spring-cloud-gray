@@ -34,6 +34,12 @@
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-starter-gray-server</artifactId>
+            <!--            <exclusions>-->
+            <!--                <exclusion>-->
+            <!--                    <artifactId>spring-cloud-gray-server-plugin-event-longpolling</artifactId>-->
+            <!--                    <groupId>cn.springcloud.gray</groupId>-->
+            <!--                </exclusion>-->
+            <!--            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
@@ -41,20 +47,24 @@
         </dependency>
 
         <!-- nacos -->
-<!--        <dependency>-->
-<!--            <groupId>cn.springcloud.gray</groupId>-->
-<!--            <artifactId>spring-cloud-gray-server-plugin-nacos-discovery</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.alibaba.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>cn.springcloud.gray</groupId>-->
+        <!--            <artifactId>spring-cloud-gray-server-plugin-nacos-discovery</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+        <!--        </dependency>-->
 
 
-<!--        <dependency>-->
-<!--            <groupId>cn.springcloud.gray</groupId>-->
-<!--            <artifactId>spring-cloud-gray-server-plugin-event-stream</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>cn.springcloud.gray</groupId>-->
+        <!--            <artifactId>spring-cloud-gray-server-plugin-event-stream</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>-->
+        <!--        </dependency>-->
 
     </dependencies>
 
