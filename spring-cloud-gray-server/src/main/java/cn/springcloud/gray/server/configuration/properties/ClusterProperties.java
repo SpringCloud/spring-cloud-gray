@@ -20,6 +20,7 @@ public class ClusterProperties {
 
     @Data
     public class SynchroProperties {
+        private boolean enable = true;
         private ExecutorConcurrentStrategy executorConcurrentStrategy = new ExecutorConcurrentStrategy();
 
     }

@@ -6,6 +6,7 @@ import cn.springcloud.gray.server.clustering.synchro.http.HttpServerSynchronizer
 import cn.springcloud.gray.server.clustering.synchro.http.ServerSynchDataAcceptEndpoint;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +17,7 @@ import java.util.concurrent.ExecutorService;
  * @date 2020-08-16 04:48
  */
 @Configuration
+@ConditionalOnProperty(value = "gray.server.cluster.synchro.enable", matchIfMissing = true)
 public class HttpSynchroAutoConfiguration {
 
     @Bean
