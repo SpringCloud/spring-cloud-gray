@@ -1,5 +1,5 @@
 server:
-  port: 20202
+  port: 20203
 spring:
   application:
     name: gray-Server
@@ -60,7 +60,7 @@ eureka:
 gray:
   server:
     cluster:
-      peerNodes:
+      peer-nodes:
         - host: localhost
           port: 20202
         - host: localhost

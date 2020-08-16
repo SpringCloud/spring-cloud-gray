@@ -66,8 +66,8 @@ gray:
   hystrix:
     enabled: true
   server:
-    url: http://localhost:20202
-    loadbalanced: false
+    url: http://gray-Server
+    loadbalanced: true
     retryable: true
     retryNumberOfRetries: 3
   client:
@@ -119,4 +119,9 @@ gray:
 #  client:
 #    instance:
 #      grayEnroll: false #是否在启动后自动注册成灰度实例
+logging:
+  level:
+    cn:
+      springcloud:
+        gray: debug
 #    serverUrl: http://localhost:20202 #灰度服务端的url
