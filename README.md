@@ -2,9 +2,9 @@
 
 
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![A Release](https://img.shields.io/badge/release-A.1.2.0-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/A.1.1.2)
-[![B Release](https://img.shields.io/badge/release-B.0.1.0-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/B.0.0.2)
-[![B Release](https://img.shields.io/badge/release-C.0.1.0-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/C.0.0.1)
+[![A Release](https://img.shields.io/badge/release-A.1.1.6-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/A.1.1.6)
+[![B Release](https://img.shields.io/badge/release-B.0.0.6-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/B.0.0.6)
+[![B Release](https://img.shields.io/badge/release-C.0.0.5-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/C.0.0.5)
 
 ## 介绍
 Spring Cloud Gray 是一套开源的微服务灰度路由解决方案，它由spring-cloud-gray-client，spring-cloud-gray-client-netflix 和 spring-cloud-tray-server，spring-cloud-gray-webui组成。<br/>
@@ -34,11 +34,11 @@ insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`
 [管控端界面使用手册](doc/guide/gray-admin-guide.md)<br/>
 
 ## 版本信息
-项目分支 | srpingcloud版本 | springboot版本
---- | --- | ---
-A | Edgware | 1.5.*
-B | Finchley | 2.0.*
-C | Greenwich | 2.1.*
+项目分支 | 项目版本 | srpingcloud版本 | springboot版本
+--- | --- | --- | ---
+A | A.1.1.6 | Edgware | 1.5.*
+B | B.0.0.6 | Finchley | 2.0.*
+C | C.0.0.5 | Greenwich | 2.1.*
 
 
 ## Spring Cloud Gray 能做什么
@@ -177,7 +177,6 @@ spring-cloud-gray-plugin-zuul | 灰度客户端与zuul 1.0集成的插件
 spring-cloud-gray-plugin-gateway | 灰度客户端与spring cloud gateway集成的插件(B版及以上)
 spring-cloud-gray-plugin-event-stream | 灰度客户端与spring cloud stream(rabbitmq)集成的插件
 spring-cloud-gray-plugin-ribbon-nacos-discovery | 灰度客户端支持ribbon与注册中心nacos集成的插件
-spring-cloud-gray-plugin-refresher | 灰度客户端通过配置中心刷新灰度实例、灰度追踪的插件
 spring-cloud-gray-server | 灰度管控端的核心代码
 spring-cloud-gray-server-plugin-eureka | 灰度管控端与注册中心eureka集成的插件
 spring-cloud-gray-server-plugin-event-stream | 灰度管控端与spring cloud stream(rabbitmq)集成的插件
@@ -197,8 +196,6 @@ spring-cloud-gray-service-a-sample | 服务提供方示例
 spring-cloud-gray-service-a1-sample | 服务提供方示例
 spring-cloud-gray-ervice-b-sample | 服务消费方示例
 spring-cloud-gray-zuul-sample | zuul网关示例
-spring-cloud-gray-apollo-config-sample | apollo配置中心动态刷新灰度实例、灰度追踪示例
-spring-cloud-gray-consumer-nacos-config-sample | nacos配置中心动态刷新灰度实例、灰度追踪示例
 spring-cloud-gray-gateway-sample | spring-cloud-gateway网关示例(B版及以上)
 
 
@@ -217,7 +214,6 @@ HttpTrackParameter | HttpTrackParameterGrayDecisionFactory | 根据灰度追踪�
 TraceIpGray | TraceIpGrayDecisionFactory | 根据灰度追踪记录的请求ip进行判断
 TrackAttribute | TrackAttributeGrayDecisionFactory | 根据灰度追踪记录的属性值进行判断
 FlowRateGray | FlowRateGrayDecisionFactory | 按百分比放量进行判断
-RandomFlowRate | RandomFlowRateGrayDecisionFactory | 随机放量
 
 ### 自定义灰度决策实现
 如果上面这些决策还不能满足需求，那么可以扩展`cn.springcloud.gray.decision.factory.GrayDecisionFactory`，实现自定义的逻辑，发布到spring 容器中即可。如:
