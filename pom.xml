@@ -76,7 +76,7 @@
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-codec.version>1.10</commons-codec.version>
-        <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <guava.version>27.0.1-jre</guava.version>
         <mapstruct.version>1.1.0.Final</mapstruct.version>
         <caffeine.version>2.7.0</caffeine.version>
