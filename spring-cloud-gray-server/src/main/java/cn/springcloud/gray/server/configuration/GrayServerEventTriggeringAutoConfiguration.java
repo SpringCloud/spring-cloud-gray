@@ -13,6 +13,7 @@ import cn.springlcoud.gray.event.server.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -141,6 +142,7 @@ public class GrayServerEventTriggeringAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnBean(ServerSynchronizer.class)
     public GrayEventServerSynchroObserver grayEventServerSynchroObserver(ServerSynchronizer serverSynchronizer) {
         return new GrayEventServerSynchroObserver(serverSynchronizer);
     }
