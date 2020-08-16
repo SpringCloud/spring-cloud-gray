@@ -299,7 +299,7 @@ public class SimpleGrayModule implements GrayModule {
             definition.setInfos(objectMapper.readValue(handleAction.getInfos(), new TypeReference<Map<String, String>>() {
             }));
         } catch (IOException e) {
-            log.error("解决HandleAction.infos失败，{}", handleAction, e);
+            log.error("解析HandleAction.infos失败，{}", handleAction, e);
             return null;
         }
         return definition;

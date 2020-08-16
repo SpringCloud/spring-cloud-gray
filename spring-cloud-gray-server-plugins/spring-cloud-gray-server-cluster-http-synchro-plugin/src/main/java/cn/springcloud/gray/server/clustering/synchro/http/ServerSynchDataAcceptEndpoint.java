@@ -45,9 +45,9 @@ public class ServerSynchDataAcceptEndpoint {
 
         try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(objBytes))) {
             SynchData synchData = (SynchData) ois.readObject();
-            log.info("Synch Signal Id:{} 同步数据对象转换成功");
+            log.info("Synch Signal Id:{} 同步数据对象转换成功", synchSignal.getId());
             synchDataAcceptor.accept(synchData);
-            log.info("Synch Signal Id:{} 同步数据对象接收完成");
+            log.info("Synch Signal Id:{} 同步数据对象接收完成", synchSignal.getId());
         } catch (IOException e) {
             log.error("Synch Signal Id:{}，发生IOException", synchSignal.getId(), e);
             return ApiResHelper.failed("接收到同步数据，发生IOException");

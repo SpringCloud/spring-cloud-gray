@@ -46,6 +46,7 @@ public class HttpServerSynchronizer implements ServerSynchronizer {
         if (ArrayUtils.isEmpty(peerNodes)) {
             return;
         }
+        //todo 计划改为异步
         if (StringUtils.isEmpty(synchData.getId())) {
             synchData.setId(StringUtils.defaultString(synchData.getDataType()) +
                     cn.springcloud.gray.utils.StringUtils.generateUUID());
@@ -95,7 +96,7 @@ public class HttpServerSynchronizer implements ServerSynchronizer {
         for (int sendTimes = 1; sendTimes <= peerNodeSynchronizeRetryTimes; sendTimes++) {
             ApiRes apiRes = rest.postForObject(peerNode + ServerSynchDataAcceptEndpoint.ENDPOING_URI, synchSignal, ApiRes.class);
             if (apiRes.judgeSuccess()) {
-                log.info("开始发送同步数据, Synch Signal Id:{}, 发往->{}", synchSignal.getId(), peerNode);
+                log.info("发送同步数据成功, Synch Signal Id:{}, 发往->{}", synchSignal.getId(), peerNode);
                 return;
             }
             log.warn("Synch Signal Id:{}, 发往->{}, 第{}次同步失败, 原因:{}",

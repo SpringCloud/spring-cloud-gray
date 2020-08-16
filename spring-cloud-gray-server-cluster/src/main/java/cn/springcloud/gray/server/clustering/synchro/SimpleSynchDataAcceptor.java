@@ -31,6 +31,7 @@ public class SimpleSynchDataAcceptor implements SynchDataAcceptor {
         if (Objects.isNull(listeners)) {
             return;
         }
+        //todo 计划改为异步
         for (SynchDataListener synchDataListener : listeners) {
             synchDataListener.listen(synchData);
         }
