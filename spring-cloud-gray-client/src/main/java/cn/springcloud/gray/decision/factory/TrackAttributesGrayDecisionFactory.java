@@ -3,7 +3,9 @@ package cn.springcloud.gray.decision.factory;
 import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.compare.Comparators;
 import cn.springcloud.gray.decision.compare.PredicateComparator;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.request.GrayRequest;
+import cn.springcloud.gray.request.GrayTrackInfo;
+import cn.springcloud.gray.utils.JsonUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -27,17 +29,27 @@ public class TrackAttributesGrayDecisionFactory extends CompareGrayDecisionFacto
     @Override
     public GrayDecision apply(Config configBean) {
         return args -> {
-            GrayHttpTrackInfo grayTrackInfo = (GrayHttpTrackInfo) args.getGrayRequest().getGrayTrackInfo();
+            GrayRequest grayRequest = args.getGrayRequest();
+            GrayTrackInfo grayTrackInfo = grayRequest.getGrayTrackInfo();
             if (grayTrackInfo == null) {
-                log.warn("没有获取到灰度追踪信息");
+                log.warn("[TrackAttributesGrayDecision] serviceId:{} 没有获取到灰度追踪信息, testResult:{}",
+                        grayRequest.getServiceId(), false);
                 return false;
             }
             PredicateComparator<Collection<String>> predicateComparator = Comparators.getCollectionStringComparator(configBean.getCompareMode());
             if (predicateComparator == null) {
-                log.warn("没有找到相应与compareMode'{}'对应的PredicateComparator", configBean.getCompareMode());
+                log.warn("[TrackAttributesGrayDecision] serviceId:{} 没有找到相应与compareMode'{}'对应的PredicateComparator, testResult:{}",
+                        grayRequest.getServiceId(), configBean.getCompareMode(), false);
                 return false;
             }
-            return predicateComparator.test(Arrays.asList(grayTrackInfo.getAttribute(configBean.getName())), configBean.getValues());
+
+            List<String> attributeValues = Arrays.asList(grayTrackInfo.getAttribute(configBean.getName()));
+            boolean b = predicateComparator.test(attributeValues, configBean.getValues());
+            if (log.isDebugEnabled()) {
+                log.debug("[TrackAttributesGrayDecision] serviceId:{}, decisionConfig:{}, attributeValues:{}, testReslut:{}",
+                        grayRequest.getServiceId(), JsonUtils.toJsonString(configBean), attributeValues, b);
+            }
+            return b;
         };
     }
 

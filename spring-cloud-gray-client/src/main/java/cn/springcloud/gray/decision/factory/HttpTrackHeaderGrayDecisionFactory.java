@@ -3,12 +3,17 @@ package cn.springcloud.gray.decision.factory;
 import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.compare.Comparators;
 import cn.springcloud.gray.decision.compare.PredicateComparator;
+import cn.springcloud.gray.request.GrayHttpRequest;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.utils.JsonUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.List;
 
+@Slf4j
 public class HttpTrackHeaderGrayDecisionFactory extends CompareGrayDecisionFactory<HttpHeaderGrayDecisionFactory.Config> {
 
     private static final Logger log = LoggerFactory.getLogger(HttpTrackHeaderGrayDecisionFactory.class);
@@ -20,19 +25,29 @@ public class HttpTrackHeaderGrayDecisionFactory extends CompareGrayDecisionFacto
     @Override
     public GrayDecision apply(HttpHeaderGrayDecisionFactory.Config configBean) {
         return args -> {
-            GrayHttpTrackInfo grayTrackInfo = (GrayHttpTrackInfo) args.getGrayRequest().getGrayTrackInfo();
+            GrayHttpRequest grayRequest = (GrayHttpRequest) args.getGrayRequest();
+            GrayHttpTrackInfo grayTrackInfo = (GrayHttpTrackInfo) grayRequest.getGrayTrackInfo();
             if (grayTrackInfo == null) {
-                log.warn("没有获取到灰度追踪信息");
+                log.warn("[HttpTrackHeaderGrayDecision] serviceId:{}, uri:{} 没有获取到灰度追踪信息, testReslut:{}",
+                        grayRequest.getServiceId(), grayRequest.getUri(), false);
                 return false;
             }
 
             PredicateComparator<Collection<String>> predicateComparator =
                     Comparators.getCollectionStringComparator(configBean.getCompareMode());
             if (predicateComparator == null) {
-                log.warn("没有找到相应与compareMode'{}'对应的PredicateComparator", configBean.getCompareMode());
+                log.warn("[HttpTrackHeaderGrayDecision] serviceId:{}, uri:{} 没有找到相应与compareMode'{}'对应的PredicateComparator, testReslut:{}",
+                        grayRequest.getServiceId(), grayRequest.getUri(), configBean.getCompareMode(), false);
                 return false;
             }
-            return predicateComparator.test(grayTrackInfo.getHeader(configBean.getHeader()), configBean.getValues());
+
+            List<String> headerValues = grayTrackInfo.getHeader(configBean.getHeader());
+            boolean b = predicateComparator.test(headerValues, configBean.getValues());
+            if (log.isDebugEnabled()) {
+                log.debug("[HttpTrackHeaderGrayDecision] serviceId:{}, uri:{}, decisionConfig:{}, trackHeader:{}, testReslut:{}",
+                        grayRequest.getServiceId(), grayRequest.getUri(), JsonUtils.toJsonString(configBean), headerValues, b);
+            }
+            return b;
         };
     }
 }

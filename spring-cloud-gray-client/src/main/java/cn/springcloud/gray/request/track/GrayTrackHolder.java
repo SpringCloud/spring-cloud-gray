@@ -28,7 +28,7 @@ public interface GrayTrackHolder {
 
 
     default <REQ> void recordGrayTrack(GrayTrackInfo info, REQ req) {
-        if(!GrayClientHolder.getGraySwitcher().state()){
+        if (!GrayClientHolder.getGraySwitcher().state()) {
             return;
         }
         getGrayInfoTrackers().forEach(tracker -> {
