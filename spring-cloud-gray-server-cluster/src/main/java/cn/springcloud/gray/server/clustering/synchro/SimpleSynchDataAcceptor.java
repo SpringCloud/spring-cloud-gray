@@ -7,6 +7,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author saleson
@@ -17,8 +21,16 @@ public class SimpleSynchDataAcceptor implements SynchDataAcceptor {
 
     private List<SynchDataListener> synchDataListeners;
     private Map<String, List<SynchDataListener>> dataTypeListenerCache = new HashMap<>();
+    private ExecutorService executorService;
 
     public SimpleSynchDataAcceptor(List<SynchDataListener> synchDataListeners) {
+        this(new ThreadPoolExecutor(10, 10,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>(10)), synchDataListeners);
+    }
+
+    public SimpleSynchDataAcceptor(ExecutorService executorService, List<SynchDataListener> synchDataListeners) {
+        this.executorService = executorService;
         this.synchDataListeners = synchDataListeners;
         refreshDataTypeListenerCache();
     }
@@ -31,10 +43,11 @@ public class SimpleSynchDataAcceptor implements SynchDataAcceptor {
         if (Objects.isNull(listeners)) {
             return;
         }
-        //todo 计划改为异步
-        for (SynchDataListener synchDataListener : listeners) {
-            synchDataListener.listen(synchData);
-        }
+        executorService.execute(() -> {
+            for (SynchDataListener synchDataListener : listeners) {
+                synchDataListener.listen(synchData);
+            }
+        });
     }
 
     private void refreshDataTypeListenerCache() {
