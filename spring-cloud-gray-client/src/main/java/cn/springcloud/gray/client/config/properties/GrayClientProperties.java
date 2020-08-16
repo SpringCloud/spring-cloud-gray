@@ -13,11 +13,6 @@ public class GrayClientProperties implements GrayClientConfig {
 
     private int infosUpdateIntervalTimerInMs = 0;
 
-    /**
-     * 实始化灰度信息的延迟时间
-     */
-    private int infosInitializeDelayTimeInMs = 40000;
-
     private InstanceConfig instance = new InstanceConfig();
 
     private Map<String, CacheProperties> caches = new HashMap<>();
@@ -41,20 +36,6 @@ public class GrayClientProperties implements GrayClientConfig {
     @Override
     public int getInfosUpdateIntervalTimerInMs() {
         return infosUpdateIntervalTimerInMs;
-    }
-
-    @Override
-    public int getInfosInitializeDelayTimeInMs() {
-        return infosInitializeDelayTimeInMs;
-    }
-
-
-    public void setInfosUpdateIntervalTimerInMs(int infosUpdateIntervalTimerInMs) {
-        this.infosUpdateIntervalTimerInMs = infosUpdateIntervalTimerInMs;
-    }
-
-    public void setInfosInitializeDelayTimeInMs(int infosInitializeDelayTimeInMs) {
-        this.infosInitializeDelayTimeInMs = infosInitializeDelayTimeInMs;
     }
 
     public Map<String, CacheProperties> getCaches() {

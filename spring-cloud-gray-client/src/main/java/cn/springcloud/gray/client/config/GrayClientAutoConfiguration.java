@@ -8,6 +8,7 @@ import cn.springcloud.gray.choose.loadbalance.factory.RoundRobinLoadBalancerFact
 import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.*;
 import cn.springcloud.gray.client.initialize.DefaultGrayInfosInitializer;
+import cn.springcloud.gray.client.initialize.GrayClientApplicationRunner;
 import cn.springcloud.gray.client.initialize.GrayInfosInitializer;
 import cn.springcloud.gray.client.switcher.EnvGraySwitcher;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
@@ -164,6 +165,11 @@ public class GrayClientAutoConfiguration {
             InformationClient informationClient,
             RefreshDriver refreshDriver) {
         return new DefaultGrayInfosInitializer(grayClientConfig, informationClient, refreshDriver);
+    }
+
+    @Bean
+    public GrayClientApplicationRunner grayClientApplicationRunner(GrayInfosInitializer grayInfosInitializer) {
+        return new GrayClientApplicationRunner(grayInfosInitializer);
     }
 
     @Bean

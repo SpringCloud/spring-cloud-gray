@@ -1,5 +1,5 @@
-org.springframework.boot.SpringApplicationRunListener=\
-  cn.springcloud.gray.client.initialize.GrayClientApplicationRunListener
+#org.springframework.boot.SpringApplicationRunListener=\
+#  cn.springcloud.gray.client.initialize.GrayClientApplicationRunListener
 # Auto Configure
 #cn.springcloud.gray.client.EnableGrayClient=\
 #  cn.springcloud.gray.client.config.GrayClientImportSelector

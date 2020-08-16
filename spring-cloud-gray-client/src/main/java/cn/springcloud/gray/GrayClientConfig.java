@@ -32,6 +32,4 @@ public interface GrayClientConfig {
      */
     int getInfosUpdateIntervalTimerInMs();
 
-
-    int getInfosInitializeDelayTimeInMs();
 }
