@@ -24,10 +24,10 @@ public class GrayEventStreamSender implements GrayEventSender {
 
     @Override
     public void send(GrayEvent grayEvent) {
-        executorService.schedule(() -> send(grayEvent), 100, TimeUnit.MILLISECONDS);
+        executorService.schedule(() -> sendMsg(grayEvent), 100, TimeUnit.MILLISECONDS);
     }
 
-    public boolean send(Object obj) {
+    public boolean sendMsg(Object obj) {
         return sender.output().send(MessageBuilder.withPayload(obj).build());
     }
 }
