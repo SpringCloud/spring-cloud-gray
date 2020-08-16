@@ -37,8 +37,8 @@ insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`
 项目分支 | 项目版本 | srpingcloud版本 | springboot版本
 --- | --- | --- | ---
 A | A.2.0.0-RC1 | Edgware | 1.5.*
-B | B.1.0.0-RC1 | Finchley | 2.0.*
-C | C.1.0.0-RC1 | Greenwich | 2.1.*
+B | B.1.0.0-RC1(暂未支持) | Finchley | 2.0.*
+C | C.1.0.0-RC1(暂未支持) | Greenwich | 2.1.*
 
 
 ## Spring Cloud Gray 能做什么
