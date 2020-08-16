@@ -1,8 +1,6 @@
 server:
-  port: 20202
+  port: 20203
 spring:
-#  main:
-#    allow-bean-definition-overriding: true
   application:
     name: gray-Server
 
@@ -40,7 +38,6 @@ spring:
         #            concurrency: 1 #并发数
         #            max-attempts: 1
         GrayEventOutput:
-          contentType: application/x-java-serialized-object
           destination: gray_event
           #      rabbit:
           #        bindings:
@@ -63,7 +60,7 @@ eureka:
 gray:
   server:
     cluster:
-      peerNodes:
+      peer-nodes:
         - host: localhost
           port: 20202
         - host: localhost
