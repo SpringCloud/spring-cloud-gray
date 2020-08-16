@@ -60,9 +60,6 @@ public class GrayClientHttpRequestIntercptor implements ClientHttpRequestInterce
                 .grayRequest(grayRequest).build();
 
         GrayRequestHelper.setPreviousServerInfoToHttpHeaderByInstanceLocalInfo(grayRequest);
-        if (true) {
-            throw new IllegalAccessException("df");
-        }
 
         return routingConnectionPoint.executeOrMock(
                 connectPointContext, () -> execution.execute(request, body), this::mockResultConvert);

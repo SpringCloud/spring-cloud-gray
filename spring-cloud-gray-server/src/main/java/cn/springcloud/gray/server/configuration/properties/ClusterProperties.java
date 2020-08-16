@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2020-08-16 00:29
  */
 @Data
-@ConfigurationProperties(prefix = "server.cluster")
+@ConfigurationProperties(prefix = "gray.server.cluster")
 public class ClusterProperties {
     private List<PeerNode> peerNodes = new ArrayList<>();
 }

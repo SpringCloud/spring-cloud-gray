@@ -109,7 +109,8 @@ public class OAuth2Config {
                 "/**.html", "/**.js", "/**.css", "/**.png",
                 "/swagger-resources/**", "/v2/api-docs",
                 "/gray/user/login", "/gray/user/login", "/gray/instances/enable",
-                "/gray/instances", "/gray/trackDefinitions", "/gray/v1/**", "/gray/v2/**"
+                "/gray/instances", "/gray/trackDefinitions", "/gray/v1/**", "/gray/v2/**",
+                "/server/synch/accept"
         };
 
         @Autowired

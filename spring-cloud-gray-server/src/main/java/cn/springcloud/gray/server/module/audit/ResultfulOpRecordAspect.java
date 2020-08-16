@@ -33,6 +33,8 @@ public class ResultfulOpRecordAspect {
     private static final Logger log = LoggerFactory.getLogger(ResultfulOpRecordAspect.class);
     private String[] recordMethods = {RequestMethod.POST.name(), RequestMethod.PUT.name(), RequestMethod.DELETE.name()};
 
+    private Set<String> excludeMethodMarks = new HashSet<>();
+
     private ObjectMapper objectMapper;
     private UserModule userModule;
     private OperateAuditModule operateAuditModule;
@@ -41,6 +43,12 @@ public class ResultfulOpRecordAspect {
         this.objectMapper = objectMapper;
         this.userModule = userModule;
         this.operateAuditModule = operateAuditModule;
+        this.initExcludeMethodMarks();
+    }
+
+
+    private void initExcludeMethodMarks() {
+        excludeMethodMarks.add("cn.springcloud.gray.server.clustering.synchro.http.ServerSynchDataAcceptEndpoint#accept");
     }
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping) " +
@@ -53,9 +61,9 @@ public class ResultfulOpRecordAspect {
 
     @AfterReturning(value = "pointcut()", returning = "result")
     public void doAfter(JoinPoint joinPoint, Object result) {
-
+        String methodMark = joinPoint.getSignature().getDeclaringTypeName() + "#" + joinPoint.getSignature().getName();
         RequestMapping requestMapping = getRequestMapping(joinPoint);
-        if (!isSholdRecord(requestMapping)) {
+        if (!isSholdRecord(requestMapping) || excludeMethodMarks.contains(methodMark)) {
             return;
         }
 
