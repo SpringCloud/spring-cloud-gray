@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Data
 @NoArgsConstructor
-@ConfigurationProperties("gray.holdoutServer")
+@ConfigurationProperties("gray.holdout-server")
 public class GrayHoldoutServerProperties {
 
     private boolean enabled;
