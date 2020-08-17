@@ -1,16 +1,12 @@
 package cn.springcloud.gray;
 
-import cn.springcloud.gray.communication.InformationClient;
-import cn.springcloud.gray.decision.GrayDecision;
-import cn.springcloud.gray.model.DecisionDefinition;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
-import cn.springcloud.gray.model.PolicyDefinition;
 
 import java.util.Collection;
 import java.util.List;
 
-public abstract class GrayManagerDelegater implements UpdateableGrayManager, CommunicableGrayManager {
+public abstract class GrayManagerDelegater implements UpdateableGrayManager {
 
     protected GrayManager delegate;
 
@@ -19,8 +15,13 @@ public abstract class GrayManagerDelegater implements UpdateableGrayManager, Com
     }
 
     @Override
-    public boolean hasGray(String serviceId) {
-        return delegate.hasGray(serviceId);
+    public boolean hasInstanceGray(String serviceId) {
+        return delegate.hasInstanceGray(serviceId);
+    }
+
+    @Override
+    public boolean hasServiceGray(String serviceId) {
+        return delegate.hasServiceGray(serviceId);
     }
 
     @Override
@@ -36,16 +37,6 @@ public abstract class GrayManagerDelegater implements UpdateableGrayManager, Com
     @Override
     public GrayInstance getGrayInstance(String serviceId, String instanceId) {
         return delegate.getGrayInstance(serviceId, instanceId);
-    }
-
-    @Override
-    public List<GrayDecision> getGrayDecision(GrayInstance instance) {
-        return delegate.getGrayDecision(instance);
-    }
-
-    @Override
-    public List<GrayDecision> getGrayDecision(String serviceId, String instanceId) {
-        return delegate.getGrayDecision(serviceId, instanceId);
     }
 
 
@@ -93,46 +84,9 @@ public abstract class GrayManagerDelegater implements UpdateableGrayManager, Com
         }
     }
 
-    @Override
-    public InformationClient getGrayInformationClient() {
-        if (delegate instanceof CommunicableGrayManager) {
-            return ((CommunicableGrayManager) delegate).getGrayInformationClient();
-        }
-        throw new UnsupportedOperationException("delegate不是CommunicableGrayManager的实现类");
-    }
-
-
-    public void removeGrayService(String serviceId){
+    public void removeGrayService(String serviceId) {
         if (delegate instanceof UpdateableGrayManager) {
             ((UpdateableGrayManager) delegate).removeGrayService(serviceId);
-        }
-    }
-
-    @Override
-    public void removePolicyDefinition(String serviceId, String instanceId, String policyId){
-        if (delegate instanceof UpdateableGrayManager) {
-            ((UpdateableGrayManager) delegate).removePolicyDefinition(serviceId, instanceId, policyId);
-        }
-    }
-
-    @Override
-    public void updatePolicyDefinition(String serviceId, String instanceId, PolicyDefinition policyDefinition){
-        if (delegate instanceof UpdateableGrayManager) {
-            ((UpdateableGrayManager) delegate).updatePolicyDefinition(serviceId, instanceId, policyDefinition);
-        }
-    }
-
-    @Override
-    public void removeDecisionDefinition(String serviceId, String instanceId, String policyId, String decisionId){
-        if (delegate instanceof UpdateableGrayManager) {
-            ((UpdateableGrayManager) delegate).removeDecisionDefinition(serviceId, instanceId, policyId, decisionId);
-        }
-    }
-
-    @Override
-    public void updateDecisionDefinition(String serviceId, String instanceId, String policyId, DecisionDefinition decisionDefinition){
-        if (delegate instanceof UpdateableGrayManager) {
-            ((UpdateableGrayManager) delegate).updateDecisionDefinition(serviceId, instanceId, policyId, decisionDefinition);
         }
     }
 

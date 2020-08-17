@@ -1,29 +1,33 @@
 package cn.springcloud.gray.server.configuration;
 
-import cn.springcloud.gray.event.GraySourceEventPublisher;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
+import cn.springcloud.gray.server.module.NamespaceFinder;
+import cn.springcloud.gray.server.module.NamespaceModule;
 import cn.springcloud.gray.server.module.audit.OperateAuditModule;
 import cn.springcloud.gray.server.module.audit.jpa.JPAOperateAuditModule;
-import cn.springcloud.gray.server.module.gray.GrayInstanceRecordEvictor;
-import cn.springcloud.gray.server.module.gray.GrayServerModule;
-import cn.springcloud.gray.server.module.gray.GrayServerTrackModule;
-import cn.springcloud.gray.server.module.gray.GrayServiceIdFinder;
-import cn.springcloud.gray.server.module.gray.jpa.JPAGrayInstanceRecordEvictor;
-import cn.springcloud.gray.server.module.gray.jpa.JPAGrayServerModule;
-import cn.springcloud.gray.server.module.gray.jpa.JPAGrayServerTrackModule;
-import cn.springcloud.gray.server.module.gray.jpa.JPAGrayServiceIdFinder;
-import cn.springcloud.gray.server.module.user.JPAServiceManageModule;
-import cn.springcloud.gray.server.module.user.JPAUserModule;
+import cn.springcloud.gray.server.module.event.listener.UserResourceAuthorityEventListener;
+import cn.springcloud.gray.server.module.gray.*;
+import cn.springcloud.gray.server.module.gray.jpa.*;
+import cn.springcloud.gray.server.module.jpa.JPANamespaceFinder;
+import cn.springcloud.gray.server.module.jpa.JPANamespaceModule;
+import cn.springcloud.gray.server.module.route.policy.RoutePolicyModule;
+import cn.springcloud.gray.server.module.route.policy.jpa.JPARoutePolicyModule;
+import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.module.user.UserModule;
+import cn.springcloud.gray.server.module.user.jpa.JPAAuthorityModule;
+import cn.springcloud.gray.server.module.user.jpa.JPAServiceManageModule;
+import cn.springcloud.gray.server.module.user.jpa.JPAUserModule;
 import cn.springcloud.gray.server.oauth2.Oauth2Service;
 import cn.springcloud.gray.server.service.*;
+import cn.springlcoud.gray.event.server.GrayEventTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -48,30 +52,35 @@ public class DBStorageConfiguration {
         @Bean
         @ConditionalOnMissingBean
         public GrayServerModule grayServerModule(
-                GraySourceEventPublisher graySourceEventPublisher, @Autowired(required = false) ServiceDiscovery serviceDiscovery,
-                GrayServiceService grayServiceService, GrayInstanceService grayInstanceService,
-                GrayDecisionService grayDecisionService, GrayPolicyService grayPolicyService,
+                @Autowired(required = false) ServiceDiscovery serviceDiscovery,
+                GrayEventTrigger grayEventTrigger,
+                GrayServiceService grayServiceService,
+                GrayInstanceService grayInstanceService,
                 ServiceManageModule serviceManageModule) {
             return new JPAGrayServerModule(
-                    grayServerProperties, graySourceEventPublisher, serviceDiscovery, grayServiceService, grayInstanceService,
-                    grayDecisionService, grayPolicyService, serviceManageModule);
+                    grayServerProperties,
+                    grayEventTrigger,
+                    serviceDiscovery,
+                    grayServiceService,
+                    grayInstanceService,
+                    serviceManageModule);
         }
 
 
         @Bean
         @ConditionalOnMissingBean
-        public GrayServerTrackModule grayServerTrackModule(GraySourceEventPublisher graySourceEventPublisher, GrayTrackService grayTrackService) {
-            return new JPAGrayServerTrackModule(graySourceEventPublisher, grayTrackService);
+        public GrayServerTrackModule grayServerTrackModule(
+                GrayEventTrigger grayEventTrigger,
+                GrayTrackService grayTrackService) {
+            return new JPAGrayServerTrackModule(grayEventTrigger, grayTrackService);
         }
 
         @Bean
         @ConditionalOnMissingBean
         public GrayServiceIdFinder grayServiceIdFinder(
                 GrayInstanceService grayInstanceService,
-                GrayPolicyService grayPolicyService,
-                GrayDecisionService grayDecisionService,
                 GrayTrackService grayTrackService) {
-            return new JPAGrayServiceIdFinder(grayInstanceService, grayPolicyService, grayDecisionService, grayTrackService);
+            return new JPAGrayServiceIdFinder(grayInstanceService, grayTrackService);
         }
 
         @Bean
@@ -93,10 +102,73 @@ public class DBStorageConfiguration {
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnProperty(value = "gray.server.operate.audit.enable", matchIfMissing = true)
-        public OperateAuditModule operateAuditModule(OperateRecordService operateRecordService){
+        public OperateAuditModule operateAuditModule(OperateRecordService operateRecordService) {
             return new JPAOperateAuditModule(operateRecordService);
         }
 
+
+        @Bean
+        @ConditionalOnMissingBean
+        public GrayEventLogModule grayEventLogModule(GrayEventLogService grayEventLogService) {
+            return new JPAGrayEventLogModule(grayEventLogService);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public GrayPolicyModule grayPolicyModule(
+                GrayPolicyService grayPolicyService,
+                GrayDecisionService grayDecisionService,
+                GrayEventTrigger grayEventTrigger) {
+            return new JPAGrayPolicyModule(grayPolicyService, grayDecisionService, grayEventTrigger);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public RoutePolicyModule instanceRouteModule(
+                RoutePolicyRecordService routePolicyRecordService,
+                GrayEventTrigger grayEventTrigger,
+                NamespaceFinder namespaceFinder,
+                AuthorityModule authorityModule) {
+            return new JPARoutePolicyModule(routePolicyRecordService, grayEventTrigger, namespaceFinder, authorityModule);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public AuthorityModule authorityModule(
+                ApplicationEventPublisher eventPublisher,
+                UserResourceAuthorityService userResourceAuthorityService,
+                AuthorityService authorityService,
+                UserModule userModule) {
+            return new JPAAuthorityModule(eventPublisher, userResourceAuthorityService, authorityService, userModule);
+        }
+
+
+        @Bean
+        @ConditionalOnMissingBean
+        public NamespaceFinder namespaceFinder(
+                GrayServiceService grayServiceService,
+                GrayInstanceService grayInstanceService,
+                GrayTrackService grayTrackService,
+                GrayPolicyService grayPolicyService,
+                GrayDecisionService grayDecisionService) {
+            return new JPANamespaceFinder(grayServiceService,
+                    grayInstanceService,
+                    grayTrackService,
+                    grayPolicyService,
+                    grayDecisionService);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public NamespaceModule namespaceModule(NamespaceService namespaceService, NamespaceFinder namespaceFinder, AuthorityModule authorityModule) {
+            return new JPANamespaceModule(namespaceService, namespaceFinder, authorityModule);
+        }
+
+
+        @Bean
+        public UserResourceAuthorityEventListener userResourceAuthorityEventListener(NamespaceModule namespaceModule, AuthorityModule authorityModule) {
+            return new UserResourceAuthorityEventListener(namespaceModule, authorityModule);
+        }
     }
 
 

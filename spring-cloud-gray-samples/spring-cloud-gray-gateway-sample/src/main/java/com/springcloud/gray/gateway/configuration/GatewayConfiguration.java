@@ -10,6 +10,7 @@ public class GatewayConfiguration {
 
 
     @Bean
+
     public KeyResolver uriKeyResolver() {
         return exchange -> Mono.just(exchange.getRequest().getURI().getPath());
     }

@@ -16,10 +16,10 @@ import java.util.concurrent.TimeUnit;
 public class GrayServerProperties {
 
 
-
     private DiscoveryProperties discovery = new DiscoveryProperties();
 
     private InstanceProperties instance = new InstanceProperties();
+
 
     @Setter
     @Getter
@@ -37,7 +37,7 @@ public class GrayServerProperties {
 
     @Setter
     @Getter
-    public static class DiscoveryProperties{
+    public static class DiscoveryProperties {
         private boolean evictionEnabled = true;
         private long evictionIntervalTimerInMs = TimeUnit.SECONDS.toMillis(60);
     }

@@ -2,10 +2,7 @@ package cn.springcloud.gray.server.dao.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 
@@ -15,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gray_service")
+@Table(name = "gray_service", indexes = {@Index(columnList = "namespace")})
 public class GrayServiceDO {
 
     @Id
@@ -25,11 +22,13 @@ public class GrayServiceDO {
     private String serviceName;
     @Column(length = 64)
     private String contextPath;
+    @Column(length = 64)
+    private String namespace;
     @Column(length = 4)
     private Integer instanceNumber;
     @Column(length = 4)
     private Integer grayInstanceNumber;
-    @Column(length = 256, name = "des")
+    @Column(length = 128, name = "des")
     private String describe;
     @Column(length = 32)
     private String operator;

@@ -1,11 +1,19 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.changed.notify.ChangedListener;
+import cn.springcloud.gray.changed.notify.ChangedNotifyDriver;
+import cn.springcloud.gray.choose.PolicyPredicate;
+import cn.springcloud.gray.choose.ServerChooser;
+import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
-import cn.springcloud.gray.local.InstanceLocalInfoInitiralizer;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
+import cn.springcloud.gray.spring.SpringEventPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -28,14 +36,20 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
                 getBean("serverListProcessor", ServerListProcessor.class, new ServerListProcessor.Default()));
         GrayClientHolder.setGraySwitcher(
                 getBean("graySwitcher", GraySwitcher.class, new GraySwitcher.DefaultGraySwitcher()));
-
         GrayClientHolder.setServerChooser(getBean("serverChooser", ServerChooser.class));
+        GrayClientHolder.setGrayTrackHolder(getBean("grayTrackHolder", GrayTrackHolder.class));
+        GrayClientHolder.setPolicyDecisionManager(getBean("policyDecisionManager", PolicyDecisionManager.class));
+        GrayClientHolder.setSpringEventPublisher(getBean("springEventPublisher", SpringEventPublisher.class));
+        GrayClientHolder.setLoadBalancerFactory(getBean("loadBalancerFactory", LoadBalancerFactory.class));
 
         initGrayManagerRequestInterceptors();
 
         loadInstanceLocalInfo();
-    }
 
+        registerPolicyPredicates();
+
+        initChangedNotifyDriver();
+    }
 
 
     @Override
@@ -43,12 +57,12 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         this.cxt = applicationContext;
     }
 
-    private void loadInstanceLocalInfo(){
-        InstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer = getBean("instanceLocalInfoInitiralizer", InstanceLocalInfoInitiralizer.class);
-        if(instanceLocalInfoInitiralizer==null){
+    private void loadInstanceLocalInfo() {
+        InstanceLocalInfoObtainer instanceLocalInfoObtainer = getBean("instanceLocalInfoInitiralizer", InstanceLocalInfoObtainer.class);
+        if (instanceLocalInfoObtainer == null) {
             return;
         }
-        GrayClientHolder.setInstanceLocalInfo(instanceLocalInfoInitiralizer.getInstanceLocalInfo());
+        GrayClientHolder.setInstanceLocalInfo(instanceLocalInfoObtainer.getInstanceLocalInfo());
     }
 
 
@@ -95,4 +109,22 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         }
         grayManager.setup();
     }
+
+
+    /**
+     * 往PolicyDecisionManager注册PolicyPredicate
+     */
+    private void registerPolicyPredicates() {
+        Map<String, PolicyPredicate> policyPredicates = cxt.getBeansOfType(PolicyPredicate.class);
+        PolicyDecisionManager policyDecisionManager = GrayClientHolder.getPolicyDecisionManager();
+        policyPredicates.values().forEach(policyDecisionManager::registerPolicyPredicate);
+    }
+
+
+    private void initChangedNotifyDriver() {
+        ChangedNotifyDriver changedNotifyDriver = getBean("changedNotifyDriver", ChangedNotifyDriver.class);
+        changedNotifyDriver.registerListeners(cxt.getBeansOfType(ChangedListener.class).values());
+        GrayClientHolder.setChangedNotifyDriver(changedNotifyDriver);
+    }
+
 }

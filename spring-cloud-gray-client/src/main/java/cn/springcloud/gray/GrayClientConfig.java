@@ -26,12 +26,10 @@ public interface GrayClientConfig {
 
 
     /**
-     * 更新灰度列表的时间间隔(ms)，小于等于0将不会开启定时轮询
+     * 更新灰度信息的时间间隔(ms)，小于等于0将不会开启定时轮询
      *
      * @return 返回更新灰度列表的时间间隔(ms)
      */
-    int getServiceUpdateIntervalTimerInMs();
+    int getInfosUpdateIntervalTimerInMs();
 
-
-    int getServiceInitializeDelayTimeInMs();
 }

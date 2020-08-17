@@ -17,12 +17,6 @@ public class GrayTrackProperties {
     private String trackType = "web";
     private Web web = new Web();
 
-    private int definitionsUpdateIntervalTimerInMs = 60000;
-    /**
-     * 实始追踪信息的延迟时间
-     */
-    private int definitionsInitializeDelayTimeInMs = 40000;
-
     @Setter
     @Getter
     public static class Web {
@@ -36,6 +30,7 @@ public class GrayTrackProperties {
         private String[] pathPatterns = new String[]{"/*"};
         private String[] excludePathPatterns = new String[]{};
 
+        @Deprecated
         private List<GrayTrackDefinition> trackDefinitions = new ArrayList<>();
 
     }

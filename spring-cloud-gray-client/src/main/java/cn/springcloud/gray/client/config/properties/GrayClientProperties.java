@@ -11,12 +11,7 @@ public class GrayClientProperties implements GrayClientConfig {
 
     private String runenv = "web";
 
-    private int serviceUpdateIntervalTimerInMs = 60000;
-
-    /**
-     * 实始化灰度信息的延迟时间
-     */
-    private int serviceInitializeDelayTimeInMs = 40000;
+    private int infosUpdateIntervalTimerInMs = 0;
 
     private InstanceConfig instance = new InstanceConfig();
 
@@ -38,10 +33,9 @@ public class GrayClientProperties implements GrayClientConfig {
         return instance.getGrayEnrollDealyTimeInMs();
     }
 
-
     @Override
-    public int getServiceUpdateIntervalTimerInMs() {
-        return serviceUpdateIntervalTimerInMs;
+    public int getInfosUpdateIntervalTimerInMs() {
+        return infosUpdateIntervalTimerInMs;
     }
 
     public Map<String, CacheProperties> getCaches() {
@@ -59,19 +53,6 @@ public class GrayClientProperties implements GrayClientConfig {
             caches.put(key, cacheProperties);
         }
         return cacheProperties;
-    }
-
-    public void setServiceUpdateIntervalTimerInMs(int serviceUpdateIntervalTimerInMs) {
-        this.serviceUpdateIntervalTimerInMs = serviceUpdateIntervalTimerInMs;
-    }
-
-    @Override
-    public int getServiceInitializeDelayTimeInMs() {
-        return serviceInitializeDelayTimeInMs;
-    }
-
-    public void setServiceInitializeDelayTimeInMs(int serviceInitializeDelayTimeInMs) {
-        this.serviceInitializeDelayTimeInMs = serviceInitializeDelayTimeInMs;
     }
 
     public InstanceConfig getInstance() {

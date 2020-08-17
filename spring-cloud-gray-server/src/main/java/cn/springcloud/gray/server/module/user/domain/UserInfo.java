@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -25,8 +26,15 @@ public class UserInfo {
     private Date operateTime;
 
 
-
-    public boolean isAdmin(){
+    public boolean isAdmin() {
         return ArrayUtils.contains(this.roles, ROLE_ADMIN);
+    }
+
+    public boolean isEnabled() {
+        return Objects.equals(status, STATUS_ENABLED);
+    }
+
+    public static boolean isEnable(UserInfo userInfo) {
+        return !Objects.isNull(userInfo) && userInfo.isEnabled();
     }
 }

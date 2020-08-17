@@ -17,7 +17,7 @@ spring:
           enabled: true
           lowerCaseServiceId: true
       routes:
-        # 会员服务
+        # service-a
         - id: service-a
           uri: lb://service-a
           predicates:
@@ -29,31 +29,31 @@ spring:
               args:
                 key-resolver: '#{@uriKeyResolver}'
                 redis-rate-limiter.replenishRate: 500
-              redis-rate-limiter.burstCapacity: 1000
-            #降级配置
+                redis-rate-limiter.burstCapacity: 1000
+            # 降级配置
             - name: Hystrix
               args:
                 name: default
                 fallbackUri: 'forward:/fallback'
-stream:
-  bindings:
-    GrayEventInput:
-      group: zuul
-      destination: gray_event
-      consumer:
-        concurrency: 1 #并发数
-    #            max-attempts: 1
-  #        GrayEventOutput:
-  #          destination: gray-event
-  rabbit:
-    bindings:
-      GrayEventInput:
-        consumer:
-          maxConcurrency: 1 #并发数
-          #              prefetch: 1 #从mq一次获取消息的数量
-          #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
-          #              auto-bind-dlq: true
-          acknowledgeMode: AUTO
+    stream:
+      bindings:
+        GrayEventInput:
+          group: zuul
+          destination: gray_event
+          consumer:
+            concurrency: 1 #并发数
+        #            max-attempts: 1
+      #        GrayEventOutput:
+      #          destination: gray-event
+      rabbit:
+        bindings:
+          GrayEventInput:
+            consumer:
+              maxConcurrency: 1 #并发数
+              #              prefetch: 1 #从mq一次获取消息的数量
+              #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
+              #              auto-bind-dlq: true
+              acknowledgeMode: AUTO
 server:
   port: 20401
 eureka:

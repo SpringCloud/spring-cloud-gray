@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gray_decision", indexes = {@Index(columnList = "policyId"), @Index(columnList = "instanceId")})
+@Table(name = "gray_decision", indexes = {@Index(columnList = "policyId")})
 public class GrayDecisionDO {
 
     @Id
@@ -21,8 +21,6 @@ public class GrayDecisionDO {
     @Column(length = 20)
     private Long policyId;
     @Column(length = 64)
-    private String instanceId;
-    @Column(length = 64)
     private String name;
     @Column(length = 256)
     private String infos;
@@ -30,4 +28,6 @@ public class GrayDecisionDO {
     private String operator;
     @Column
     private Date operateTime;
+    @Column
+    private Boolean delFlag;
 }

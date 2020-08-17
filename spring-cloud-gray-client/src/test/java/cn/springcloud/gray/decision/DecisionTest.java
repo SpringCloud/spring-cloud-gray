@@ -37,7 +37,7 @@ public class DecisionTest {
         grayHttpRequest.setGrayTrackInfo(grayHttpTrackInfo);
         grayHttpTrackInfo.addParameter("version", "4.0");
         grayHttpTrackInfo.addParameter("platform", "ios");
-        GrayDecisionInputArgs args = GrayDecisionInputArgs.builder().grayRequest(grayHttpRequest).build();
+        DecisionInputArgs args = new GrayDecisionInputArgs().setGrayRequest(grayHttpRequest);
 
         TestTiming testTiming = new TestTiming();
         testTiming.start();

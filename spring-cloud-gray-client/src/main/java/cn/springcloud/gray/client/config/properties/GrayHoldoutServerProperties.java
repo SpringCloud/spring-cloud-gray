@@ -1,7 +1,6 @@
 package cn.springcloud.gray.client.config.properties;
 
 import cn.springcloud.gray.model.InstanceStatus;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,8 +11,7 @@ import java.util.Map;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@ConfigurationProperties(value = "gray.holdout-server")
+@ConfigurationProperties("gray.holdout-server")
 public class GrayHoldoutServerProperties {
 
     private boolean enabled;

@@ -4,6 +4,8 @@ import cn.springcloud.gray.client.config.properties.GrayServerProperties;
 import cn.springcloud.gray.communication.HttpInformationClient;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.communication.RetryableInformationClient;
+import cn.springcloud.gray.communication.http.HttpAgent;
+import cn.springcloud.gray.communication.http.RestTemplateAgent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -41,14 +43,21 @@ public class InformationClientConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public InformationClient informationClient(
-            @Autowired(required = false) RestTemplate grayInformationRestTemplate,
-            GrayServerProperties grayServerProperties) {
-        InformationClient httpClient = new HttpInformationClient(grayServerProperties.getUrl(), grayInformationRestTemplate);
+    public InformationClient informationClient(HttpAgent httpAgent, GrayServerProperties grayServerProperties) {
+        InformationClient httpClient = new HttpInformationClient(httpAgent);
         if (grayServerProperties.isRetryable()) {
             return new RetryableInformationClient(Math.max(3, grayServerProperties.getRetryNumberOfRetries()), httpClient);
         } else {
             return httpClient;
         }
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public HttpAgent httpAgent(
+            GrayServerProperties grayServerProperties,
+            @Autowired(required = false) RestTemplate grayInformationRestTemplate) {
+        return new RestTemplateAgent(grayServerProperties.getUrl(), grayInformationRestTemplate);
     }
 }

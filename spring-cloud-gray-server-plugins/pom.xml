@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>C.0.0.5</version>
+        <version>C.1.0.0-RC1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,6 +15,8 @@
         <module>spring-cloud-gray-server-plugin-eureka</module>
         <module>spring-cloud-gray-server-plugin-event-stream</module>
         <module>spring-cloud-gray-server-plugin-nacos-discovery</module>
+        <module>spring-cloud-gray-server-plugin-event-longpolling</module>
+        <module>spring-cloud-gray-server-cluster-http-synchro-plugin</module>
     </modules>
 
 

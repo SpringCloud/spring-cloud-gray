@@ -1,5 +1,6 @@
 package cn.springcloud.gray.server.utils;
 
+import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.dao.mapper.ModelMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -29,6 +32,18 @@ public class PaginationUtils {
 
     public static <MODEL, T> Page<MODEL> convert(Pageable pageable, Page<T> p, List<MODEL> models) {
         return new PageImpl<MODEL>(models, pageable, p.getTotalElements());
+    }
+
+    public static <T> ResponseEntity<ApiRes<List<T>>> generatePaginationResponseResult(Page<T> page) {
+        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
+        ApiRes<List<T>> data = ApiRes.<List<T>>builder()
+                .code(ApiRes.CODE_SUCCESS)
+                .data(page.getContent())
+                .build();
+        return new ResponseEntity<>(
+                data,
+                headers,
+                HttpStatus.OK);
     }
 
 

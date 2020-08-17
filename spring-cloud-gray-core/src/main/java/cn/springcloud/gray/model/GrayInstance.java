@@ -7,7 +7,10 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 
 /**
@@ -27,8 +30,12 @@ public class GrayInstance implements Serializable {
 
     /**
      * 类度策略组
+     * 兼容第一个版本，下一大版本将会弃用
      */
+    @Deprecated
     private List<PolicyDefinition> policyDefinitions = new CopyOnWriteArrayList<>();
+
+    private Set<String> routePolicies;
 
     private GrayStatus grayStatus;
 
@@ -37,5 +44,28 @@ public class GrayInstance implements Serializable {
         return grayStatus == GrayStatus.OPEN;
     }
 
+
+    public void addRoutePolicy(String policyId) {
+        routePolicies.add(policyId);
+    }
+
+    public void removeRoutePolicy(String policyId) {
+        routePolicies.remove(policyId);
+    }
+
+
+    public static GrayInstance copyof(GrayInstance other) {
+        GrayInstance bean = new GrayInstance();
+        bean.setPort(other.getPort());
+        bean.setHost(other.getHost());
+        bean.setGrayStatus(other.getGrayStatus());
+        bean.setInstanceId(other.getInstanceId());
+        bean.setServiceId(other.getServiceId());
+        bean.setRoutePolicies(new CopyOnWriteArraySet<>());
+        if (Objects.nonNull(other.getRoutePolicies())) {
+            bean.getRoutePolicies().addAll(other.getRoutePolicies());
+        }
+        return bean;
+    }
 
 }

@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-Vue.use(Router)
-
 /* Layout */
 import Layout from '@/layout'
+
+Vue.use(Router)
 
 /* Router Modules */
 
@@ -35,6 +34,7 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [
+  /* eslint-disable */
   {
     path: '/redirect',
     component: Layout,
@@ -75,7 +75,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: {title: 'Dashboard', icon: 'dashboard', affix: true}
       }
     ]
   },
@@ -93,23 +93,142 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
+        meta: {title: 'Profile', icon: 'user', noCache: true}
       },
       {
         path: 'modifyPassword',
         component: () => import('@/views/profile/modifyPassowrd'),
         name: 'Modify Password',
-        meta: { title: 'Modify Password', icon: 'user', noCache: true }
+        meta: {title: 'Modify Password', icon: 'user', noCache: true}
       }
     ]
   },
-/* eslint-disable */
+  {
+    path: '/authority',
+    name: 'Authority',
+    component: Layout,
+    hidden: true,
+    alwaysShow: false, // will always show the root menu
+    redirect: '/ns',
+    meta: {
+      title: 'Authority',
+      icon: '',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'users',
+        component: () => import('@/views/authority/users'),
+        name: '用户权限',
+        meta: {title: '用户权限', icon: '', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/ns',
+    name: 'Namespace',
+    component: Layout,
+    alwaysShow: true, // will always show the root menu
+    redirect: '/ns',
+    meta: {
+      title: 'Namespace',
+      icon: 'table',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/ns/list'),
+        name: 'Namespace列表',
+        meta: {title: 'Namespace列表', icon: 'table', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/policy',
+    name: '策略',
+    component: Layout,
+    alwaysShow: true, // will always show the root menu
+    redirect: '/policy',
+    meta: {
+      title: '策略',
+      icon: 'table',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'grayPolicys',
+        component: () => import('@/views/gray-policy/list'),
+        name: '灰度策略',
+        meta: {title: '灰度策略', icon: 'table', noCache: true}
+      },
+      {
+        path: 'grayPolicys/decision/:policyId',
+        component: () => import('@/views/gray-decision/complex-table'),
+        name: '灰度决策',
+        meta: {title: '灰度决策', noCache: true},
+        hidden: true
+      },
+      {
+        path: 'handle',
+        component: () => import('@/views/handle/list'),
+        name: '处理策略',
+        meta: {title: '处理策略', icon: 'table', noCache: true}
+      },
+      {
+        path: 'handle/action',
+        component: () => import('@/views/handle/actions'),
+        name: '处理动作',
+        hidden: true,
+        meta: {title: '处理动作', icon: 'table', noCache: true}
+      },
+      {
+        path: 'handleRules',
+        component: () => import('@/views/handle-rule/list'),
+        name: '处理规则',
+        meta: {title: '处理规则', icon: 'table', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/routingPolicy',
+    name: 'RoutingPolicy',
+    component: Layout,
+    hidden: true,
+    alwaysShow: false, // will always show the root menu
+    redirect: '/routingPolicy',
+    meta: {
+      title: 'RoutingPolicy',
+      icon: '',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'serviceGrayPolicys',
+        component: () => import('@/views/routing-policy/service-gray-policy-list'),
+        name: '服务灰度策略',
+        meta: {title: '服务灰度策略', icon: '', noCache: true}
+      },
+      {
+        path: 'serviceMultiVersionGrayPolicys',
+        component: () => import('@/views/routing-policy/service-multiversion-gray-policy-list'),
+        name: '服务多版本策略',
+        meta: {title: '服务多版本策略', icon: '', noCache: true}
+      },
+      {
+        path: 'instanceGrayPolicyList',
+        component: () => import('@/views/routing-policy/instance-gray-policy-list'),
+        name: '实例灰度策略',
+        meta: {title: '实例灰度策略', icon: '', noCache: true}
+      }
+    ]
+  },
   {
     path: '/gray/service',
     name: '灰度服务',
     component: Layout,
     alwaysShow: true, // will always show the root menu
-    redirect: '/grayService',
+    redirect: '/gray/services',
     meta: {
       title: '灰度服务',
       icon: 'table',
@@ -120,26 +239,26 @@ export const constantRoutes = [
         path: 'list',
         component: () => import('@/views/gray-service/list'),
         name: '服务列表',
-        meta: { title: '服务列表', icon: 'table', noCache: true }
+        meta: {title: '服务列表', icon: 'table', noCache: true}
       },
       {
         path: 'owners',
         component: () => import('@/views/gray-service/owners'),
         name: '服务Owner',
-        meta: { title: '服务Owner', icon: 'table', noCache: true }
+        meta: {title: '服务Owner', icon: 'table', noCache: true}
       },
       {
         path: 'authority',
         hidden: true,
         component: () => import('@/views/gray-service/authority'),
         name: '服务权限',
-        meta: { title: '服务权限', icon: 'table', noCache: true , activeMenu: '/gray/service'}
+        meta: {title: '服务权限', icon: 'table', noCache: true, activeMenu: '/gray/service'}
       },
       {
         path: 'discovery-instances:id(.+)',
         component: () => import('@/views/gray-instance/discovery-instances'),
         name: '服务实例',
-        meta: { title: '服务实例', noCache: true, activeMenu: '/grayService' },
+        meta: {title: '服务实例', noCache: true, activeMenu: '/grayService'},
         hidden: true
       }
     ]
@@ -160,7 +279,7 @@ export const constantRoutes = [
         path: 'list',
         component: () => import('@/views/user/list'),
         name: '用户列表',
-        meta: { title: '用户列表', icon: 'table', noCache: true }
+        meta: {title: '用户列表', icon: 'table', noCache: true}
       }
     ]
   },
@@ -180,7 +299,7 @@ export const constantRoutes = [
         path: 'list',
         component: () => import('@/views/operate-record/list'),
         name: '操作记录',
-        meta: { title: '操作记录', icon: 'table', noCache: true }
+        meta: {title: '操作记录', icon: 'table', noCache: true}
       }
     ]
   },
@@ -190,41 +309,29 @@ export const constantRoutes = [
     redirect: '/grayInstance',
     hidden: true,
     children: [
-    {
+      {
         path: '',
         component: () => import('@/views/gray-instance/complex-table'),
-    name: '灰度实例',
-    meta: { title: '灰度实例', icon: 'tree-table', noCache: true, activeMenu: '/gray/service' }
-    },{
-    path: 'policy',
-        component: () => import('@/views/gray-policy/complex-table'),
-        name: '灰度策略',
-        meta: { title: '灰度策略', noCache: true, activeMenu: '/gray/instance' },
-        hidden: true
-    },{
-    path: 'policy/decision/:policyId',
-        component: () => import('@/views/gray-decision/complex-table'),
-        name: '灰度决策',
-        meta: { title: '灰度决策', noCache: true, activeMenu: '/gray/instance/decision' },
-        hidden: true
-    }
-]
-},
-{
+        name: '灰度实例',
+        meta: {title: '灰度实例', icon: 'tree-table', noCache: true, activeMenu: '/gray/service'}
+      }
+    ]
+  },
+  {
     path: '/gray/trackor',
     component: Layout,
     redirect: '/graytrackor',
     hidden: true,
     children: [
-    {
+      {
         path: '',
         component: () => import('@/views/gray-trackor/complex-table'),
-    name: '灰度追踪',
-    meta: { title: '灰度追踪', icon: 'table', noCache: true, activeMenu: '/gray/service' }
-}
-]
-}
-/* eslint-disable */
+        name: '灰度追踪',
+        meta: {title: '灰度追踪', icon: 'table', noCache: true, activeMenu: '/gray/service'}
+      }
+    ]
+  }
+  /* eslint-disable */
 
 ]
 
@@ -234,12 +341,12 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  {path: '*', redirect: '/404', hidden: true}
 ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })
 

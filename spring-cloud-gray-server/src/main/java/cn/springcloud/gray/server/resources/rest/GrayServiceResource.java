@@ -3,6 +3,7 @@ package cn.springcloud.gray.server.resources.rest;
 import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.module.gray.GrayServerModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayService;
+import cn.springcloud.gray.server.module.gray.domain.query.GrayServiceQuery;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.utils.ApiResHelper;
@@ -14,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,16 +42,14 @@ public class GrayServiceResource {
 
     @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<GrayService>>> list(
+            @RequestParam(value = "namespace") String namespace,
             @ApiParam @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<String> servicePage = serviceManageModule.listAllServiceIds(userModule.getCurrentUserId(), pageable);
-        List<GrayService> grayServices = grayServerModule.findGrayServices(servicePage.getContent());
-//        Page<GrayService> page = grayServerModule.listAllGrayServices(pageable);
-        HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(servicePage);
-        ApiRes<List<GrayService>> data = ApiRes.<List<GrayService>>builder().code("0").data(grayServices).build();
-        return new ResponseEntity<>(
-                data,
-                headers,
-                HttpStatus.OK);
+        GrayServiceQuery serviceQuery = GrayServiceQuery.builder()
+                .namespace(namespace)
+                .userId(userModule.getCurrentUserId())
+                .build();
+        Page<GrayService> page = grayServerModule.queryGrayServices(serviceQuery, pageable);
+        return PaginationUtils.generatePaginationResponseResult(page);
     }
 
 

@@ -1,10 +1,10 @@
 package cn.springcloud.gray.server.resources.rest;
 
 import cn.springcloud.gray.api.ApiRes;
-import cn.springcloud.gray.server.module.gray.GrayModelType;
 import cn.springcloud.gray.server.module.gray.GrayServerModule;
 import cn.springcloud.gray.server.module.gray.GrayServiceIdFinder;
 import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
+import cn.springcloud.gray.server.module.gray.domain.GrayModelType;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.utils.ApiResHelper;
@@ -40,13 +40,6 @@ public class GrayInstanceResource {
     @Autowired
     private GrayServiceIdFinder grayServiceIdFinder;
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET, params = {"serviceId"})
-    public ApiRes<List<GrayInstance>> listByServiceId(@RequestParam("serviceId") String serviceId) {
-        return ApiRes.<List<GrayInstance>>builder()
-                .code(CODE_SUCCESS)
-                .data(grayServerModule.listGrayInstancesByServiceId(serviceId))
-                .build();
-    }
 
     @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<GrayInstance>>> page(

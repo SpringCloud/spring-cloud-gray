@@ -6,6 +6,7 @@ import cn.springcloud.gray.client.netflix.eureka.*;
 import cn.springcloud.gray.servernode.InstanceDiscoveryClient;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
+import cn.springcloud.gray.servernode.VersionExtractor;
 import com.netflix.discovery.EurekaClient;
 import com.netflix.loadbalancer.Server;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,13 @@ public class GrayClientEurekaAutoConfiguration {
     private SpringClientFactory springClientFactory;
 
     @Bean
-    public EurekaInstanceLocalInfoInitiralizer instanceLocalInfoInitiralizer() {
-        return new EurekaInstanceLocalInfoInitiralizer();
+    public EurekaInstanceLocalInfoObtainer instanceLocalInfoInitiralizer() {
+        return new EurekaInstanceLocalInfoObtainer();
     }
 
-//    @Bean
-    public ServerExplainer<Server> serverExplainer() {
-        return new EurekaServerExplainer(springClientFactory);
+    //    @Bean
+    public ServerExplainer<Server> serverExplainer(VersionExtractor versionExtractor) {
+        return new EurekaServerExplainer(springClientFactory, versionExtractor);
     }
 
 
@@ -49,7 +50,7 @@ public class GrayClientEurekaAutoConfiguration {
     @ConditionalOnProperty(value = "gray.holdout-server.enabled")
     @ConditionalOnMissingBean
     public ServerListProcessor serverListProcessor(GrayHoldoutServerProperties grayHoldoutServerProperties, EurekaClient eurekaClient) {
-        if(grayHoldoutServerProperties.isZoneAffinity()){
+        if (grayHoldoutServerProperties.isZoneAffinity()) {
             return new EurekaZoneAffinityServerListProcessor(grayHoldoutServerProperties, eurekaClient);
         }
         return new EurekaServerListProcessor(grayHoldoutServerProperties, eurekaClient);

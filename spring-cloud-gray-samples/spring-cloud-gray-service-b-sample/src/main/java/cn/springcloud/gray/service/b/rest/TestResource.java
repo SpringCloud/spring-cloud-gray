@@ -1,7 +1,5 @@
 package cn.springcloud.gray.service.b.rest;
 
-import cn.springcloud.gray.choose.GrayPredicate;
-import cn.springcloud.gray.client.config.properties.GrayClientProperties;
 import cn.springcloud.gray.client.config.properties.GrayProperties;
 import cn.springcloud.gray.service.b.feign.Test2Client;
 import cn.springcloud.gray.service.b.feign.TestClient;
@@ -112,7 +110,7 @@ public class TestResource {
 
     @RequestMapping(value = "/graySwith", method = RequestMethod.GET)
     @ResponseBody
-    public String graySwith(){
+    public String graySwith() {
         grayProperties.setEnabled(!grayProperties.isEnabled());
         return "sccuess";
     }

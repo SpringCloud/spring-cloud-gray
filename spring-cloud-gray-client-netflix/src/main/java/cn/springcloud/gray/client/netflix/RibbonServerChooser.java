@@ -2,9 +2,13 @@ package cn.springcloud.gray.client.netflix;
 
 import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.ServerChooser;
 import cn.springcloud.gray.ServerListResult;
-import cn.springcloud.gray.choose.GrayPredicate;
+import cn.springcloud.gray.choose.ChooseGroup;
+import cn.springcloud.gray.choose.ListChooser;
+import cn.springcloud.gray.choose.PredicateType;
+import cn.springcloud.gray.choose.ServerChooser;
+import cn.springcloud.gray.decision.GrayDecisionInputArgs;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.RequestLocalStorage;
@@ -22,6 +26,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * 已被 {@link cn.springcloud.gray.choose.DefaultServerChooser} 替换
+ */
+@Deprecated
 @Slf4j
 public class RibbonServerChooser implements ServerChooser<Server> {
 
@@ -29,7 +37,7 @@ public class RibbonServerChooser implements ServerChooser<Server> {
 
     private RequestLocalStorage requestLocalStorage;
 
-    private GrayPredicate grayPredicate;
+    private PolicyDecisionManager policyDecisionManager;
 
     private ServerExplainer<Server> serverExplainer;
 
@@ -39,38 +47,61 @@ public class RibbonServerChooser implements ServerChooser<Server> {
     public RibbonServerChooser(
             GrayManager grayManager,
             RequestLocalStorage requestLocalStorage,
-            GrayPredicate grayPredicate,
+            PolicyDecisionManager policyDecisionManager,
             ServerExplainer<Server> serverExplainer,
             ServerListProcessor serverListProcessor) {
         this.grayManager = grayManager;
         this.requestLocalStorage = requestLocalStorage;
-        this.grayPredicate = grayPredicate;
+        this.policyDecisionManager = policyDecisionManager;
         this.serverExplainer = serverExplainer;
         this.serverListProcessor = serverListProcessor;
     }
 
     @Override
-    public boolean matchGrayDecisions(ServerSpec serverSpec) {
-        return grayPredicate.apply(serverSpec);
+    public Server chooseServer(List<Server> servers, ListChooser<Server> chooser) {
+        ServerListResult<Server> serverListResult = distinguishAndMatchGrayServerList(servers);
+        if (serverListResult == null) {
+            return chooser.choose(ChooseGroup.ALL, servers);
+        }
+
+        if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()) {
+            if (CollectionUtils.isNotEmpty(serverListResult.getGrayServers())) {
+                Server server = chooser.choose(ChooseGroup.GRAY, serverListResult.getGrayServers());
+                if (server != null) {
+                    return server;
+                }
+            }
+        }
+
+        return chooser.choose(ChooseGroup.NORMAL, serverListResult.getNormalServers());
     }
 
-    @Override
+
+    //    @Override
+    public boolean matchGrayDecisions(ServerSpec serverSpec) {
+        GrayDecisionInputArgs decisionInputArgs = new GrayDecisionInputArgs();
+        decisionInputArgs.setServer(serverSpec);
+        decisionInputArgs.setGrayRequest(requestLocalStorage.getGrayRequest());
+
+        return policyDecisionManager.testPolicyPredicate(PredicateType.SERVER.name(), decisionInputArgs);
+    }
+
+    //    @Override
     public boolean matchGrayDecisions(Server server) {
         return matchGrayDecisions(serverExplainer.apply(server));
     }
 
-    @Override
+    //    @Override
     public ServerListResult<Server> distinguishServerList(List<Server> servers) {
         String serviceId = getServiceId(servers);
         if (StringUtils.isEmpty(serviceId)) {
-            log.warn("没有获取到当前remote request的service id, 返回null");
             return null;
         }
         return distinguishServerList(serviceId, servers);
     }
 
 
-    @Override
+    //    @Override
     public ServerListResult<Server> distinguishAndMatchGrayServerList(List<Server> servers) {
         ServerListResult<Server> serverListResult = distinguishServerList(servers);
         if (serverListResult == null) {
@@ -109,12 +140,16 @@ public class RibbonServerChooser implements ServerChooser<Server> {
 
 
     private ServerListResult<Server> distinguishServerList(String serviceId, List<Server> servers) {
-        if (!grayManager.hasGray(serviceId)) {
-            log.debug("当前灰度开关未打开，或服务 '{}'没有相关灰度策略", serviceId);
+        if (!grayManager.hasInstanceGray(serviceId)) {
+            log.debug("当前灰度开关未打开，或服务 '{}'没有相关灰度策略,返回null", serviceId);
             return null;
         }
 
         GrayService grayService = grayManager.getGrayService(serviceId);
+        if (Objects.nonNull(grayService)) {
+            log.debug("服务 '{}'没有相关灰度策略,返回null", serviceId);
+            return null;
+        }
         List<Server> serverList = serverListProcessor.process(serviceId, servers);
         List<Server> grayServers = new ArrayList<>(grayService.getGrayInstances().size());
         List<Server> normalServers = new ArrayList<>(Math.min(servers.size(), grayService.getGrayInstances().size()));

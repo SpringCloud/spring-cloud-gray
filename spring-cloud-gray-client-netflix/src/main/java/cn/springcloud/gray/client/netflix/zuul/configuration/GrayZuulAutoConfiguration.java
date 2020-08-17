@@ -1,14 +1,13 @@
 package cn.springcloud.gray.client.netflix.zuul.configuration;
 
-import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
+import cn.springcloud.gray.client.netflix.zuul.GrayMockRoutingZuulFilter;
 import cn.springcloud.gray.client.netflix.zuul.GrayPostZuulFilter;
 import cn.springcloud.gray.client.netflix.zuul.GrayPreZuulFilter;
 import cn.springcloud.gray.client.netflix.zuul.ZuulRequestInterceptor;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import com.netflix.zuul.http.ZuulServlet;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +29,12 @@ public class GrayZuulAutoConfiguration {
     @Bean
     public GrayPostZuulFilter grayPostZuulFilter(RoutingConnectionPoint routingConnectionPoint) {
         return new GrayPostZuulFilter(routingConnectionPoint);
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "gray.mock.enabled", havingValue = "true")
+    public GrayMockRoutingZuulFilter grayMockRoutingZuulFilter(RoutingConnectionPoint routingConnectionPoint) {
+        return new GrayMockRoutingZuulFilter(routingConnectionPoint);
     }
 
 

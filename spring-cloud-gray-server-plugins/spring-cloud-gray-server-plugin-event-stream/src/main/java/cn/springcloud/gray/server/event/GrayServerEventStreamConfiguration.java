@@ -1,8 +1,8 @@
 package cn.springcloud.gray.server.event;
 
-import cn.springcloud.gray.event.GrayEventPublisher;
-import cn.springcloud.gray.server.event.stream.StreamGrayEventPublisher;
+import cn.springcloud.gray.server.event.stream.GrayEventStreamSender;
 import cn.springcloud.gray.server.event.stream.StreamOutput;
+import cn.springlcoud.gray.event.server.GrayEventSender;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class GrayServerEventStreamConfiguration {
 
     @Bean
-    public GrayEventPublisher grayEventPublisher(StreamOutput streamOutput) {
-        return new StreamGrayEventPublisher(streamOutput);
+    public GrayEventSender grayEventSender(StreamOutput streamOutput) {
+        return new GrayEventStreamSender(streamOutput);
     }
 }

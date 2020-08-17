@@ -1,18 +1,26 @@
 package cn.springcloud.gray;
 
+import cn.springcloud.gray.changed.notify.ChangedNotifyDriver;
+import cn.springcloud.gray.choose.ServerChooser;
+import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
+import cn.springcloud.gray.spring.SpringEventPublisher;
 
 import java.util.Objects;
 
 public class GrayClientHolder {
 
     private static GrayManager grayManager;
+    private static GrayTrackHolder grayTrackHolder;
+    private static PolicyDecisionManager policyDecisionManager;
     private static RequestLocalStorage requestLocalStorage;
     private static LocalStorageLifeCycle localStorageLifeCycle;
     private static ServerExplainer<?> serverExplainer;
@@ -20,6 +28,11 @@ public class GrayClientHolder {
     private static GraySwitcher graySwitcher = new GraySwitcher.DefaultGraySwitcher();
     private static InstanceLocalInfo instanceLocalInfo;
     private static ServerChooser<?> serverChooser;
+    private static LoadBalancerFactory loadBalancerFactory;
+
+    private static SpringEventPublisher springEventPublisher;
+
+    private static ChangedNotifyDriver changedNotifyDriver;
 
     public static GrayManager getGrayManager() {
         return grayManager;
@@ -85,6 +98,47 @@ public class GrayClientHolder {
     public static void setServerChooser(ServerChooser<?> serverChooser) {
         GrayClientHolder.serverChooser = serverChooser;
     }
+
+    public static GrayTrackHolder getGrayTrackHolder() {
+        return grayTrackHolder;
+    }
+
+    public static void setGrayTrackHolder(GrayTrackHolder grayTrackHolder) {
+        GrayClientHolder.grayTrackHolder = grayTrackHolder;
+    }
+
+    public static PolicyDecisionManager getPolicyDecisionManager() {
+        return policyDecisionManager;
+    }
+
+    public static void setPolicyDecisionManager(PolicyDecisionManager policyDecisionManager) {
+        GrayClientHolder.policyDecisionManager = policyDecisionManager;
+    }
+
+    public static SpringEventPublisher getSpringEventPublisher() {
+        return springEventPublisher;
+    }
+
+    public static void setSpringEventPublisher(SpringEventPublisher springEventPublisher) {
+        GrayClientHolder.springEventPublisher = springEventPublisher;
+    }
+
+    public static LoadBalancerFactory getLoadBalancerFactory() {
+        return loadBalancerFactory;
+    }
+
+    public static void setLoadBalancerFactory(LoadBalancerFactory loadBalancerFactory) {
+        GrayClientHolder.loadBalancerFactory = loadBalancerFactory;
+    }
+
+    public static ChangedNotifyDriver getChangedNotifyDriver() {
+        return changedNotifyDriver;
+    }
+
+    public static void setChangedNotifyDriver(ChangedNotifyDriver changedNotifyDriver) {
+        GrayClientHolder.changedNotifyDriver = changedNotifyDriver;
+    }
+
 
 
     /**

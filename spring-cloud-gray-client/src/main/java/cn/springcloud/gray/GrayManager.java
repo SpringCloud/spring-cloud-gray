@@ -1,12 +1,12 @@
 package cn.springcloud.gray;
 
-import cn.springcloud.gray.decision.GrayDecision;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
+import cn.springcloud.gray.model.ServiceRouteInfo;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -24,19 +24,94 @@ public interface GrayManager {
      * @param serviceId 服务ID
      * @return has gray instance if true
      */
-    boolean hasGray(String serviceId);
+    boolean hasInstanceGray(String serviceId);
 
+
+    /**
+     * 判断指定服务ID是否有Service级的灰度
+     *
+     * @param serviceId
+     * @return
+     */
+    default boolean hasServiceGray(String serviceId) {
+        GrayService grayService = getGrayService(serviceId);
+        if (Objects.isNull(grayService)) {
+            return false;
+        }
+
+        if (!grayService.getRoutePolicies().isEmpty()) {
+            return true;
+        }
+
+        for (DataSet<String> value : grayService.getMultiVersionRotePolicies().values()) {
+            if (!value.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 返回所有的灰度服务
+     *
+     * @return
+     */
     Collection<GrayService> allGrayServices();
+
+    /**
+     * 清空所有的灰度服务信息
+     */
+    void clearAllGrayServices();
 
     GrayService getGrayService(String serviceId);
 
+    GrayService createGrayService(String serviceId);
+
     GrayInstance getGrayInstance(String serviceId, String instanceId);
 
-    List<GrayDecision> getGrayDecision(GrayInstance instance);
+    default Collection<String> getInstanceRoutePolicies(String serviceId, String instanceId) {
+        GrayInstance grayInstance = getGrayInstance(serviceId, instanceId);
+        if (Objects.isNull(grayInstance)) {
+            return Collections.EMPTY_SET;
+        }
+        return grayInstance.getRoutePolicies();
+    }
 
-    List<GrayDecision> getGrayDecision(String serviceId, String instanceId);
+
+    default DataSet<String> getServiceRoutePolicies(String serviceId) {
+        GrayService grayService = getGrayService(serviceId);
+        if (Objects.isNull(grayService)) {
+            return null;
+        }
+        return grayService.getRoutePolicies();
+    }
+
+    default Map<String, DataSet<String>> getMultiVersionRoutePolicies(String serviceId) {
+        GrayService grayService = getGrayService(serviceId);
+        if (Objects.isNull(grayService)) {
+            return Collections.EMPTY_MAP;
+        }
+        return grayService.getMultiVersionRotePolicies();
+    }
+
+    default DataSet<String> getServiceVersionRoutePolicies(String serviceId, String version) {
+        Map<String, DataSet<String>> multiVersionRotePolicies = getMultiVersionRoutePolicies(serviceId);
+        return multiVersionRotePolicies.get(version);
+    }
 
     void updateGrayInstance(GrayInstance instance);
+
+    default void updateServiceRouteInfo(ServiceRouteInfo serviceRouteInfo) {
+        GrayService grayService = getGrayService(serviceRouteInfo.getServiceId());
+        if (Objects.isNull(grayService)) {
+            grayService = createGrayService(serviceRouteInfo.getServiceId());
+        }
+        grayService.getRoutePolicies().addDatas(serviceRouteInfo.getRoutePolicies());
+        for (Map.Entry<String, Set<String>> stringSetEntry : serviceRouteInfo.getMultiVersionRoutePolicies().entrySet()) {
+            grayService.getOrCreateVersionRotePolicies(stringSetEntry.getKey()).addDatas(stringSetEntry.getValue());
+        }
+    }
 
     void closeGray(GrayInstance instance);
 
@@ -57,4 +132,10 @@ public interface GrayManager {
     void setup();
 
     void shutdown();
+
+
+    GrayTrackHolder getGrayTrackHolder();
+
+    PolicyDecisionManager getPolicyDecisionManager();
+
 }

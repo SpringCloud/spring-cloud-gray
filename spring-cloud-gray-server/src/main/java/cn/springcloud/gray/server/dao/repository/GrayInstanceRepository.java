@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -28,4 +29,6 @@ public interface GrayInstanceRepository extends JpaRepository<GrayInstanceDO, St
 
 
     List<GrayInstanceDO> findAllByLastUpdateDateBeforeAndInstanceStatusIn(Date lastUpdateDate, String[] instanceStatus);
+
+    List<GrayInstanceDO> findAllByServiceIdInAndInstanceStatusInAndGrayLock(Iterator<String> serviceIds, String[] instanceStatus, int grayLock);
 }

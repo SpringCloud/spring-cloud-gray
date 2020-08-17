@@ -3,13 +3,13 @@ package cn.springcloud.gray.server.configuration;
 import cn.springcloud.gray.server.configuration.apidoc.PageableParameterAlternateTypeRuleConvention;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
@@ -23,13 +23,14 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 /**
  * Created by saleson on 2017/7/6.
  */
 @Configuration
 @EnableSwagger2
 //@Import(springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration.class)
-@ComponentScan({"cn.springcloud.gray.server.resources"})
 public class Swagger2Configuration extends WebMvcConfigurerAdapter {
 
 
@@ -79,11 +80,14 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
     public Docket createRestApi() {
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
+                .globalOperationParameters(buildGlobalOperationParameters())
                 .forCodeGeneration(true)
                 .genericModelSubstitutes(ResponseEntity.class)
                 .select()
 //                .paths(PathSelectors.any())
-                .paths(PathSelectors.ant("/gray/**"))
+                .paths(PathSelectors.ant("/**"))
+//                .paths(PathSelectors.ant("/namespace/**"))
+//                .paths(PathSelectors.ant("/authority/**"))
                 .build()
                 //2 定义了API的根路径
 //                .pathMapping("/")
@@ -152,7 +156,7 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
 //        return Arrays.asList();
         return Arrays.asList(
                 new SecurityReference("accessToken", authorizationScopes),
-        new SecurityReference("Authorization", authorizationScopes));
+                new SecurityReference("Authorization", authorizationScopes));
 //                new SecurityReference(CompanyUserInterceptor.AUTH_HEADER, authorizationScopes));
     }
 
@@ -182,5 +186,19 @@ public class Swagger2Configuration extends WebMvcConfigurerAdapter {
                         .code(401)
                         .message("")
                         .build());
+    }
+
+
+    private List<Parameter> buildGlobalOperationParameters() {
+        List<Parameter> parameters = newArrayList();
+        parameters.add(new ParameterBuilder()
+                .name("ns")
+                .description("namespace")
+                .modelRef(new ModelRef("string"))
+                .parameterType("query")
+                .required(false)
+                .defaultValue("")
+                .build());
+        return parameters;
     }
 }

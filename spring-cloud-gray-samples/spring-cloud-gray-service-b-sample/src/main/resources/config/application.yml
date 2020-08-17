@@ -14,7 +14,7 @@ spring:
     stream:
       bindings:
         GrayEventInput:
-#          contentType: application/x-java-serialized-object
+          #          contentType: application/x-java-serialized-object
           group: service-a
           destination: gray_event
           consumer:
@@ -42,7 +42,7 @@ eureka:
     availability-zones:
       sh: xuhui,gray
     serviceUrl:
-      #      defaultZone: http://localhost:20001/eureka/
+      defaultZone: http://localhost:20001/eureka/
       xuhui: http://localhost:20001/eureka/
       gray: http://localhost:20001/eureka/
     registry-fetch-interval-seconds: 5
@@ -62,30 +62,35 @@ hystrix:
 
 
 gray:
+  mock:
+    enabled: true
+
   enabled: true
   hystrix:
     enabled: true
   server:
-    url: http://localhost:20202
-    loadbalanced: false
+    url: http://gray-Server
+    loadbalanced: true
     retryable: true
     retryNumberOfRetries: 3
   client:
+    event:
+      longpolling: 60000
     runenv: web
-    serviceUpdateIntervalTimerInMs: 5000
-    serviceInitializeDelayTimeInMs: 10000
+    infosUpdateIntervalTimerInMs: 0
+    infosInitializeDelayTimeInMs: 10000
     instance:
       grayEnroll: false
       grayEnrollDealyTimeInMs: 20000
   holdoutServer:
-    enabled: true
+    enabled: false
     services:
       "service-a": starting
   request:
     track:
       enabled: true
       trackType: web
-      definitionsUpdateIntervalTimerInMs: 5000
+      definitionsUpdateIntervalTimerInMs: 10000
       definitionsInitializeDelayTimeInMs: 10000
       web:
         track-definitions:
@@ -99,8 +104,8 @@ gray:
         #            value: version,test
         path-patterns: /*
         exclude-path-patterns: /test/*
-  load:
-    enabled: true
+#  load:
+#    enabled: true
 #    gray-instances:
 #      - serviceId: service-a
 #        instance-id: service-a:20104
@@ -117,4 +122,9 @@ gray:
 #  client:
 #    instance:
 #      grayEnroll: false #是否在启动后自动注册成灰度实例
+logging:
+  level:
+    cn:
+      springcloud:
+        gray: debug
 #    serverUrl: http://localhost:20202 #灰度服务端的url

@@ -48,6 +48,9 @@ public class OAuth2Config {
 
     private static final Logger log = LoggerFactory.getLogger(OAuth2Config.class);
 
+    @Autowired
+    private AuthorizationServerTokenServices tokenServices;
+
     @Bean
     public JwtTokenStore tokenStore() {
         return new JwtTokenStore(jwtAccessTokenConverter());
@@ -74,17 +77,18 @@ public class OAuth2Config {
         return new DefaultOAuth2RequestFactory(clientDetailsService);
     }
 
+
     @Bean
-    public RefreshTokenGranter refreshTokenGranter(AuthorizationServerTokenServices tokenServices,
-                                                   ClientDetailsService clientDetailsService,
-                                                   OAuth2RequestFactory requestFactory) {
+    public RefreshTokenGranter refreshTokenGranter(
+            ClientDetailsService clientDetailsService,
+            OAuth2RequestFactory requestFactory) {
         return new RefreshTokenGranter(tokenServices, clientDetailsService, requestFactory);
     }
 
     @Bean
-    public DefaultTokenGranter defaultTokenGranter(AuthorizationServerTokenServices tokenServices,
-                                                   ClientDetailsService clientDetailsService,
-                                                   OAuth2RequestFactory requestFactory) {
+    public DefaultTokenGranter defaultTokenGranter(
+            ClientDetailsService clientDetailsService,
+            OAuth2RequestFactory requestFactory) {
         return new DefaultTokenGranter(tokenServices, clientDetailsService, requestFactory);
     }
 
@@ -114,6 +118,14 @@ public class OAuth2Config {
     @EnableResourceServer
     public static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
+        public String[] permitPathPatterns = {
+                "/**.html", "/**.js", "/**.css", "/**.png",
+                "/swagger-resources/**", "/v2/api-docs",
+                "/gray/user/login", "/gray/user/login", "/gray/instances/enable",
+                "/gray/instances", "/gray/trackDefinitions", "/gray/v1/**", "/gray/v2/**",
+                "/server/synch/accept"
+        };
+
         @Autowired
         private TokenStore tokenStore;
 
@@ -121,19 +133,22 @@ public class OAuth2Config {
         public void configure(HttpSecurity http) throws Exception {
             http.formLogin().and()
                     .authorizeRequests()
-                    .antMatchers("/gray/user/login").permitAll()
-                    .antMatchers("/gray/user/login").permitAll()
-                    .antMatchers("/gray/instances/enable").permitAll()
-                    .antMatchers("/gray/instances").permitAll()
-                    .antMatchers("/gray/trackDefinitions").permitAll()
+//                    .antMatchers("/gray/user/login").permitAll()
+//                    .antMatchers("/gray/user/login").permitAll()
+//                    .antMatchers("/gray/instances/enable").permitAll()
+//                    .antMatchers("/gray/instances").permitAll()
+//                    .antMatchers("/gray/trackDefinitions").permitAll()
+//                    .antMatchers("/gray/v1/**", "/gray/v2/**").permitAll()
+                    .antMatchers(permitPathPatterns).permitAll()
 
-                    .antMatchers(HttpMethod.OPTIONS, "/gray/**").permitAll()
-                    .antMatchers("/gray/service/**").authenticated()
-                    .antMatchers("/gray/policy/**").authenticated()
-                    .antMatchers("/gray/decision/**").authenticated()
-                    .antMatchers("/gray/discover/**").authenticated()
-                    .antMatchers("/gray/track/**").authenticated()
-                    .anyRequest().permitAll()
+                    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                    .antMatchers("/gray/service/**").authenticated()
+//                    .antMatchers("/gray/policy/**").authenticated()
+//                    .antMatchers("/gray/decision/**").authenticated()
+//                    .antMatchers("/gray/discover/**").authenticated()
+//                    .antMatchers("/gray/track/**").authenticated()
+//                    .antMatchers("/route/**").authenticated()
+                    .anyRequest().authenticated()
                     .and()
                     .csrf().disable();
         }

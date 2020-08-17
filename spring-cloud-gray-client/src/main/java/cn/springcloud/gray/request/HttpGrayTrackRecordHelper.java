@@ -1,5 +1,6 @@
 package cn.springcloud.gray.request;
 
+import cn.springcloud.gray.commons.GrayRequestHelper;
 import org.apache.commons.collections.MapUtils;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public class HttpGrayTrackRecordHelper {
         if (MapUtils.isNotEmpty(grayAttributes)) {
             recordGrayTrackInfo(recordDevice, GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX, grayAttributes);
         }
+
+        GrayRequestHelper.recordLocalInstanceInfos(recordDevice);
     }
 
 
@@ -47,4 +50,6 @@ public class HttpGrayTrackRecordHelper {
             recordDevice.record(prefix + entry.getKey(), entry.getValue());
         });
     }
+
+
 }

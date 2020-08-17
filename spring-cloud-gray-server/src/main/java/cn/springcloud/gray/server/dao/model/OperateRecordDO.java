@@ -34,5 +34,5 @@ public class OperateRecordDO {
      * 操作结论, 0:failed, 1: scuuessed
      */
     @Column(length = 2)
-    private int operateState;
+    private Integer operateState;
 }
