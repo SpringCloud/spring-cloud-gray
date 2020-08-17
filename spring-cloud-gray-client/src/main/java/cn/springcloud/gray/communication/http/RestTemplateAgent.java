@@ -3,6 +3,7 @@ package cn.springcloud.gray.communication.http;
 import cn.springcloud.gray.http.HttpParams;
 import cn.springcloud.gray.http.HttpRequest;
 import cn.springcloud.gray.http.HttpResult;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +67,8 @@ public class RestTemplateAgent implements HttpAgent {
         StringBuilder url = new StringBuilder();
         url.append(baseUrl).append(path);
         if (!Objects.isNull(paramValues)) {
-            url.append("?").append(paramValues.toQueryString());
+            String queryString = StringUtils.isEmpty(encoding) ? paramValues.toQueryString() : paramValues.encodingParams(encoding);
+            url.append("?").append(queryString);
         }
         return url.toString();
     }
