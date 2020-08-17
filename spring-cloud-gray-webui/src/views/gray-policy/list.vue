@@ -4,8 +4,12 @@
       <el-select ref="" v-model="listQuery.namespace" placeholder="请选择">
         <el-option v-for="item in nsList" :key="item.code" :label="item.name" :value="item.code" />
       </el-select>
+      <el-select v-model="listQuery.delFlag" placeholder="Status" clearable class="filter-item" style="width: 130px" @change="handleFilter">
+        <el-option :key="`ALL`" :label="`全部`" :value="`ALL`" />
+        <el-option :key="`UNDELETE`" :label="`启用`" :value="`UNDELETE`" />
+        <el-option :key="`DELELTED`" :label="`删除`" :value="`DELELTED`" />
+      </el-select>
 
-      <!--<el-input v-model="listQuery.title" placeholder="Service Id" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />-->
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         Search
       </el-button>
@@ -27,36 +31,21 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="Service Id" prop="serviceId" align="center">
+      <el-table-column label="Id" prop="serviceId" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.serviceId }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Service Name" align="center">
+      <el-table-column label="Alias" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.serviceName }}</span>
+          <span>{{ scope.row.alias }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Context Path" align="center">
+      <!--<el-table-column label="Instance Id" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.contextPath }}</span>
+          <span>{{ scope.row.instanceId }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="实例数" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.instanceNumber }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="灰度数" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.grayInstanceNumber }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="描述" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.describe }}</span>
-        </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="Operator" prop="operator" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.operator }}</span>
@@ -67,67 +56,32 @@
           <span>{{ scope.row.operateTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="280" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-dropdown trigger="click">
-            <el-button size="mini" type="primary" style="width:80px" class="list-button">
-              编辑
-              <i class="el-icon-arrow-down" />
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="handleUpdate(row)">修改</el-dropdown-item>
-              <el-dropdown-item @click.native="handleDelete(row)">删除</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <el-dropdown trigger="click">
-            <el-button size="mini" type="info" style="width:80px" class="list-button">
-              实例
-              <i class="el-icon-arrow-down" />
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <router-link :to="`/gray/instance?ns=${row.namespace}&serviceId=${row.serviceId}`"><el-dropdown-item>实例列表</el-dropdown-item></router-link>
-              <router-link :to="'/gray/service/discovery-instances/'+row.serviceId+'?serviceId='+row.serviceId"><el-dropdown-item>在线实例</el-dropdown-item></router-link>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <el-dropdown trigger="click">
-            <el-button size="mini" type="danger" style="width:80px" class="list-button">
-              灰度
-              <i class="el-icon-arrow-down" />
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <router-link :to="`/routingPolicy/serviceGrayPolicys?ns=${row.namespace}&resource=${row.serviceId}`"><el-dropdown-item>服务灰度</el-dropdown-item></router-link>
-              <router-link :to="`/routingPolicy/serviceMultiVersionGrayPolicys?ns=${row.namespace}&moduleId=${row.serviceId}`"><el-dropdown-item>多版本灰度</el-dropdown-item></router-link>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <router-link :to="'/gray/trackor?serviceId='+row.serviceId">
-            <el-button size="mini" type="success" class="list-button">
-              追踪
+          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+            Edit
+          </el-button>
+          <router-link :to="'/policy/grayPolicys/decision/'+row.id">
+            <el-button size="mini" type="success">
+              决策
             </el-button>
           </router-link>
-          <router-link :to="'/gray/service/authority?serviceId='+row.serviceId">
-            <el-button size="mini" type="success" class="list-button">
-              权限
-            </el-button>
-          </router-link>
+          <el-button v-if="!row.delFlag" size="mini" type="danger" @click="handleDelete(row)">
+            Delete
+          </el-button>
+          <el-button v-if="row.delFlag" size="mini" type="primary" @click="handleRecover(row)">
+            恢复
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.size" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-    <el-dialog :title="textMap[dialogStatus] + '  ' + temp.serviceId" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus] + '  ' + temp.id" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item v-if="dialogStatus==='create'" label="Service Id" prop="serviceId">
-          <el-input v-model="temp.serviceId" />
-        </el-form-item>
-        <el-form-item label="Service Name" prop="serviceName">
-          <el-input v-model="temp.serviceName" />
-        </el-form-item>
-        <el-form-item label="Context Path" prop="contextPath">
-          <el-input v-model="temp.contextPath" />
-        </el-form-item>
-        <el-form-item label="Describe" prop="describe">
-          <el-input v-model="temp.describe" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        <el-form-item label="Alias" prop="alias">
+          <el-input v-model="temp.alias" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -154,11 +108,18 @@
 
 <script>
 import { getDefaultNamespace } from '@/utils/ns'
-import { getData } from '@/api/api-request'
-import { fetchList, createService, updateService, deleteService } from '@/api/gray-service'
+import { getData, recoverRecord } from '@/api/api-request'
+import { fetchList, deletePolicy, createPolicy, updatePolicy } from '@/api/gray-policy'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+
+const calendarTypeOptions = [
+  { key: 'CN', display_name: 'China' },
+  { key: 'US', display_name: 'USA' },
+  { key: 'JP', display_name: 'Japan' },
+  { key: 'EU', display_name: 'Eurozone' }
+]
 
 export default {
   name: 'ComplexTable',
@@ -171,21 +132,20 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        namespace: getDefaultNamespace(),
         page: 1,
-        size: 10
+        limit: 10,
+        namespace: getDefaultNamespace(),
+        delFlag: 'UNDELETE'
       },
       nsList: [],
-      importanceOptions: [1, 2, 3],
+      calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
       temp: {
+        id: undefined,
         namespace: '',
-        serviceName: '',
-        serviceId: '',
-        contextPath: '',
-        describe: ''
+        alias: ''
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -196,14 +156,18 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        serviceId: [{ required: true, message: 'serviceId is required', trigger: 'change' }]
+        alias: [{ required: true, message: 'Alias is required', trigger: 'change' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      tempRoute: {}
     }
   },
   created() {
-    this.getList()
+    this.tempRoute = Object.assign({}, this.$route)
     this.getNamespaceList()
+    this.getList()
+    /** this.setTagsViewTitle()
+    this.setPageTitle() */
   },
   methods: {
     getNamespaceList() {
@@ -211,9 +175,19 @@ export default {
         this.nsList = response.data
       })
     },
+    setPageTitle() {
+      const title = '灰度策略'
+      document.title = `${title} - ${this.listQuery.instanceId}`
+    },
+    setTagsViewTitle() {
+      const title = '灰度策略'
+      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.listQuery.instanceId}` })
+      this.$store.dispatch('tagsView/updateVisitedView', route)
+      console.log(route)
+      console.log(this.$store.dispatch)
+    },
     getList() {
       this.listLoading = true
-      // this.listQuery.page = this.listQuery.page - 1
       fetchList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
@@ -227,6 +201,13 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
+    },
+    handleModifyStatus(row, status) {
+      this.$message({
+        message: '操作Success',
+        type: 'success'
+      })
+      row.status = status
     },
     sortChange(data) {
       const { prop, order } = data
@@ -244,11 +225,9 @@ export default {
     },
     resetTemp() {
       this.temp = {
+        id: undefined,
         namespace: this.listQuery.namespace,
-        serviceId: '',
-        serviceName: '',
-        contextPath: '',
-        describe: ''
+        alias: ''
       }
     },
     handleCreate() {
@@ -262,8 +241,10 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createService(this.temp).then(() => {
-            this.list.unshift(this.temp)
+          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+          this.temp.namespace = this.listQuery.namespace
+          createPolicy(this.temp).then(response => {
+            this.list.unshift(response.data)
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
@@ -289,11 +270,11 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateService(tempData).then(() => {
+          updatePolicy(tempData).then(response => {
             for (const v of this.list) {
-              if (v.serviceId === this.temp.serviceId) {
+              if (v.id === this.temp.id) {
                 const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
+                this.list.splice(index, 1, response.data)
                 break
               }
             }
@@ -314,15 +295,27 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(async() => {
-        deleteService(row.serviceId).then(() => {
+        deletePolicy(row.id).then(() => {
           this.dialogFormVisible = false
-          for (const v of this.list) {
-            if (v.serviceId === row.serviceId) {
-              const index = this.list.indexOf(v)
-              this.list.splice(index, 1)
-              break
-            }
-          }
+          this.getList()
+          this.$notify({
+            title: 'Success',
+            message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      })
+    },
+    handleRecover(row) {
+      this.$confirm('Confirm to recover the record?', 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async() => {
+        recoverRecord(`/gray/policy/${row.id}/recover`).then(() => {
+          this.dialogFormVisible = false
+          this.getList()
           this.$notify({
             title: 'Success',
             message: 'Delete Successfully',
@@ -335,13 +328,13 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['Service Id', 'Service Name', '实例数', '描述']
-        const filterVal = ['serviceId', 'serviceName', 'instanceNumber', 'describe']
+        const tHeader = ['Id', 'Alias', 'Instance Id']
+        const filterVal = ['id', 'alias', 'instanceId']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: 'gray-service-list'
+          filename: 'table-list'
         })
         this.downloadLoading = false
       })
@@ -358,9 +351,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  .list-button {
-    margin-top: 5px;
-  }
-</style>

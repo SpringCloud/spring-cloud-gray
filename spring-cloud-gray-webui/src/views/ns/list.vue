@@ -1,8 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <!--<el-input v-model="listQuery.title" placeholder="Service Id" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />-->
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        Refresh
+        Search
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         Add
@@ -22,54 +23,52 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="Id" prop="serviceId" align="center">
+      <el-table-column label="Code" prop="code" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.code }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Alias" align="center">
+      <el-table-column label="Name" prop="name" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.alias }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <!--<el-table-column label="Instance Id" align="center">
+      <el-table-column label="Creator" prop="creator" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.instanceId }}</span>
-        </template>
-      </el-table-column>-->
-      <el-table-column label="Operator" prop="operator" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.operator }}</span>
+          <span>{{ scope.row.creator }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Operate Time" prop="operateTime" align="center">
+      <el-table-column label="Create Time" prop="createTime" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.operateTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" width="280" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            Edit
+          <el-button v-if="!row.default" type="primary" size="mini" @click="handleDefault(row)">
+            Default
           </el-button>
-          <router-link :to="'/gray/instance/policy/decision/'+row.id">
-            <el-button size="mini" type="success">
-              决策
+          <router-link :to="'/authority/users?resource=namespace&resourceId='+row.code">
+            <el-button size="mini" type="success" class="list-button">
+              权限
             </el-button>
           </router-link>
-          <el-button size="mini" type="danger" @click="handleDelete(row)">
+          <el-button size="mini" type="danger" class="list-button" @click="handleDelete(row)">
             Delete
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.size" @pagination="getList" />
 
-    <el-dialog :title="textMap[dialogStatus] + '  ' + temp.id" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus] + '  ' + temp.code" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Alias" prop="alias">
-          <el-input v-model="temp.alias" />
+        <el-form-item label="Code" prop="code">
+          <el-input v-model="temp.code" />
+        </el-form-item>
+        <el-form-item label="Name" prop="name">
+          <el-input v-model="temp.name" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -95,17 +94,11 @@
 </template>
 
 <script>
-import { fetchList, deletePolicy, createPolicy, updatePolicy } from '@/api/gray-policy'
+import { setDefaultNamespace } from '@/utils/ns'
+import { fetchList, createRecord, deleteRecord, putData } from '@/api/api-request'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-
-const calendarTypeOptions = [
-  { key: 'CN', display_name: 'China' },
-  { key: 'US', display_name: 'USA' },
-  { key: 'JP', display_name: 'Japan' },
-  { key: 'EU', display_name: 'Eurozone' }
-]
 
 export default {
   name: 'ComplexTable',
@@ -119,17 +112,15 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10,
-        instanceId: unescape(this.$route.query.instanceId || '')
+        size: 10
       },
-      calendarTypeOptions,
+      importanceOptions: [1, 2, 3],
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
       temp: {
-        id: undefined,
-        instanceId: unescape(this.$route.query.instanceId || ''),
-        alias: ''
+        code: '',
+        name: ''
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -140,33 +131,20 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        alias: [{ required: true, message: 'Alias is required', trigger: 'change' }]
+        code: [{ required: true, message: 'Code is required', trigger: 'change' }],
+        name: [{ required: true, message: 'Name is required', trigger: 'change' }]
       },
-      downloadLoading: false,
-      tempRoute: {}
+      downloadLoading: false
     }
   },
   created() {
-    this.tempRoute = Object.assign({}, this.$route)
     this.getList()
-    this.setTagsViewTitle()
-    this.setPageTitle()
   },
   methods: {
-    setPageTitle() {
-      const title = '灰度策略'
-      document.title = `${title} - ${this.listQuery.instanceId}`
-    },
-    setTagsViewTitle() {
-      const title = '灰度策略'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.listQuery.instanceId}` })
-      this.$store.dispatch('tagsView/updateVisitedView', route)
-      console.log(route)
-      console.log(this.$store.dispatch)
-    },
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      // this.listQuery.page = this.listQuery.page - 1
+      fetchList('/namespace/page', this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
 
@@ -180,33 +158,24 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作Success',
-        type: 'success'
-      })
-      row.status = status
-    },
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'id') {
+      if (prop === 'code') {
         this.sortByID(order)
       }
     },
     sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = '+code'
       } else {
-        this.listQuery.sort = '-id'
+        this.listQuery.sort = '-code'
       }
       this.handleFilter()
     },
     resetTemp() {
-      const instanceId = this.listQuery.instanceId
       this.temp = {
-        id: undefined,
-        instanceId: instanceId,
-        alias: ''
+        name: '',
+        code: ''
       }
     },
     handleCreate() {
@@ -220,47 +189,12 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          createPolicy(this.temp).then(response => {
+          createRecord('/namespace/', this.temp).then((response) => {
             this.list.unshift(response.data)
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
               message: 'Created Successfully',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updatePolicy(tempData).then(response => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, response.data)
-                break
-              }
-            }
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Update Successfully',
               type: 'success',
               duration: 2000
             })
@@ -274,10 +208,10 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(async() => {
-        deletePolicy(row.id).then(() => {
+        deleteRecord('/namespace/' + row.code).then(() => {
           this.dialogFormVisible = false
           for (const v of this.list) {
-            if (v.id === row.id) {
+            if (v.serviceId === row.serviceId) {
               const index = this.list.indexOf(v)
               this.list.splice(index, 1)
               break
@@ -292,16 +226,41 @@ export default {
         })
       })
     },
+    handleDefault(row) {
+      this.$confirm('Confirm to set the record default?', 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async() => {
+        putData('/namespace/' + row.code + '/default').then(() => {
+          this.dialogFormVisible = false
+          for (const v of this.list) {
+            if (v.default) {
+              v.default = false
+              break
+            }
+          }
+          row.default = true
+          setDefaultNamespace(row.code)
+          this.$notify({
+            title: 'Success',
+            message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      })
+    },
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['Id', 'Alias', 'Instance Id']
-        const filterVal = ['id', 'alias', 'instanceId']
+        const tHeader = ['Code', 'Name', 'Creator', 'Create Time']
+        const filterVal = ['code', 'name', 'creator', 'createTime']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: 'table-list'
+          filename: 'gray-service-list'
         })
         this.downloadLoading = false
       })
@@ -318,3 +277,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .list-button {
+    margin-top: 5px;
+  }
+</style>
