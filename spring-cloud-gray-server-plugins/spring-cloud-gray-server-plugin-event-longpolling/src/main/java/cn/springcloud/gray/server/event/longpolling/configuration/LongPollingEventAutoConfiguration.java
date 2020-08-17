@@ -1,6 +1,5 @@
 package cn.springcloud.gray.server.event.longpolling.configuration;
 
-import cn.springcloud.gray.bean.properties.EnableConfigurationProperties;
 import cn.springcloud.gray.server.event.longpolling.DefaultLongPollingManager;
 import cn.springcloud.gray.server.event.longpolling.LongPollingGrayEventSender;
 import cn.springcloud.gray.server.event.longpolling.LongPollingManager;
@@ -8,6 +7,7 @@ import cn.springcloud.gray.server.event.longpolling.configuration.properties.Eve
 import cn.springlcoud.gray.event.server.GrayEventSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
