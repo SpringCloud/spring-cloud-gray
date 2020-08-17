@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.event.longpolling.configuration.properties;
 
-import cn.springcloud.gray.bean.properties.ConfigurationProperties;
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author saleson

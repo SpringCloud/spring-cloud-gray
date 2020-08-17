@@ -1,6 +1,5 @@
 package cn.springcloud.gray.eureka.server.configuration;
 
-import cn.springcloud.gray.bean.properties.EnableConfigurationProperties;
 import cn.springcloud.gray.eureka.server.communicate.GrayCommunicateClient;
 import cn.springcloud.gray.eureka.server.communicate.HttpCommunicateClient;
 import cn.springcloud.gray.eureka.server.communicate.RetryableGrayCommunicateClient;
@@ -9,6 +8,7 @@ import cn.springcloud.gray.eureka.server.listener.EurekaInstanceListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

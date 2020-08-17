@@ -1,7 +1,6 @@
 package cn.springcloud.gray.client.plugin.event.longpolling.configuration;
 
 import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.bean.properties.EnableConfigurationProperties;
 import cn.springcloud.gray.client.plugin.event.longpolling.GrayEventLongPollingReceiver;
 import cn.springcloud.gray.client.plugin.event.longpolling.GrayEventRemoteClient;
 import cn.springcloud.gray.client.plugin.event.longpolling.GrayRefreshedSortMarkListener;
@@ -13,6 +12,7 @@ import cn.springlcoud.gray.event.client.GrayEventReceiver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
