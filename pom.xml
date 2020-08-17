@@ -70,6 +70,7 @@
         <spring-security-oauth2.version>2.3.6.RELEASE</spring-security-oauth2.version>
         <spring-security-jwt.version>1.0.10.RELEASE</spring-security-jwt.version>
         <alibaba-cloud.version>2.1.0.RELEASE</alibaba-cloud.version>
+        <spring-cloud-alibaba-dependencies.version>2.1.0.RELEASE</spring-cloud-alibaba-dependencies.version>
         <springfox.version>2.9.2</springfox.version>
         <lombok.version>1.18.8</lombok.version>
         <slf4j.version>1.7.26</slf4j.version>
