@@ -1,6 +1,8 @@
 server:
   port: 20203
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: gray-Server
 
@@ -31,24 +33,19 @@ spring:
         server-addr: 127.0.0.1:8848
     stream:
       bindings:
-        #        GrayEventInput:
-        #          group: service-a
-        #          destination: test
-        #          consumer:
-        #            concurrency: 1 #并发数
-        #            max-attempts: 1
         GrayEventOutput:
+          contentType: application/x-java-serialized-object
           destination: gray_event
-          #      rabbit:
-          #        bindings:
-          #          GrayEventInput:
-          #            consumer:
-          #              maxConcurrency: 1 #并发数
-          #              prefetch: 1 #从mq一次获取消息的数量
-          #              requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
-          #              auto-bind-dlq: true
-          #              acknowledgeMode: AUTO
-#              acknowledgeMode: MANUAL
+          rabbit:
+            bindings:
+              GrayEventInput:
+                consumer:
+                  maxConcurrency: 1 #并发数
+                  prefetch: 1 #从mq一次获取消息的数量
+                  requeueRejected: true #spring cloud stream 如果出现异常， 是否需要重新投递消息， false表示丢弃。  也有相应的Exception， true-MessageRejectedWhileStoppingException false-AmqpRejectAndDontRequeueException
+                  auto-bind-dlq: true
+                acknowledgeMode: AUTO
+          acknowledgeMode: MANUAL
 eureka:
   client:
     register-with-eureka: true
@@ -60,7 +57,9 @@ eureka:
 gray:
   server:
     cluster:
-      peer-nodes:
+      #      synchro:
+      #        enable: false
+      peerNodes:
         - host: localhost
           port: 20202
         - host: localhost
