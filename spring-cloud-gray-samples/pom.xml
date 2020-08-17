@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>B.1.0.0</version>
+        <version>B.1.0.0-RC1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,6 +22,7 @@
         <module>spring-cloud-gray-stream-sample</module>
         <module>spring-cloud-gray-performance-agent</module>
         <module>spring-cloud-gray-btrace-sample</module>
+        <module>spring-cloud-gray-gateway-sample</module>
         <module>spring-cloud-gray-consumer-nacos-config-sample</module>
         <module>spring-cloud-gray-apollo-config-sample</module>
     </modules>

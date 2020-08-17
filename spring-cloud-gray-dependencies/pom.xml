@@ -5,7 +5,7 @@
     <parent>
         <artifactId>spring-cloud-gray</artifactId>
         <groupId>cn.springcloud.gray</groupId>
-        <version>B.1.0.0</version>
+        <version>B.1.0.0-RC1</version>
     </parent>
     <!--    <parent>-->
     <!--        <groupId>org.springframework.boot</groupId>-->
@@ -17,7 +17,7 @@
 
     <groupId>cn.springcloud.gray</groupId>
     <artifactId>spring-cloud-gray-dependencies</artifactId>
-    <version>B.1.0.0</version>
+    <version>B.1.0.0-RC1</version>
     <packaging>pom</packaging>
 
     <licenses>
@@ -121,6 +121,18 @@
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-gray-plugin-webmvc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-webflux</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-gateway</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
