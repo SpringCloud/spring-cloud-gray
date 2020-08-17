@@ -19,7 +19,7 @@ public class GrayServer2Application {
 
 
     public static void main(String[] args) throws UnknownHostException {
-        Environment env = new SpringApplicationBuilder(GrayServer2Application.class).web(true).run(args).getEnvironment();
+        Environment env = new SpringApplicationBuilder(GrayServer2Application.class).run(args).getEnvironment();
         log.info(
                 "\n----------------------------------------------------------\n\t"
                         + "Application '{}' is running! Access URLs:\n\t" + "Local: \t\thttp://127.0.0.1:{}\n\t"

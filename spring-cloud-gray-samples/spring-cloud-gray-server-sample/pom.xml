@@ -21,16 +21,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>org.springframework.cloud</groupId>-->
-<!--                    <artifactId>spring-cloud-netflix-eureka-client</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <!--            <exclusions>-->
+            <!--                <exclusion>-->
+            <!--                    <groupId>org.springframework.cloud</groupId>-->
+            <!--                    <artifactId>spring-cloud-netflix-eureka-client</artifactId>-->
+            <!--                </exclusion>-->
+            <!--            </exclusions>-->
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -39,20 +39,20 @@
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-starter-gray-server</artifactId>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>cn.springcloud.gray</groupId>-->
-        <!--            <artifactId>spring-cloud-gray-server-plugin-eureka</artifactId>-->
-        <!--        </dependency>-->
-
-        <!-- nacos -->
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
-            <artifactId>spring-cloud-gray-server-plugin-nacos-discovery</artifactId>
+            <artifactId>spring-cloud-gray-server-plugin-eureka</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
+
+        <!-- nacos -->
+        <!--        <dependency>-->
+        <!--            <groupId>cn.springcloud.gray</groupId>-->
+        <!--            <artifactId>spring-cloud-gray-server-plugin-nacos-discovery</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+        <!--        </dependency>-->
 
 
         <!--        <dependency>-->
