@@ -118,6 +118,8 @@ public class DefaultHandleRuleManager implements HandleRuleManager {
                 .collect(Collectors.toList());
         if (!handleRuleInfos.isEmpty()) {
             handleRuleTypeInfos.put(handleRuleType, handleRuleInfos);
+        } else {
+            handleRuleTypeInfos.remove(handleRuleType);
         }
     }
 
