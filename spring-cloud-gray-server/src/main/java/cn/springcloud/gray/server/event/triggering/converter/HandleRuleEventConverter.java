@@ -31,6 +31,8 @@ public class HandleRuleEventConverter extends AbstrctEventConverter<HandleRule, 
 
     private HandleRuleEvent toEvent(TriggerType triggerType, HandleRule handleRule) {
         HandleRuleEvent event = new HandleRuleEvent();
+        event.setModuleId(handleRule.getModuleId());
+        event.setResource(handleRule.getResource());
         HandleRuleDefinition definition = grayModule.toHandleRuleDefinition(handleRule);
         event.setHandleRuleDefinition(definition);
         event.setTriggerType(triggerType);
