@@ -1,6 +1,6 @@
 spring:
   main:
-      allow-bean-definition-overriding: true
+    allow-bean-definition-overriding: true
   application:
     name: service-b
   rabbitmq:
@@ -47,7 +47,7 @@ eureka:
       gray: http://localhost:20001/eureka/
     registry-fetch-interval-seconds: 5
   instance:
-    instanceId: ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}
+    #    instanceId: $spring.cloud.client.ip-pddress}:${spring.application.name}:${server.port}
     lease-renewal-interval-in-seconds: 5
     lease-expiration-duration-in-seconds: 15
     prefer-ip-address: true
