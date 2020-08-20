@@ -20,6 +20,7 @@ import java.util.List;
  * @date 2020-05-05 09:12
  */
 @Configuration
+@ConditionalOnProperty(value = "gray.enabled")
 public class GrayClientRefreshAutoConfiguration {
 
     @Configuration
