@@ -39,7 +39,7 @@ eureka:
     availability-zones:
       sh: xuhui,gray
     serviceUrl:
-      #      defaultZone: http://localhost:20001/eureka/
+      defaultZone: http://localhost:20001/eureka/
       xuhui: http://localhost:20001/eureka/
       gray: http://localhost:20001/eureka/
     registry-fetch-interval-seconds: 5
@@ -82,7 +82,7 @@ gray:
   holdout-server:
     enabled: true
     services:
-      service-a: starting
+      "service-a": starting
   request:
     track:
       enabled: true
