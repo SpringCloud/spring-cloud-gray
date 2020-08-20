@@ -18,12 +18,58 @@ eureka:
       defaultZone: http://localhost:20001/eureka/
   #      xuhui: http://localhost:20001/eureka/
   instance:
-    instanceId: ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}
+    #    instanceId: ${spring.cloud.client.ipAddress}:${spring.application.name}:${server.port}
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
-    prefer-ip-address: true
+    #    prefer-ip-address: true
     metadata-map:
       version: v3
       #      zone: gray3
       instanceId: s
 #    initial-status: starting
+
+
+gray:
+  mock:
+    enabled: true
+
+  enabled: true
+  hystrix:
+    enabled: true
+  server:
+    url: http://gray-Server
+    loadbalanced: true
+    retryable: true
+    retryNumberOfRetries: 3
+  client:
+    event:
+      longpolling: 60000
+    runenv: web
+    infosUpdateIntervalTimerInMs: 0
+    infosInitializeDelayTimeInMs: 10000
+    instance:
+      grayEnroll: false
+      grayEnrollDealyTimeInMs: 20000
+  holdoutServer:
+    enabled: false
+    services:
+      "service-a": starting
+  request:
+    track:
+      enabled: true
+      trackType: web
+      definitionsUpdateIntervalTimerInMs: 10000
+      definitionsInitializeDelayTimeInMs: 10000
+      web:
+        track-definitions:
+          - name: HttpReceive
+        path-patterns: /*
+        exclude-path-patterns: /test/*
+#  client:
+#    instance:
+#      grayEnroll: false #是否在启动后自动注册成灰度实例
+logging:
+  level:
+    cn:
+      springcloud:
+        gray: debug
