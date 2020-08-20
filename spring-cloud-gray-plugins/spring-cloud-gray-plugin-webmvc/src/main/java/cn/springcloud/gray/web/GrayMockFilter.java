@@ -55,7 +55,7 @@ public class GrayMockFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        HttpResponseMessage httpResponseMessage = HttpResponseMessage.toHttpResponseMessage(mockInfo);
+        HttpResponseMessage httpResponseMessage = HttpResponseMessage.toHttpResponseMessage(mockResult);
         responseMockMessage((HttpServletResponse) response, httpResponseMessage);
 
     }
