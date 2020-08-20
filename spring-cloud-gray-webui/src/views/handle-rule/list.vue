@@ -70,7 +70,7 @@
       </el-table-column>
       <el-table-column label="Matching Policys" align="center">
         <template slot-scope="scope">
-          <router-link v-for="(item, index) in scope.row.matchingPolicys" :key="item.policyId" :to="`/policy/handle/action?handleId=${item.policyId}`">
+          <router-link v-for="(item, index) in scope.row.matchingPolicys" :key="item.policyId" :to="`/policy/grayPolicys/decision/${item.policyId}`">
             <span class="link-type">{{ item.policyName }}</span> <span v-if="(index + 1) < scope.row.matchingPolicys.length"> | </span>
             <!--<el-tag>{{ item.policyName }}</el-tag>-->
           </router-link>
