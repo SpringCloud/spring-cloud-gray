@@ -43,7 +43,8 @@ public class RestTemplateAgent implements HttpAgent {
 
     @Override
     public HttpResult request(HttpRequest request) {
-        String url = getCompleteUrl(request.getPath(), request.getParamValues(), request.getEncoding());
+//        String url = getCompleteUrl(request.getPath(), request.getParamValues(), request.getEncoding());
+        String url = getCompleteUrl(request.getPath(), request.getParamValues(), null);
         org.springframework.http.HttpHeaders httpHeaders = new org.springframework.http.HttpHeaders();
         if (Objects.nonNull(request.getHeaders())) {
             httpHeaders.putAll(request.getHeaders().toMap());
