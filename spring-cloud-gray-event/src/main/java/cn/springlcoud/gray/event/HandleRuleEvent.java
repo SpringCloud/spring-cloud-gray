@@ -10,8 +10,11 @@ import lombok.Data;
 @Data
 public class HandleRuleEvent extends GrayEvent {
 
+    private static final long serialVersionUID = -5723492249160514681L;
     private HandleRuleDefinition handleRuleDefinition;
 
+    private String moduleId;
+    private String resource;
 
     @Override
     public String getSourceId() {
