@@ -1,8 +1,6 @@
 package cn.springcloud.gray.client.gateway;
 
 import cn.springcloud.gray.RequestInterceptor;
-import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
-import cn.springcloud.gray.client.netflix.zuul.GrayPreZuulFilter;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.HttpGrayTrackRecordDevice;
@@ -27,7 +25,7 @@ public class GatewayRequestInterceptor implements RequestInterceptor {
         GrayHttpTrackInfo grayTrack = (GrayHttpTrackInfo) request.getGrayTrackInfo();
         if (grayTrack != null) {
             ServerHttpRequest.Builder requestBuilder = (ServerHttpRequest.Builder) request.getAttribute(
-                    GrayGlobalFilter.GRAY_REQUEST_ATTRIBUTE_GATEWAY_HTTPREQUEST_BUILDER);
+                    GrayLoadBalancerClientFilter.GRAY_REQUEST_ATTRIBUTE_GATEWAY_HTTPREQUEST_BUILDER);
             HttpGrayTrackRecordHelper.record(new GatewayHttpGrayTrackRecordDevice(requestBuilder), grayTrack);
         }
         return true;

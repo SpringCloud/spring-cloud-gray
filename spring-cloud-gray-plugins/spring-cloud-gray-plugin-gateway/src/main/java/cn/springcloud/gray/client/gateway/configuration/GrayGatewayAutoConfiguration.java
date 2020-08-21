@@ -19,10 +19,6 @@ public class GrayGatewayAutoConfiguration {
     @Autowired
     private GrayRequestProperties grayRequestProperties;
 
-    //    @Bean
-//    public GrayGlobalFilter grayGlobalFilter(RoutingConnectionPoint routingConnectionPoint, RequestLocalStorage requestLocalStorage) {
-//        return new GrayGlobalFilter(grayRequestProperties, routingConnectionPoint, requestLocalStorage);
-//    }
 
     @Bean
     @ConditionalOnBean(LoadBalancerClient.class)
