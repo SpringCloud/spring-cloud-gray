@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>spring-cloud-gray-gateway-sample</artifactId>
+    <artifactId>spring-cloud-gray-service-a-webflux-sample</artifactId>
 
     <dependencies>
         <!--        <dependency>-->
@@ -32,48 +32,42 @@
         <!--            <groupId>com.alibaba.cloud</groupId>-->
         <!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
         <!--        </dependency>-->
-
-
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-gateway-core</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.cloud</groupId>-->
-        <!--            <artifactId>spring-cloud-starter-gateway</artifactId>-->
-        <!--        </dependency>-->
+
 
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-starter-gray-client</artifactId>
             <exclusions>
                 <exclusion>
-                    <artifactId>spring-cloud-gray-plugin-webmvc</artifactId>
                     <groupId>cn.springcloud.gray</groupId>
+                    <artifactId>spring-cloud-gray-plugin-webmvc</artifactId>
                 </exclusion>
-                <!--                <exclusion>-->
-                <!--                    <groupId>cn.springcloud.gray</groupId>-->
-                <!--                    <artifactId>spring-cloud-gray-plugin-eureka</artifactId>-->
-                <!--                </exclusion>-->
             </exclusions>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>cn.springcloud.gray</groupId>-->
-        <!--            <artifactId>spring-cloud-gray-plugin-ribbon-nacos-discovery</artifactId>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
-            <artifactId>spring-cloud-gray-plugin-gateway</artifactId>
+            <artifactId>spring-cloud-gray-plugin-webflux</artifactId>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>cn.springcloud.gray</groupId>-->
-        <!--            <artifactId>spring-cloud-gray-plugin-event-stream</artifactId>-->
-        <!--        </dependency>-->
-
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!--skip deploy -->
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
