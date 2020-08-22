@@ -15,4 +15,13 @@ public interface RequestLocalStorage {
 
     GrayRequest getGrayRequest();
 
+    LocalStorageLifeCycle getLocalStorageLifeCycle();
+
+
+    default void clearAll() {
+        removeGrayRequest();
+        removeGrayTrackInfo();
+        getLocalStorageLifeCycle().closeContext();
+    }
+
 }

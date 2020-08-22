@@ -114,8 +114,8 @@ public class GrayClientAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RequestLocalStorage requestLocalStorage() {
-        return new ThreadLocalRequestStorage();
+    public RequestLocalStorage requestLocalStorage(LocalStorageLifeCycle localStorageLifeCycle) {
+        return new ThreadLocalRequestStorage(localStorageLifeCycle);
     }
 
     @Bean

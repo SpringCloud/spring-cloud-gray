@@ -1,9 +1,17 @@
 package cn.springcloud.gray.request;
 
-public class ThreadLocalRequestStorage implements RequestLocalStorage {
+public class ThreadLocalRequestStorage extends BaseRequestLocalStorage {
     private ThreadLocal<GrayRequest> grayRequestThreadLocal = new ThreadLocal<>();
     private ThreadLocal<GrayTrackInfo> grayTrackInfoThreadLocal = new ThreadLocal<>();
 
+
+    public ThreadLocalRequestStorage() {
+        this(new LocalStorageLifeCycle.NoOpLocalStorageLifeCycle());
+    }
+
+    public ThreadLocalRequestStorage(LocalStorageLifeCycle localStorageLifeCycle) {
+        super(localStorageLifeCycle);
+    }
 
     @Override
     public void setGrayTrackInfo(GrayTrackInfo grayTrackInfo) {
@@ -34,5 +42,6 @@ public class ThreadLocalRequestStorage implements RequestLocalStorage {
     public GrayRequest getGrayRequest() {
         return grayRequestThreadLocal.get();
     }
+
 
 }
