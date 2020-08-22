@@ -28,13 +28,14 @@ public class GrayTrackFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         GrayHttpTrackInfo webTrack = new GrayHttpTrackInfo();
-//        trackors.forEach(trackor -> trackor.call(webTrack, (HttpServletRequest) request));
-        grayTrackHolder.recordGrayTrack(webTrack, new ServletHttpRequestWrapper((HttpServletRequest) request));
-        requestLocalStorage.setGrayTrackInfo(webTrack);
+        requestLocalStorage.getLocalStorageLifeCycle().initContext(GrayTrackFilter.class.getName());
         try {
+            grayTrackHolder.recordGrayTrack(webTrack, new ServletHttpRequestWrapper((HttpServletRequest) request));
+            requestLocalStorage.setGrayTrackInfo(webTrack);
             chain.doFilter(request, response);
         } finally {
             requestLocalStorage.removeGrayTrackInfo();
+            requestLocalStorage.getLocalStorageLifeCycle().closeContext(GrayTrackFilter.class.getName());
         }
     }
 
