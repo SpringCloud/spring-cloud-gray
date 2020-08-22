@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 import javax.servlet.Filter;
 
@@ -60,7 +59,7 @@ public class GrayTrackWebMvcConfiguration {
 
     //    @Configuration
     @ConditionalOnProperty(value = {"gray.hystrix.threadTransmitStrategy"}, havingValue = "HYSTRIX_REQUEST_LOCAL_STORAGE")
-    @Import(HystrixGrayTrackWebConfiguration.class)
+//    @Import(HystrixGrayTrackWebConfiguration.class)
     public static class HystrixRequestLocalStorageConfiguration {
         @Bean
         public RequestLocalStorage requestLocalStorage() {
