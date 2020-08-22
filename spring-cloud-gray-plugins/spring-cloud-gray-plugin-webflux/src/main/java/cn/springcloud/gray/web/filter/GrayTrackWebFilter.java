@@ -28,12 +28,20 @@ public class GrayTrackWebFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        GrayHttpTrackInfo webTrack = new GrayHttpTrackInfo();
-        grayTrackHolder.recordGrayTrack(webTrack, new ServerHttpRequestWrapper(exchange.getRequest()));
-        requestLocalStorage.setGrayTrackInfo(webTrack);
 
-        recordGrayTrack(exchange, webTrack);
-        return chain.filter(exchange).doFinally(t -> requestLocalStorage.removeGrayTrackInfo());
+        GrayHttpTrackInfo webTrack = new GrayHttpTrackInfo();
+        requestLocalStorage.getLocalStorageLifeCycle().initContext();
+        try {
+            grayTrackHolder.recordGrayTrack(webTrack, new ServerHttpRequestWrapper(exchange.getRequest()));
+            requestLocalStorage.setGrayTrackInfo(webTrack);
+
+            recordGrayTrack(exchange, webTrack);
+            return chain.filter(exchange).doFinally(t -> {
+                requestLocalStorage.clearAll();
+            });
+        } finally {
+            requestLocalStorage.clearAll();
+        }
     }
 
     /**
