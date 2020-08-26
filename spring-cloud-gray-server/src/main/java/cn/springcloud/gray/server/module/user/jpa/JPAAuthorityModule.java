@@ -209,7 +209,7 @@ public class JPAAuthorityModule implements AuthorityModule {
         } else {
             record.reset(userResourceAuthority);
         }
-        setDefault(userResourceAuthority);
+        setDefault(record);
         return userResourceAuthorityService.saveModel(record);
     }
 
