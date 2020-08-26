@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRepository, NamespaceDO, String> {
@@ -65,13 +65,15 @@ public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRe
     }
 
     public String getDefaultNamespace(String userId) {
-        DefaultNamespaceDO defaultNamespaceDO = defaultNamespaceRepository.getOne(userId);
-        return Objects.nonNull(defaultNamespaceDO) ? defaultNamespaceDO.getNsCode() : null;
+        Optional<DefaultNamespaceDO> defaultNamespaceDOOptional = defaultNamespaceRepository.findById(userId);
+        return defaultNamespaceDOOptional.isPresent() ? defaultNamespaceDOOptional.get().getNsCode() : null;
     }
 
 
     private Specification<NamespaceDO> createSpecificationByUserId(String userId) {
         return new Specification<NamespaceDO>() {
+            private static final long serialVersionUID = -1079743868733189594L;
+
             @Override
             public Predicate toPredicate(Root<NamespaceDO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList();
