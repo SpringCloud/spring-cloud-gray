@@ -65,7 +65,7 @@ public class NamespaceService extends AbstraceCRUDService<Namespace, NamespaceRe
     }
 
     public String getDefaultNamespace(String userId) {
-        DefaultNamespaceDO defaultNamespaceDO = defaultNamespaceRepository.getOne(userId);
+        DefaultNamespaceDO defaultNamespaceDO = defaultNamespaceRepository.findOne(userId);
         return Objects.nonNull(defaultNamespaceDO) ? defaultNamespaceDO.getNsCode() : null;
     }
 
