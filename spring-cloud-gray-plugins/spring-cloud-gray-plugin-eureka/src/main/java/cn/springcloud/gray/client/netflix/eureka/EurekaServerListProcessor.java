@@ -81,7 +81,8 @@ public class EurekaServerListProcessor implements ServerListProcessor<Server>, E
         if (grayHoldoutServerProperties.isCacheable()) {
             serversMap.put(cacheKey, serverList);
         }
-        log.debug("通过破窗能力，{} 服务实例列表新增{}个实例，新列表:{}", serviceId, unUpServers.size(), serverList);
+        int unUpServersSize = Objects.isNull(unUpServers) ? 0 : unUpServers.size();
+        log.debug("通过破窗能力，{} 服务实例列表新增{}个实例，新列表:{}", serviceId, unUpServersSize, serverList);
         return serverList;
     }
 
