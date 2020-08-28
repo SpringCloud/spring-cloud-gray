@@ -23,7 +23,7 @@ public class GrayEventServerSynchroObserver implements GrayEventObserver {
 
     @Override
     public void observe(GrayEventObserveState observeState, GrayEvent grayEvent) {
-        if (!Objects.equals(GrayEventObserveState.SENT, observeState)) {
+        if (!Objects.equals(GrayEventObserveState.CREATED, observeState)) {
             return;
         }
 

@@ -7,5 +7,5 @@ package cn.springlcoud.gray.event.server;
  * @date 2020-08-16 04:09
  */
 public enum GrayEventObserveState {
-    CREATED, SENT
+    CREATED, /*READY_FOR_SENDING,*/ SENT
 }
