@@ -109,6 +109,7 @@ public class JPAGrayServerModule implements GrayServerModule {
             grayService = GrayService.builder()
                     .serviceId(instance.getServiceId())
                     .serviceName(instance.getServiceId())
+                    .namespace("default")
                     .build();
             grayServiceService.saveModel(grayService);
             serviceManageModule.insertServiceOwner(grayService.getServiceId());
