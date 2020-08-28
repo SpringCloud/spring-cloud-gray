@@ -35,15 +35,18 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
     @Override
     public void triggering(Object eventSource, TriggerType triggerType) {
         GrayEvent grayEvent = convertGrayEvent(eventSource, triggerType);
-        noticeObservers(GrayEventObserveState.CREATED, grayEvent);
-
         if (Objects.isNull(grayEvent)) {
 //            log.warn("转换失败, grayEvent is null, eventSource:{}, triggerType:{}", eventSource, triggerType);
             return;
         }
+
         if (Objects.isNull(grayEvent.getTriggerType())) {
             grayEvent.setTriggerType(triggerType);
         }
+
+        noticeObservers(GrayEventObserveState.CREATED, grayEvent);
+
+//        noticeObservers(GrayEventObserveState.READY_FOR_SENDING, grayEvent);
         grayEventSender.send(grayEvent);
 
         noticeObservers(GrayEventObserveState.SENT, grayEvent);
