@@ -107,7 +107,7 @@ public class OAuth2Config {
 
         public String[] permitPathPatterns = {
                 "/**.html", "/**.js", "/**.css", "/**.png",
-                "/swagger-resources/**", "/v2/api-docs",
+                "/swagger-resources/**", "/v2/api-docs", "/webjars/**",
                 "/gray/user/login", "/gray/user/login", "/gray/instances/enable",
                 "/gray/instances", "/gray/trackDefinitions", "/gray/v1/**", "/gray/v2/**",
                 "/server/synch/accept"
@@ -174,7 +174,7 @@ public class OAuth2Config {
 
     @Configuration
     @EnableAuthorizationServer
-    public static class OAuth2Config2 extends AuthorizationServerConfigurerAdapter {
+    public static class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         @Autowired
         private AuthenticationManager authenticationManager;
         @Autowired
