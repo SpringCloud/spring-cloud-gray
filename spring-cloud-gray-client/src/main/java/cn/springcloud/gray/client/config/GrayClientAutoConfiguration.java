@@ -14,7 +14,6 @@ import cn.springcloud.gray.client.switcher.EnvGraySwitcher;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.*;
-import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.mock.MockManager;
 import cn.springcloud.gray.mock.NoOpMockManager;
 import cn.springcloud.gray.refresh.RefreshDriver;
@@ -30,7 +29,6 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -101,13 +99,13 @@ public class GrayClientAutoConfiguration {
     }
 
 
+    @Configuration
     @ConditionalOnProperty(value = "gray.client.instance.grayEnroll")
     public class GrayClientEnrollConfiguration {
         @Bean
-        @ConditionalOnBean(InformationClient.class)
         public GrayClientEnrollInitializingDestroyBean grayClientEnrollInitializingDestroyBean(
-                InformationClient informationClient, InstanceLocalInfo instanceLocalInfo) {
-            return new GrayClientEnrollInitializingDestroyBean(informationClient, grayClientProperties, instanceLocalInfo);
+                InformationClient informationClient) {
+            return new GrayClientEnrollInitializingDestroyBean(informationClient, grayClientProperties);
         }
     }
 
