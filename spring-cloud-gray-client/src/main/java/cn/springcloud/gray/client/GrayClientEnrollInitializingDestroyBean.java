@@ -3,6 +3,7 @@ package cn.springcloud.gray.client;
 import cn.springcloud.gray.GrayClientConfig;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.local.InstanceLocalInfo;
+import cn.springcloud.gray.local.InstanceLocalInfoAware;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -10,17 +11,16 @@ import org.springframework.beans.factory.InitializingBean;
 
 
 @Slf4j
-public class GrayClientEnrollInitializingDestroyBean implements InitializingBean {
+public class GrayClientEnrollInitializingDestroyBean implements InitializingBean, InstanceLocalInfoAware {
 
     private InformationClient informationClient;
     private InstanceLocalInfo instanceLocalInfo;
     private GrayClientConfig clientConfig;
 
     public GrayClientEnrollInitializingDestroyBean(
-            InformationClient informationClient, GrayClientConfig clientConfig, InstanceLocalInfo instanceLocalInfo) {
+            InformationClient informationClient, GrayClientConfig clientConfig) {
         this.informationClient = informationClient;
         this.clientConfig = clientConfig;
-        this.instanceLocalInfo = instanceLocalInfo;
     }
 
     @Override
@@ -32,20 +32,30 @@ public class GrayClientEnrollInitializingDestroyBean implements InitializingBean
                         Thread.sleep(clientConfig.grayEnrollDealyTimeInMs());
                     } catch (InterruptedException e) {
                     }
-                    log.info("灰度注册自身实例...");
-                    grayRegister();
+                    registerGrayInstance();
                 }, "GrayEnroll");
                 t.start();
             } else {
-                grayRegister();
+                registerGrayInstance();
             }
         }
     }
 
     public void shutdown() {
-        if (instanceLocalInfo.isGray()) {
-            informationClient.serviceDownline(
-                    instanceLocalInfo.getInstanceId());
+//        if (instanceLocalInfo.isGray()) {
+//            informationClient.serviceDownline(
+//                    instanceLocalInfo.getInstanceId());
+//        }
+    }
+
+    private void registerGrayInstance() {
+        log.info("灰度注册自身实例...");
+        try {
+            grayRegister();
+            log.info("灰度注册成功.");
+        } catch (Exception e) {
+            log.error("灰度注册失败.", e);
+            throw e;
         }
     }
 
@@ -59,5 +69,10 @@ public class GrayClientEnrollInitializingDestroyBean implements InitializingBean
 
         informationClient.addGrayInstance(grayInstance);
         instanceLocalInfo.setGray(true);
+    }
+
+    @Override
+    public void setInstanceLocalInfo(InstanceLocalInfo instanceLocalInfo) {
+        this.instanceLocalInfo = instanceLocalInfo;
     }
 }

@@ -59,7 +59,7 @@ public class HttpInformationClient implements InformationClient {
 
     @Override
     public void addGrayInstance(GrayInstance grayInstance) {
-        HttpRequest request = new HttpRequest("/gray/instance/", HttpMethod.POST);
+        HttpRequest request = new HttpRequest("/gray/v2/instance/", HttpMethod.POST);
         request.initHttpHeaders()
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         try {

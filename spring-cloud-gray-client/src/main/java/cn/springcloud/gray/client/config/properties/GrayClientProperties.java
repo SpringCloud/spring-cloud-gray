@@ -70,7 +70,7 @@ public class GrayClientProperties implements GrayClientConfig {
     public class InstanceConfig {
 
         private boolean grayEnroll = false;
-        private int grayEnrollDealyTimeInMs = 40000;
+        private int grayEnrollDealyTimeInMs = 0;
         private boolean useMultiVersion = false;
 
         public boolean isGrayEnroll() {
