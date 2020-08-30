@@ -58,8 +58,8 @@ public class RoutePolicyRecordService extends AbstraceCRUDService<RoutePolicyRec
 
     public RoutePolicyRecord findFirstAscByDelFlag(RoutePolicyQuery irpQuery) {
         Specification<RoutePolicyRecordDO> specification = createSpecification(irpQuery);
-        Pageable pageable = new PageRequest(
-                0, 1, new Sort(new Sort.Order(Sort.Direction.ASC, "delFlag")));
+        Pageable pageable = PageRequest.of(
+                0, 1, Sort.by(new Sort.Order(Sort.Direction.ASC, "delFlag")));
         Page<RoutePolicyRecordDO> page = repository.findAll(specification, pageable);
         if (!page.hasContent()) {
             return null;
