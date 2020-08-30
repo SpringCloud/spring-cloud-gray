@@ -38,9 +38,10 @@ public class GrayServiceConfigurationRefresher implements Refresher {
             return false;
         }
 
-        log.info("刷新灰度实例信息");
+        log.info("开始更新灰度实例信息...");
         grayManager.clearAllGrayServices();
         loadProperties();
+        log.info("灰度实例信息更新完成。");
         return true;
     }
 
@@ -49,7 +50,10 @@ public class GrayServiceConfigurationRefresher implements Refresher {
         if (!isLoadable()) {
             return false;
         }
+
+        log.info("开始加载灰度实例信息...");
         loadProperties();
+        log.info("灰度实例信息加载完成。");
         return true;
     }
 
