@@ -61,6 +61,7 @@ hystrix:
 #      circuitBreaker:
 #        enabled: true
 #        forceOpen: true
+
 gray:
   enabled: true
   hystrix:
@@ -91,7 +92,7 @@ gray:
         #            value: version,test
         path-patterns: /*
   load:
-    enabled: true
+    enabled: false
 #    gray-instances:
 #      - serviceId: service-a
 #        instance-id: service-a:20103

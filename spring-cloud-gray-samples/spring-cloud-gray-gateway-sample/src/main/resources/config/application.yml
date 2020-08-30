@@ -106,4 +106,4 @@ gray:
         #            value: version,test
         path-patterns: /*
   load:
-    enabled: true
+    enabled: false
