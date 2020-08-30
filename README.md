@@ -40,7 +40,7 @@ insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`
 A | A.2.0.0-RC2 | Edgware | 1.5.*
 B | B.1.0.0-RC2 | Finchley | 2.0.*
 C | C.1.0.0-RC2 | Greenwich | 2.1.*
-C | D.0.0.0-RC1 | Hoxton | 2.3.*
+D | D.0.0.0-RC1 | Hoxton | 2.3.*
 
 
 ## Spring Cloud Gray 能做什么
