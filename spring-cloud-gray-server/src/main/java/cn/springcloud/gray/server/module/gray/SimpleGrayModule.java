@@ -113,7 +113,7 @@ public class SimpleGrayModule implements GrayModule {
     }
 
     @Override
-    public List<GrayInstance> allOpenInstances(Iterator<String> serviceIds, Version version) {
+    public List<GrayInstance> allOpenInstances(Collection<String> serviceIds, Version version) {
         List<cn.springcloud.gray.server.module.gray.domain.GrayInstance> instances =
                 grayServerModule.listGrayInstances(
                         serviceIds, grayServerProperties.getInstance().getNormalInstanceStatus());

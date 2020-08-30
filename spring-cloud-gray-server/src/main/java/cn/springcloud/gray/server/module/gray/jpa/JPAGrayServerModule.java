@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,7 +65,7 @@ public class JPAGrayServerModule implements GrayServerModule {
     }
 
     @Override
-    public List<GrayInstance> listGrayInstances(Iterator<String> serviceIds, Collection<InstanceStatus> instanceStatus) {
+    public List<GrayInstance> listGrayInstances(Collection<String> serviceIds, Collection<InstanceStatus> instanceStatus) {
         return grayInstanceService.listGrayInstances(serviceIds, instanceStatus);
     }
 

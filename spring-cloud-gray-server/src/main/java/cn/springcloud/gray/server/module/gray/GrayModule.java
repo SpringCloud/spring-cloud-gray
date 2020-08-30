@@ -10,7 +10,7 @@ import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
 import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 
 public interface GrayModule {
@@ -21,7 +21,7 @@ public interface GrayModule {
 
     List<GrayInstance> allOpenInstances(Version version);
 
-    List<GrayInstance> allOpenInstances(Iterator<String> serviceIds, Version version);
+    List<GrayInstance> allOpenInstances(Collection<String> serviceIds, Version version);
 
     default GrayInstance getGrayInstance(String serviceId, String instanceId) {
         return getGrayInstance(serviceId, instanceId, Version.V2);

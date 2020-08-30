@@ -19,7 +19,10 @@ import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -126,7 +129,7 @@ public class GrayInstanceService extends AbstraceCRUDService<GrayInstance, GrayI
         return dos2models(repository.findAllByLastUpdateDateBeforeAndInstanceStatusIn(lastUpdateDate, instanceStatusAry));
     }
 
-    public List<GrayInstance> listGrayInstances(Iterator<String> serviceIds, Collection<InstanceStatus> instanceStatusList) {
+    public List<GrayInstance> listGrayInstances(Collection<String> serviceIds, Collection<InstanceStatus> instanceStatusList) {
         String[] instanceStatusAry = toArray(instanceStatusList);
         List<GrayInstanceDO> grayInstanceDOList = repository.findAllByServiceIdInAndInstanceStatusInAndGrayLock(
                 serviceIds, instanceStatusAry, GrayInstance.GRAY_LOCKED);
