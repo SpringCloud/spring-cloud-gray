@@ -85,7 +85,7 @@
         <querydsl.version>4.2.1</querydsl.version>
         <fm-dynamic-compiler.version>1.0-SNAPSHOT</fm-dynamic-compiler.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
-        <hibernate-validator.version>6.0.16.Final</hibernate-validator.version>
+        <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
     </properties>
 
 
