@@ -28,9 +28,10 @@ public class GrayTrackConfigurationRefresher implements Refresher {
             return false;
         }
 
-        log.info("刷新灰度追踪元配置信息");
+        log.info("开始更新灰度追踪元配置信息...");
         grayTrackHolder.clearTrackDefinitions();
         loadProperties();
+        log.info("灰度追踪元配置信息更新完成.");
         return true;
     }
 
@@ -39,7 +40,9 @@ public class GrayTrackConfigurationRefresher implements Refresher {
         if (!isLoadable()) {
             return false;
         }
+        log.info("开始加载灰度追踪元配置信息...");
         loadProperties();
+        log.info("灰度追踪元配置信息加载完成.");
         return true;
     }
 
