@@ -1,5 +1,6 @@
 package cn.springcloud.gray.local;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -26,7 +27,7 @@ public abstract class LazyInstanceLocalInfoObtainer implements InstanceLocalInfo
     protected InstanceLocalInfo createInstanceLocalInfo() {
         Registration registration = applicationContext.getBean(Registration.class);
         return InstanceLocalInfo.builder()
-                .instanceId(getLocalInstanceId())
+                .instanceId(StringUtils.defaultString(getLocalInstanceId(), registration.getInstanceId()))
                 .serviceId(registration.getServiceId())
                 .host(registration.getHost())
                 .port(registration.getPort())

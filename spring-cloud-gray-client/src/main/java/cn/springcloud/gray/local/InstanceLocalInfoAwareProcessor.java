@@ -5,16 +5,16 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 
 public class InstanceLocalInfoAwareProcessor implements BeanPostProcessor {
 
-    private  InstanceLocalInfo instanceLocalInfo;
+    private InstanceLocalInfoObtainer instanceLocalInfoObtainer;
 
-    public InstanceLocalInfoAwareProcessor(InstanceLocalInfo instanceLocalInfo) {
-        this.instanceLocalInfo = instanceLocalInfo;
+    public InstanceLocalInfoAwareProcessor(InstanceLocalInfoObtainer instanceLocalInfoObtainer) {
+        this.instanceLocalInfoObtainer = instanceLocalInfoObtainer;
     }
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (bean instanceof InstanceLocalInfoAware) {
-            ((InstanceLocalInfoAware) bean).setInstanceLocalInfo(instanceLocalInfo);
+            ((InstanceLocalInfoAware) bean).setInstanceLocalInfo(instanceLocalInfoObtainer.getInstanceLocalInfo());
         }
         return bean;
     }
