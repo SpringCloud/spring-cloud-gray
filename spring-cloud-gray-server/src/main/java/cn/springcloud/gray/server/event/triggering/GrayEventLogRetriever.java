@@ -9,7 +9,6 @@ import cn.springlcoud.gray.event.server.EventConverter;
 import cn.springlcoud.gray.event.server.GrayEventRetriever;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,12 +91,19 @@ public class GrayEventLogRetriever implements GrayEventRetriever {
 //                    (Class<? extends GrayEvent>) Class.forName(grayEventLog.getEventClass());
             Class<? extends GrayEvent> eventClass = retrieveTypeClass(grayEventLog.getType());
             grayEvent = grayEventDecoder.decode(grayEventLog.getContent(), eventClass);
-        } catch (IOException e) {
-            //todo print error log
-            log.error("");
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            log.error("GrayEventLog 转换 GrayEvent 失败, 发生异常 {}:{}, Log:{} , 返加",
+                    e.getClass(), e.getMessage(), grayEventLog, e);
+            return createEmptyGrayEvent(grayEventLog);
         }
         return decorateEvent(grayEvent);
+    }
+
+
+    private EmptyGrayEvent createEmptyGrayEvent(GrayEventLog grayEventLog) {
+        EmptyGrayEvent emptyGrayEvent = new EmptyGrayEvent();
+        emptyGrayEvent.setSortMark(grayEventLog.getSortMark());
+        return emptyGrayEvent;
     }
 
 
