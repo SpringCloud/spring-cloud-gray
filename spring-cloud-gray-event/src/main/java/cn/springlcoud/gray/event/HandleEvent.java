@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class HandleEvent extends GrayEvent {
 
+    private static final long serialVersionUID = -6329028318618387070L;
     private String handleId;
     private String name;
 
@@ -17,7 +18,7 @@ public class HandleEvent extends GrayEvent {
      * 处理类型: 比如Mock
      * 详情请看{@link HandleType#code()}
      */
-    private String type;
+    private String handleType;
 
     @Override
     public String getSourceId() {
