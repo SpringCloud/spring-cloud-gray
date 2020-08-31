@@ -23,10 +23,10 @@ public class HandleEventlistener extends AbstractGrayEventListener<HandleEvent> 
     protected void onUpdate(HandleEvent event) {
         HandleInfo handleInfo = handleManager.getHandleInfo(event.getHandleId());
         if (Objects.isNull(handleInfo)) {
-            handleInfo = new HandleInfo(event.getHandleId(), event.getType());
+            handleInfo = new HandleInfo(event.getHandleId(), event.getHandleType());
             handleManager.addHandleInfo(handleInfo);
         } else {
-            handleInfo.setType(event.getType());
+            handleInfo.setType(event.getHandleType());
             handleManager.publishHandleInfoChanged(ChangedType.UPDATED, handleInfo);
         }
     }
