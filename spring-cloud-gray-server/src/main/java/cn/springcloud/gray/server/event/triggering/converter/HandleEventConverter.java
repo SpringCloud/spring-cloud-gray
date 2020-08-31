@@ -25,7 +25,7 @@ public class HandleEventConverter extends AbstrctEventConverter<Handle, HandleEv
         HandleEvent handleEvent = new HandleEvent();
         handleEvent.setHandleId(String.valueOf(handle.getId()));
         handleEvent.setName(handle.getName());
-        handleEvent.setType(handle.getType());
+        handleEvent.setHandleType(handle.getType());
         handleEvent.setTriggerType(triggerType);
         return handleEvent;
     }
