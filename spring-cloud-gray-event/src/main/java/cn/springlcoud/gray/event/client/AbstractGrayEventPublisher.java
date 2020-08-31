@@ -4,6 +4,7 @@ import cn.springcloud.gray.error.handler.ErrorHandler;
 import cn.springcloud.gray.error.handler.LoggingErrorHandler;
 import cn.springcloud.gray.retriever.GenericRetriever;
 import cn.springlcoud.gray.event.GrayEvent;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * @author saleson
  * @date 2020-01-30 13:25
  */
+@Slf4j
 public abstract class AbstractGrayEventPublisher implements GrayEventPublisher {
 
     //    private final Map<ListenerCacheKey, ListenerRetriever> retrieverCache = new ConcurrentHashMap<>(64);
@@ -29,6 +31,7 @@ public abstract class AbstractGrayEventPublisher implements GrayEventPublisher {
     public void publishEvent(GrayEvent grayEvent) {
 //        Collection<GrayEventListener<?>> grayEventListeners = getGrayEventListeners(grayEvent);
         Collection<GrayEventListener<?>> grayEventListeners = genericRetriever.retrieveFunctions(grayEvent);
+        log.debug("接收到{}:{}, GrayEventListeners size:{}", grayEvent.getClass(), grayEvent, grayEventListeners.size());
         grayEventListeners.forEach(listener -> invokeListenOnEvent(listener, grayEvent));
     }
 
