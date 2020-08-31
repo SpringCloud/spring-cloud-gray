@@ -88,14 +88,17 @@ public class JPAGrayServerModule implements GrayServerModule {
     @Override
     public void updateGrayStatus(String instanceId, GrayStatus grayStatus) {
         GrayInstance instance = grayInstanceService.findOneModel(instanceId);
-        if (instance != null && !Objects.equals(instance.getGrayStatus(), grayStatus)) {
-            instance.setGrayStatus(grayStatus);
-            grayInstanceService.saveModel(instance);
-            if (grayStatus == GrayStatus.OPEN) {
-                triggerUpdateEvent(instance);
-            } else {
-                triggerDeleteEvent(instance);
-            }
+        if (instance == null || Objects.equals(instance.getGrayStatus(), grayStatus)) {
+            return;
+        }
+
+        instance.setGrayStatus(grayStatus);
+        grayInstanceService.saveModel(instance);
+
+        if (grayStatus == GrayStatus.OPEN) {
+            triggerUpdateEvent(instance);
+        } else {
+            triggerDeleteEvent(instance);
         }
     }
 
