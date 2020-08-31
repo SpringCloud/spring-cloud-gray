@@ -57,7 +57,7 @@ public class DefaultServerChooser implements ServerChooser<Object> {
         List<Object> serverList = serverListProcessor.process(serviceId, servers);
 
         if (!grayManager.hasServiceGray(serviceId)) {
-            log.debug("{} 服务没有相关灰度策略, 从serverList列表挑选, serverList.size={}", serviceId, serverList.size());
+            log.debug("{} 服务没有相关灰度策略, 从serverList列表进行灰度策选, serverList.size={}", serviceId, serverList.size());
             return chooseInstanceServer(serverList, chooser);
         }
 
@@ -67,7 +67,7 @@ public class DefaultServerChooser implements ServerChooser<Object> {
                 serviceGrayServerSorter.distinguishAndMatchGrayServerSpecList(serverSpecs);
 
         if (Objects.isNull(serviceServerSpecListResult)) {
-            log.debug("区分 {} 服务灰度列表和正常列表失败, 从serverList列表挑选, serverList.size={}", serviceId, serverList.size());
+            log.debug("区分 {} 服务灰度列表和正常列表失败, 从serverList列表进行灰度策选, serverList.size={}", serviceId, serverList.size());
             return chooseInstanceServer(serverList, chooser);
         }
 
