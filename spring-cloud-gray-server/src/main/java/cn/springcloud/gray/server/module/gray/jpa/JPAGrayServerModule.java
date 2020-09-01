@@ -273,4 +273,49 @@ public class JPAGrayServerModule implements GrayServerModule {
                 isLockGray(grayInstance) ||
                         grayServerProperties.getInstance().getNormalInstanceStatus().contains(grayInstance.getInstanceStatus()));
     }
+
+    @Override
+    public void closeGrayLock(String instanceId) {
+        GrayInstance instance = grayInstanceService.findOneModel(instanceId);
+        if (Objects.isNull(instance) || Objects.equals(instance.getGrayLock(), GrayInstance.GRAY_UNLOCKED)) {
+            return;
+        }
+
+        instance.setGrayLock(GrayInstance.GRAY_UNLOCKED);
+        grayInstanceService.saveModel(instance);
+
+        //推送实例变更信息
+        if (Objects.equals(instance.getGrayStatus(), GrayStatus.CLOSE)) {
+            return;
+        }
+
+        boolean isNormalInstanceStatus = grayServerProperties.getInstance()
+                .getNormalInstanceStatus()
+                .contains(instance.getInstanceStatus());
+        if (!isNormalInstanceStatus) {
+            triggerDeleteEvent(instance);
+        }
+    }
+
+    @Override
+    public void openGrayLock(String instanceId) {
+        GrayInstance instance = grayInstanceService.findOneModel(instanceId);
+        if (Objects.isNull(instance) || Objects.equals(instance.getGrayLock(), GrayInstance.GRAY_LOCKED)) {
+            return;
+        }
+        instance.setGrayLock(GrayInstance.GRAY_LOCKED);
+        grayInstanceService.saveModel(instance);
+
+        //推送实例变更信息
+        if (Objects.equals(instance.getGrayStatus(), GrayStatus.CLOSE)) {
+            return;
+        }
+
+        boolean isNormalInstanceStatus = grayServerProperties.getInstance()
+                .getNormalInstanceStatus()
+                .contains(instance.getInstanceStatus());
+        if (!isNormalInstanceStatus) {
+            triggerEvent(TriggerType.MODIFY, instance);
+        }
+    }
 }
