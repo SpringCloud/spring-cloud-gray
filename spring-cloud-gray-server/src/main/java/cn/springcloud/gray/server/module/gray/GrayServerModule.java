@@ -74,4 +74,8 @@ public interface GrayServerModule {
     boolean isActiveGrayInstance(String instanceId);
 
     boolean isActiveGrayInstance(GrayInstance grayInstance);
+
+    void closeGrayLock(String instanceId);
+
+    void openGrayLock(String instanceId);
 }
