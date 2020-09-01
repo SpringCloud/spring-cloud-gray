@@ -44,17 +44,38 @@
       </el-table-column>
       <el-table-column label="Gray Status" class-name="status-col" min-width="100px">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.grayStatus }}</el-tag>
+          <el-dropdown trigger="click">
+            <el-tag style="cursor:pointer">{{ scope.row.grayStatus }}</el-tag>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item v-if="scope.row.grayStatus=='CLOSE'" @click.native="handleSwitchGrayStatus(scope.row, 1)">Open</el-dropdown-item>
+              <el-dropdown-item v-if="scope.row.grayStatus=='OPEN'" @click.native="handleSwitchGrayStatus(scope.row, 0)">Close</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
       <el-table-column label="Gray Lock" class-name="status-col" min-width="100px">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.grayLock | grayLockStatusFilter">{{ scope.row.grayLock | grayLockFilter }}</el-tag>
+          <el-dropdown trigger="click">
+            <el-tag style="cursor:pointer" :type="scope.row.grayLock | grayLockStatusFilter">{{ scope.row.grayLock | grayLockFilter }}</el-tag>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item v-if="scope.row.grayLock==0" @click.native="handleSwitchGrayLock(scope.row, 1)">Lock</el-dropdown-item>
+              <el-dropdown-item v-if="scope.row.grayLock==1" @click.native="handleSwitchGrayLock(scope.row, 0)">UnLock</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
       <el-table-column label="Instance Status" min-width="110px">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.instanceStatus }}</el-tag>
+          <el-dropdown trigger="click">
+            <el-tag style="cursor:pointer">{{ scope.row.instanceStatus }}</el-tag>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="changeInstanceStatus(scope.row, 'STARTING')">STARTING</el-dropdown-item>
+              <el-dropdown-item @click.native="changeInstanceStatus(scope.row, 'UP')">UP</el-dropdown-item>
+              <el-dropdown-item @click.native="changeInstanceStatus(scope.row, 'OUT_OF_SERVICE')">OUT_OF_SERVICE</el-dropdown-item>
+              <el-dropdown-item @click.native="changeInstanceStatus(scope.row, 'DOWN')">DOWN</el-dropdown-item>
+              <el-dropdown-item @click.native="changeInstanceStatus(scope.row, 'UNKNOWN')">UNKNOWN</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
       <el-table-column label="Des" class-name="status-col" min-width="100px">
@@ -79,17 +100,21 @@
       </el-table-column>-->
       <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" class="list-button" @click="handleUpdate(row)">
-            Edit
-          </el-button>
+          <el-dropdown trigger="click">
+            <el-button size="mini" type="primary" style="width:80px" class="list-button">
+              编辑
+              <i class="el-icon-arrow-down" />
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="handleUpdate(row)">修改</el-dropdown-item>
+              <el-dropdown-item @click.native="handleDelete(row)">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <router-link :to="`/routingPolicy/instanceGrayPolicyList?ns=${ns}&moduleId=${row.serviceId}&resource=${escapeStr(row.instanceId)}`">
             <el-button size="mini" type="success" class="list-button">
               策略
             </el-button>
           </router-link>
-          <el-button size="mini" type="danger" class="list-button" @click="handleDelete(row)">
-            Delete
-          </el-button>
           <el-dropdown trigger="click">
             <el-button size="mini" type="info" style="width:80px" class="list-button">
               实例状态
@@ -138,11 +163,6 @@
             <el-option v-for="item in grayStatusOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Gray Lock" prop="grayStatus">
-          <el-select v-model="temp.grayLock" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in grayLockOptions" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="Describe" prop="describe">
           <el-input v-model="temp.des" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
@@ -183,6 +203,7 @@
 
 <script>
 import { fetchList, deleteInstance, createInstance, updateInstance, tryChangeInstanceStatus } from '@/api/gray-instance'
+import { putData } from '@/api/api-request'
 import { getServiceAllInfos, getAllDefinitions } from '@/api/gray-client'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -421,6 +442,47 @@ export default {
           this.$notify({
             title: 'Success',
             message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      })
+    },
+    handleSwitchGrayStatus(row, switchVal) {
+      const warningMSG = switchVal === 0 ? 'Confirm to close gray status by the record?' : 'Confirm to open gray status by the record?'
+      this.$confirm(warningMSG, 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async() => {
+        const url = '/gray/instance/switchStatus?id=' + escape(row.instanceId) + '&switch=' + switchVal
+        putData(url).then(() => {
+          this.dialogFormVisible = false
+          const status = switchVal === 0 ? 'CLOSE' : 'OPEN'
+          row.grayStatus = status
+          this.$notify({
+            title: 'Success',
+            message: 'Operate Successfully',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      })
+    },
+    handleSwitchGrayLock(row, switchVal) {
+      const warningMSG = switchVal === 0 ? 'Confirm to close gray lock by the record?' : 'Confirm to open gray lock by the record?'
+      this.$confirm(warningMSG, 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async() => {
+        const url = '/gray/instance/switchLock?id=' + escape(row.instanceId) + '&switch=' + switchVal
+        putData(url).then(() => {
+          this.dialogFormVisible = false
+          row.grayLock = switchVal
+          this.$notify({
+            title: 'Success',
+            message: 'Operate Successfully',
             type: 'success',
             duration: 2000
           })

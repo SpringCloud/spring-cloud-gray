@@ -120,5 +120,32 @@ public class GrayInstanceResource {
         }
     }
 
+    @RequestMapping(value = "/switchLock", method = RequestMethod.PUT)
+    public ApiRes<Void> switchGrayLock(@RequestParam("id") String instanceId,
+                                       @ApiParam(value = "开关{0: unlock, 1: lock}", defaultValue = "0") @RequestParam("switch") int onoff) {
+
+        if (StringUtils.isNotEmpty(userModule.getCurrentUserId())) {
+            if (!serviceManageModule.hasServiceAuthority(
+                    grayServiceIdFinder.getServiceId(GrayModelType.INSTANCE, instanceId))) {
+                return ApiResHelper.notAuthority();
+            }
+        }
+
+        switch (onoff) {
+            case 1:
+                grayServerModule.openGrayLock(instanceId);
+                return ApiRes.<Void>builder()
+                        .code(CODE_SUCCESS)
+                        .build();
+            case 0:
+                grayServerModule.closeGrayLock(instanceId);
+                return ApiRes.<Void>builder()
+                        .code(CODE_SUCCESS)
+                        .build();
+            default:
+                throw new UnsupportedOperationException("不支持的开关类型");
+        }
+    }
+
 
 }
