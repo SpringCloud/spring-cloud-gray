@@ -49,7 +49,7 @@ public class GrayInstance {
     @ApiModelProperty("灰度状态")
     private GrayStatus grayStatus;
 
-    @ApiModelProperty("灰度状态")
+    @ApiModelProperty("灰度锁定")
     private Integer grayLock = GRAY_UNLOCKED;
 
 }
