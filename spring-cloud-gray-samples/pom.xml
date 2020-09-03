@@ -26,6 +26,7 @@
         <module>spring-cloud-gray-apollo-config-sample</module>
         <module>spring-cloud-gray-gateway-sample</module>
         <module>spring-cloud-gray-service-a-webflux-sample</module>
+        <module>dubbo-samples</module>
     </modules>
 
     <build>
