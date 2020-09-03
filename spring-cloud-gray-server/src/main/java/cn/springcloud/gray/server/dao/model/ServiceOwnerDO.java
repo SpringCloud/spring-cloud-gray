@@ -16,6 +16,7 @@ import java.util.Date;
 @Table(name = "service_owner", indexes = {@Index(columnList = "userId")})
 public class ServiceOwnerDO {
     @Id
+    @Column(length = 128)
     private String serviceId;
     @Column(length = 32)
     private String userId;

@@ -22,9 +22,9 @@ public class HandleRuleDO {
     private String namespace;
     @Column(length = 64)
     private String type;
-    @Column(length = 64)
+    @Column(length = 128)
     private String moduleId;
-    @Column(length = 64)
+    @Column(length = 128)
     private String resource;
     @Column(length = 256)
     private Long[] matchingPolicyIds;

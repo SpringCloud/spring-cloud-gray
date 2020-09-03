@@ -19,7 +19,7 @@ public class UserServiceAuthorityDO {
     private Long id;
     @Column(length = 32)
     private String userId;
-    @Column(length = 32)
+    @Column(length = 128)
     private String serviceId;
     @Column(length = 32)
     private String operator;

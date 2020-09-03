@@ -25,7 +25,7 @@ public class AuthorityDO {
     private Long id;
     @Column(length = 32)
     private String role;
-    @Column(length = 32)
+    @Column(length = 128)
     private String resource;
     @Column(length = 64)
     private String[] authorities;

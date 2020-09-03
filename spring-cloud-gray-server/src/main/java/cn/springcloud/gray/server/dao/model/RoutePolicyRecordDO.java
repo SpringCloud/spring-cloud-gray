@@ -25,9 +25,9 @@ public class RoutePolicyRecordDO {
     private String namespace;
     @Column(length = 32)
     private String type;
-    @Column(length = 64)
+    @Column(length = 128)
     private String moduleId;
-    @Column(length = 64)
+    @Column(length = 128)
     private String resource;
     @Column(length = 20)
     private Long policyId;

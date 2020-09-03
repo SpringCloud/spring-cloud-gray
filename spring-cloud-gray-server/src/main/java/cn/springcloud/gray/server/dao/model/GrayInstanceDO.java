@@ -16,7 +16,7 @@ public class GrayInstanceDO {
     @Id
     @Column(length = 64)
     private String instanceId;
-    @Column(length = 32)
+    @Column(length = 128)
     private String serviceId;
     @Column(length = 32)
     private String host;

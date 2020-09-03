@@ -18,7 +18,7 @@ public class GrayTrackDO {
 //    @Column(length = 20)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 32)
+    @Column(length = 128)
     private String serviceId;
     @Column(length = 64)
     private String instanceId;

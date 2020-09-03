@@ -16,9 +16,9 @@ import java.util.Date;
 public class GrayServiceDO {
 
     @Id
-    @Column(length = 32)
+    @Column(length = 128)
     private String serviceId;
-    @Column(length = 64)
+    @Column(length = 128)
     private String serviceName;
     @Column(length = 64)
     private String contextPath;
