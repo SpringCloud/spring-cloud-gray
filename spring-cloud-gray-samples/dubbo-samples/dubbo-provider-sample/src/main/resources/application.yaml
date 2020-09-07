@@ -1,0 +1,14 @@
+dubbo:
+  scan:
+    base-packages: cn.springcloud.gray.dubbo.service
+  protocols:
+    dubbo:
+      name: dubbo
+      port: -1
+    rest:
+      name: rest
+      port: 9090
+      server: netty
+feign:
+  hystrix:
+    enabled: true

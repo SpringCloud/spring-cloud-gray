@@ -14,6 +14,11 @@
     <modules>
         <module>dubbo-provider-sample</module>
         <module>dubbo-consumer-sample</module>
+        <module>dubbo-sample-api</module>
+        <module>dubbo-provider-web-sample</module>
+        <module>dubbo-server-sample</module>
+        <module>dubbo-client-sample</module>
+        <module>dubbo-servlet-gateway-sample</module>
     </modules>
 
 
