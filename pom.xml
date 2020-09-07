@@ -69,8 +69,16 @@
         <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
         <spring-security-oauth2.version>2.3.6.RELEASE</spring-security-oauth2.version>
         <spring-security-jwt.version>1.0.10.RELEASE</spring-security-jwt.version>
-        <alibaba-cloud.version>2.1.0.RELEASE</alibaba-cloud.version>
+
+
+        <!-- Alibaba Cloud -->
         <spring-cloud-alibaba-dependencies.version>2.2.1.RELEASE</spring-cloud-alibaba-dependencies.version>
+
+        <!-- Apache Dubbo -->
+        <dubbo.version>2.7.8</dubbo.version>
+        <curator.version>4.0.1</curator.version>
+
+
         <springfox.version>2.9.2</springfox.version>
         <lombok.version>1.18.8</lombok.version>
         <slf4j.version>1.7.26</slf4j.version>
@@ -98,13 +106,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${spring-cloud-alibaba-dependencies.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
 
             <!--            <dependency>-->
             <!--                <groupId>cn.springcloud.gray</groupId>-->
@@ -120,23 +121,6 @@
                 <version>${caffeine.version}</version>
                 <optional>true</optional>
             </dependency>
-
-
-            <!-- alibaba cloud start -->
-            <!--            <dependency>-->
-            <!--                <groupId>com.alibaba.cloud</groupId>-->
-            <!--                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
-            <!--                <version>${alibaba-cloud.version}</version>-->
-            <!--                <optional>true</optional>-->
-            <!--            </dependency>-->
-            <!--            <dependency>-->
-            <!--                <groupId>com.alibaba.cloud</groupId>-->
-            <!--                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
-            <!--                <version>${alibaba-cloud.version}</version>-->
-            <!--                <optional>true</optional>-->
-            <!--            </dependency>-->
-            <!-- alibaba cloud end -->
-
 
             <dependency>
                 <groupId>io.springfox</groupId>
@@ -483,6 +467,27 @@
                 <artifactId>fm-dynamic-compiler-core</artifactId>
                 <version>${fm-dynamic-compiler.version}</version>
             </dependency>
+
+
+            <!-- Alibaba Start -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Dubbo -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+
+            <!-- Alibaba End -->
+
+
         </dependencies>
     </dependencyManagement>
 
