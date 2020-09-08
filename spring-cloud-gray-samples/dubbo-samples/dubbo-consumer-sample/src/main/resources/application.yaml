@@ -9,7 +9,7 @@ dubbo:
     check: false
 
 server:
-  port: 0
+  port: 9099
 
 provider:
   application:

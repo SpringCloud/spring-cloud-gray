@@ -20,6 +20,7 @@ import cn.springcloud.gray.dubbo.service.RestService;
 import cn.springcloud.gray.dubbo.service.User;
 import cn.springcloud.gray.dubbo.service.UserService;
 import com.alibaba.cloud.dubbo.annotation.DubboTransported;
+import com.alibaba.fastjson.JSON;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -38,8 +40,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -122,6 +126,29 @@ public class DubboSpringCloudConsumerBootstrap {
 
         // To call /request/body/map
         callRequestBodyMap();
+    }
+
+    @Bean
+    public Resources resources() {
+        return new Resources();
+    }
+
+    @RestController
+    public static class Resources {
+
+        @DubboReference
+        private UserService userService;
+        @Autowired
+        private ApplicationContext applicationContext;
+
+        @RequestMapping("/test")
+        public String f() {
+            Collection<User> users = userService.findAll();
+            if (Objects.nonNull(users)) {
+                return JSON.toJSONString(users);
+            }
+            return "success";
+        }
     }
 
     @Scheduled(fixedDelay = 10 * 1000L)
