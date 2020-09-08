@@ -1,5 +1,6 @@
 package cn.springcloud.gray.server.module.gray;
 
+import cn.springcloud.gray.model.GrayInstanceAlias;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
@@ -78,4 +79,6 @@ public interface GrayServerModule {
     void closeGrayLock(String instanceId);
 
     void openGrayLock(String instanceId);
+
+    void updateInstanceAliases(GrayInstanceAlias grayInstanceAlias, String currentUserId);
 }

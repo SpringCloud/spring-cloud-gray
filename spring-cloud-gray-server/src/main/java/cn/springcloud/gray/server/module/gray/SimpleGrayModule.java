@@ -163,6 +163,7 @@ public class SimpleGrayModule implements GrayModule {
         cn.springcloud.gray.model.GrayInstance grayInstance = new cn.springcloud.gray.model.GrayInstance();
         grayInstance.setPort(instance.getPort());
         grayInstance.setServiceId(instance.getServiceId());
+        grayInstance.setAliases(instance.getAliases());
         grayInstance.setInstanceId(instance.getInstanceId());
         grayInstance.setGrayStatus(instance.getGrayStatus());
         grayInstance.setHost(instance.getHost());

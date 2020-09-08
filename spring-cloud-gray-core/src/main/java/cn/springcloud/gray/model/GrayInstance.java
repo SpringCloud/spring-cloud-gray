@@ -27,6 +27,7 @@ public class GrayInstance implements Serializable {
     private String instanceId;
     private String host;
     private Integer port;
+    private String[] aliases;
 
     /**
      * 类度策略组
@@ -61,6 +62,7 @@ public class GrayInstance implements Serializable {
         bean.setGrayStatus(other.getGrayStatus());
         bean.setInstanceId(other.getInstanceId());
         bean.setServiceId(other.getServiceId());
+        bean.setAliases(other.getAliases());
         bean.setRoutePolicies(new CopyOnWriteArraySet<>());
         if (Objects.nonNull(other.getRoutePolicies())) {
             bean.getRoutePolicies().addAll(other.getRoutePolicies());

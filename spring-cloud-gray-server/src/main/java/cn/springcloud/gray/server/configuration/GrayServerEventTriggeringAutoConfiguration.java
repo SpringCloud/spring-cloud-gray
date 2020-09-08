@@ -104,6 +104,13 @@ public class GrayServerEventTriggeringAutoConfiguration {
         return new GrayInstanceEventConverter(grayModule);
     }
 
+
+    @Bean
+    @ConditionalOnMissingBean(name = "grayInstanceAliasEventConverter")
+    public GrayInstanceAliasEventConverter grayInstanceAliasEventConverter() {
+        return new GrayInstanceAliasEventConverter();
+    }
+
     @Bean
     @ConditionalOnMissingBean(name = "grayInstanceRoutePolicyEventConverter")
     public GrayRoutePolicyEventConverter grayInstanceRoutePolicyEventConverter(GrayServerModule grayServerModule) {

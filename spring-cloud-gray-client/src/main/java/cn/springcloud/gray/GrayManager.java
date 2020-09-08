@@ -2,6 +2,7 @@ package cn.springcloud.gray;
 
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.GrayInstance;
+import cn.springcloud.gray.model.GrayInstanceAlias;
 import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.model.ServiceRouteInfo;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
@@ -138,4 +139,5 @@ public interface GrayManager {
 
     PolicyDecisionManager getPolicyDecisionManager();
 
+    void setGrayInstanceAlias(GrayInstanceAlias grayInstanceAlias);
 }

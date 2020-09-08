@@ -1,12 +1,14 @@
 package cn.springcloud.gray.server.resources.rest;
 
 import cn.springcloud.gray.api.ApiRes;
+import cn.springcloud.gray.model.GrayInstanceAlias;
 import cn.springcloud.gray.server.module.gray.GrayServerModule;
 import cn.springcloud.gray.server.module.gray.GrayServiceIdFinder;
 import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
 import cn.springcloud.gray.server.module.gray.domain.GrayModelType;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.module.user.UserModule;
+import cn.springcloud.gray.server.resources.domain.fo.GrayInstanceAliasFO;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import io.swagger.annotations.ApiParam;
@@ -19,6 +21,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -145,6 +148,23 @@ public class GrayInstanceResource {
             default:
                 throw new UnsupportedOperationException("不支持的开关类型");
         }
+    }
+
+
+    @RequestMapping(value = "/updateAliases", method = RequestMethod.PUT)
+    public ApiRes<Void> updateAliases(@Validated @RequestBody GrayInstanceAliasFO fo) {
+        String serviceId = grayServiceIdFinder.getServiceId(GrayModelType.INSTANCE, fo.getInstanceId());
+        if (!serviceManageModule.hasServiceAuthority(serviceId)) {
+            return ApiResHelper.notAuthority();
+        }
+        GrayInstanceAlias grayInstanceAlias = GrayInstanceAlias.builder()
+                .instanceId(fo.getInstanceId())
+                .aliases(fo.getAliases())
+                .serviceId(serviceId)
+                .build();
+        grayServerModule.updateInstanceAliases(grayInstanceAlias, userModule.getCurrentUserId());
+
+        return ApiResHelper.success();
     }
 
 

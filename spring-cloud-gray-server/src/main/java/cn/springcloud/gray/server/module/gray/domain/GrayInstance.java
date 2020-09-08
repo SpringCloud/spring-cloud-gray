@@ -43,6 +43,10 @@ public class GrayInstance {
      */
     @ApiModelProperty("服务实例状态")
     private InstanceStatus instanceStatus;
+
+
+    @ApiModelProperty("别名")
+    private String[] aliases;
     /**
      * 灰度状态
      */

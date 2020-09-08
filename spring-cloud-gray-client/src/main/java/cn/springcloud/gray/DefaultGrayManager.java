@@ -8,8 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultGrayManager extends SimpleGrayManager {
 
 
-    public DefaultGrayManager(GrayTrackHolder grayTrackHolder, PolicyDecisionManager policyDecisionManager) {
+    public DefaultGrayManager(
+            GrayTrackHolder grayTrackHolder,
+            PolicyDecisionManager policyDecisionManager,
+            AliasRegistry aliasRegistry) {
         super(grayTrackHolder, policyDecisionManager);
+        setAliasRegistry(aliasRegistry);
     }
 
     @Override

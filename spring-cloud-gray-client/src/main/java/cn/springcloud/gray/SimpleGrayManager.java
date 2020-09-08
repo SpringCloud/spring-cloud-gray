@@ -3,10 +3,12 @@ package cn.springcloud.gray;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.model.GrayInstance;
+import cn.springcloud.gray.model.GrayInstanceAlias;
 import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.model.ServiceRouteInfo;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
@@ -86,6 +88,8 @@ public class SimpleGrayManager extends AbstractGrayManager {
         } finally {
             lock.unlock();
         }
+        getAliasRegistry().removeAlias(AliasRegistry.aliasRegion("service", serviceId));
+
     }
 
     @Override
@@ -112,6 +116,8 @@ public class SimpleGrayManager extends AbstractGrayManager {
         } finally {
             lock.unlock();
         }
+        getAliasRegistry().setAliases(createServiceAliasRegion(instance.getServiceId()),
+                instance.getInstanceId(), instance.getAliases());
     }
 
     protected void updateGrayInstance(Map<String, GrayService> grayServices, GrayInstance instance) {
@@ -144,6 +150,12 @@ public class SimpleGrayManager extends AbstractGrayManager {
             log.debug("没有找到灰度服务:{}, 所以无需删除实例:{} 的灰度状态", serviceId, instanceId);
             return;
         }
+        GrayInstance grayInstance = service.getGrayInstance(instanceId);
+        if (Objects.isNull(grayInstance)) {
+            log.debug("没有找到服务 '{}' 的灰度实例: {}", serviceId, instanceId);
+            return;
+        }
+
         log.debug("关闭实例的在灰度状态, serviceId:{}, instanceId:{}", serviceId, instanceId);
         lock.lock();
         try {
@@ -151,6 +163,7 @@ public class SimpleGrayManager extends AbstractGrayManager {
         } finally {
             lock.unlock();
         }
+        getAliasRegistry().removeAliases(createServiceAliasRegion(serviceId), grayInstance.getAliases());
     }
 
     @Override
@@ -174,6 +187,26 @@ public class SimpleGrayManager extends AbstractGrayManager {
         return policyDecisionManager;
     }
 
+    @Override
+    public void setGrayInstanceAlias(GrayInstanceAlias grayInstanceAlias) {
+        GrayInstance grayInstance = getGrayInstance(grayInstanceAlias.getServiceId(), grayInstanceAlias.getInstanceId());
+        if (Objects.isNull(grayInstance)) {
+            return;
+        }
+        String[] newAliases = grayInstanceAlias.getAliases();
+        String[] oldAliases = grayInstance.getAliases();
+        grayInstance.setAliases(newAliases);
+
+        AliasRegistry.AliasRegion aliasRegion = createServiceAliasRegion(grayInstance.getServiceId());
+        if (Objects.isNull(oldAliases)) {
+            getAliasRegistry().setAliases(aliasRegion, grayInstance.getInstanceId(), newAliases);
+        }
+
+        String[] deletes = ArrayUtils.removeElements(oldAliases, newAliases);
+        String[] news = ArrayUtils.removeElements(newAliases, oldAliases);
+        getAliasRegistry().updateAliases(aliasRegion, grayInstance.getInstanceId(), deletes, news);
+    }
+
 
     @Override
     public void setGrayServices(Object grayServices) {
@@ -182,6 +215,10 @@ public class SimpleGrayManager extends AbstractGrayManager {
         } else {
             throw new UnsupportedOperationException("setGrayServices(grayServices) 无法支持的参数类型");
         }
+    }
+
+    private AliasRegistry.AliasRegion createServiceAliasRegion(String service) {
+        return AliasRegistry.aliasRegion("service", service);
     }
 
 

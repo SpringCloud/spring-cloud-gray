@@ -1,5 +1,6 @@
 package cn.springcloud.gray.server.module.gray.jpa;
 
+import cn.springcloud.gray.model.GrayInstanceAlias;
 import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.model.InstanceStatus;
@@ -315,6 +316,17 @@ public class JPAGrayServerModule implements GrayServerModule {
                 .contains(instance.getInstanceStatus());
         if (!isNormalInstanceStatus) {
             triggerEvent(TriggerType.MODIFY, instance);
+        }
+    }
+
+    @Override
+    public void updateInstanceAliases(GrayInstanceAlias grayInstanceAlias, String currentUserId) {
+        GrayInstance grayInstance = grayInstanceService.findOneModel(grayInstanceAlias.getInstanceId());
+        grayInstance.setAliases(grayInstanceAlias.getAliases());
+        grayInstance.setOperator(currentUserId);
+        grayInstanceService.saveModel(grayInstance);
+        if (isActiveGrayInstance(grayInstance)) {
+            triggerUpdateEvent(grayInstanceAlias);
         }
     }
 }

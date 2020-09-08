@@ -30,6 +30,8 @@ public class GrayInstanceDO {
     private String operator;
     @Column
     private Date operateTime;
+    @Column
+    private String[] aliases;
 
     /**
      * 实例状态

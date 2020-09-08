@@ -19,6 +19,7 @@ public abstract class AbstractGrayManager implements UpdateableGrayManager {
 
     private Map<String, List<RequestInterceptor>> requestInterceptors = new HashMap<>();
     private List<RequestInterceptor> communalRequestInterceptors = ListUtils.EMPTY_LIST;
+    private AliasRegistry aliasRegistry;
 
 
     @Override
@@ -52,6 +53,14 @@ public abstract class AbstractGrayManager implements UpdateableGrayManager {
         }
         this.communalRequestInterceptors = all;
         this.requestInterceptors = requestInterceptorMap;
+    }
+
+    protected void setAliasRegistry(AliasRegistry aliasRegistry) {
+        this.aliasRegistry = aliasRegistry;
+    }
+
+    protected AliasRegistry getAliasRegistry() {
+        return aliasRegistry;
     }
 
     private void putTypeAllTo(Map<String, List<RequestInterceptor>> requestInterceptorMap, List<RequestInterceptor> all) {

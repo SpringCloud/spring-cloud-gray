@@ -69,12 +69,20 @@ public class GrayClientAutoConfiguration {
         return new SpringEventPublisher();
     }
 
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AliasRegistry aliasRegistry() {
+        return new SimpleAliasRegistry();
+    }
+
     @Bean
     @ConditionalOnMissingBean
     public GrayManager grayManager(
             GrayTrackHolder grayTrackHolder,
-            PolicyDecisionManager policyDecisionManager) {
-        return new DefaultGrayManager(grayTrackHolder, policyDecisionManager);
+            PolicyDecisionManager policyDecisionManager,
+            AliasRegistry aliasRegistry) {
+        return new DefaultGrayManager(grayTrackHolder, policyDecisionManager, aliasRegistry);
     }
 
     @Bean
