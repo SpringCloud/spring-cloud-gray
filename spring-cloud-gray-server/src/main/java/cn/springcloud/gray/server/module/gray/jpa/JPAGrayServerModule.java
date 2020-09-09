@@ -117,15 +117,19 @@ public class JPAGrayServerModule implements GrayServerModule {
             grayServiceService.saveModel(grayService);
             serviceManageModule.insertServiceOwner(grayService.getServiceId());
         }
+
+        GrayInstance oldRecord = grayInstanceService.findOneModel(instance.getInstanceId());
         if (Objects.isNull(instance.getInstanceStatus()) && !Objects.isNull(serviceDiscovery)) {
             InstanceInfo instanceInfo =
                     serviceDiscovery.getInstanceInfo(instance.getServiceId(), instance.getInstanceId());
-            if (!Objects.isNull(instanceInfo)) {
+            if (Objects.nonNull(instanceInfo)) {
                 instance.setInstanceStatus(instanceInfo.getInstanceStatus());
+                if (Objects.isNull(oldRecord) && Objects.nonNull(instanceInfo.getAliases()) && instanceInfo.getAliases().length > 0) {
+                    instance.setAliases(instanceInfo.getAliases());
+                }
             }
         }
 
-        GrayInstance oldRecord = grayInstanceService.findOneModel(instance.getInstanceId());
         GrayInstance newRecord = grayInstanceService.saveModel(instance);
         if (isLockGray(newRecord) ||
                 grayServerProperties.getInstance().getNormalInstanceStatus().contains(instance.getInstanceStatus())) {

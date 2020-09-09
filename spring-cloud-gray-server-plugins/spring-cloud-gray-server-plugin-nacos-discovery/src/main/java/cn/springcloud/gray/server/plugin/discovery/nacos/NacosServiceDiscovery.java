@@ -2,7 +2,8 @@ package cn.springcloud.gray.server.plugin.discovery.nacos;
 
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.model.InstanceStatus;
-import cn.springcloud.gray.server.discovery.ServiceDiscovery;
+import cn.springcloud.gray.server.discovery.AbstractServiceDiscovery;
+import cn.springcloud.gray.server.discovery.InstanceInfoAnalyser;
 import cn.springcloud.gray.server.discovery.ServiceInfo;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.alibaba.nacos.api.exception.NacosException;
@@ -15,14 +16,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NacosServiceDiscovery implements ServiceDiscovery {
+public class NacosServiceDiscovery extends AbstractServiceDiscovery<Instance> {
 
     private static final Logger log = LoggerFactory.getLogger(NacosServiceDiscovery.class);
 
     private NacosDiscoveryProperties discoveryProperties;
 
     public NacosServiceDiscovery(NacosDiscoveryProperties discoveryProperties) {
+        this(discoveryProperties, Collections.EMPTY_LIST);
+    }
+
+    public NacosServiceDiscovery(
+            NacosDiscoveryProperties discoveryProperties,
+            List<InstanceInfoAnalyser<Instance>> instanceInfoAnalysers) {
         this.discoveryProperties = discoveryProperties;
+        this.setInstanceInfoAnalysers(instanceInfoAnalysers);
     }
 
     @Override
@@ -66,7 +74,8 @@ public class NacosServiceDiscovery implements ServiceDiscovery {
         }
     }
 
-    private InstanceInfo createInstanceInfo(Instance instance) {
+    @Override
+    protected InstanceInfo createInstanceInfo(Instance instance) {
         InstanceStatus instanceStatus = InstanceStatus.DOWN;
         if (instance.isEnabled()) {
             if (instance.isHealthy()) {

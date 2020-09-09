@@ -11,6 +11,7 @@ import lombok.*;
 public class InstanceInfo {
     private String serviceId;
     private String instanceId;
+    private String[] aliases;
     private String host;
     private int port;
 
