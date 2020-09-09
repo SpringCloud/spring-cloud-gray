@@ -16,10 +16,13 @@
 
 package cn.springcloud.gray.dubbo.bootstrap;
 
+import org.apache.dubbo.config.spring.beans.factory.config.DubboConfigDefaultPropertyValueBeanPostProcessor;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 
 /**
  * Dubbo Spring Cloud Provider Bootstrap.
@@ -32,6 +35,12 @@ public class DubboSpringCloudProviderBootstrap {
         new SpringApplicationBuilder(DubboSpringCloudProviderBootstrap.class)
                 .properties("spring.profiles.active=nacos").web(WebApplicationType.NONE)
                 .run(args);
+    }
+
+    @Bean
+    @Order(1)
+    public DubboConfigDefaultPropertyValueBeanPostProcessor dubboConfigDefaultPropertyValueBeanPostProcessor() {
+        return new DubboConfigDefaultPropertyValueBeanPostProcessor();
     }
 
 }

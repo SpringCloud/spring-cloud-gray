@@ -1,4 +1,6 @@
 dubbo:
+  #  config:
+  #    multiple: false
   scan:
     base-packages: cn.springcloud.gray.dubbo.service
   protocols:

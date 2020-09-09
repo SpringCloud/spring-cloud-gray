@@ -22,6 +22,7 @@ import cn.springcloud.gray.dubbo.service.UserService;
 import com.alibaba.cloud.dubbo.annotation.DubboTransported;
 import com.alibaba.fastjson.JSON;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.spring.context.annotation.EnableDubboConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
@@ -56,6 +57,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @EnableFeignClients
 @EnableScheduling
 @EnableCaching
+@EnableDubboConfig
 public class DubboSpringCloudConsumerBootstrap {
 
     @DubboReference
