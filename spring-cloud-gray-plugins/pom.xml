@@ -23,6 +23,7 @@
         <module>spring-cloud-gray-plugin-dynamic-logic</module>
         <module>spring-cloud-gray-plugin-refresher</module>
         <module>spring-cloud-gray-plugin-event-longpolling</module>
+        <module>spring-cloud-gray-plugin-dubbo</module>
     </modules>
 
 </project>

@@ -73,10 +73,11 @@
 
         <!-- Alibaba Cloud -->
         <spring-cloud-alibaba-dependencies.version>2.2.1.RELEASE</spring-cloud-alibaba-dependencies.version>
-
         <!-- Apache Dubbo -->
         <dubbo.version>2.7.8</dubbo.version>
         <curator.version>4.0.1</curator.version>
+        <!-- Alibaba Nacos -->
+        <nacos.version>1.2.1</nacos.version>
 
 
         <springfox.version>2.9.2</springfox.version>
@@ -483,6 +484,21 @@
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo</artifactId>
                 <version>${dubbo.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-common</artifactId>
+                <version>${dubbo.version}</version>
+                <optional>true</optional>
+            </dependency>
+
+            <!-- Nacos -->
+            <dependency>
+                <groupId>com.alibaba.nacos</groupId>
+                <artifactId>nacos-api</artifactId>
+                <version>${nacos.version}</version>
+                <optional>true</optional>
             </dependency>
 
             <!-- Alibaba End -->

@@ -17,6 +17,7 @@
         <module>spring-cloud-gray-server-plugin-nacos-discovery</module>
         <module>spring-cloud-gray-server-plugin-event-longpolling</module>
         <module>spring-cloud-gray-server-cluster-http-synchro-plugin</module>
+        <module>spring-cloud-gray-server-plugin-dubbo</module>
     </modules>
 
 
