@@ -1,4 +1,5 @@
 import { getDefaultNamespace } from '@/api/ns'
+import { setDefaultNamespace2Cookie, removeDefaultNamespaceByCookie } from '@/utils/ns'
 
 const state = {
   defaultNamespace: null
@@ -13,6 +14,7 @@ const mutations = {
 const actions = {
   setDefault({ commit }, ns) {
     commit('SET_DEFAULT_NAMESPACE', ns)
+    setDefaultNamespace2Cookie(ns)
   },
 
   // get user info
@@ -28,12 +30,17 @@ const actions = {
       getDefaultNamespace().then(response => {
         const { data } = response
         commit('SET_DEFAULT_NAMESPACE', data)
-        console.log('AAAAA' + data)
+        setDefaultNamespace2Cookie(data)
         resolve()
       }).catch(error => {
         reject(error)
       })
     })
+  },
+
+  clear({ commit }) {
+    commit('SET_DEFAULT_NAMESPACE', '')
+    removeDefaultNamespaceByCookie()
   }
 }
 
