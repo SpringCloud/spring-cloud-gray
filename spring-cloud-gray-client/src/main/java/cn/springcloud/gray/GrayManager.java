@@ -6,6 +6,7 @@ import cn.springcloud.gray.model.GrayInstanceAlias;
 import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.model.ServiceRouteInfo;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,6 +19,16 @@ import java.util.stream.Collectors;
  */
 public interface GrayManager {
 
+
+    /**
+     * 是否需要区分灰度/正常
+     *
+     * @param serviceId
+     * @return
+     */
+    default boolean isNeedDistinguish(String serviceId) {
+        return StringUtils.isNotEmpty(serviceId) && (hasServiceGray(serviceId) || hasInstanceGray(serviceId));
+    }
 
     /**
      * 判断指定的服务ID是否有灰度实例

@@ -14,7 +14,7 @@ import java.util.Date;
 @Table(name = "gray_instance", indexes = {@Index(columnList = "serviceId")})
 public class GrayInstanceDO {
     @Id
-    @Column(length = 64)
+    @Column(length = 128)
     private String instanceId;
     @Column(length = 128)
     private String serviceId;

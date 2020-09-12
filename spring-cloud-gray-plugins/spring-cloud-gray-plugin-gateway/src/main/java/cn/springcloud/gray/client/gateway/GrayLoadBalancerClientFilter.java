@@ -108,7 +108,7 @@ public class GrayLoadBalancerClientFilter extends LoadBalancerClientFilter {
         headers.addAll(serverHttpRequest.getHeaders());
         grayRequest.setHeaders(headers);
 
-        grayRequest.setAttribute(GRAY_REQUEST_ATTRIBUTE_GATEWAY_HTTPREQUEST_BUILDER, requestBuilder);
+        grayRequest.setAttachment(GRAY_REQUEST_ATTRIBUTE_GATEWAY_HTTPREQUEST_BUILDER, requestBuilder);
         GrayTrackInfo grayTrackInfo = (GrayTrackInfo) exchange.getAttributes().get(GrayTrackWebFilter.GRAY_WEB_TRACK_ATTR_NAME);
         if (grayTrackInfo != null) {
             requestLocalStorage.setGrayTrackInfo(grayTrackInfo);

@@ -85,8 +85,8 @@ public class GrayPreZuulFilter extends ZuulFilter {
 
         grayRequest.setMethod(servletRequest.getMethod());
         grayRequest.setHeaders(getHeaders(context));
-        grayRequest.setAttribute(GRAY_REQUEST_ATTRIBUTE_NAME_ZUUL_REQUEST, servletRequest);
-        grayRequest.setAttribute(GRAY_REQUEST_ATTRIBUTE_NAME_ZUUL_REQUEST_CONTEXT, context);
+        grayRequest.setAttachment(GRAY_REQUEST_ATTRIBUTE_NAME_ZUUL_REQUEST, servletRequest);
+        grayRequest.setAttachment(GRAY_REQUEST_ATTRIBUTE_NAME_ZUUL_REQUEST_CONTEXT, context);
         //context.getZuulRequestHeaders().get(FilterConstants.X_FORWARDED_FOR_HEADER.toLowerCase())
 
         RoutingConnectPointContext connectPointContext = RoutingConnectPointContext.builder()

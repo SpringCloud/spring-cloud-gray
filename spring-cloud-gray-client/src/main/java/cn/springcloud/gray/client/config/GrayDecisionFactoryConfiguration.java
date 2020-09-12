@@ -20,6 +20,18 @@ import java.util.Objects;
 public class GrayDecisionFactoryConfiguration {
 
 
+    @Bean
+    public AttributeGrayDecisionFactory attributeGrayDecisionFactory() {
+        return new AttributeGrayDecisionFactory();
+    }
+
+
+    @Bean
+    public AttributesGrayDecisionFactory attributesGrayDecisionFactory() {
+        return new AttributesGrayDecisionFactory();
+    }
+
+
     @Configuration
     public static class WebGrayDecisionFactoryConfiguration {
 

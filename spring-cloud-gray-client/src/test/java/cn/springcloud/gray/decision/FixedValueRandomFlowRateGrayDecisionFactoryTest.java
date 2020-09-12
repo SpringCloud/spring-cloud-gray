@@ -1,7 +1,7 @@
 package cn.springcloud.gray.decision;
 
+import cn.springcloud.gray.decision.factory.FixedValueRandomFlowRateGrayDecisionFactory;
 import cn.springcloud.gray.decision.factory.FlowRateGrayDecisionFactory;
-import cn.springcloud.gray.decision.factory.RandomFlowRateGrayDecisionFactory;
 import cn.springcloud.gray.request.GrayHttpRequest;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,13 +10,13 @@ import org.junit.Test;
  * @author saleson
  * @date 2019-11-28 15:17
  */
-public class RandomFlowRateGrayDecisionFactoryTest {
+public class FixedValueRandomFlowRateGrayDecisionFactoryTest {
 
     @Test
     public void testAllowRandomFlowRateGrayDecision() {
-        RandomFlowRateGrayDecisionFactory decisionFactory = new RandomFlowRateGrayDecisionFactory();
+        FixedValueRandomFlowRateGrayDecisionFactory decisionFactory = new FixedValueRandomFlowRateGrayDecisionFactory();
 
-        RandomFlowRateGrayDecisionFactory.Config config = new RandomFlowRateGrayDecisionFactory.Config();
+        FixedValueRandomFlowRateGrayDecisionFactory.Config config = new FixedValueRandomFlowRateGrayDecisionFactory.Config();
         config.setSalt("");
         config.setType(FlowRateGrayDecisionFactory.FIELD_SCOPE_HTTP_HEADER);
         config.setField("mark");
@@ -43,9 +43,9 @@ public class RandomFlowRateGrayDecisionFactoryTest {
 
     @Test
     public void testRefuseRandomFlowRateGrayDecision() {
-        RandomFlowRateGrayDecisionFactory decisionFactory = new RandomFlowRateGrayDecisionFactory();
+        FixedValueRandomFlowRateGrayDecisionFactory decisionFactory = new FixedValueRandomFlowRateGrayDecisionFactory();
 
-        RandomFlowRateGrayDecisionFactory.Config config = new RandomFlowRateGrayDecisionFactory.Config();
+        FixedValueRandomFlowRateGrayDecisionFactory.Config config = new FixedValueRandomFlowRateGrayDecisionFactory.Config();
         config.setSalt("");
         config.setType(FlowRateGrayDecisionFactory.FIELD_SCOPE_HTTP_HEADER);
         config.setField("mark");
@@ -68,9 +68,9 @@ public class RandomFlowRateGrayDecisionFactoryTest {
     @Test
     public void testRate() {
         double diff = 3.0;
-        RandomFlowRateGrayDecisionFactory decisionFactory = new RandomFlowRateGrayDecisionFactory();
+        FixedValueRandomFlowRateGrayDecisionFactory decisionFactory = new FixedValueRandomFlowRateGrayDecisionFactory();
 
-        RandomFlowRateGrayDecisionFactory.Config config = new RandomFlowRateGrayDecisionFactory.Config();
+        FixedValueRandomFlowRateGrayDecisionFactory.Config config = new FixedValueRandomFlowRateGrayDecisionFactory.Config();
         config.setSalt("");
         config.setType(FlowRateGrayDecisionFactory.FIELD_SCOPE_HTTP_HEADER);
         config.setField("mark");

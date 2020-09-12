@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 public class SimpleAliasRegistry implements AliasRegistry {
 
-    private Map<AliasRegion, Map<String, String>> modules = new HashMap<>();
+    private volatile Map<AliasRegion, Map<String, String>> modules = new HashMap<>();
 
     @Override
     public void removeAlias(AliasRegion aliasRegion) {

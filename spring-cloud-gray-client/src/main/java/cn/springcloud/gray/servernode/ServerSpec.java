@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +17,6 @@ public class ServerSpec<SERVER> {
 
     private String serviceId;
     private String instanceId;
-    private URI uri;
     private Map<String, Object> metadata = new HashMap<>();
     private SERVER server;
     private String version;

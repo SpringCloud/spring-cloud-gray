@@ -3,7 +3,6 @@ package cn.springcloud.gray;
 
 import cn.springcloud.gray.request.GrayRequest;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 
 /**
  *
@@ -12,7 +11,9 @@ public interface RequestInterceptor extends Ordered {
 
     String interceptroType();
 
-    boolean shouldIntercept();
+    default boolean shouldIntercept() {
+        return true;
+    }
 
     boolean pre(GrayRequest request);
 

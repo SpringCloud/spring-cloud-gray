@@ -4,6 +4,7 @@ import cn.springcloud.gray.changed.notify.ChangedListener;
 import cn.springcloud.gray.changed.notify.ChangedNotifyDriver;
 import cn.springcloud.gray.choose.PolicyPredicate;
 import cn.springcloud.gray.choose.ServerChooser;
+import cn.springcloud.gray.choose.ServerDistinguisher;
 import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
@@ -11,6 +12,7 @@ import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 import cn.springcloud.gray.spring.SpringEventPublisher;
@@ -31,12 +33,14 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
         GrayClientHolder.setGrayManager(getBean("grayManager", GrayManager.class));
         GrayClientHolder.setRequestLocalStorage(getBean("requestLocalStorage", RequestLocalStorage.class));
         GrayClientHolder.setLocalStorageLifeCycle(getBean("localStorageLifeCycle", LocalStorageLifeCycle.class));
+        GrayClientHolder.setRoutingConnectionPoint(getBean("ribbonConnectionPoint", RoutingConnectionPoint.class));
         GrayClientHolder.setServerExplainer(getBean("serverExplainer", ServerExplainer.class));
         GrayClientHolder.setServerListProcessor(
                 getBean("serverListProcessor", ServerListProcessor.class, new ServerListProcessor.Default()));
         GrayClientHolder.setGraySwitcher(
                 getBean("graySwitcher", GraySwitcher.class, new GraySwitcher.DefaultGraySwitcher()));
         GrayClientHolder.setServerChooser(getBean("serverChooser", ServerChooser.class));
+        GrayClientHolder.setServerDistinguisher(getBean("serverDistinguisher", ServerDistinguisher.class));
         GrayClientHolder.setGrayTrackHolder(getBean("grayTrackHolder", GrayTrackHolder.class));
         GrayClientHolder.setPolicyDecisionManager(getBean("policyDecisionManager", PolicyDecisionManager.class));
         GrayClientHolder.setSpringEventPublisher(getBean("springEventPublisher", SpringEventPublisher.class));

@@ -33,6 +33,7 @@
                     <groupId>org.bouncycastle</groupId>
                 </exclusion>
             </exclusions>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

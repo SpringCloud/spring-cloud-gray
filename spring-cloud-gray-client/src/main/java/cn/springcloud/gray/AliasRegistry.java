@@ -10,6 +10,8 @@ import lombok.Data;
  */
 public interface AliasRegistry {
 
+    public static final String ALIAS_REGION_TYPE_SERVICE = "service";
+
     void removeAlias(AliasRegion aliasRegion);
 
     void setAliases(AliasRegion aliasRegion, String id, String... aliases);

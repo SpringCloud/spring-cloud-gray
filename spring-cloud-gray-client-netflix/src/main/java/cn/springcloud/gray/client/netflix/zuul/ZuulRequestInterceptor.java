@@ -4,8 +4,8 @@ import cn.springcloud.gray.RequestInterceptor;
 import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
 import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
-import cn.springcloud.gray.request.HttpGrayTrackRecordDevice;
-import cn.springcloud.gray.request.HttpGrayTrackRecordHelper;
+import cn.springcloud.gray.request.GrayTrackRecordDevice;
+import cn.springcloud.gray.request.GrayTrackRecordHelper;
 import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,9 +26,9 @@ public class ZuulRequestInterceptor implements RequestInterceptor {
     public boolean pre(GrayRequest request) {
         GrayHttpTrackInfo grayTrack = (GrayHttpTrackInfo) request.getGrayTrackInfo();
         if (grayTrack != null) {
-            RequestContext context = (RequestContext) request.getAttribute(
+            RequestContext context = (RequestContext) request.getAttachment(
                     GrayPreZuulFilter.GRAY_REQUEST_ATTRIBUTE_NAME_ZUUL_REQUEST_CONTEXT);
-            HttpGrayTrackRecordHelper.record(new ZuulHttpGrayTrackRecordDevice(context), grayTrack);
+            GrayTrackRecordHelper.recordHttpTrack(new ZuulGrayTrackRecordDevice(context), grayTrack);
 
 //            if (StringUtils.isNotEmpty(grayTrack.getUri())) {
 //                context.getZuulRequestHeaders().put(GrayHttpTrackInfo.GRAY_TRACK_URI, grayTrack.getUri());
@@ -75,11 +75,11 @@ public class ZuulRequestInterceptor implements RequestInterceptor {
     }
 
 
-    public static class ZuulHttpGrayTrackRecordDevice implements HttpGrayTrackRecordDevice {
+    public static class ZuulGrayTrackRecordDevice implements GrayTrackRecordDevice {
 
         private RequestContext context;
 
-        public ZuulHttpGrayTrackRecordDevice(RequestContext context) {
+        public ZuulGrayTrackRecordDevice(RequestContext context) {
             this.context = context;
         }
 

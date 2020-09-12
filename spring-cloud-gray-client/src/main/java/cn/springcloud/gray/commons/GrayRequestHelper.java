@@ -4,7 +4,7 @@ import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.request.GrayHttpRequest;
 import cn.springcloud.gray.request.GrayRequest;
-import cn.springcloud.gray.request.HttpGrayTrackRecordDevice;
+import cn.springcloud.gray.request.GrayTrackRecordDevice;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -50,11 +50,11 @@ public class GrayRequestHelper {
         grayRequest.addHeader(GrayRequestHelper.PREVIOUS_SERVER_PORT, String.valueOf(instanceLocalInfo.getPort()));
     }
 
-    public static void recordLocalInstanceInfos(HttpGrayTrackRecordDevice recordDevice) {
+    public static void recordLocalInstanceInfos(GrayTrackRecordDevice recordDevice) {
         recordLocalInstanceInfos(recordDevice, GrayClientHolder.getInstanceLocalInfo());
     }
 
-    public static void recordLocalInstanceInfos(HttpGrayTrackRecordDevice recordDevice, InstanceLocalInfo instanceLocalInfo) {
+    public static void recordLocalInstanceInfos(GrayTrackRecordDevice recordDevice, InstanceLocalInfo instanceLocalInfo) {
         if (Objects.isNull(instanceLocalInfo)) {
             return;
         }

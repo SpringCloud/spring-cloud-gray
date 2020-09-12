@@ -6,10 +6,8 @@ import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -35,6 +33,9 @@ public class GrayTrackRequestInterceptor implements RequestInterceptor {
 
     @Override
     public boolean pre(GrayRequest request) {
+        if (!(request instanceof GrayHttpRequest)) {
+            return true;
+        }
         GrayHttpRequest grayHttpRequest = (GrayHttpRequest) request;
         GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) request.getGrayTrackInfo();
         if (grayHttpTrackInfo != null) {

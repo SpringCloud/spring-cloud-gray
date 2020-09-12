@@ -10,7 +10,6 @@ import cn.springcloud.gray.servernode.ServerIdExtractor;
 import cn.springcloud.gray.servernode.ServerSpec;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -54,7 +53,7 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
     @Override
     public ServerListResult<ServerSpec<SERVER>> distinguishServerSpecList(List<ServerSpec<SERVER>> serverSpecs) {
         String serviceId = getSpecServiceId(serverSpecs);
-        if (!isNeedDistinguish(serviceId)) {
+        if (!grayManager.isNeedDistinguish(serviceId)) {
             return null;
         }
         return distinguishServerSpecList(serviceId, serverSpecs);
@@ -69,7 +68,9 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
         }
         if (GrayClientHolder.getGraySwitcher().isEanbleGrayRouting()
                 || CollectionUtils.isNotEmpty(serverSpecResult.getGrayServers())) {
-            serverSpecResult.setGrayServers(filterServerSpecAccordingToRoutePolicy(serverSpecResult.getServiceId(), serverSpecResult.getGrayServers()));
+            List<ServerSpec<SERVER>> grays = filterServerSpecAccordingToRoutePolicy(
+                    serverSpecResult.getServiceId(), serverSpecResult.getGrayServers());
+            serverSpecResult.setGrayServers(grays);
         } else {
             serverSpecResult.setGrayServers(ListUtils.EMPTY_LIST);
         }
@@ -89,7 +90,7 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
             Function<List<ServerSpec<SERVER>>, ServerListResult<ServerSpec<SERVER>>> spectServerListfunction) {
 
         String serviceId = getServiceId(servers);
-        if (!isNeedDistinguish(serviceId)) {
+        if (!grayManager.isNeedDistinguish(serviceId)) {
             return null;
         }
 
@@ -109,16 +110,6 @@ public abstract class AbstractGrayServerSorter<SERVER> implements GrayServerSort
                 .map(ServerSpec::getServer)
                 .collect(Collectors.toList());
         return new ServerListResult<>(serviceId, grayServers, normalServers);
-    }
-
-    /**
-     * 是否需要区分灰度/正常
-     *
-     * @param serviceId
-     * @return
-     */
-    protected boolean isNeedDistinguish(String serviceId) {
-        return StringUtils.isNotEmpty(serviceId) && (grayManager.hasServiceGray(serviceId) || grayManager.hasInstanceGray(serviceId));
     }
 
 

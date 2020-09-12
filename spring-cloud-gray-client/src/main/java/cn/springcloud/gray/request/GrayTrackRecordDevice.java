@@ -2,7 +2,7 @@ package cn.springcloud.gray.request;
 
 import java.util.List;
 
-public interface HttpGrayTrackRecordDevice {
+public interface GrayTrackRecordDevice {
 
     void record(String name, String value);
 

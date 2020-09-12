@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 
 /**
- * 按(value(type,feild)+salt)%100， &lt; rate的将放量。
+ * 按(value(type,feild)+salt).hashcode % 100， &lt; rate的将放量。
  * 从以上的逻辑中实现按百分比灰度放量.
  */
 @Slf4j

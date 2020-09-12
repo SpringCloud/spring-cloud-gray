@@ -54,7 +54,7 @@ public class GrayClientHttpRequestIntercptor implements ClientHttpRequestInterce
         grayRequest.setMethod(request.getMethod().name());
         grayRequest.addHeaders(request.getHeaders());
 
-        grayRequest.setAttribute(GRAY_REQUEST_ATTRIBUTE_RESTTEMPLATE_REQUEST, request);
+        grayRequest.setAttachment(GRAY_REQUEST_ATTRIBUTE_RESTTEMPLATE_REQUEST, request);
         RoutingConnectPointContext connectPointContext = RoutingConnectPointContext.builder()
                 .interceptroType(GrayNetflixClientConstants.INTERCEPTRO_TYPE_RESTTEMPLATE)
                 .grayRequest(grayRequest).build();

@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
  */
 public class DefaultHandleRuleManager implements HandleRuleManager {
 
-    private Map<String, List<HandleRuleInfo>> handleRuleTypeInfos = new ConcurrentHashMap<>();
+    private volatile Map<String, List<HandleRuleInfo>> handleRuleTypeInfos = new ConcurrentHashMap<>();
 
-    private Map<String, HandleRuleInfo> handleRuleInfos = new ConcurrentHashMap<>();
+    private volatile Map<String, HandleRuleInfo> handleRuleInfos = new ConcurrentHashMap<>();
 
     private ChangedNotifyDriver changedNotifyDriver;
 

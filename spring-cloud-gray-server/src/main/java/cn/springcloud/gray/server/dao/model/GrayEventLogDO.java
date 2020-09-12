@@ -23,7 +23,7 @@ public class GrayEventLogDO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String type;
-    @Column(length = 64)
+    @Column(length = 128)
     private String sourceId;
     @Column(length = 20)
     private Long sortMark;

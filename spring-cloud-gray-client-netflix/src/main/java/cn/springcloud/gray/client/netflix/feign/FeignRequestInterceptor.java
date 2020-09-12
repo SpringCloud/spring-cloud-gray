@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Map;
 
+@Deprecated
 public class FeignRequestInterceptor implements RequestInterceptor {
     @Override
     public String interceptroType() {
@@ -19,13 +20,8 @@ public class FeignRequestInterceptor implements RequestInterceptor {
     }
 
     @Override
-    public boolean shouldIntercept() {
-        return true;
-    }
-
-    @Override
     public boolean pre(GrayRequest request) {
-        Request feignRequest = (Request) (request.getAttribute(GrayFeignClient.GRAY_REQUEST_ATTRIBUTE_NAME_FEIGN_REQUEST));
+        Request feignRequest = (Request) (request.getAttachment(GrayFeignClient.GRAY_REQUEST_ATTRIBUTE_NAME_FEIGN_REQUEST));
         GrayHttpTrackInfo grayTrack = (GrayHttpTrackInfo) request.getGrayTrackInfo();
         if (grayTrack != null) {
             if (StringUtils.isNotEmpty(grayTrack.getUri())) {

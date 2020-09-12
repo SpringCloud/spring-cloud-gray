@@ -11,13 +11,17 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * 按(value(type,feild)+salt)%100， &lt; rate的将放量。
- * 从以上的逻辑中实现按百分比灰度放量.
+ * 定值放量
+ * 放量公式:
+ * val = value(type,feild)
+ * val == value && (val+salt).hashcode % 100 &lt; rate
+ * <p>
+ * (value(type,feild)+salt).hashcode % 100， &lt; rate
  */
 @Slf4j
-public class RandomFlowRateGrayDecisionFactory extends FlowRateGrayDecisionFactory {
+public class FixedValueRandomFlowRateGrayDecisionFactory extends FlowRateGrayDecisionFactory {
 
-    public RandomFlowRateGrayDecisionFactory() {
+    public FixedValueRandomFlowRateGrayDecisionFactory() {
         super();
     }
 

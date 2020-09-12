@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -174,8 +175,10 @@ public class GrayClientAutoConfiguration {
     }
 
     @Bean
-    public GrayClientApplicationRunner grayClientApplicationRunner(GrayInfosInitializer grayInfosInitializer) {
-        return new GrayClientApplicationRunner(grayInfosInitializer);
+    public GrayClientApplicationRunner grayClientApplicationRunner(
+            GrayInfosInitializer grayInfosInitializer,
+            ApplicationEventPublisher applicationEventPublisher) {
+        return new GrayClientApplicationRunner(grayInfosInitializer, applicationEventPublisher);
     }
 
     @Bean
@@ -201,6 +204,32 @@ public class GrayClientAutoConfiguration {
                 serviceGrayServerSorter,
                 serverListProcessor);
     }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ServerDistinguisher serverDistinguisher(
+            GrayManager grayManager,
+            GraySwitcher graySwitcher,
+            ServerExplainer serverExplainer,
+            ServerIdExtractor serverIdExtractor,
+            @Qualifier("instanceGrayServerSorter") InstanceGrayServerSorter instanceGrayServerSorter,
+            @Qualifier("serviceGrayServerSorter") ServiceGrayServerSorter serviceGrayServerSorter,
+            @Autowired(required = false) ServerListProcessor serverListProcessor) {
+
+        if (serverListProcessor == null) {
+            serverListProcessor = GrayClientHolder.getServereListProcessor();
+        }
+        return new DefaultServerDistinguisher(
+                grayManager,
+                graySwitcher,
+                serverIdExtractor,
+                instanceGrayServerSorter,
+                serviceGrayServerSorter,
+                serverExplainer,
+                serverListProcessor);
+    }
+
 
     @Bean
     @ConditionalOnMissingBean(name = "serviceGrayServerSorter")

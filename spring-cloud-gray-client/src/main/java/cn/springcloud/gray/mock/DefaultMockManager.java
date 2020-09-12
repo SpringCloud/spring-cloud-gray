@@ -105,7 +105,7 @@ public class DefaultMockManager implements MockManager {
 
         GrayDecisionInputArgs decisionInputArgs = new GrayDecisionInputArgs();
         decisionInputArgs.setGrayRequest(grayRequest);
-        Object server = grayRequest.getAttribute(PublicConstants.CHOOSED_SERVER);
+        Object server = grayRequest.getAttachment(PublicConstants.CHOOSED_SERVER);
         if (Objects.nonNull(server)) {
             ServerSpec serverSpec = serverExplainer.apply(server);
             decisionInputArgs.setServer(serverSpec);

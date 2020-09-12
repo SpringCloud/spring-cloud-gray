@@ -88,9 +88,9 @@ public class SimpleGrayManager extends AbstractGrayManager {
         } finally {
             lock.unlock();
         }
-        getAliasRegistry().removeAlias(AliasRegistry.aliasRegion("service", serviceId));
-
+        removeServiceInstancesAliases(serviceId);
     }
+
 
     @Override
     public GrayInstance getGrayInstance(String serviceId, String instanceId) {
@@ -116,8 +116,7 @@ public class SimpleGrayManager extends AbstractGrayManager {
         } finally {
             lock.unlock();
         }
-        getAliasRegistry().setAliases(createServiceAliasRegion(instance.getServiceId()),
-                instance.getInstanceId(), instance.getAliases());
+        setInstanceAsliases(instance);
     }
 
     protected void updateGrayInstance(Map<String, GrayService> grayServices, GrayInstance instance) {
@@ -163,7 +162,7 @@ public class SimpleGrayManager extends AbstractGrayManager {
         } finally {
             lock.unlock();
         }
-        getAliasRegistry().removeAliases(createServiceAliasRegion(serviceId), grayInstance.getAliases());
+        removeInstanceAliases(grayInstance);
     }
 
     @Override
@@ -187,8 +186,16 @@ public class SimpleGrayManager extends AbstractGrayManager {
         return policyDecisionManager;
     }
 
+
+    private boolean isEnabledEditGrayInstanceAlias() {
+        return false;
+    }
+
     @Override
     public void setGrayInstanceAlias(GrayInstanceAlias grayInstanceAlias) {
+        if (!isEnabledEditGrayInstanceAlias()) {
+            return;
+        }
         GrayInstance grayInstance = getGrayInstance(grayInstanceAlias.getServiceId(), grayInstanceAlias.getInstanceId());
         if (Objects.isNull(grayInstance)) {
             return;
@@ -207,6 +214,28 @@ public class SimpleGrayManager extends AbstractGrayManager {
         getAliasRegistry().updateAliases(aliasRegion, grayInstance.getInstanceId(), deletes, news);
     }
 
+    private void setInstanceAsliases(GrayInstance instance) {
+        if (!isEnabledEditGrayInstanceAlias()) {
+            return;
+        }
+        getAliasRegistry().setAliases(createServiceAliasRegion(instance.getServiceId()),
+                instance.getInstanceId(), instance.getAliases());
+    }
+
+    private void removeInstanceAliases(GrayInstance grayInstance) {
+        if (!isEnabledEditGrayInstanceAlias()) {
+            return;
+        }
+        getAliasRegistry().removeAliases(createServiceAliasRegion(grayInstance.getServiceId()), grayInstance.getAliases());
+    }
+
+    private void removeServiceInstancesAliases(String serviceId) {
+        if (!isEnabledEditGrayInstanceAlias()) {
+            return;
+        }
+        getAliasRegistry().removeAlias(AliasRegistry.aliasRegion(AliasRegistry.ALIAS_REGION_TYPE_SERVICE, serviceId));
+    }
+
 
     @Override
     public void setGrayServices(Object grayServices) {
@@ -218,7 +247,7 @@ public class SimpleGrayManager extends AbstractGrayManager {
     }
 
     private AliasRegistry.AliasRegion createServiceAliasRegion(String service) {
-        return AliasRegistry.aliasRegion("service", service);
+        return AliasRegistry.aliasRegion(AliasRegistry.ALIAS_REGION_TYPE_SERVICE, service);
     }
 
 

@@ -2,6 +2,7 @@ package cn.springcloud.gray;
 
 import cn.springcloud.gray.changed.notify.ChangedNotifyDriver;
 import cn.springcloud.gray.choose.ServerChooser;
+import cn.springcloud.gray.choose.ServerDistinguisher;
 import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
@@ -10,6 +11,7 @@ import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
+import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import cn.springcloud.gray.servernode.ServerExplainer;
 import cn.springcloud.gray.servernode.ServerListProcessor;
 import cn.springcloud.gray.spring.SpringEventPublisher;
@@ -23,11 +25,13 @@ public class GrayClientHolder {
     private static PolicyDecisionManager policyDecisionManager;
     private static RequestLocalStorage requestLocalStorage;
     private static LocalStorageLifeCycle localStorageLifeCycle;
+    private static RoutingConnectionPoint routingConnectionPoint;
     private static ServerExplainer<?> serverExplainer;
     private static ServerListProcessor<?> serverListProcessor;
     private static GraySwitcher graySwitcher = new GraySwitcher.DefaultGraySwitcher();
     private static InstanceLocalInfo instanceLocalInfo;
     private static ServerChooser<?> serverChooser;
+    private static ServerDistinguisher<?> serverDistinguisher;
     private static LoadBalancerFactory loadBalancerFactory;
 
     private static SpringEventPublisher springEventPublisher;
@@ -56,6 +60,14 @@ public class GrayClientHolder {
 
     public static LocalStorageLifeCycle getLocalStorageLifeCycle() {
         return localStorageLifeCycle;
+    }
+
+    public static RoutingConnectionPoint getRoutingConnectionPoint() {
+        return routingConnectionPoint;
+    }
+
+    public static void setRoutingConnectionPoint(RoutingConnectionPoint routingConnectionPoint) {
+        GrayClientHolder.routingConnectionPoint = routingConnectionPoint;
     }
 
     public static <SERVER> ServerExplainer<SERVER> getServerExplainer() {
@@ -99,6 +111,14 @@ public class GrayClientHolder {
         GrayClientHolder.serverChooser = serverChooser;
     }
 
+    public static <SERVER> ServerDistinguisher<SERVER> getServerDistinguisher() {
+        return (ServerDistinguisher<SERVER>) serverDistinguisher;
+    }
+
+    public static void setServerDistinguisher(ServerDistinguisher<?> serverDistinguisher) {
+        GrayClientHolder.serverDistinguisher = serverDistinguisher;
+    }
+
     public static GrayTrackHolder getGrayTrackHolder() {
         return grayTrackHolder;
     }
@@ -138,7 +158,6 @@ public class GrayClientHolder {
     public static void setChangedNotifyDriver(ChangedNotifyDriver changedNotifyDriver) {
         GrayClientHolder.changedNotifyDriver = changedNotifyDriver;
     }
-
 
 
     /**

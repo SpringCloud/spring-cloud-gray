@@ -17,9 +17,11 @@ public class GrayTrackInfo {
 
     public static final String ATTRIBUTE_TRACE_IP = "track_ip";
 
+    public static final String ATTRIBUTE_ATTR = "attr";
+
     public static final String GRAY_TRACK_TRACE_IP = GRAY_TRACK_PREFIX + ATTRIBUTE_TRACE_IP;
 
-    public static final String GRAY_TRACK_ATTRIBUTE_PREFIX = GRAY_TRACK_PREFIX + "attr";
+    public static final String GRAY_TRACK_ATTRIBUTE_PREFIX = GRAY_TRACK_PREFIX + ATTRIBUTE_ATTR;
 
     private Map<String, String> attributes = new HashMap<>(32);
 
@@ -53,12 +55,19 @@ public class GrayTrackInfo {
         return str.toString();
     }
 
-    public void setTraceIp(String ip){
+    public void setTraceIp(String ip) {
         setAttribute(ATTRIBUTE_TRACE_IP, ip);
     }
 
-    public String getTraceIp(){
+    public String getTraceIp() {
         return StringUtils.defaultString(getAttribute(ATTRIBUTE_TRACE_IP));
+    }
+
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(ATTRIBUTE_ATTR, getAttributes());
+        return map;
     }
 
 }

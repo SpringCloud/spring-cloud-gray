@@ -1,9 +1,6 @@
 package cn.springcloud.gray.client.netflix.feign;
 
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
-import cn.springcloud.gray.request.HttpGrayTrackRecordDevice;
-import cn.springcloud.gray.request.HttpGrayTrackRecordHelper;
-import cn.springcloud.gray.request.RequestLocalStorage;
+import cn.springcloud.gray.request.*;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.slf4j.Logger;
@@ -25,40 +22,20 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
-        GrayHttpTrackInfo grayTrack = getGrayHttpTrackInfo(template);
+        GrayTrackInfo grayTrack = getGrayHttpTrackInfo(template);
         if (grayTrack == null) {
             return;
         }
-        HttpGrayTrackRecordHelper.record(new FeignHttpGrayTrackRecordDevice(template), grayTrack);
-//        if (StringUtils.isNotEmpty(grayTrack.getUri())) {
-//            template.header(GrayHttpTrackInfo.GRAY_TRACK_URI, grayTrack.getUri());
-//        }
-//        if (StringUtils.isNotEmpty(grayTrack.getTraceIp())) {
-//            template.header(GrayHttpTrackInfo.GRAY_TRACK_TRACE_IP, grayTrack.getTraceIp());
-//        }
-//        if (StringUtils.isNotEmpty(grayTrack.getMethod())) {
-//            template.header(GrayHttpTrackInfo.GRAY_TRACK_METHOD, grayTrack.getMethod());
-//        }
-//        if (MapUtils.isNotEmpty(grayTrack.getParameters())) {
-//            appendGrayTrackInfosToHeader(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX, grayTrack.getParameters(), template);
-////            String prefix = GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX + GrayTrackInfo.GRAY_TRACK_SEPARATE;
-////            grayTrack.getParameters().entrySet().forEach(entry -> {
-////                template.header(prefix + entry.getKey(), entry.getValue());
-////            });
-//        }
-//        if (MapUtils.isNotEmpty(grayTrack.getHeaders())) {
-//            appendGrayTrackInfosToHeader(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX, grayTrack.getHeaders(), template);
-////            String prefix = GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX + GrayTrackInfo.GRAY_TRACK_SEPARATE;
-////            grayTrack.getHeaders().entrySet().forEach(entry -> {
-////                template.header(prefix + entry.getKey(), entry.getValue());
-////            });
-//        }
-//        appendGrayTrackInfoToHeader(GrayTrackInfo.GRAY_TRACK_ATTRIBUTE_PREFIX, grayTrack.getAttributes(), template);
+        if (grayTrack instanceof GrayHttpTrackInfo) {
+            GrayTrackRecordHelper.recordHttpTrack(new FeignGrayTrackRecordDevice(template), grayTrack);
+        } else {
+            GrayTrackRecordHelper.recordTrack(new FeignGrayTrackRecordDevice(template), grayTrack);
+        }
     }
 
-    private GrayHttpTrackInfo getGrayHttpTrackInfo(RequestTemplate template) {
+    private GrayTrackInfo getGrayHttpTrackInfo(RequestTemplate template) {
         try {
-            return (GrayHttpTrackInfo) requestLocalStorage.getGrayTrackInfo();
+            return requestLocalStorage.getGrayTrackInfo();
         } catch (Exception e) {
             log.warn("从requestLocalStorage中获取GrayTrackInfo对象失败, url:{}", template.url(), e);
             return null;
@@ -66,11 +43,11 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
     }
 
 
-    public static class FeignHttpGrayTrackRecordDevice implements HttpGrayTrackRecordDevice {
+    public static class FeignGrayTrackRecordDevice implements GrayTrackRecordDevice {
 
         private RequestTemplate template;
 
-        public FeignHttpGrayTrackRecordDevice(RequestTemplate template) {
+        public FeignGrayTrackRecordDevice(RequestTemplate template) {
             this.template = template;
         }
 
@@ -85,20 +62,4 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
         }
     }
 
-//
-//    private void appendGrayTrackInfoToHeader(String grayPrefix, Map<String, String> infos, RequestTemplate template) {
-//        String prefix = grayPrefix + GrayTrackInfo.GRAY_TRACK_SEPARATE;
-//        if (MapUtils.isNotEmpty(infos)) {
-//            infos.entrySet().forEach(entry -> {
-//                template.header(prefix + entry.getKey(), entry.getValue());
-//            });
-//        }
-//    }
-//
-//    private void appendGrayTrackInfosToHeader(String grayPrefix, Map<String, List<String>> infos, RequestTemplate template) {
-//        String prefix = grayPrefix + GrayTrackInfo.GRAY_TRACK_SEPARATE;
-//        infos.entrySet().forEach(entry -> {
-//            template.header(prefix + entry.getKey(), entry.getValue());
-//        });
-//    }
 }

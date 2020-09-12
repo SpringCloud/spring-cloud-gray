@@ -14,13 +14,15 @@ public class GrayHttpTrackInfo extends GrayTrackInfo {
 
     public static final String ATTRIBUTE_HTTP_METHOD = "method";
     public static final String ATTRIBUTE_HTTP_URI = "uri";
+    public static final String ATTRIBUTE_HTTP_HEADER = "header";
+    public static final String ATTRIBUTE_HTTP_PARAMETER = "param";
 
 
-    public static final String GRAY_TRACK_HEADER_PREFIX = GRAY_TRACK_PREFIX + "header";
+    public static final String GRAY_TRACK_HEADER_PREFIX = GRAY_TRACK_PREFIX + ATTRIBUTE_HTTP_HEADER;
 
     public static final String GRAY_TRACK_METHOD = GRAY_TRACK_PREFIX + ATTRIBUTE_HTTP_METHOD;
 
-    public static final String GRAY_TRACK_PARAMETER_PREFIX = GRAY_TRACK_PREFIX + "param";
+    public static final String GRAY_TRACK_PARAMETER_PREFIX = GRAY_TRACK_PREFIX + ATTRIBUTE_HTTP_PARAMETER;
 
     public static final String GRAY_TRACK_URI = GRAY_TRACK_PREFIX + ATTRIBUTE_HTTP_URI;
 
@@ -68,19 +70,28 @@ public class GrayHttpTrackInfo extends GrayTrackInfo {
         return MapUtils.unmodifiableMap(parameters);
     }
 
-    public void setUri(String url){
+    public void setUri(String url) {
         setAttribute(ATTRIBUTE_HTTP_URI, url);
     }
 
-    public String getUri(){
+    public String getUri() {
         return StringUtils.defaultString(getAttribute(ATTRIBUTE_HTTP_URI));
     }
 
-    public void setMethod(String method){
+    public void setMethod(String method) {
         setAttribute(ATTRIBUTE_HTTP_METHOD, method);
     }
 
-    public String getMethod(){
+    public String getMethod() {
         return StringUtils.defaultString(getAttribute(ATTRIBUTE_HTTP_METHOD));
+    }
+
+
+    @Override
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = super.toMap();
+        map.put(ATTRIBUTE_HTTP_HEADER, getHeaders());
+        map.put(ATTRIBUTE_HTTP_PARAMETER, getParameters());
+        return map;
     }
 }

@@ -44,8 +44,8 @@ class GrayFeignClientWrapper implements Client {
             grayRequest.setBody(request.body());
         }
 
-        grayRequest.setAttribute(GrayFeignClient.GRAY_REQUEST_ATTRIBUTE_NAME_FEIGN_REQUEST, request);
-        grayRequest.setAttribute(GrayFeignClient.GRAY_REQUEST_ATTRIBUTE_NAME_FEIGN_REQUEST_OPTIONS, options);
+        grayRequest.setAttachment(GrayFeignClient.GRAY_REQUEST_ATTRIBUTE_NAME_FEIGN_REQUEST, request);
+        grayRequest.setAttachment(GrayFeignClient.GRAY_REQUEST_ATTRIBUTE_NAME_FEIGN_REQUEST_OPTIONS, options);
         RoutingConnectPointContext connectPointContext = RoutingConnectPointContext.builder()
                 .interceptroType(GrayNetflixClientConstants.INTERCEPTRO_TYPE_FEIGN)
                 .grayRequest(grayRequest).build();
