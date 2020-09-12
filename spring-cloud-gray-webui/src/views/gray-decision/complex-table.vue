@@ -99,14 +99,18 @@
           </div>
         </el-form-item>
         <div>
-          <HttpHeader v-if="temp.type === 'HttpHeader'" ref="HttpHeader" :info="temp.infos" @sendInfos="sendInfos" />
-          <HttpMethod v-if="temp.type === 'HttpMethod'" ref="HttpMethod" :info="temp.infos" @sendInfos="sendInfos" />
-          <HttpParameter v-if="temp.type === 'HttpParameter'" ref="HttpParameter" :info="temp.infos" @sendInfos="sendInfos" />
-          <HttpTrackHeader v-if="temp.type === 'HttpTrackHeader'" ref="HttpTrackHeader" :info="temp.infos" @sendInfos="sendInfos" />
-          <HttpTrackParameter v-if="temp.type === 'HttpTrackParameter'" ref="HttpTrackParameter" :info="temp.infos" @sendInfos="sendInfos" />
-          <TraceIp v-if="temp.type === 'TraceIp'" ref="TraceIp" :info="temp.info" @sendInfos="sendInfos" />
-          <TrackAttribute v-if="temp.type === 'TrackAttribute'" ref="TrackAttribute" :info="temp.infos" @sendInfos="sendInfos" />
-          <FlowRate v-if="temp.type === 'FlowRate'" ref="FlowRate" :info="temp.infos" @sendInfos="sendInfos" />
+          <HttpMethod v-if="temp.type === 'HttpMethod'" ref="HttpMethod" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <HttpHeader v-if="temp.type === 'HttpHeader'" ref="HttpHeader" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <HttpParameter v-if="temp.type === 'HttpParameter'" ref="HttpParameter" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <HttpTrackHeader v-if="temp.type === 'HttpTrackHeader'" ref="HttpTrackHeader" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <HttpTrackParameter v-if="temp.type === 'HttpTrackParameter'" ref="HttpTrackParameter" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <TraceIp v-if="temp.type === 'TraceIp'" ref="TraceIp" :info="temp.info" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <TrackAttribute v-if="temp.type === 'TrackAttribute'" ref="TrackAttribute" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <TrackAttributes v-if="temp.type === 'TrackAttributes'" ref="TrackAttributes" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <FlowRate v-if="temp.type === 'FlowRate'" ref="FlowRate" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <Attribute v-if="temp.type === 'Attribute'" ref="Attribute" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <Attributes v-if="temp.type === 'Attributes'" ref="Attributes" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <FixedValueRandomFlowRate v-if="temp.type === 'FixedValueRandomFlowRate'" ref="FixedValueRandomFlowRate" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
           <el-form-item v-if="temp.type === '自定义名称'" label="infos" prop="infos">
             <el-input v-model="temp.infos" />
           </el-form-item>
@@ -144,14 +148,18 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 export default {
   name: 'ComplexTable',
   components: { Pagination,
-    HttpHeader: () => import('./components/HttpHeader'),
     HttpMethod: () => import('./components/HttpMethod'),
+    HttpHeader: () => import('./components/HttpHeader'),
     HttpParameter: () => import('./components/HttpParameter'),
     HttpTrackHeader: () => import('./components/HttpTrackHeader'),
     HttpTrackParameter: () => import('./components/HttpTrackParameter'),
     TraceIp: () => import('./components/TraceIp'),
     TrackAttribute: () => import('./components/TrackAttribute'),
-    FlowRate: () => import('./components/FlowRate')
+    TrackAttributes: () => import('./components/TrackAttributes'),
+    Attribute: () => import('./components/Attribute'),
+    Attributes: () => import('./components/Attributes'),
+    FlowRate: () => import('./components/FlowRate'),
+    FixedValueRandomFlowRate: () => import('./components/FixedValueRandomFlowRate')
   },
   directives: { waves },
   data() {
@@ -178,11 +186,11 @@ export default {
         delFlag: 'UNDELETE'
       },
       options: [{
-        value: 'HttpHeader',
-        label: 'HttpHeader'
-      }, {
         value: 'HttpMethod',
         label: 'HttpMethod'
+      }, {
+        value: 'HttpHeader',
+        label: 'HttpHeader'
       }, {
         value: 'HttpParameter',
         label: 'HttpParameter'
@@ -199,14 +207,24 @@ export default {
         value: 'TrackAttribute',
         label: 'TrackAttribute'
       }, {
+        value: 'TrackAttributes',
+        label: 'TrackAttributes'
+      }, {
+        value: 'Attribute',
+        label: 'Attribute'
+      }, {
+        value: 'Attributes',
+        label: 'Attributes'
+      }, {
         value: 'FlowRate',
         label: 'FlowRate'
-      },
-      {
+      }, {
+        value: 'FixedValueRandomFlowRate',
+        label: 'FixedValueRandomFlowRate'
+      }, {
         value: '自定义名称',
         label: '自定义名称'
-      }
-      ],
+      }],
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
@@ -217,6 +235,7 @@ export default {
         timestamp: new Date(),
         title: '',
         type: '',
+        name: '',
         status: 'published'
       },
       dialogFormVisible: false,
@@ -248,6 +267,9 @@ export default {
     },
     sendInfos(val) {
       this.temp.infos = val
+    },
+    sendDecisionName(name) {
+      this.temp.name = name
     },
     setPageTitle() {
       const title = '灰度决策'
@@ -343,38 +365,12 @@ export default {
         }
       })
     },
-    checkName(str) {
-      let flag = false
-      this.options.forEach(item => {
-        if (item.value === str) {
-          flag = true
-        }
-      })
-      return flag
-    },
-    handleUpdate(row) {
-      this.temp = { ...row } // copy obj
-      if (this.checkName(this.temp.name)) {
-        this.$set(this.temp, 'type', this.temp.name)
-        this.$nextTick(() => {
-          this.$refs[this.temp.name].clear()
-        })
-      } else {
-        this.$set(this.temp, 'type', '自定义名称')
-      }
-      console.log(this.temp)
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           if (this.temp.type !== '自定义名称') {
             if (this.$refs[this.temp.type].check()) {
+              this.temp.name = this.temp.type
               const tempData = Object.assign({}, this.temp)
               tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
               updateDecision(tempData).then(response => {
@@ -415,6 +411,33 @@ export default {
             })
           }
         }
+      })
+    },
+    checkName(str) {
+      let flag = false
+      this.options.forEach(item => {
+        if (item.value === str) {
+          flag = true
+        }
+      })
+      return flag
+    },
+    handleUpdate(row) {
+      this.temp = { ...row } // copy obj
+      if (this.checkName(this.temp.name)) {
+        this.$set(this.temp, 'type', this.temp.name)
+        this.$nextTick(() => {
+          this.$refs[this.temp.name].clear()
+        })
+      } else {
+        this.$set(this.temp, 'type', '自定义名称')
+      }
+      console.log(this.temp)
+      this.temp.timestamp = new Date(this.temp.timestamp)
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
       })
     },
     handleDelete(row) {
