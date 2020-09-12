@@ -1,0 +1,6 @@
+# Auto Configure
+#cn.springcloud.gray.client.EnableGrayClient=\
+#  cn.springcloud.gray.client.config.GrayClientImportSelector
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.springcloud.gray.client.dubbo.configuration.DubboPluginAutoConfiguration,\
+  cn.springcloud.gray.client.dubbo.configuration.DubboPluginServernodeAutoConfiguration

@@ -5,6 +5,7 @@ import cn.springcloud.gray.server.discovery.InstanceInfoAnalyser;
 import cn.springcloud.gray.utils.StringUtils;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,13 +23,16 @@ public class DubboNacosInstanceInfoAnalyser implements InstanceInfoAnalyser<Inst
 
     @Override
     public void analyse(Instance instance, InstanceInfo instanceInfo) {
-        String[] aliases = instance.getMetadata()
-                .entrySet()
+        String[] aliases = getAliases(instance.getIp(), instance.getMetadata());
+        instanceInfo.setAliases(aliases);
+    }
+
+    private String[] getAliases(String host, Map<String, String> metadata) {
+        return metadata.entrySet()
                 .stream()
-                .map(entry -> getAlias(instance.getIp(), entry.getKey(), entry.getValue()))
+                .map(entry -> getAlias(host, entry.getKey(), entry.getValue()))
                 .filter(Objects::nonNull)
                 .toArray(String[]::new);
-        instanceInfo.setAliases(aliases);
     }
 
 

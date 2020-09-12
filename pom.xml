@@ -172,6 +172,11 @@
             </dependency>
             <dependency>
                 <groupId>cn.springcloud.gray</groupId>
+                <artifactId>spring-cloud-gray-plugin-dubbo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.springcloud.gray</groupId>
                 <artifactId>spring-cloud-starter-gray-eureka-server</artifactId>
                 <version>${project.version}</version>
             </dependency>

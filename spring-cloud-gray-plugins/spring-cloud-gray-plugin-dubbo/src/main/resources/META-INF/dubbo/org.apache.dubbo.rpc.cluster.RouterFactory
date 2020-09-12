@@ -1,0 +1,1 @@
+gray=cn.springcloud.gray.client.dubbo.cluster.factory.GrayRouterFactory
