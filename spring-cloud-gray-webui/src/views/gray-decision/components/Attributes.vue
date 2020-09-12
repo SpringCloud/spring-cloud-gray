@@ -1,7 +1,7 @@
 <template>
-  <div class="HttpHeader">
+  <div class="Attributes">
     <el-form
-      ref="HttpHeader"
+      ref="Attributes"
       :rules="rules"
       :model="infos"
       :inline="true"
@@ -20,8 +20,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="header" prop="header">
-          <el-input v-model="infos.header" />
+        <el-form-item label="name" prop="name">
+          <el-input v-model="infos.name" />
         </el-form-item>
         <el-form-item label="values" prop="values">
           <el-input v-model="infos.values" />
@@ -50,10 +50,10 @@ export default {
   data() {
     return {
       infos: {
-        header: '',
         values: '',
+        name: '',
         compareMode: '',
-        infos: '{"compareMode":"","header":"","values":""}'
+        infos: '{"compareMode":"","name":"","values":""}'
       },
       options: [{
         value: 'EQUAL',
@@ -76,14 +76,14 @@ export default {
       }],
       rules: {
         compareMode: [{ required: true, message: 'compareMode is required', trigger: 'change' }],
-        header: [{ required: true, message: 'header is required', trigger: 'blur' }],
+        name: [{ required: true, message: 'header is required', trigger: 'blur' }],
         values: [{ required: true, message: 'values is required', trigger: 'blur' }]
       }
     }
   },
   computed: {
-    header() {
-      return this.infos.header
+    name() {
+      return this.infos.name
     },
     compareMode() {
       return this.infos.compareMode
@@ -93,20 +93,14 @@ export default {
     }
   },
   watch: {
-    header(a) {
-      if (a) {
-        this.setInfos()
-      }
+    name(a) {
+      this.setInfos()
     },
     compareMode(a) {
-      if (a) {
-        this.setInfos()
-      }
+      this.setInfos()
     },
     values(a) {
-      if (a) {
-        this.setInfos()
-      }
+      this.setInfos()
     },
     info(a) {
       if (a) {
@@ -127,15 +121,15 @@ export default {
   },
   methods: {
     setInfos() {
-      this.infos.infos = '{"compareMode":"' + this.infos.compareMode + '","header":"' + this.infos.header + '","values":"' + this.infos.values + '"}'
+      this.infos.infos = '{"compareMode":"' + this.infos.compareMode + '","name":"' + this.infos.name + '","values":"' + this.infos.values + '"}'
       this.$emit('sendInfos', this.infos.infos)
     },
     clear() {
-      this.$refs.HttpHeader.clearValidate()
+      this.$refs.Attributes.clearValidate()
     },
     check() {
       let flag = false
-      this.$refs.HttpHeader.validate((valid) => {
+      this.$refs.Attributes.validate((valid) => {
         flag = valid
       })
       return flag
@@ -144,17 +138,17 @@ export default {
 }
 </script>
 <style >
-.HttpHeader .selectBox .el-form-item{
+.Attributes .selectBox .el-form-item{
     margin-right: 0;
 margin-left: 20px;
 }
-.HttpHeader .selectBox .el-form-item:first-child{
+.Attributes .selectBox .el-form-item:first-child{
     margin: 0;
 }
-.HttpHeader .infosBox{
+.Attributes .infosBox{
     width: 100%;
 }
-.HttpHeader .infosBox .el-form-item__content{
+.Attributes .infosBox .el-form-item__content{
     width:80%;
 }
 </style>

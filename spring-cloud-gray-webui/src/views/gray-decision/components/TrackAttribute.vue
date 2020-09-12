@@ -73,18 +73,6 @@ export default {
       }, {
         value: 'UNEQUAL',
         label: 'UNEQUAL'
-      }, {
-        value: 'CONTAINS_ALL',
-        label: 'CONTAINS_ALL'
-      }, {
-        value: 'CONTAINS_ANY',
-        label: 'CONTAINS_ANY'
-      }, {
-        value: 'NOT_CONTAINS_ANY',
-        label: 'NOT_CONTAINS_ANY'
-      }, {
-        value: 'NOT_CONTAINS_ALL',
-        label: 'NOT_CONTAINS_ALL'
       }],
       rules: {
         compareMode: [{ required: true, message: 'compareMode is required', trigger: 'change' }],

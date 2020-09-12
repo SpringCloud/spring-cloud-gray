@@ -56,18 +56,6 @@ export default {
         infos: '{"compareMode":"","header":"","values":""}'
       },
       options: [{
-        value: 'GT',
-        label: 'GT'
-      }, {
-        value: 'GTE',
-        label: 'GTE'
-      }, {
-        value: 'LT',
-        label: 'LT'
-      }, {
-        value: 'LTE',
-        label: 'LTE'
-      }, {
         value: 'EQUAL',
         label: 'EQUAL'
       }, {
