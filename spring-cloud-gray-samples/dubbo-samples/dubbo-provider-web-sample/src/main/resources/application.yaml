@@ -1,16 +1,20 @@
 dubbo:
+  application:
+    id: spring-cloud-alibaba-dubbo-provider
+    name: spring-cloud-alibaba-dubbo-provider
+    qosEnable: false
   scan:
     base-packages: cn.springcloud.gray.dubbo.service
   protocols:
     dubbo:
-      port: -1
+      port: 20881
 
 feign:
   hystrix:
     enabled: true
 
 server:
-  port: 0
+  port: 9091
 
 management:
   endpoints:

@@ -14,3 +14,46 @@ server:
 provider:
   application:
     name: spring-cloud-alibaba-dubbo-provider
+
+
+
+gray:
+  enabled: true
+  mock:
+    enabled: true
+  hystrix:
+    enabled: true
+  server:
+    url: http://gray-Server
+    loadbalanced: true
+    retryable: true
+    retryNumberOfRetries: 3
+  client:
+    event:
+      longpolling: 60000
+    runenv: web
+    infosUpdateIntervalTimerInMs: 0
+    infosInitializeDelayTimeInMs: 10000
+    instance:
+      grayEnroll: false
+      grayEnrollDealyTimeInMs: 20000
+  holdoutServer:
+    enabled: false
+    services:
+      "service-a": starting
+  request:
+    track:
+      enabled: true
+      trackType: web
+      definitionsUpdateIntervalTimerInMs: 10000
+      definitionsInitializeDelayTimeInMs: 10000
+      web:
+        track-definitions:
+          - name: HttpReceive
+        path-patterns: /*
+        exclude-path-patterns: /test/*
+logging:
+  level:
+    cn:
+      springcloud:
+        gray: debug

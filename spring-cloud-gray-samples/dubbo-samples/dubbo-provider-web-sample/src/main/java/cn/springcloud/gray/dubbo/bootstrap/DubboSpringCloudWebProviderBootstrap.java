@@ -16,6 +16,7 @@
 
 package cn.springcloud.gray.dubbo.bootstrap;
 
+import org.apache.dubbo.config.spring.context.annotation.EnableDubboConfig;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -25,7 +26,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @EnableDiscoveryClient
 @EnableAutoConfiguration
-//@EnableDubboConfig
+@EnableDubboConfig
 public class DubboSpringCloudWebProviderBootstrap {
 
     public static void main(String[] args) {

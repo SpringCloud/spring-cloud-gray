@@ -21,8 +21,8 @@ import cn.springcloud.gray.dubbo.service.User;
 import cn.springcloud.gray.dubbo.service.UserService;
 import com.alibaba.cloud.dubbo.annotation.DubboTransported;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.dubbo.config.spring.context.annotation.EnableDubboConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
@@ -37,7 +37,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -57,7 +56,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @EnableFeignClients
 @EnableScheduling
 @EnableCaching
-@EnableDubboConfig
 public class DubboSpringCloudConsumerBootstrap {
 
     @DubboReference
@@ -71,7 +69,7 @@ public class DubboSpringCloudConsumerBootstrap {
     private FeignRestService feignRestService;
 
     @Autowired
-    @Lazy
+//    @Lazy
     private DubboFeignRestService dubboFeignRestService;
 
     @Value("${provider.application.name}")
@@ -81,7 +79,7 @@ public class DubboSpringCloudConsumerBootstrap {
     @LoadBalanced
     private RestTemplate restTemplate;
 
-    @Bean
+    //    @Bean
     public ApplicationRunner userServiceRunner() {
         return arguments -> {
 
@@ -105,7 +103,7 @@ public class DubboSpringCloudConsumerBootstrap {
         };
     }
 
-    @Bean
+    //    @Bean
     public ApplicationRunner callRunner() {
         return arguments -> {
             callAll();
@@ -142,6 +140,8 @@ public class DubboSpringCloudConsumerBootstrap {
         private UserService userService;
         @Autowired
         private ApplicationContext applicationContext;
+        @DubboReference(version = "1.0.0", protocol = "rest")
+        private RestService restService;
 
         @RequestMapping("/test")
         public String f() {
@@ -151,12 +151,26 @@ public class DubboSpringCloudConsumerBootstrap {
             }
             return "success";
         }
+
+        @RequestMapping("/remove")
+        public String remove() {
+            return String.valueOf(userService.remove(1l));
+        }
+
+        @RequestMapping("/test/rest")
+        public String rest() {
+            String result = restService.param("ad");
+            if (StringUtils.isNotEmpty(result)) {
+                return result;
+            }
+            return "success";
+        }
     }
 
-    @Scheduled(fixedDelay = 10 * 1000L)
-    public void onScheduled() {
-        callAll();
-    }
+//    @Scheduled(fixedDelay = 10 * 1000L)
+//    public void onScheduled() {
+//        callAll();
+//    }
 
     private void callPathVariables() {
         // Dubbo Service call
@@ -218,9 +232,10 @@ public class DubboSpringCloudConsumerBootstrap {
         // System.out.println(feignRestService.requestBody("Hello,World", data));
 
         // RestTemplate call
-        System.out.println(restTemplate.postForObject(
-                "http://" + providerApplicationName + "/request/body/map?param=小马哥", data,
-                User.class));
+        //todo
+//        System.out.println(restTemplate.postForObject(
+//                "http://" + providerApplicationName + "/request/body/map?param=小马哥", data,
+//                User.class));
     }
 
     @Bean

@@ -17,6 +17,8 @@
 package cn.springcloud.gray.dubbo.service;
 
 import org.apache.dubbo.config.annotation.DubboService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ import java.util.Map;
  */
 @DubboService(protocol = "dubbo")
 public class InMemoryUserService implements UserService {
+    private static final Logger log = LoggerFactory.getLogger(InMemoryUserService.class);
 
     private Map<Long, User> usersRepository = new HashMap<>();
 
@@ -42,6 +45,7 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public Collection<User> findAll() {
+        log.info("[web] invoke findAll");
         return usersRepository.values();
     }
 
