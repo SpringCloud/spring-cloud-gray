@@ -1,7 +1,7 @@
 <template>
-  <div class="HttpHeader">
+  <div class="Attribute">
     <el-form
-      ref="HttpHeader"
+      ref="Attribute"
       :rules="rules"
       :model="infos"
       :inline="true"
@@ -20,11 +20,11 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="header" prop="header">
-          <el-input v-model="infos.header" />
+        <el-form-item label="name" prop="name">
+          <el-input v-model="infos.name" />
         </el-form-item>
-        <el-form-item label="values" prop="values">
-          <el-input v-model="infos.values" />
+        <el-form-item label="value" prop="value">
+          <el-input v-model="infos.value" />
         </el-form-item>
       </div>
       <div class="infosBox">
@@ -50,63 +50,57 @@ export default {
   data() {
     return {
       infos: {
-        header: '',
-        values: '',
+        value: '',
+        name: '',
         compareMode: '',
-        infos: '{"compareMode":"","header":"","values":""}'
+        infos: '{"compareMode":"","name":"","value":""}'
       },
       options: [{
+        value: 'GT',
+        label: 'GT'
+      }, {
+        value: 'GTE',
+        label: 'GTE'
+      }, {
+        value: 'LT',
+        label: 'LT'
+      }, {
+        value: 'LTE',
+        label: 'LTE'
+      }, {
         value: 'EQUAL',
         label: 'EQUAL'
       }, {
         value: 'UNEQUAL',
         label: 'UNEQUAL'
-      }, {
-        value: 'CONTAINS_ALL',
-        label: 'CONTAINS_ALL'
-      }, {
-        value: 'CONTAINS_ANY',
-        label: 'CONTAINS_ANY'
-      }, {
-        value: 'NOT_CONTAINS_ANY',
-        label: 'NOT_CONTAINS_ANY'
-      }, {
-        value: 'NOT_CONTAINS_ALL',
-        label: 'NOT_CONTAINS_ALL'
       }],
       rules: {
         compareMode: [{ required: true, message: 'compareMode is required', trigger: 'change' }],
-        header: [{ required: true, message: 'header is required', trigger: 'blur' }],
-        values: [{ required: true, message: 'values is required', trigger: 'blur' }]
+        name: [{ required: true, message: 'header is required', trigger: 'blur' }],
+        value: [{ required: true, message: 'value is required', trigger: 'blur' }]
       }
     }
   },
   computed: {
-    header() {
-      return this.infos.header
+    name() {
+      return this.infos.name
     },
     compareMode() {
       return this.infos.compareMode
     },
-    values() {
-      return this.infos.values
+    value() {
+      return this.infos.value
     }
   },
   watch: {
-    header(a) {
-      if (a) {
-        this.setInfos()
-      }
+    name(a) {
+      this.setInfos()
     },
     compareMode(a) {
-      if (a) {
-        this.setInfos()
-      }
+      this.setInfos()
     },
-    values(a) {
-      if (a) {
-        this.setInfos()
-      }
+    value(a) {
+      this.setInfos()
     },
     info(a) {
       if (a) {
@@ -127,15 +121,15 @@ export default {
   },
   methods: {
     setInfos() {
-      this.infos.infos = '{"compareMode":"' + this.infos.compareMode + '","header":"' + this.infos.header + '","values":"' + this.infos.values + '"}'
+      this.infos.infos = '{"compareMode":"' + this.infos.compareMode + '","name":"' + this.infos.name + '","value":"' + this.infos.value + '"}'
       this.$emit('sendInfos', this.infos.infos)
     },
     clear() {
-      this.$refs.HttpHeader.clearValidate()
+      this.$refs.Attribute.clearValidate()
     },
     check() {
       let flag = false
-      this.$refs.HttpHeader.validate((valid) => {
+      this.$refs.Attribute.validate((valid) => {
         flag = valid
       })
       return flag
@@ -144,17 +138,17 @@ export default {
 }
 </script>
 <style >
-.HttpHeader .selectBox .el-form-item{
+.Attribute .selectBox .el-form-item{
     margin-right: 0;
 margin-left: 20px;
 }
-.HttpHeader .selectBox .el-form-item:first-child{
+.Attribute .selectBox .el-form-item:first-child{
     margin: 0;
 }
-.HttpHeader .infosBox{
+.Attribute .infosBox{
     width: 100%;
 }
-.HttpHeader .infosBox .el-form-item__content{
+.Attribute .infosBox .el-form-item__content{
     width:80%;
 }
 </style>
