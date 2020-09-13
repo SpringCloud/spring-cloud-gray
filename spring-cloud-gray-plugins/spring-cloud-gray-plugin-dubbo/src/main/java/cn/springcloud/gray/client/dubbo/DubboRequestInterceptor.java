@@ -38,9 +38,6 @@ public class DubboRequestInterceptor implements RequestInterceptor {
             return;
         }
 
-        //todo
-        grayTrackInfo.setAttribute("methodName", invocation.getMethodName());
-
         invocation.setAttachment(GrayTrackInfo.GRAY_TRACK_PREFIX, grayTrackInfo.toMap());
     }
 
