@@ -77,7 +77,7 @@ public class TestResource {
 //        Enumeration<String> names = request.getHeaderNames();
 //        while (names.hasMoreElements()) {
 //            String name = names.nextElement();
-////            if (org.apache.commons.lang.StringUtils.startsWith(name, GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX)) {
+////            if (org.apache.commons.lang.StringUtils.startsWith(name, GrayTrackInfo.GRAY_TRACK_HEADER_PREFIX)) {
 //            log.info("{}:{}", name, request.getHeader(name));
 //            Enumeration<String> values = request.getHeaders(name);
 //            while (values.hasMoreElements()) {

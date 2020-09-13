@@ -1,6 +1,6 @@
 package cn.springcloud.gray.service.b;
 
-//import cn.springcloud.gray.request.GrayHttpTrackInfo;
+//import cn.springcloud.gray.request.GrayTrackInfo;
 //import cn.springcloud.gray.request.LocalStorageLifeCycle;
 //import cn.springcloud.gray.request.RequestLocalStorage;
 
@@ -30,7 +30,7 @@ public class ExecutorServiceGrayAspectTest {
 //
 //    @Test
 //    public void testExecute() {
-//        requestLocalStorage.setGrayTrackInfo(new GrayHttpTrackInfo());
+//        requestLocalStorage.setGrayTrackInfo(new GrayTrackInfo());
 //        executorService.execute(() -> {
 //            System.out.println("323fd");
 //        });
