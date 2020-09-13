@@ -9,8 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Objects;
-
 /**
  * @author saleson
  * @date 2020-09-12 18:42
@@ -33,10 +31,8 @@ public class AttributeGrayDecisionFactory extends CompareGrayDecisionFactory<Att
                 return false;
             }
 
-            //todo
-            Object attributeValue = grayRequest.getAttribute(configBean.getName());
-            String value = Objects.isNull(attributeValue) ? "" : attributeValue.toString();
-            boolean b = predicateComparator.test(value, configBean.getValue());
+            String attributeValue = grayRequest.getAttribute(configBean.getName());
+            boolean b = predicateComparator.test(attributeValue, configBean.getValue());
             if (log.isDebugEnabled()) {
                 log.debug("[AttributeGrayDecision] serviceId:{}, decisionConfig:{}, attributeValue:{}, testReslut:{}",
                         grayRequest.getServiceId(), JsonUtils.toJsonString(configBean), attributeValue, b);
