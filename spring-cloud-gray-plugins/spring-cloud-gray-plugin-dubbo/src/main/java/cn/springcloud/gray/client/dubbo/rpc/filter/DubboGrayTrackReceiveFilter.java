@@ -3,7 +3,6 @@ package cn.springcloud.gray.client.dubbo.rpc.filter;
 import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.client.dubbo.constants.GrayDubboConstants;
 import cn.springcloud.gray.function.Consumer2;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import org.apache.dubbo.common.extension.Activate;
@@ -29,7 +28,7 @@ public class DubboGrayTrackReceiveFilter implements Filter {
         if (Objects.isNull(requestLocalStorage)) {
             return invoker.invoke(invocation);
         }
-        GrayTrackInfo grayTrackInfo = new GrayHttpTrackInfo();
+        GrayTrackInfo grayTrackInfo = new GrayTrackInfo();
         receiveGrayTrackInfo(invocation, grayTrackInfo);
         requestLocalStorage.getLocalStorageLifeCycle().initContext(DubboGrayTrackReceiveFilter.class.getName());
         try {
@@ -50,14 +49,11 @@ public class DubboGrayTrackReceiveFilter implements Filter {
         Map<String, String> attrs = (Map<String, String>) trackMap.get(GrayTrackInfo.ATTRIBUTE_ATTR);
         fillInfos(attrs, grayTrackInfo::setAttribute);
 
-        if (grayTrackInfo instanceof GrayHttpTrackInfo) {
-            GrayHttpTrackInfo grayHttpTrackInfo = (GrayHttpTrackInfo) grayTrackInfo;
-            Map<String, List<String>> headers = (Map<String, List<String>>) trackMap.get(GrayHttpTrackInfo.ATTRIBUTE_HTTP_HEADER);
-            fillInfos(headers, grayHttpTrackInfo::setHeader);
+        Map<String, List<String>> headers = (Map<String, List<String>>) trackMap.get(GrayTrackInfo.ATTRIBUTE_HTTP_HEADER);
+        fillInfos(headers, grayTrackInfo::setHeader);
 
-            Map<String, List<String>> params = (Map<String, List<String>>) trackMap.get(GrayHttpTrackInfo.ATTRIBUTE_HTTP_PARAMETER);
-            fillInfos(params, grayHttpTrackInfo::setParameters);
-        }
+        Map<String, List<String>> params = (Map<String, List<String>>) trackMap.get(GrayTrackInfo.ATTRIBUTE_HTTP_PARAMETER);
+        fillInfos(params, grayTrackInfo::setParameters);
 
     }
 

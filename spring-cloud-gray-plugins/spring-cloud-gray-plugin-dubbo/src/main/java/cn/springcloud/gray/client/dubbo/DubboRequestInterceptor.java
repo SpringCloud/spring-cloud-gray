@@ -2,7 +2,6 @@ package cn.springcloud.gray.client.dubbo;
 
 import cn.springcloud.gray.RequestInterceptor;
 import cn.springcloud.gray.client.dubbo.constants.GrayDubboConstants;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import org.apache.dubbo.rpc.Invocation;
@@ -21,7 +20,7 @@ public class DubboRequestInterceptor implements RequestInterceptor {
 
     @Override
     public boolean pre(GrayRequest request) {
-        GrayHttpTrackInfo grayTrack = (GrayHttpTrackInfo) request.getGrayTrackInfo();
+        GrayTrackInfo grayTrack = request.getGrayTrackInfo();
         if (Objects.nonNull(grayTrack)) {
             recordGrayTrack(request);
         }
