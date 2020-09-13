@@ -4,7 +4,7 @@ import cn.springcloud.gray.decision.compare.CompareMode;
 import cn.springcloud.gray.decision.factory.HttpTrackParameterGrayDecisionFactory;
 import cn.springcloud.gray.model.DecisionDefinition;
 import cn.springcloud.gray.request.GrayHttpRequest;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -33,10 +33,10 @@ public class DecisionTest {
 
 
         GrayHttpRequest grayHttpRequest = new GrayHttpRequest();
-        GrayHttpTrackInfo grayHttpTrackInfo = new GrayHttpTrackInfo();
-        grayHttpRequest.setGrayTrackInfo(grayHttpTrackInfo);
-        grayHttpTrackInfo.addParameter("version", "4.0");
-        grayHttpTrackInfo.addParameter("platform", "ios");
+        GrayTrackInfo grayTrackInfo = new GrayTrackInfo();
+        grayHttpRequest.setGrayTrackInfo(grayTrackInfo);
+        grayTrackInfo.addParameter("version", "4.0");
+        grayTrackInfo.addParameter("platform", "ios");
         DecisionInputArgs args = new GrayDecisionInputArgs().setGrayRequest(grayHttpRequest);
 
         TestTiming testTiming = new TestTiming();

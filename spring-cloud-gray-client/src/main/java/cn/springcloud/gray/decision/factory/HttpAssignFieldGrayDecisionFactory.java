@@ -1,7 +1,6 @@
 package cn.springcloud.gray.decision.factory;
 
 import cn.springcloud.gray.request.GrayHttpRequest;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,32 +21,30 @@ public abstract class HttpAssignFieldGrayDecisionFactory<C extends AbstractAssig
     }
 
 
-
-    protected Object getRequestAssignFieldValue(GrayHttpRequest grayRequest, C configBean){
+    protected Object getRequestAssignFieldValue(GrayHttpRequest grayRequest, C configBean) {
         Object fieldValue = super.getRequestAssignFieldValue(grayRequest, configBean);
-        if(fieldValue!=null){
+        if (fieldValue != null) {
             return fieldValue;
         }
-        switch (configBean.getType()){
+        switch (configBean.getType()) {
             case FIELD_SCOPE_HTTP_HEADER:
                 return grayRequest.getHeader(configBean.getField());
             case FIELD_SCOPE_HTTP_PARAMETER:
                 return grayRequest.getParameter(configBean.getField());
             case FIELD_SCOPE_HTTP_TRACK_HEADER:
-                if(grayRequest.getGrayTrackInfo()==null){
+                if (grayRequest.getGrayTrackInfo() == null) {
                     return null;
                 }
-                return ((GrayHttpTrackInfo)grayRequest.getGrayTrackInfo()).getHeader(configBean.getField());
+                return grayRequest.getGrayTrackInfo().getHeader(configBean.getField());
             case FIELD_SCOPE_HTTP_TRACK_PARAMETER:
-                if(grayRequest.getGrayTrackInfo()==null){
+                if (grayRequest.getGrayTrackInfo() == null) {
                     return null;
                 }
-                return ((GrayHttpTrackInfo)grayRequest.getGrayTrackInfo()).getParameter(configBean.getField());
+                return grayRequest.getGrayTrackInfo().getParameter(configBean.getField());
 
         }
         return null;
     }
-
 
 
 }

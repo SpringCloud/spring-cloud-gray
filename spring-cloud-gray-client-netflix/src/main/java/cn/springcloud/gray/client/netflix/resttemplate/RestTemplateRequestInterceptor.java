@@ -2,8 +2,8 @@ package cn.springcloud.gray.client.netflix.resttemplate;
 
 import cn.springcloud.gray.RequestInterceptor;
 import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.GrayTrackRecordDevice;
 import cn.springcloud.gray.request.GrayTrackRecordHelper;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +24,7 @@ public class RestTemplateRequestInterceptor implements RequestInterceptor {
 
     @Override
     public boolean pre(GrayRequest request) {
-        GrayHttpTrackInfo grayTrack = (GrayHttpTrackInfo) request.getGrayTrackInfo();
+        GrayTrackInfo grayTrack = request.getGrayTrackInfo();
         if (grayTrack != null) {
             HttpRequest httpRequest = (HttpRequest) request.getAttachment(
                     GrayClientHttpRequestIntercptor.GRAY_REQUEST_ATTRIBUTE_RESTTEMPLATE_REQUEST);

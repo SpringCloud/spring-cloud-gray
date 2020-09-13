@@ -1,6 +1,9 @@
 package cn.springcloud.gray.client.netflix.feign;
 
-import cn.springcloud.gray.request.*;
+import cn.springcloud.gray.request.GrayTrackInfo;
+import cn.springcloud.gray.request.GrayTrackRecordDevice;
+import cn.springcloud.gray.request.GrayTrackRecordHelper;
+import cn.springcloud.gray.request.RequestLocalStorage;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.slf4j.Logger;
@@ -22,18 +25,14 @@ public class GrayTrackFeignRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
-        GrayTrackInfo grayTrack = getGrayHttpTrackInfo(template);
+        GrayTrackInfo grayTrack = getGrayTrackInfo(template);
         if (grayTrack == null) {
             return;
         }
-        if (grayTrack instanceof GrayHttpTrackInfo) {
-            GrayTrackRecordHelper.recordHttpTrack(new FeignGrayTrackRecordDevice(template), grayTrack);
-        } else {
-            GrayTrackRecordHelper.recordTrack(new FeignGrayTrackRecordDevice(template), grayTrack);
-        }
+        GrayTrackRecordHelper.recordHttpTrack(new FeignGrayTrackRecordDevice(template), grayTrack);
     }
 
-    private GrayTrackInfo getGrayHttpTrackInfo(RequestTemplate template) {
+    private GrayTrackInfo getGrayTrackInfo(RequestTemplate template) {
         try {
             return requestLocalStorage.getGrayTrackInfo();
         } catch (Exception e) {

@@ -4,7 +4,7 @@ import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.compare.Comparators;
 import cn.springcloud.gray.decision.compare.PredicateComparator;
 import cn.springcloud.gray.request.GrayHttpRequest;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class HttpTrackParameterGrayDecisionFactory extends CompareGrayDecisionFa
     public GrayDecision apply(HttpParameterGrayDecisionFactory.Config configBean) {
         return args -> {
             GrayHttpRequest grayRequest = (GrayHttpRequest) args.getGrayRequest();
-            GrayHttpTrackInfo grayTrackInfo = (GrayHttpTrackInfo) grayRequest.getGrayTrackInfo();
+            GrayTrackInfo grayTrackInfo = grayRequest.getGrayTrackInfo();
             if (grayTrackInfo == null) {
                 log.warn("[HttpTrackParameterGrayDecision] serviceId:{}, uri:{} 没有获取到灰度追踪信息, testResult:{}",
                         grayRequest.getServiceId(), grayRequest.getUri(), false);

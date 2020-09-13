@@ -1,6 +1,6 @@
 package cn.springcloud.gray.web;
 
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 
@@ -27,7 +27,7 @@ public class GrayTrackFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        GrayHttpTrackInfo webTrack = new GrayHttpTrackInfo();
+        GrayTrackInfo webTrack = new GrayTrackInfo();
         requestLocalStorage.getLocalStorageLifeCycle().initContext(GrayTrackFilter.class.getName());
         try {
             grayTrackHolder.recordGrayTrack(webTrack, new ServletHttpRequestWrapper((HttpServletRequest) request));

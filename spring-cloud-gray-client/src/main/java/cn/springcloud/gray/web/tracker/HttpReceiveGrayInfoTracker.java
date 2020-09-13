@@ -1,6 +1,5 @@
 package cn.springcloud.gray.web.tracker;
 
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.TrackArgs;
 import cn.springcloud.gray.web.HttpRequest;
@@ -23,7 +22,7 @@ public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
     }
 
 
-    public void call(GrayHttpTrackInfo trackInfo, HttpRequest request) {
+    public void call(GrayTrackInfo trackInfo, HttpRequest request) {
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
@@ -36,7 +35,7 @@ public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
 
 
     @Override
-    public void call(TrackArgs<GrayHttpTrackInfo, HttpRequest> args) {
+    public void call(TrackArgs<GrayTrackInfo, HttpRequest> args) {
         call(args.getTrackInfo(), args.getRequest());
     }
 
@@ -59,13 +58,13 @@ public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
             log.debug("接收到{} --> {}", loadSpec.getHeaderName(), value);
         });
 
-        loaders.put(GrayHttpTrackInfo.GRAY_TRACK_HEADER_PREFIX, loadSpec -> {
+        loaders.put(GrayTrackInfo.GRAY_TRACK_HEADER_PREFIX, loadSpec -> {
             List<String> value = loadSpec.getHeaderValues();
             loadSpec.getTrackInfo().setHeader(loadSpec.getNames()[1], value);
             log.debug("接收到{} --> {}", loadSpec.getHeaderName(), value);
         });
 
-        loaders.put(GrayHttpTrackInfo.GRAY_TRACK_PARAMETER_PREFIX, loadSpec -> {
+        loaders.put(GrayTrackInfo.GRAY_TRACK_PARAMETER_PREFIX, loadSpec -> {
             List<String> value = loadSpec.getHeaderValues();
             loadSpec.getTrackInfo().setParameters(loadSpec.getNames()[1], value);
             log.debug("接收到{} --> {}", loadSpec.getHeaderName(), value);
@@ -78,7 +77,7 @@ public class HttpReceiveGrayInfoTracker implements HttpGrayInfoTracker {
     private static class LoadSpec {
         private String headerName;
         private String[] names;
-        private GrayHttpTrackInfo trackInfo;
+        private GrayTrackInfo trackInfo;
         private HttpRequest request;
 
 

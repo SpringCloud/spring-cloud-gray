@@ -42,7 +42,9 @@ public interface GrayTrackHolder {
                         .trackDefinition(definition)
                         .build();
                 try {
-                    tracker.call(args);
+                    if (tracker.shold(args)) {
+                        tracker.call(args);
+                    }
                 } catch (Exception e) {
                     LogUtils.logger(GrayTrackHolder.class).error(e.getMessage());
                 }

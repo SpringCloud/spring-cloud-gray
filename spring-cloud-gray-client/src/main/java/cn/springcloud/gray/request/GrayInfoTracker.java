@@ -11,6 +11,10 @@ import org.springframework.core.Ordered;
  */
 public interface GrayInfoTracker<TRACK extends GrayTrackInfo, REQ> extends Ordered {
 
+    default boolean shold(TrackArgs<TRACK, REQ> args) {
+        return true;
+    }
+
     void call(TrackArgs<TRACK, REQ> args);
 
 

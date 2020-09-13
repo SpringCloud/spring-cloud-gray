@@ -222,7 +222,7 @@ FlowRateGray | FlowRateGrayDecisionFactory | 按百分比放量进行判断
 ``` java
 import cn.springcloud.gray.decision.GrayDecision;
 import cn.springcloud.gray.decision.factory.AbstractGrayDecisionFactory;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -238,7 +238,7 @@ public class VersionGrayDecisionFactory extends AbstractGrayDecisionFactory<Vers
     @Override
     public GrayDecision apply(Config configBean) {
         return args -> {
-            GrayHttpTrackInfo grayRequest = (GrayHttpTrackInfo) args.getGrayRequest().getGrayTrackInfo();
+            GrayTrackInfo grayRequest = args.getGrayRequest().getGrayTrackInfo();
            int version = StringUtils.defaultIfNull(grayRequest.getAttribute(USER_ID_PARAM_NAME), "0");
             if(StringUtils.equal(configBean.getCompareMode(), "LT")){
                 return configBean.getVersion() > version;
@@ -275,7 +275,7 @@ HttpURI | HttpURIGrayInfoTracker | 获取http请求的URI并记录到灰度追�
 ### 自定义灰度追踪实现
 如果上面这些决策还不能满足需求，那么可以扩展`cn.springcloud.gray.request.GrayInfoTracker`，实现自定义的逻辑，发布到spring 容器中即可。如:
 ``` java
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.TrackArgs;
 import cn.springcloud.gray.web.tracker.HttpGrayInfoTracker;
 import lombok.extern.slf4j.Slf4j;
@@ -291,7 +291,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserIdGrayInfoTracker implements HttpGrayInfoTracker {
 
     @Override
-    public void call(TrackArgs<GrayHttpTrackInfo, HttpServletRequest> args) {
+    public void call(TrackArgs<GrayTrackInfo, HttpServletRequest> args) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         String userId = null;

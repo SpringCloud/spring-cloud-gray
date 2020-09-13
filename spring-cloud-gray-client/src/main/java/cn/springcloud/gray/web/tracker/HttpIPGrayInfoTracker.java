@@ -1,6 +1,6 @@
 package cn.springcloud.gray.web.tracker;
 
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.TrackArgs;
 import cn.springcloud.gray.web.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -12,17 +12,16 @@ import java.net.UnknownHostException;
 public class HttpIPGrayInfoTracker implements HttpGrayInfoTracker {
 
 
-    public void call(GrayHttpTrackInfo trackInfo, HttpRequest request) {
+    public void call(GrayTrackInfo trackInfo, HttpRequest request) {
         String ip = getIpAddr(request);
         trackInfo.setTraceIp(ip);
         log.debug("记录下ip:{}", trackInfo.getTraceIp());
     }
 
     @Override
-    public void call(TrackArgs<GrayHttpTrackInfo, HttpRequest> args) {
+    public void call(TrackArgs<GrayTrackInfo, HttpRequest> args) {
         call(args.getTrackInfo(), args.getRequest());
     }
-
 
 
     public String getIpAddr(HttpRequest request) {
