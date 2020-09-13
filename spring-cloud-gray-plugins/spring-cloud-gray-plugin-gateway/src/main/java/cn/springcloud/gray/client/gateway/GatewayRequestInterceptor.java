@@ -1,8 +1,8 @@
 package cn.springcloud.gray.client.gateway;
 
 import cn.springcloud.gray.RequestInterceptor;
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
 import cn.springcloud.gray.request.GrayRequest;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.GrayTrackRecordDevice;
 import cn.springcloud.gray.request.GrayTrackRecordHelper;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -22,7 +22,7 @@ public class GatewayRequestInterceptor implements RequestInterceptor {
 
     @Override
     public boolean pre(GrayRequest request) {
-        GrayHttpTrackInfo grayTrack = (GrayHttpTrackInfo) request.getGrayTrackInfo();
+        GrayTrackInfo grayTrack = request.getGrayTrackInfo();
         if (grayTrack != null) {
             ServerHttpRequest.Builder requestBuilder = (ServerHttpRequest.Builder) request.getAttachment(
                     GrayLoadBalancerClientFilter.GRAY_REQUEST_ATTRIBUTE_GATEWAY_HTTPREQUEST_BUILDER);

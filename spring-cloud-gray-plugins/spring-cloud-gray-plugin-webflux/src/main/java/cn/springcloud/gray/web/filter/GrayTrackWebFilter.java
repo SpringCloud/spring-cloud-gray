@@ -1,6 +1,6 @@
 package cn.springcloud.gray.web.filter;
 
-import cn.springcloud.gray.request.GrayHttpTrackInfo;
+import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.web.ServerHttpRequestWrapper;
@@ -29,7 +29,7 @@ public class GrayTrackWebFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 
-        GrayHttpTrackInfo webTrack = new GrayHttpTrackInfo();
+        GrayTrackInfo webTrack = new GrayTrackInfo();
         requestLocalStorage.getLocalStorageLifeCycle().initContext();
         try {
             grayTrackHolder.recordGrayTrack(webTrack, new ServerHttpRequestWrapper(exchange.getRequest()));
@@ -50,7 +50,7 @@ public class GrayTrackWebFilter implements WebFilter {
      * @param exchange
      * @param webTrack
      */
-    private void recordGrayTrack(ServerWebExchange exchange, GrayHttpTrackInfo webTrack) {
+    private void recordGrayTrack(ServerWebExchange exchange, GrayTrackInfo webTrack) {
         exchange.getAttributes().put(GRAY_WEB_TRACK_ATTR_NAME, webTrack);
     }
 }
