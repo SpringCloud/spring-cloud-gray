@@ -5,12 +5,14 @@ import org.springframework.beans.BeansException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.annotation.Order;
 
 /**
  * @author saleson
  * @date 2020-08-16 17:02
  */
 @Slf4j
+@Order(value = -1)
 public class GrayClientApplicationRunner implements ApplicationRunner {
     private GrayInfosInitializer grayInfosInitializer;
     private ApplicationEventPublisher applicationEventPublisher;
