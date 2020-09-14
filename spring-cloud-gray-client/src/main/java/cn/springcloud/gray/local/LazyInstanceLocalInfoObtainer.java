@@ -27,7 +27,7 @@ public abstract class LazyInstanceLocalInfoObtainer implements InstanceLocalInfo
     protected InstanceLocalInfo createInstanceLocalInfo() {
         Registration registration = applicationContext.getBean(Registration.class);
         return InstanceLocalInfo.builder()
-                .instanceId(StringUtils.defaultString(getLocalInstanceId(), registration.getInstanceId()))
+                .instanceId(StringUtils.defaultString(getLocalInstanceId()))
                 .serviceId(registration.getServiceId())
                 .host(registration.getHost())
                 .port(registration.getPort())
