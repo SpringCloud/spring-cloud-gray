@@ -10,14 +10,12 @@ import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectPointContext;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
 import org.apache.dubbo.common.URL;
-import org.apache.dubbo.rpc.Invocation;
-import org.apache.dubbo.rpc.Invoker;
-import org.apache.dubbo.rpc.Result;
-import org.apache.dubbo.rpc.RpcException;
+import org.apache.dubbo.rpc.*;
 import org.apache.dubbo.rpc.cluster.ClusterInvoker;
 import org.apache.dubbo.rpc.cluster.Directory;
 import org.apache.dubbo.rpc.service.GenericService;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -63,11 +61,8 @@ public class GrayClusterInvoker<T> implements ClusterInvoker<T> {
             return this.invoker.invoke(invocation);
         }
 
-        GrayRequest grayRequest = new GrayRequest();
-        grayRequest.setServiceId(InvokerExplainHelper.getServiceId(invoker));
-        grayRequest.setAttachment(GrayDubboConstants.INVOKE_INVOCATION, invocation);
-
-        GrayRequestHelper.setPreviousServerInfoByInstanceLocalInfo(grayRequest);
+        String serviceId = InvokerExplainHelper.getServiceId(invoker);
+        GrayRequest grayRequest = createGrayRequest(serviceId, invocation);
 
         RoutingConnectPointContext connectPointContext = RoutingConnectPointContext.builder()
                 .interceptroType(GrayDubboConstants.INTERCEPTRO_TYPE_DUBBO)
@@ -76,6 +71,7 @@ public class GrayClusterInvoker<T> implements ClusterInvoker<T> {
 
         return routingConnectionPoint.execute(connectPointContext, () -> invoker.invoke(invocation));
     }
+
 
     @Override
     public URL getUrl() {
@@ -92,6 +88,29 @@ public class GrayClusterInvoker<T> implements ClusterInvoker<T> {
         invoker.destroy();
     }
 
+    private GrayRequest createGrayRequest(String serviceId, Invocation invocation) {
+        GrayRequest grayRequest = new GrayRequest();
+        grayRequest.setServiceId(serviceId);
+
+        grayRequest.setAttachment(GrayDubboConstants.INVOKE_INVOCATION, invocation);
+
+        String serviceName = invocation.getServiceName();
+        String methodName = invocation.getMethodName();
+        grayRequest.setAttribute("serviceName", serviceName);
+        grayRequest.setAttribute("methodName", methodName);
+
+        grayRequest.setAttachment("arguments", invocation.getArguments());
+        grayRequest.setAttachment("parameterTypes", invocation.getParameterTypes());
+        if (invocation instanceof RpcInvocation) {
+            RpcInvocation rpcInvocation = (RpcInvocation) invocation;
+            grayRequest.setAttachment("returnType", rpcInvocation.getReturnType());
+            grayRequest.setAttribute("parameterTypesDesc", rpcInvocation.getParameterTypesDesc());
+        }
+
+        grayRequest.setUri(URI.create(serviceName + "#" + methodName));
+        GrayRequestHelper.setPreviousServerInfoByInstanceLocalInfo(grayRequest);
+        return grayRequest;
+    }
 
     protected boolean ignoreGrayscale(Invocation invocation) {
         String serviceName = invocation.getServiceName();
