@@ -79,7 +79,7 @@ public class DubboSpringCloudConsumerBootstrap {
     @LoadBalanced
     private RestTemplate restTemplate;
 
-    //    @Bean
+    @Bean
     public ApplicationRunner userServiceRunner() {
         return arguments -> {
 
