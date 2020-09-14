@@ -1,7 +1,6 @@
 package cn.springcloud.gray.client.dubbo.rpc.filter;
 
 import cn.springcloud.gray.GrayClientHolder;
-import cn.springcloud.gray.client.dubbo.constants.GrayDubboConstants;
 import cn.springcloud.gray.function.Consumer2;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.RequestLocalStorage;
@@ -18,7 +17,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.PROVIDER;
  * @author saleson
  * @date 2020-09-12 11:36
  */
-@Activate(group = PROVIDER, value = GrayDubboConstants.DUBBO_FILTER_GRAY_TRACK_RECEIVE)
+@Activate(group = PROVIDER, order = -10)
 public class DubboGrayTrackReceiveFilter implements Filter {
 
 
