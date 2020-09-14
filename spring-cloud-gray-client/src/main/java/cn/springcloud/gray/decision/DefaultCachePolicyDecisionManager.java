@@ -47,29 +47,29 @@ public class DefaultCachePolicyDecisionManager implements PolicyDecisionManager 
 
     @Override
     public void setPolicyInfo(PolicyInfo policyInfo) {
-        invalidateCache(policyInfo.getPolicyId());
         delegater.setPolicyInfo(policyInfo);
+        invalidateCache(policyInfo.getPolicyId());
     }
 
 
     @Override
     public void setPolicyDefinition(PolicyDefinition policyDefinition) {
-        invalidateCache(policyDefinition.getPolicyId());
         delegater.setPolicyDefinition(policyDefinition);
+        invalidateCache(policyDefinition.getPolicyId());
     }
 
 
     @Override
     public void setDecisionDefinition(String policyId, DecisionDefinition decisionDefinition) {
-        invalidateCache(policyId);
         delegater.setDecisionDefinition(policyId, decisionDefinition);
+        invalidateCache(policyId);
     }
 
 
     @Override
     public void removeDecisionDefinition(String policyId, String decisionId) {
-        invalidateCache(policyId);
         delegater.removeDecisionDefinition(policyId, decisionId);
+        invalidateCache(policyId);
     }
 
     @Override
