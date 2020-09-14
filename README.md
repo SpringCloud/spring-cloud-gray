@@ -2,10 +2,10 @@
 
 
 [![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![A Release](https://img.shields.io/badge/release-A.2.0.0%20RC2-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/A.2.0.0-RC2)
-[![B Release](https://img.shields.io/badge/release-B.1.0.0%20RC2-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/B.1.0.0-RC2)
-[![B Release](https://img.shields.io/badge/release-C.1.0.0%20RC2-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/C.1.0.0-RC2)
-[![B Release](https://img.shields.io/badge/release-D.0.0.1%20RC1-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/D.0.0.1-RC1)
+[![A Release](https://img.shields.io/badge/release-A.2.0.0-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/A.2.0.0)
+[![B Release](https://img.shields.io/badge/release-B.1.0.0-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/B.1.0.0)
+[![B Release](https://img.shields.io/badge/release-C.1.0.0-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/C.1.0.0)
+[![B Release](https://img.shields.io/badge/release-D.0.0.1-blue)](https://github.com/SpringCloud/spring-cloud-gray/releases/tag/D.0.0.1)
 
 ## 介绍
 Spring Cloud Gray 是一套开源的微服务灰度路由解决方案，它由spring-cloud-gray-client，spring-cloud-gray-client-netflix 和 spring-cloud-tray-server，spring-cloud-gray-webui组成。<br/>
@@ -37,10 +37,10 @@ insert into `user` ( `user_id`, `account`, `name`, `password`, `roles`, `status`
 ## 版本信息
 项目分支 | 项目版本 | srpingcloud版本 | springboot版本
 --- | --- | --- | ---
-A | A.2.0.0-RC2 | Edgware | 1.5.*
-B | B.1.0.0-RC2 | Finchley | 2.0.*
-C | C.1.0.0-RC2 | Greenwich | 2.1.*
-D | D.0.0.1-RC1 | Hoxton | 2.3.*
+A | A.2.0.0 | Edgware | 1.5.*
+B | B.1.0.0 | Finchley | 2.0.*
+C | C.1.0.0 | Greenwich | 2.1.*
+D | D.0.0.1 | Hoxton | 2.3.*
 
 
 ## Spring Cloud Gray 能做什么
