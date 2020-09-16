@@ -63,22 +63,19 @@ public class GrayClientEventAutoConfiguration {
     }
 
     @Bean
-    public GrayPolicyEventListener grayPolicyEventListener(
-            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
-            PolicyDecisionManager policyDecisionManager) {
-        return new GrayPolicyEventListener(policyDecisionManager, instanceLocalInfoObtainer);
+    public GrayPolicyEventListener grayPolicyEventListener(PolicyDecisionManager policyDecisionManager) {
+        return new GrayPolicyEventListener(policyDecisionManager);
     }
 
     @Bean
-    public GraServiceEventListener graServiceEventListener(UpdateableGrayManager grayManager) {
-        return new GraServiceEventListener(grayManager);
+    public GrayServiceEventListener grayServiceEventListener(UpdateableGrayManager grayManager) {
+        return new GrayServiceEventListener(grayManager);
     }
 
     @Bean
     public GrayDecisionEventListener grayDecisionEventListener(
-            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             PolicyDecisionManager policyDecisionManager) {
-        return new GrayDecisionEventListener(policyDecisionManager, instanceLocalInfoObtainer);
+        return new GrayDecisionEventListener(policyDecisionManager);
     }
 
     @Bean
