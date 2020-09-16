@@ -11,6 +11,7 @@ import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
+import cn.springcloud.gray.utils.StringUtils;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,7 +43,8 @@ public class GrayPolicyResource {
     private UserModule userModule;
 
     @RequestMapping(value = "list", method = RequestMethod.GET, params = "namespace")
-    public ApiRes<List<GrayPolicy>> listByInstanceId(@RequestParam("namespace") String namespace) {
+    public ApiRes<List<GrayPolicy>> listByInstanceId(
+            @Validated @RequestParam(value = "namespace", required = false) String namespace) {
         return ApiRes.<List<GrayPolicy>>builder()
                 .code(CODE_SUCCESS)
                 .data(grayPolicyModule.listEnabledGrayPoliciesByNamespace(namespace))
@@ -54,6 +56,12 @@ public class GrayPolicyResource {
     public ResponseEntity<ApiRes<List<GrayPolicy>>> page(
             @Validated GrayPolicyQuery query,
             @ApiParam @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        if (StringUtils.isEmpty(query.getNamespace())) {
+            return ResponseEntity.ok(ApiResHelper.failed("namespace 不能为空"));
+        }
+        if (!authorityModule.hasNamespaceAuthority(query.getNamespace())) {
+            return ResponseEntity.ok(ApiResHelper.notAuthority());
+        }
         Page<GrayPolicy> page = grayPolicyModule.queryGrayPolicies(query, pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
         ApiRes<List<GrayPolicy>> res = ApiRes.<List<GrayPolicy>>builder()

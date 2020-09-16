@@ -9,6 +9,7 @@ import cn.springcloud.gray.server.resources.domain.fo.HandleFO;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import cn.springcloud.gray.server.utils.SessionUtils;
+import cn.springcloud.gray.utils.StringUtils;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,6 +54,12 @@ public class HandleResource {
             @Validated HandleQuery query,
             @ApiParam @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
+        if (StringUtils.isEmpty(query.getNamespace())) {
+            return ResponseEntity.ok(ApiResHelper.failed("namespace 不能为空"));
+        }
+        if (!authorityModule.hasNamespaceAuthority(query.getNamespace())) {
+            return ResponseEntity.ok(ApiResHelper.notAuthority());
+        }
         Page<Handle> page = handleModule.queryHandles(query, pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
         return new ResponseEntity<>(

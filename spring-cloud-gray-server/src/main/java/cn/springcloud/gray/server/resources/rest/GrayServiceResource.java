@@ -4,10 +4,12 @@ import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.module.gray.GrayServerModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayService;
 import cn.springcloud.gray.server.module.gray.domain.query.GrayServiceQuery;
+import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.module.user.ServiceManageModule;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
+import cn.springcloud.gray.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ public class GrayServiceResource {
     private ServiceManageModule serviceManageModule;
     @Autowired
     private UserModule userModule;
+    @Autowired
+    private AuthorityModule authorityModule;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ApiRes<List<GrayService>> list() {
@@ -42,8 +46,14 @@ public class GrayServiceResource {
 
     @GetMapping(value = "/page")
     public ResponseEntity<ApiRes<List<GrayService>>> list(
-            @RequestParam(value = "namespace") String namespace,
+            @RequestParam(value = "namespace", required = false) String namespace,
             @ApiParam @PageableDefault(direction = Sort.Direction.DESC) Pageable pageable) {
+        if (StringUtils.isEmpty(namespace)) {
+            return ResponseEntity.ok(ApiResHelper.failed("namespace 不能为空"));
+        }
+        if (!authorityModule.hasNamespaceAuthority(namespace)) {
+            return ResponseEntity.ok(ApiResHelper.notAuthority());
+        }
         GrayServiceQuery serviceQuery = GrayServiceQuery.builder()
                 .namespace(namespace)
                 .userId(userModule.getCurrentUserId())
