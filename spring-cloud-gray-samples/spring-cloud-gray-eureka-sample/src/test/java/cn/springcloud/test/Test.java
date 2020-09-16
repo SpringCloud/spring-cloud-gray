@@ -1,25 +1,23 @@
 package cn.springcloud.test;
 
-import cn.springcloud.gray.eureka.GrayEruekaApplication;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableBiMap;
 import lombok.Data;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.validation.Validator;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ActiveProfiles({"dev"})
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = GrayEruekaApplication.class)
+//@ActiveProfiles({"dev"})
+//@RunWith(SpringRunner.class)
+//@SpringBootTest(classes = GrayEruekaApplication.class)
 public class Test {
 
 
@@ -32,8 +30,22 @@ public class Test {
 
     @org.junit.Test
     public void testBind() {
-        Map<String, String> args = ImmutableBiMap.of("s", "10", "adf", "a,b,c,d", "apiRes", "#{@apiRes}");
+//        Map<String, String> args = ImmutableBiMap.of("s", "10", "adf", "a,b,c,d", "apiRes", "#{@apiRes}");
+        Map<String, String> args = new HashMap<>();
+        args.put("adf", "asdfd");
         SpelExpressionParser parser = new SpelExpressionParser();
+        String expressionStr = "#args['adf']";
+//        Expression expression = parser.parseExpression(expressionStr);
+
+
+        EvaluationContext context = SimpleEvaluationContext.forReadOnlyDataBinding().build();
+        context.setVariable("args", args);
+
+        Expression expression = parser.parseExpression(expressionStr);
+
+
+        Object obj = expression.getValue(context);
+        System.out.println(obj);
 
 //        Map<String, Object> properties = ConfigurationUtils.normalize(args, parser, cxt);
 
@@ -45,6 +57,13 @@ public class Test {
 //                conversionService);
 //        System.out.println(configuration);
 
+
+//        LocalVariableTableParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+//        Method[] methods = St.class.getMethods();
+//        for (Method method : methods) {
+//            String[] methodParameterNames = parameterNameDiscoverer.getParameterNames(method);
+//            System.out.println(StringUtils.join(methodParameterNames, ","));
+//        }
 
     }
 
