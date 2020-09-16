@@ -77,7 +77,7 @@ public class JPANamespaceFinder implements NamespaceFinder {
     @Override
     public boolean hasResource(String namespace) {
 
-        return false;
+        return true;
     }
 
     private String findByService(Object id) {
