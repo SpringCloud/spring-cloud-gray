@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -18,8 +16,8 @@ import javax.validation.constraints.NotNull;
 public class RetrieveFO {
     @NotNull(message = "排序标记不能为空")
     @ApiModelProperty(value = "排序标记，类似于时间戳", required = true)
-    @Min(value = 1000000000000l, message = "排序标记不符合格式要求")
-    @Max(value = 10000000000000l, message = "排序标记不符合格式要求")
+//    @Min(value = 1000000000000l, message = "排序标记不符合格式要求")
+//    @Max(value = 10000000000000l, message = "排序标记不符合格式要求")
     private Long sortMark;
     @NotEmpty(message = "实例id不能为空")
     @ApiModelProperty(value = "实例id", required = true)
