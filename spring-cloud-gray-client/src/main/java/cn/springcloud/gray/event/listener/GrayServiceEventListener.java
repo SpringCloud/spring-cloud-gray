@@ -7,12 +7,12 @@ import cn.springlcoud.gray.event.GrayServiceEvent;
  * @author saleson
  * @date 2020-02-05 14:37
  */
-public class GraServiceEventListener extends AbstractGrayEventListener<GrayServiceEvent> {
+public class GrayServiceEventListener extends AbstractGrayEventListener<GrayServiceEvent> {
 
     private UpdateableGrayManager grayManager;
 
 
-    public GraServiceEventListener(UpdateableGrayManager grayManager) {
+    public GrayServiceEventListener(UpdateableGrayManager grayManager) {
         this.grayManager = grayManager;
     }
 
