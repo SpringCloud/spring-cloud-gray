@@ -12,7 +12,6 @@ import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import cn.springcloud.gray.server.utils.SessionUtils;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,8 +48,11 @@ public class HandleRuleResource {
     public ResponseEntity<ApiRes<List<HandleRuleVO>>> page(
             HandleRuleQueryFO queryFO,
             @ApiParam @PageableDefault(sort = "order", direction = Sort.Direction.DESC) Pageable pageable) {
-        if (StringUtils.isEmpty(queryFO.getNamespace())) {
-            queryFO.setNamespace(SessionUtils.currentNamespace());
+        if (cn.springcloud.gray.utils.StringUtils.isEmpty(queryFO.getNamespace())) {
+            return ResponseEntity.ok(ApiResHelper.failed("namespace 不能为空"));
+        }
+        if (!authorityModule.hasNamespaceAuthority(queryFO.getNamespace())) {
+            return ResponseEntity.ok(ApiResHelper.notAuthority());
         }
         Page<HandleRule> page = handleRuleModule.queryHandleRules(queryFO.toHandleRuleQuery(), pageable);
         HttpHeaders headers = PaginationUtils.generatePaginationHttpHeaders(page);
