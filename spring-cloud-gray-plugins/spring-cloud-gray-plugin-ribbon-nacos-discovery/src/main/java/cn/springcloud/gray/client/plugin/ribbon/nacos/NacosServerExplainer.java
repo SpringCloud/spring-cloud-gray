@@ -38,17 +38,17 @@ public class NacosServerExplainer implements ServerExplainer<Server> {
 
     @Override
     public String getServiceId(Server server) {
-        return server.getMetaInfo().getInstanceId();
-    }
-
-    @Override
-    public String getInstaceId(Server server) {
         String appName = server.getMetaInfo().getAppName();
         String seviceId = appName;
         if (StringUtils.contains(appName, "@@")) {
             seviceId = StringUtils.split(appName, "@@")[1];
         }
         return seviceId;
+    }
+
+    @Override
+    public String getInstaceId(Server server) {
+        return server.getMetaInfo().getInstanceId();
     }
 
     @Override
