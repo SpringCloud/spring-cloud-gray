@@ -10,8 +10,6 @@ import lombok.Data;
 @Data
 public class GrayDecisionEvent extends GrayEvent {
 
-    private String serviceId;
-    private String instanceId;
     private String policyId;
     private DecisionDefinition source;
 
