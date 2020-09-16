@@ -191,6 +191,9 @@ export default {
         if (valid) {
           createRecord('/namespace/', this.temp).then((response) => {
             this.list.unshift(response.data)
+            if (response.data.default) {
+              setDefaultNamespace(response.data.code)
+            }
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
