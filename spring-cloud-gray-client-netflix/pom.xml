@@ -15,14 +15,17 @@
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-utils</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -60,19 +63,19 @@
             <artifactId>spring-cloud-context</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-netflix-eureka-client</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-netflix-eureka-client</artifactId>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.netflix.eureka</groupId>-->
-<!--            <artifactId>eureka-client</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.netflix.eureka</groupId>-->
+        <!--            <artifactId>eureka-client</artifactId>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>com.netflix.ribbon</groupId>
             <artifactId>ribbon-eureka</artifactId>

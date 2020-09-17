@@ -97,6 +97,8 @@
         <fm-dynamic-compiler.version>1.0-SNAPSHOT</fm-dynamic-compiler.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
+
+        <maven_flatten_version>1.1.0</maven_flatten_version>
     </properties>
 
 
@@ -136,181 +138,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-mock</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-dynamic-logic</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-event</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-code-component</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-client</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-client-netflix</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-dubbo</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-starter-gray-eureka-server</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-utils</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-starter-gray-client</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-server</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-server-cluster</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-starter-gray-server</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-
-            <!-- gray client plugins start -->
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-dynamic-logic</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-event-longpolling</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-webmvc</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-webflux</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-eureka</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-ribbon-nacos-discovery</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-feign</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-refresher</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-zuul</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-gateway</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-plugin-event-stream</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!-- gray client plugins end -->
-
-
-            <!-- gray server plugins start -->
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-server-plugin-eureka</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-server-plugin-event-longpolling</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-server-plugin-event-stream</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-server-plugin-nacos-discovery</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.springcloud.gray</groupId>
-                <artifactId>spring-cloud-gray-server-cluster-http-synchro-plugin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <!-- gray server plugins end -->
-
 
             <dependency>
                 <groupId>org.springframework.security.oauth</groupId>
@@ -536,6 +363,31 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${maven_flatten_version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

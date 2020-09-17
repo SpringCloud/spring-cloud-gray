@@ -42,6 +42,7 @@
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-starter-gray-server</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <!--        <dependency>-->
         <!--            <groupId>cn.springcloud.gray</groupId>-->
@@ -52,6 +53,7 @@
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-server-plugin-nacos-discovery</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

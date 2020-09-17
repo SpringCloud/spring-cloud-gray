@@ -16,6 +16,7 @@
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-server</artifactId>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jsr305</artifactId>
