@@ -80,6 +80,18 @@ public class JPARoutePolicyModule implements RoutePolicyModule {
 
     }
 
+    @Override
+    public void physicsDeleteRoutePolicy(String type, String moduleId, String resource) {
+        RoutePolicyQuery irpQuery = RoutePolicyQuery.builder()
+                .type(type)
+                .moduleId(moduleId)
+                .resource(resource)
+                .build();
+        List<RoutePolicyRecord> routePolicyRecords =
+                Optional.ofNullable(routePolicyRecordService.queryRoutePolicies(irpQuery)).orElse(Collections.EMPTY_LIST);
+        routePolicyRecordService.deleteModel(routePolicyRecords);
+    }
+
 
     @Override
     public void updateRoutePolicyDelFlag(Long id, boolean newDelFlag, String operatorId) {

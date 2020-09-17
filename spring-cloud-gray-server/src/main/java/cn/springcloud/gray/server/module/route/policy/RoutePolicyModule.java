@@ -29,6 +29,9 @@ public interface RoutePolicyModule {
      */
     RoutePolicyRecord addRoutePolicy(String ns, RoutePolicy routePolicy, String operatorId);
 
+
+    void physicsDeleteRoutePolicy(String type, String moduleId, String resource);
+
     /**
      * 更新状态
      *
