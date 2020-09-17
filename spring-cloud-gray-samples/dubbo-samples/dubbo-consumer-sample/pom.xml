@@ -27,6 +27,7 @@
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-starter-gray-client</artifactId>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>cn.springcloud.gray</groupId>
@@ -37,6 +38,7 @@
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-plugin-dubbo</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
 
