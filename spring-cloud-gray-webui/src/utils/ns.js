@@ -5,7 +5,7 @@ const defaultNS = 'Default-NS'
 
 export function getDefaultNamespace() {
   // return store.dispatch('ns/getDefault')
-  return store.state.ns.defaultNamespace || getDefaultNamespaceByCookie() || ''
+  return store.state.ns.defaultNamespace || Cookies.get(defaultNS) || ''
   // return 'test'
 }
 
