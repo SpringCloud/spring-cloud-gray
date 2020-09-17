@@ -25,6 +25,7 @@ public class DefaultGrayInfosInitializer implements GrayInfosInitializer {
 
     private int scheduleOpenForWorkCount = 0;
     private int scheduleOpenForWorkLimit = 5;
+    private long openForWorkDelayTime = 60000;
 
 
     public DefaultGrayInfosInitializer(
@@ -49,6 +50,7 @@ public class DefaultGrayInfosInitializer implements GrayInfosInitializer {
 
     private void scheduleOpenForWork() {
         if (scheduleOpenForWorkCount > scheduleOpenForWorkLimit) {
+            delayOpenForWork();
             return;
         }
         scheduleOpenForWorkCount++;
@@ -56,20 +58,42 @@ public class DefaultGrayInfosInitializer implements GrayInfosInitializer {
     }
 
     public void openForWork() {
-        if (needPullGrayServerInfos()) {
-            log.info("拉取灰度信息");
-            boolean t = doUpdate();
-            int timerMs = getGrayClientConfig().getInfosUpdateIntervalTimerInMs();
-            if (timerMs > 0) {
-                updateTimer.schedule(new DefaultGrayInfosInitializer.UpdateTask(), timerMs, timerMs);
-            } else if (!t) {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
+        if (!needPullGrayServerInfos()) {
+            return;
+        }
+        log.info("拉取灰度信息");
+        boolean t = doUpdate();
+        int timerMs = getGrayClientConfig().getInfosUpdateIntervalTimerInMs();
+        if (timerMs > 0) {
+            updateTimer.schedule(new DefaultGrayInfosInitializer.UpdateTask(), timerMs, timerMs);
+        } else if (!t) {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
 
-                }
-                scheduleOpenForWork();
             }
+            scheduleOpenForWork();
+        }
+    }
+
+    private void delayOpenForWork() {
+        updateTimer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                delayForDoUpdate();
+            }
+        }, openForWorkDelayTime);
+    }
+
+    private void delayForDoUpdate() {
+        if (!needPullGrayServerInfos()) {
+            return;
+        }
+        log.info("拉取灰度信息");
+        boolean t = doUpdate();
+        if (!t) {
+            delayOpenForWork();
         }
     }
 
