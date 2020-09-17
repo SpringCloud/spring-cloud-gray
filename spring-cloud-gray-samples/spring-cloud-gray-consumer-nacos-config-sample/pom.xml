@@ -50,16 +50,19 @@
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-starter-gray-client</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-plugin-feign</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-plugin-refresher</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

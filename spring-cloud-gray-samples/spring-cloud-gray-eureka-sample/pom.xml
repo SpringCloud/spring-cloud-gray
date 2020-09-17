@@ -20,7 +20,7 @@
         <dependency>
             <artifactId>spring-cloud-gray-utils</artifactId>
             <groupId>cn.springcloud.gray</groupId>
-            <version>${revision}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
