@@ -29,26 +29,32 @@
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-code-component</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-mock</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-event</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-dynamic-logic</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-utils</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
