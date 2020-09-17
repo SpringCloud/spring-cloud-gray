@@ -5,7 +5,10 @@ import cn.springcloud.gray.model.GrayStatus;
 import cn.springcloud.gray.model.InstanceInfo;
 import cn.springcloud.gray.model.InstanceStatus;
 import cn.springcloud.gray.server.configuration.properties.GrayServerProperties;
+import cn.springcloud.gray.server.constant.DataOPType;
 import cn.springcloud.gray.server.discovery.ServiceDiscovery;
+import cn.springcloud.gray.server.module.event.GrayInstanceEvent;
+import cn.springcloud.gray.server.module.event.GrayServiceEvent;
 import cn.springcloud.gray.server.module.gray.GrayServerModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayInstance;
 import cn.springcloud.gray.server.module.gray.domain.GrayService;
@@ -16,6 +19,7 @@ import cn.springcloud.gray.server.service.GrayServiceService;
 import cn.springlcoud.gray.event.server.GrayEventTrigger;
 import cn.springlcoud.gray.event.server.TriggerType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +37,7 @@ public class JPAGrayServerModule implements GrayServerModule {
     private GrayServerProperties grayServerProperties;
     private ServiceDiscovery serviceDiscovery;
     private ServiceManageModule serviceManageModule;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public JPAGrayServerModule(
             GrayServerProperties grayServerProperties,
@@ -40,13 +45,15 @@ public class JPAGrayServerModule implements GrayServerModule {
             ServiceDiscovery serviceDiscovery,
             GrayServiceService grayServiceService,
             GrayInstanceService grayInstanceService,
-            ServiceManageModule serviceManageModule) {
+            ServiceManageModule serviceManageModule,
+            ApplicationEventPublisher applicationEventPublisher) {
         this.grayServerProperties = grayServerProperties;
         this.grayEventTrigger = grayEventTrigger;
         this.serviceDiscovery = serviceDiscovery;
         this.grayServiceService = grayServiceService;
         this.grayInstanceService = grayInstanceService;
         this.serviceManageModule = serviceManageModule;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -79,10 +86,11 @@ public class JPAGrayServerModule implements GrayServerModule {
             return;
         }
         grayServiceService.deleteReactById(serviceId);
-//        List<GrayInstance> grayInstances = grayInstanceService.findByServiceId(serviceId);
-//        grayInstances.forEach(this::publishDownIntanceEvent);
+
         serviceManageModule.deleteSericeManeges(serviceId);
         triggerDeleteEvent(grayService);
+
+        applicationEventPublisher.publishEvent(new GrayServiceEvent(DataOPType.DELETE, grayService));
     }
 
 
@@ -172,9 +180,14 @@ public class JPAGrayServerModule implements GrayServerModule {
     @Override
     public void deleteGrayInstance(String intanceId) {
         GrayInstance grayInstance = grayInstanceService.findOneModel(intanceId);
-        if (grayInstance != null) {
-            grayInstanceService.deleteReactById(intanceId);
+        if (Objects.isNull(grayInstance)) {
+            return;
         }
+        grayInstanceService.deleteReactById(intanceId);
+        if (isActiveGrayInstance(grayInstance)) {
+            triggerDeleteEvent(grayInstance);
+        }
+        applicationEventPublisher.publishEvent(new GrayInstanceEvent(DataOPType.DELETE, grayInstance));
     }
 
     private boolean isLockGray(GrayInstance instance) {

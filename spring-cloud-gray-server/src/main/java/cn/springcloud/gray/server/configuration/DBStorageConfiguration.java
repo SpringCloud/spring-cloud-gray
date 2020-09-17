@@ -6,6 +6,8 @@ import cn.springcloud.gray.server.module.NamespaceFinder;
 import cn.springcloud.gray.server.module.NamespaceModule;
 import cn.springcloud.gray.server.module.audit.OperateAuditModule;
 import cn.springcloud.gray.server.module.audit.jpa.JPAOperateAuditModule;
+import cn.springcloud.gray.server.module.event.listener.GrayInstanceDeleteEventListener;
+import cn.springcloud.gray.server.module.event.listener.GrayServiceDeleteEventListener;
 import cn.springcloud.gray.server.module.event.listener.UserResourceAuthorityEventListener;
 import cn.springcloud.gray.server.module.gray.*;
 import cn.springcloud.gray.server.module.gray.jpa.*;
@@ -56,14 +58,16 @@ public class DBStorageConfiguration {
                 GrayEventTrigger grayEventTrigger,
                 GrayServiceService grayServiceService,
                 GrayInstanceService grayInstanceService,
-                ServiceManageModule serviceManageModule) {
+                ServiceManageModule serviceManageModule,
+                ApplicationEventPublisher applicationEventPublisher) {
             return new JPAGrayServerModule(
                     grayServerProperties,
                     grayEventTrigger,
                     serviceDiscovery,
                     grayServiceService,
                     grayInstanceService,
-                    serviceManageModule);
+                    serviceManageModule,
+                    applicationEventPublisher);
         }
 
 
@@ -164,11 +168,6 @@ public class DBStorageConfiguration {
             return new JPANamespaceModule(namespaceService, namespaceFinder, authorityModule);
         }
 
-
-        @Bean
-        public UserResourceAuthorityEventListener userResourceAuthorityEventListener(NamespaceModule namespaceModule, AuthorityModule authorityModule) {
-            return new UserResourceAuthorityEventListener(namespaceModule, authorityModule);
-        }
     }
 
 
@@ -187,6 +186,24 @@ public class DBStorageConfiguration {
                     evictProperties.getEvictionInstanceStatus(),
                     evictProperties.getLastUpdateDateExpireDays());
         }
+    }
+
+
+    @Bean
+    public UserResourceAuthorityEventListener userResourceAuthorityEventListener(NamespaceModule namespaceModule, AuthorityModule authorityModule) {
+        return new UserResourceAuthorityEventListener(namespaceModule, authorityModule);
+    }
+
+
+    @Bean
+    public GrayServiceDeleteEventListener grayServiceDeleteEventListener(RoutePolicyModule routePolicyModule) {
+        return new GrayServiceDeleteEventListener(routePolicyModule);
+    }
+
+
+    @Bean
+    public GrayInstanceDeleteEventListener grayInstanceDeleteEventListener(RoutePolicyModule routePolicyModule) {
+        return new GrayInstanceDeleteEventListener(routePolicyModule);
     }
 
 }
