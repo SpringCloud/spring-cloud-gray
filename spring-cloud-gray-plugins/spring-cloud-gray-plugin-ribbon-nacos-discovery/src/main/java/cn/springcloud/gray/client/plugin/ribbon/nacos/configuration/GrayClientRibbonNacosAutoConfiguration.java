@@ -6,6 +6,7 @@ import cn.springcloud.gray.servernode.VersionExtractor;
 import com.alibaba.cloud.nacos.ribbon.NacosServerList;
 import com.netflix.loadbalancer.Server;
 import com.netflix.ribbon.Ribbon;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnProperty(value = "gray.enabled")
 @ConditionalOnClass({Ribbon.class, NacosServerList.class})
+@AutoConfigureBefore(name = {"cn.springcloud.gray.client.netflix.configuration.NetflixRibbonGrayAutoConfiguration"})
 public class GrayClientRibbonNacosAutoConfiguration {
 
 
