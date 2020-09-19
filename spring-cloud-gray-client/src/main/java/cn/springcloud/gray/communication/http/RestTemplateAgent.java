@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -44,14 +47,18 @@ public class RestTemplateAgent implements HttpAgent {
     @Override
     public HttpResult request(HttpRequest request) {
 //        String url = getCompleteUrl(request.getPath(), request.getParamValues(), request.getEncoding());
-        String url = getCompleteUrl(request.getPath(), request.getParamValues(), null);
+//        String url = getCompleteUrl(request.getPath(), request.getParamValues(), null);
+        Map<String, String> params = getParams(request.getParamValues());
+        String url = getExtendUrl(request.getPath(), params);
+
         org.springframework.http.HttpHeaders httpHeaders = new org.springframework.http.HttpHeaders();
         if (Objects.nonNull(request.getHeaders())) {
             httpHeaders.putAll(request.getHeaders().toMap());
         }
         HttpEntity<String> httpEntity = new HttpEntity<>(request.getBody(), httpHeaders);
+
         ResponseEntity<String> responseEntity = rest.exchange(
-                url, HttpMethod.resolve(request.getMethod().name()), httpEntity, String.class);
+                url, HttpMethod.resolve(request.getMethod().name()), httpEntity, String.class, params);
         return toHttpResult(responseEntity);
     }
 
@@ -62,6 +69,25 @@ public class RestTemplateAgent implements HttpAgent {
         httpResult.setHeaders(responseEntity.getHeaders());
         httpResult.setContent(responseEntity.getBody());
         return httpResult;
+    }
+
+    private String getExtendUrl(String path, Map<String, ?> params) {
+        String fullPath = baseUrl + path;
+        List<String> querys = new ArrayList<>(params.size());
+        params.forEach((k, v) -> {
+            StringBuilder query = new StringBuilder();
+            query.append(k).append("={").append(k).append("}");
+            querys.add(query.toString());
+        });
+        String queryString = StringUtils.join(querys, "&");
+        if (StringUtils.indexOf(fullPath, "?") > -1) {
+            return fullPath + "&" + queryString;
+        }
+        return fullPath + "?" + queryString;
+    }
+
+    private Map<String, String> getParams(HttpParams paramValues) {
+        return paramValues.toValueMap();
     }
 
     private String getCompleteUrl(String path, HttpParams paramValues, String encoding) {
