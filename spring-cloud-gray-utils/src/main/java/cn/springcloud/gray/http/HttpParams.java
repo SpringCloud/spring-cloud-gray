@@ -1,10 +1,10 @@
 package cn.springcloud.gray.http;
 
+import cn.springcloud.gray.utils.WebUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author saleson
@@ -14,11 +14,9 @@ public class HttpParams {
     private List<String> paramValues = new ArrayList<>(32);
 
 
-    public HttpParams addParamPair(String name, String... values) {
+    public HttpParams addParamPair(String name, String value) {
         paramValues.add(name);
-        for (String value : values) {
-            paramValues.add(value);
-        }
+        paramValues.add(value);
         return this;
     }
 
@@ -67,5 +65,24 @@ public class HttpParams {
     @Override
     public String toString() {
         return toQueryString();
+    }
+
+    public Map<String, List<String>> toValuesMap() {
+        return WebUtils.getQueryParams(toQueryString());
+    }
+
+    public Map<String, String> toValueMap() {
+        Map<String, String> map = new HashMap<>(paramValues.size() / 2);
+        if (null == paramValues) {
+            return map;
+        }
+
+        for (Iterator<String> iter = paramValues.iterator(); iter.hasNext(); ) {
+            String key = iter.next();
+            String value = iter.next();
+            map.put(key, value);
+        }
+
+        return map;
     }
 }
