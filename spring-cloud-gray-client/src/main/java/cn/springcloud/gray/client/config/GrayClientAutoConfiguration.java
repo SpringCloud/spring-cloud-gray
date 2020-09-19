@@ -14,6 +14,7 @@ import cn.springcloud.gray.client.switcher.EnvGraySwitcher;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.*;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.mock.MockManager;
 import cn.springcloud.gray.mock.NoOpMockManager;
 import cn.springcloud.gray.refresh.RefreshDriver;
@@ -159,10 +160,11 @@ public class GrayClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public GrayInfosInitializer grayInfosInitializer(
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             GrayClientConfig grayClientConfig,
             InformationClient informationClient,
             RefreshDriver refreshDriver) {
-        return new DefaultGrayInfosInitializer(grayClientConfig, informationClient, refreshDriver);
+        return new DefaultGrayInfosInitializer(instanceLocalInfoObtainer, grayClientConfig, informationClient, refreshDriver);
     }
 
     @Bean
