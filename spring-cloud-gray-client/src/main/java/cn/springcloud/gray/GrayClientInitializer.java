@@ -8,7 +8,6 @@ import cn.springcloud.gray.choose.ServerDistinguisher;
 import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.decision.PolicyDecisionManager;
-import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.request.LocalStorageLifeCycle;
 import cn.springcloud.gray.request.RequestLocalStorage;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
@@ -48,8 +47,6 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
 
         initGrayManagerRequestInterceptors();
 
-        loadInstanceLocalInfo();
-
         registerPolicyPredicates();
 
         initChangedNotifyDriver();
@@ -59,14 +56,6 @@ public class GrayClientInitializer implements ApplicationContextAware, Initializ
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.cxt = applicationContext;
-    }
-
-    private void loadInstanceLocalInfo() {
-        InstanceLocalInfoObtainer instanceLocalInfoObtainer = getBean("instanceLocalInfoInitiralizer", InstanceLocalInfoObtainer.class);
-        if (instanceLocalInfoObtainer == null) {
-            return;
-        }
-        GrayClientHolder.setInstanceLocalInfo(instanceLocalInfoObtainer.getInstanceLocalInfo());
     }
 
 

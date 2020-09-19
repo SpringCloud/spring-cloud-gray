@@ -14,6 +14,7 @@ import cn.springcloud.gray.client.switcher.EnvGraySwitcher;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.*;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.mock.MockManager;
 import cn.springcloud.gray.mock.NoOpMockManager;
 import cn.springcloud.gray.refresh.RefreshDriver;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -168,17 +170,19 @@ public class GrayClientAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public GrayInfosInitializer grayInfosInitializer(
+            InstanceLocalInfoObtainer instanceLocalInfoObtainer,
             GrayClientConfig grayClientConfig,
             InformationClient informationClient,
             RefreshDriver refreshDriver) {
-        return new DefaultGrayInfosInitializer(grayClientConfig, informationClient, refreshDriver);
+        return new DefaultGrayInfosInitializer(instanceLocalInfoObtainer, grayClientConfig, informationClient, refreshDriver);
     }
 
     @Bean
     public GrayClientApplicationRunner grayClientApplicationRunner(
+            ApplicationContext applicationContext,
             GrayInfosInitializer grayInfosInitializer,
             ApplicationEventPublisher applicationEventPublisher) {
-        return new GrayClientApplicationRunner(grayInfosInitializer, applicationEventPublisher);
+        return new GrayClientApplicationRunner(applicationContext, grayInfosInitializer, applicationEventPublisher);
     }
 
     @Bean

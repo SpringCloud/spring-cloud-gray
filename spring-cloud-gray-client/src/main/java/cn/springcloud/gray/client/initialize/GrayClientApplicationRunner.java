@@ -1,9 +1,13 @@
 package cn.springcloud.gray.client.initialize;
 
+import cn.springcloud.gray.GrayClientHolder;
+import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
+import cn.springcloud.gray.utils.SpringApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.annotation.Order;
 
@@ -16,16 +20,20 @@ import org.springframework.core.annotation.Order;
 public class GrayClientApplicationRunner implements ApplicationRunner {
     private GrayInfosInitializer grayInfosInitializer;
     private ApplicationEventPublisher applicationEventPublisher;
+    private ApplicationContext applicationContext;
 
     public GrayClientApplicationRunner(
+            ApplicationContext applicationContext,
             GrayInfosInitializer grayInfosInitializer,
             ApplicationEventPublisher applicationEventPublisher) {
         this.grayInfosInitializer = grayInfosInitializer;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.applicationContext = applicationContext;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        loadLocalInstanceInfo();
         log.info("开始装载灰度...");
         initializeGrayInfos();
         log.info("灰度装载完成.");
@@ -47,6 +55,18 @@ public class GrayClientApplicationRunner implements ApplicationRunner {
     public void publishGrayInitializedEvent() {
         log.info("发布灰度初始化完成事件");
         applicationEventPublisher.publishEvent(new GrayInitializedEvent());
+    }
+
+    private void loadLocalInstanceInfo() {
+        log.info("开始加载InstanceLocalInfo...");
+        InstanceLocalInfoObtainer instanceLocalInfoObtainer =
+                SpringApplicationContextUtils.getBean(applicationContext, "instanceLocalInfoInitiralizer", InstanceLocalInfoObtainer.class);
+        if (instanceLocalInfoObtainer == null) {
+            log.warn("加载InstanceLocalInfo失败, 没有找到InstanceLocalInfoObtainer.");
+            return;
+        }
+        GrayClientHolder.setInstanceLocalInfo(instanceLocalInfoObtainer.getInstanceLocalInfo());
+        log.info("加载InstanceLocalInfo完成.");
     }
 
 }
