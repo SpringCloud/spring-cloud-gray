@@ -15,7 +15,14 @@ spring-cloud-gray-server负责灰度决策、灰度追踪等信息的管理以�
 spring-cloud-gray-webui提供操作界面。
 
 **钉钉交流群**
+
+二维码:<br/>
 <img src="./doc/discuss-group/C-Group-DingDing.png" width="25%" />
+
+群链接:<br/>
+https://qr.dingtalk.com/action/joingroup?code=v1,k1,a3CBsbJY9SfCfm+h+Yp7dQdDJufTZDPHgibBtIRoVRc=&_dt_no_comment=1&origin=11
+
+
 
 
 ## Demo

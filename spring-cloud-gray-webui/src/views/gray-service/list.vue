@@ -222,6 +222,8 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 0.2 * 1000)
+      }).finally(r => {
+        this.listLoading = false
       })
     },
     handleFilter() {
@@ -271,6 +273,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).finally(r => {
+            this.listLoading = false
           })
         }
       })
@@ -304,6 +308,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).finally(r => {
+            this.listLoading = false
           })
         }
       })
@@ -329,6 +335,8 @@ export default {
             type: 'success',
             duration: 2000
           })
+        }).finally(r => {
+          this.listLoading = false
         })
       })
     },

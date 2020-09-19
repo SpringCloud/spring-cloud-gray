@@ -25,11 +25,13 @@ public class HandleRuleEventlistener extends AbstractGrayEventListener<HandleRul
         InstanceLocalInfo instanceLocalInfo = GrayClientHolder.getInstanceLocalInfo();
         if (!StringUtils.equals(instanceLocalInfo.getServiceId(), event.getModuleId())) {
             log.info("HandleRuleEvent.moduleId!=instanceLocalInfo.serviceId, HandleRuleEvent - 6 : {}", event);
+            onDelete(event);
             return;
         }
         if (!StringUtils.equals(instanceLocalInfo.getServiceId(), event.getResource()) &&
                 !StringUtils.equals(instanceLocalInfo.getInstanceId(), event.getResource())) {
             log.info("HandleRuleEvent.resource ont in [instanceLocalInfo.serviceId, instanceLocalInfo.instanceId], HandleRuleEvent - 6 : {}", event);
+            onDelete(event);
             return;
         }
         handleRuleManager.putHandleRuleDefinition(event.getHandleRuleDefinition());

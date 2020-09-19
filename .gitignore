@@ -35,6 +35,7 @@ local.properties
 .settings/**
 .loadpath
 /src/main/resources/rebel.xml
+.flattened-pom.xml
 
 # External tool builders
 .externalToolBuilders/**

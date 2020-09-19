@@ -67,7 +67,7 @@ public class GrayDecisionService extends AbstraceCRUDService<GrayDecision, GrayD
             public Predicate toPredicate(Root<GrayDecisionDO> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList();
 
-                if (Objects.isNull(grayDecisionQuery.getPolicyId())) {
+                if (Objects.nonNull(grayDecisionQuery.getPolicyId())) {
                     predicates.add(cb.equal(root.get("policyId").as(Long.class), grayDecisionQuery.getPolicyId()));
                 }
                 if (Objects.nonNull(grayDecisionQuery.getDelFlag()) && !Objects.equals(grayDecisionQuery.getDelFlag(), DelFlag.ALL)) {
