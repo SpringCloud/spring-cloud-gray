@@ -1,3 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  cn.springcloud.gray.client.plugin.ribbon.nacos.configuration.GrayClientRibbonNacosAutoConfiguration
+  cn.springcloud.gray.client.plugin.ribbon.nacos.configuration.GrayClientRibbonNacosAutoConfiguration,\
+  cn.springcloud.gray.client.plugin.ribbon.nacos.configuration.GrayClientNacosDiscoveryAutoConfiguration

@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class InstanceLocalInfo {
     private String serviceId;
+    @Setter
     private String instanceId;
     private String host;
     private int port;
