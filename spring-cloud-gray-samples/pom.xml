@@ -21,7 +21,6 @@
         <module>spring-cloud-gray-service-a1-sample</module>
         <module>spring-cloud-gray-stream-sample</module>
         <module>spring-cloud-gray-performance-agent</module>
-        <module>spring-cloud-gray-btrace-sample</module>
         <module>spring-cloud-gray-consumer-nacos-config-sample</module>
         <module>spring-cloud-gray-apollo-config-sample</module>
         <module>spring-cloud-gray-gateway-sample</module>

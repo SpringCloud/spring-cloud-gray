@@ -24,14 +24,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
         <!--        <dependency>-->
-        <!--            <groupId>com.alibaba.cloud</groupId>-->
-        <!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+        <!--            <groupId>org.springframework.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
         <!--        </dependency>-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
 
 
         <dependency>
@@ -56,16 +56,17 @@
                     <artifactId>spring-cloud-gray-plugin-webmvc</artifactId>
                     <groupId>cn.springcloud.gray</groupId>
                 </exclusion>
-                <!--                <exclusion>-->
-                <!--                    <groupId>cn.springcloud.gray</groupId>-->
-                <!--                    <artifactId>spring-cloud-gray-plugin-eureka</artifactId>-->
-                <!--                </exclusion>-->
+                <exclusion>
+                    <groupId>cn.springcloud.gray</groupId>
+                    <artifactId>spring-cloud-gray-plugin-eureka</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>cn.springcloud.gray</groupId>-->
-        <!--            <artifactId>spring-cloud-gray-plugin-ribbon-nacos-discovery</artifactId>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>cn.springcloud.gray</groupId>
+            <artifactId>spring-cloud-gray-plugin-ribbon-nacos-discovery</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-plugin-gateway</artifactId>
