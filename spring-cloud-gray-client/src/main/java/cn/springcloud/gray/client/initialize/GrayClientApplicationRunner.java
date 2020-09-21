@@ -2,6 +2,8 @@ package cn.springcloud.gray.client.initialize;
 
 import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
+import cn.springcloud.gray.model.GrayTrackDefinition;
+import cn.springcloud.gray.request.track.GrayTrackHolder;
 import cn.springcloud.gray.utils.SpringApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -34,6 +36,7 @@ public class GrayClientApplicationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         loadLocalInstanceInfo();
+        loadDefaultTrackDefinitions();
         log.info("开始装载灰度...");
         initializeGrayInfos();
         log.info("灰度装载完成.");
@@ -67,6 +70,17 @@ public class GrayClientApplicationRunner implements ApplicationRunner {
         }
         GrayClientHolder.setInstanceLocalInfo(instanceLocalInfoObtainer.getInstanceLocalInfo());
         log.info("加载InstanceLocalInfo完成.");
+    }
+
+    private void loadDefaultTrackDefinitions() {
+        log.info("开始加载默认的灰度追踪...");
+        GrayTrackHolder grayTrackHolder = GrayClientHolder.getGrayTrackHolder();
+        GrayTrackDefinition trackDefinition = new GrayTrackDefinition();
+        trackDefinition.setName("HttpReceive");
+        trackDefinition.setValue("");
+        grayTrackHolder.updateTrackDefinition(trackDefinition);
+        log.info("加载默认的灰度追踪: {}", trackDefinition.getName());
+        log.info("加载默认的灰度追踪完成.");
     }
 
 }
