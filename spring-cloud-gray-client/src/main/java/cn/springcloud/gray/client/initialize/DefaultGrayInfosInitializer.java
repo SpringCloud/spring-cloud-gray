@@ -55,6 +55,7 @@ public class DefaultGrayInfosInitializer implements GrayInfosInitializer {
 
     private void scheduleOpenForWork() {
         if (scheduleOpenForWorkCount > scheduleOpenForWorkLimit) {
+            log.warn("{}次尝试拉取灰度信息失败, 改为异步定时({} ms)拉取灰度信息，直到拉取成功.", scheduleOpenForWorkCount, openForWorkDelayTime);
             delayOpenForWork();
             return;
         }
