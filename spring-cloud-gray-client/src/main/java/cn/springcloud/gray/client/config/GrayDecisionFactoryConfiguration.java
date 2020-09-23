@@ -56,6 +56,11 @@ public class GrayDecisionFactoryConfiguration {
         }
 
         @Bean
+        public TraceIpsGrayDecisionFactory traceIpsGrayDecisionFactory() {
+            return new TraceIpsGrayDecisionFactory();
+        }
+
+        @Bean
         public HttpTrackParameterGrayDecisionFactory httpTrackParameterGrayDecisionFactory() {
             return new HttpTrackParameterGrayDecisionFactory();
         }
