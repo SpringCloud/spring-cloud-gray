@@ -39,7 +39,7 @@ public class NacosInstanceLocalInfoObtainer extends LazyInstanceLocalInfoObtaine
         }
         try {
             List<Instance> instances = nacosDiscoveryProperties.
-                    namingServiceInstance().getAllInstances(nacosDiscoveryProperties.getService(), nacosDiscoveryProperties.getGroup(), Arrays.asList(nacosDiscoveryProperties.getClusterName()));
+                    namingServiceInstance().getAllInstances(nacosDiscoveryProperties.getService(), Arrays.asList(nacosDiscoveryProperties.getClusterName()));
 
             Optional<Instance> instanceOpt = instances.stream().filter(instance -> {
                 return StringUtils.equals(instance.getIp(), nacosDiscoveryProperties.getIp()) && Objects.equals(nacosDiscoveryProperties.getPort(), instance.getPort());
