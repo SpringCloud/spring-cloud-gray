@@ -3,6 +3,7 @@ package cn.springcloud.gray.event.server;
 import cn.springcloud.gray.event.GrayEvent;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author saleson
@@ -12,13 +13,19 @@ public class DefaultGrayEventTrigger extends AbstractGrayEventTrigger {
 
     private GrayEventLogger grayEventLogger;
 
-    public DefaultGrayEventTrigger(GrayEventSender grayEventSender, GrayEventLogger grayEventLogger) {
-        this(grayEventSender, null, grayEventLogger);
+    public DefaultGrayEventTrigger(
+            GrayEventSender grayEventSender,
+            GrayEventLogger grayEventLogger,
+            ExecutorService executorService) {
+        this(grayEventSender, null, grayEventLogger, executorService);
     }
 
     public DefaultGrayEventTrigger(
-            GrayEventSender grayEventSender, List<EventConverter> eventConverters, GrayEventLogger grayEventLogger) {
-        super(grayEventSender, eventConverters);
+            GrayEventSender grayEventSender,
+            List<EventConverter> eventConverters,
+            GrayEventLogger grayEventLogger,
+            ExecutorService executorService) {
+        super(grayEventSender, eventConverters, executorService);
         this.grayEventLogger = grayEventLogger;
     }
 
