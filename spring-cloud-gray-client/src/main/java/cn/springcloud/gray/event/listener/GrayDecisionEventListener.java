@@ -2,7 +2,7 @@ package cn.springcloud.gray.event.listener;
 
 import cn.springcloud.gray.decision.PolicyDecisionManager;
 import cn.springcloud.gray.model.DecisionDefinition;
-import cn.springlcoud.gray.event.GrayDecisionEvent;
+import cn.springcloud.gray.event.GrayDecisionEvent;
 import lombok.extern.slf4j.Slf4j;
 
 /**

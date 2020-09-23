@@ -3,7 +3,7 @@ package cn.springcloud.gray.event;
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.event.stream.StreamInput;
 import cn.springcloud.gray.event.stream.StreamMessageListener;
-import cn.springlcoud.gray.event.client.GrayEventPublisher;
+import cn.springcloud.gray.event.client.GrayEventPublisher;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

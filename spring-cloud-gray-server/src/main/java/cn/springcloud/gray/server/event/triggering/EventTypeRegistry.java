@@ -1,6 +1,6 @@
 package cn.springcloud.gray.server.event.triggering;
 
-import cn.springlcoud.gray.event.GrayEvent;
+import cn.springcloud.gray.event.GrayEvent;
 
 /**
  * @author saleson

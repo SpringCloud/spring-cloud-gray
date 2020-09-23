@@ -2,7 +2,7 @@ package cn.springcloud.gray.server.event;
 
 import cn.springcloud.gray.server.event.stream.GrayEventStreamSender;
 import cn.springcloud.gray.server.event.stream.StreamOutput;
-import cn.springlcoud.gray.event.server.GrayEventSender;
+import cn.springcloud.gray.event.server.GrayEventSender;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.stream.annotation.EnableBinding;

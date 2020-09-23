@@ -4,8 +4,8 @@ import cn.springcloud.gray.server.module.HandleRuleModule;
 import cn.springcloud.gray.server.module.domain.HandleRule;
 import cn.springcloud.gray.server.module.domain.query.HandleRuleQuery;
 import cn.springcloud.gray.server.service.HandleRuleService;
-import cn.springlcoud.gray.event.server.GrayEventTrigger;
-import cn.springlcoud.gray.event.server.TriggerType;
+import cn.springcloud.gray.event.server.GrayEventTrigger;
+import cn.springcloud.gray.event.server.TriggerType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

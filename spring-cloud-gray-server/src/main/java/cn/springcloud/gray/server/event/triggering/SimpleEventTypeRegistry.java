@@ -1,6 +1,6 @@
 package cn.springcloud.gray.server.event.triggering;
 
-import cn.springlcoud.gray.event.GrayEvent;
+import cn.springcloud.gray.event.GrayEvent;
 import org.apache.commons.lang3.ClassUtils;
 
 import java.util.HashMap;

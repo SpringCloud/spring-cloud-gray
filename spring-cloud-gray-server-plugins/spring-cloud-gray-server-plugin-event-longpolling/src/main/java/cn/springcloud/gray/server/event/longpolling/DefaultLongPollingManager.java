@@ -1,8 +1,8 @@
 package cn.springcloud.gray.server.event.longpolling;
 
 import cn.springcloud.gray.server.event.longpolling.configuration.properties.EventLongPollingProperties;
-import cn.springlcoud.gray.event.GrayEvent;
-import cn.springlcoud.gray.event.longpolling.ListenResult;
+import cn.springcloud.gray.event.GrayEvent;
+import cn.springcloud.gray.event.longpolling.ListenResult;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.Iterator;

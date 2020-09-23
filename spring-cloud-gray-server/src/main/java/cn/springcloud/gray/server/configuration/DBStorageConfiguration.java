@@ -23,7 +23,7 @@ import cn.springcloud.gray.server.module.user.jpa.JPAServiceManageModule;
 import cn.springcloud.gray.server.module.user.jpa.JPAUserModule;
 import cn.springcloud.gray.server.oauth2.Oauth2Service;
 import cn.springcloud.gray.server.service.*;
-import cn.springlcoud.gray.event.server.GrayEventTrigger;
+import cn.springcloud.gray.event.server.GrayEventTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

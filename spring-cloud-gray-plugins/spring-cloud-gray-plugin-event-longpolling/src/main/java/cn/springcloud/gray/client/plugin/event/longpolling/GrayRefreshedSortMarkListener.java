@@ -3,7 +3,7 @@ package cn.springcloud.gray.client.plugin.event.longpolling;
 import cn.springcloud.gray.model.GrayInfos;
 import cn.springcloud.gray.refresh.GrayInformationRefresher;
 import cn.springcloud.gray.refresh.GrayRefreshedEvent;
-import cn.springlcoud.gray.event.client.GrayEventReceiver;
+import cn.springcloud.gray.event.client.GrayEventReceiver;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Objects;

@@ -1,9 +1,9 @@
 package cn.springcloud.gray.server.event.triggering;
 
-import cn.springlcoud.gray.code.component.initializer.SpringInitializer;
-import cn.springlcoud.gray.event.server.AbstractGrayEventTrigger;
-import cn.springlcoud.gray.event.server.EventConverter;
-import cn.springlcoud.gray.event.server.GrayEventTrigger;
+import cn.springcloud.gray.code.component.initializer.SpringInitializer;
+import cn.springcloud.gray.event.server.AbstractGrayEventTrigger;
+import cn.springcloud.gray.event.server.EventConverter;
+import cn.springcloud.gray.event.server.GrayEventTrigger;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package cn.springcloud.gray.event.listener;
 
-import cn.springlcoud.gray.event.GrayEvent;
-import cn.springlcoud.gray.event.client.GrayEventListener;
+import cn.springcloud.gray.event.GrayEvent;
+import cn.springcloud.gray.event.client.GrayEventListener;
 import lombok.extern.slf4j.Slf4j;
 
 /**

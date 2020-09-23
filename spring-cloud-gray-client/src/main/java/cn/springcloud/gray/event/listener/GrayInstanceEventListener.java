@@ -4,7 +4,7 @@ import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.model.GrayInstance;
-import cn.springlcoud.gray.event.GrayInstanceEvent;
+import cn.springcloud.gray.event.GrayInstanceEvent;
 import org.apache.commons.lang3.StringUtils;
 
 /**
