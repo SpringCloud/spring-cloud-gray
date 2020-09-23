@@ -5,8 +5,8 @@ import cn.springcloud.gray.cache.CaffeineCache;
 import cn.springcloud.gray.choose.*;
 import cn.springcloud.gray.choose.loadbalance.factory.LoadBalancerFactory;
 import cn.springcloud.gray.choose.loadbalance.factory.RoundRobinLoadBalancerFactory;
-import cn.springcloud.gray.client.GrayClientEnrollInitializingDestroyBean;
 import cn.springcloud.gray.client.config.properties.*;
+import cn.springcloud.gray.client.hooks.GrayClientEnrollHook;
 import cn.springcloud.gray.client.initialize.DefaultGrayInfosInitializer;
 import cn.springcloud.gray.client.initialize.GrayClientApplicationRunner;
 import cn.springcloud.gray.client.initialize.GrayInfosInitializer;
@@ -14,6 +14,7 @@ import cn.springcloud.gray.client.switcher.EnvGraySwitcher;
 import cn.springcloud.gray.client.switcher.GraySwitcher;
 import cn.springcloud.gray.communication.InformationClient;
 import cn.springcloud.gray.decision.*;
+import cn.springcloud.gray.hook.HookRegistory;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
 import cn.springcloud.gray.mock.MockManager;
 import cn.springcloud.gray.mock.NoOpMockManager;
@@ -53,6 +54,7 @@ import java.util.concurrent.TimeUnit;
         GrayHoldoutServerProperties.class
 })
 @Import({
+        GrayCompendontConfiguration.class,
         InformationClientConfiguration.class,
         GrayDecisionFactoryConfiguration.class,
         GrayTrackConfiguration.class
@@ -114,9 +116,10 @@ public class GrayClientAutoConfiguration {
     @ConditionalOnProperty(value = "gray.client.instance.grayEnroll")
     public class GrayClientEnrollConfiguration {
         @Bean
-        public GrayClientEnrollInitializingDestroyBean grayClientEnrollInitializingDestroyBean(
+        public GrayClientEnrollHook grayClientEnrollHook(
+                InstanceLocalInfoObtainer instanceLocalInfoObtainer,
                 InformationClient informationClient) {
-            return new GrayClientEnrollInitializingDestroyBean(informationClient, grayClientProperties);
+            return new GrayClientEnrollHook(instanceLocalInfoObtainer, informationClient, grayClientProperties);
         }
     }
 
@@ -181,8 +184,9 @@ public class GrayClientAutoConfiguration {
     public GrayClientApplicationRunner grayClientApplicationRunner(
             ApplicationContext applicationContext,
             GrayInfosInitializer grayInfosInitializer,
-            ApplicationEventPublisher applicationEventPublisher) {
-        return new GrayClientApplicationRunner(applicationContext, grayInfosInitializer, applicationEventPublisher);
+            ApplicationEventPublisher applicationEventPublisher,
+            HookRegistory hookRegistory) {
+        return new GrayClientApplicationRunner(applicationContext, grayInfosInitializer, applicationEventPublisher, hookRegistory);
     }
 
     @Bean
