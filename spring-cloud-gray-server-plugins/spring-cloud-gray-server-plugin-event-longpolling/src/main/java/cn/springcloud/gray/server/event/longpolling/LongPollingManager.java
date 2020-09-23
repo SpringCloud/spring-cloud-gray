@@ -1,6 +1,6 @@
 package cn.springcloud.gray.server.event.longpolling;
 
-import cn.springlcoud.gray.event.GrayEvent;
+import cn.springcloud.gray.event.GrayEvent;
 
 /**
  * @author saleson

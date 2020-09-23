@@ -1,6 +1,6 @@
 package cn.springcloud.gray.server.event.longpolling;
 
-import cn.springlcoud.gray.event.longpolling.ListenResult;
+import cn.springcloud.gray.event.longpolling.ListenResult;
 import lombok.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
