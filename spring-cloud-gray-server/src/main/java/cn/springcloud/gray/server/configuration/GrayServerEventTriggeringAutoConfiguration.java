@@ -1,5 +1,8 @@
 package cn.springcloud.gray.server.configuration;
 
+import cn.springcloud.gray.concurrent.ExectorServiceUtils;
+import cn.springcloud.gray.event.codec.GrayEventCodec;
+import cn.springcloud.gray.event.codec.JsonGrayEventCodec;
 import cn.springcloud.gray.event.server.*;
 import cn.springcloud.gray.server.clustering.synchro.ServerSynchronizer;
 import cn.springcloud.gray.server.configuration.properties.GrayServerEventProperties;
@@ -8,11 +11,10 @@ import cn.springcloud.gray.server.event.triggering.converter.*;
 import cn.springcloud.gray.server.module.gray.GrayEventLogModule;
 import cn.springcloud.gray.server.module.gray.GrayModule;
 import cn.springcloud.gray.server.module.gray.GrayServerModule;
-import cn.springcloud.gray.event.codec.GrayEventCodec;
-import cn.springcloud.gray.event.codec.JsonGrayEventCodec;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author saleson
@@ -58,10 +61,20 @@ public class GrayServerEventTriggeringAutoConfiguration {
 
 
     @Bean
+    @ConditionalOnMissingBean(name = "eventTriggerExecutorService")
+    public ExecutorService eventTriggerExecutorService() {
+        return ExectorServiceUtils.createExecutorService(grayServerEventProperties.getTriggerThreadPool());
+    }
+
+    @Bean
     @ConditionalOnMissingBean
     public GrayEventTrigger grayEventTrigger(
-            GrayEventSender grayEventSender, GrayEventLogger grayEventLogger) {
-        return new DefaultGrayEventTrigger(grayEventSender, grayEventLogger);
+            GrayEventSender grayEventSender,
+            GrayEventLogger grayEventLogger,
+            @Autowired @Qualifier("eventTriggerExecutorService") ExecutorService eventTriggerExecutorService) {
+        AbstractGrayEventTrigger eventTrigger = new DefaultGrayEventTrigger(grayEventSender, grayEventLogger, eventTriggerExecutorService);
+        eventTrigger.setTriggerDelayMills(grayServerEventProperties.getTriggerDelayMills());
+        return eventTrigger;
     }
 
     @Bean
