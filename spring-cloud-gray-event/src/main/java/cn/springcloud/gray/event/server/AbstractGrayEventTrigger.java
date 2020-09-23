@@ -1,5 +1,6 @@
 package cn.springcloud.gray.event.server;
 
+import cn.springcloud.gray.concurrent.DefaultThreadFactory;
 import cn.springcloud.gray.event.GrayEvent;
 import cn.springcloud.gray.keeper.ListKeeper;
 import cn.springcloud.gray.keeper.SyncListKeeper;
@@ -8,6 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author saleson
@@ -19,13 +24,17 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
     private GrayEventSender grayEventSender;
     private GenericRetriever<EventConverter> genericRetriever;
     private ListKeeper<GrayEventObserver> grayEventObservers = new SyncListKeeper<>();
+    private ExecutorService executorService;
+    private long triggerDelayMills = 100;
 
     public AbstractGrayEventTrigger(GrayEventSender grayEventSender) {
-        this(grayEventSender, null);
+        this(grayEventSender, null,
+                new ThreadPoolExecutor(10, 50, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100), new DefaultThreadFactory("event-trigger")));
     }
 
-    public AbstractGrayEventTrigger(GrayEventSender grayEventSender, List<EventConverter> eventConverters) {
+    public AbstractGrayEventTrigger(GrayEventSender grayEventSender, List<EventConverter> eventConverters, ExecutorService executorService) {
         this.grayEventSender = grayEventSender;
+        this.executorService = executorService;
         if (!Objects.isNull(eventConverters)) {
             createEventConverterRetriever(eventConverters);
         }
@@ -34,22 +43,16 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
 
     @Override
     public void triggering(Object eventSource, TriggerType triggerType) {
-        GrayEvent grayEvent = convertGrayEvent(eventSource, triggerType);
-        if (Objects.isNull(grayEvent)) {
-//            log.warn("转换失败, grayEvent is null, eventSource:{}, triggerType:{}", eventSource, triggerType);
-            return;
-        }
-
-        if (Objects.isNull(grayEvent.getTriggerType())) {
-            grayEvent.setTriggerType(triggerType);
-        }
-
-        noticeObservers(GrayEventObserveState.CREATED, grayEvent);
-
-//        noticeObservers(GrayEventObserveState.READY_FOR_SENDING, grayEvent);
-        grayEventSender.send(grayEvent);
-
-        noticeObservers(GrayEventObserveState.SENT, grayEvent);
+        executorService.execute(() -> {
+            long triggerDelay = getTriggerDelayMills();
+            if (triggerDelay > 0) {
+                try {
+                    Thread.sleep(triggerDelay);
+                } catch (InterruptedException e) {
+                }
+            }
+            innerTriggering(eventSource, triggerType);
+        });
     }
 
     protected abstract void logEventTrigger(Object eventSource, TriggerType triggerType, GrayEvent grayEvent);
@@ -70,6 +73,25 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
 
     public List<GrayEventObserver> getObservers() {
         return grayEventObservers.values();
+    }
+
+    protected void innerTriggering(Object eventSource, TriggerType triggerType) {
+        GrayEvent grayEvent = convertGrayEvent(eventSource, triggerType);
+        if (Objects.isNull(grayEvent)) {
+//            log.warn("转换失败, grayEvent is null, eventSource:{}, triggerType:{}", eventSource, triggerType);
+            return;
+        }
+
+        if (Objects.isNull(grayEvent.getTriggerType())) {
+            grayEvent.setTriggerType(triggerType);
+        }
+
+        noticeObservers(GrayEventObserveState.CREATED, grayEvent);
+
+//        noticeObservers(GrayEventObserveState.READY_FOR_SENDING, grayEvent);
+        grayEventSender.send(grayEvent);
+
+        noticeObservers(GrayEventObserveState.SENT, grayEvent);
     }
 
     protected void noticeObservers(GrayEventObserveState observeState, GrayEvent grayEvent) {
@@ -97,4 +119,11 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
     }
 
 
+    public void setTriggerDelayMills(long triggerDelayMills) {
+        this.triggerDelayMills = triggerDelayMills;
+    }
+
+    public long getTriggerDelayMills() {
+        return triggerDelayMills;
+    }
 }
