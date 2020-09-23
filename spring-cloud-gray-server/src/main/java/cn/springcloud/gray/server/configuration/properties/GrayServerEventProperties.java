@@ -26,7 +26,7 @@ public class GrayServerEventProperties {
 
     private ConcurrnetProperties triggerThreadPool = new ConcurrnetProperties(5, 20, 30000, 100, "event-trigger");
 
-    private long triggerDelayMills = 100;
+    private long triggerDelayMills = 20;
 
     @Data
     public static class EventTypeMapping {
