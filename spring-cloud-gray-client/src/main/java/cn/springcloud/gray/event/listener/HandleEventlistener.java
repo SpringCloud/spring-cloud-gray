@@ -1,9 +1,9 @@
 package cn.springcloud.gray.event.listener;
 
 import cn.springcloud.gray.changed.notify.ChangedType;
+import cn.springcloud.gray.event.HandleEvent;
 import cn.springcloud.gray.handle.HandleInfo;
 import cn.springcloud.gray.handle.HandleManager;
-import cn.springlcoud.gray.event.HandleEvent;
 
 import java.util.Objects;
 

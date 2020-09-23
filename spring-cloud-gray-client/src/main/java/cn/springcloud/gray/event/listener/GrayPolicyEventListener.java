@@ -1,7 +1,7 @@
 package cn.springcloud.gray.event.listener;
 
 import cn.springcloud.gray.decision.PolicyDecisionManager;
-import cn.springlcoud.gray.event.GrayPolicyEvent;
+import cn.springcloud.gray.event.GrayPolicyEvent;
 
 /**
  * @author saleson
