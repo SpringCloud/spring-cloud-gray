@@ -42,10 +42,12 @@
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-starter-gray-server</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
             <artifactId>spring-cloud-gray-server-plugin-eureka</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- nacos -->
@@ -59,10 +61,10 @@
         <!--        </dependency>-->
 
 
-<!--                <dependency>-->
-<!--                    <groupId>org.springframework.cloud</groupId>-->
-<!--                    <artifactId>spring-cloud-starter-stream-rabbit</artifactId>-->
-<!--                </dependency>-->
+        <!--                <dependency>-->
+        <!--                    <groupId>org.springframework.cloud</groupId>-->
+        <!--                    <artifactId>spring-cloud-starter-stream-rabbit</artifactId>-->
+        <!--                </dependency>-->
 
     </dependencies>
 
