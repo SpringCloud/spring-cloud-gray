@@ -6,7 +6,7 @@ import cn.springcloud.gray.server.clustering.synchro.SimpleSynchDataAcceptor;
 import cn.springcloud.gray.server.clustering.synchro.SynchDataAcceptor;
 import cn.springcloud.gray.server.clustering.synchro.SynchDataListener;
 import cn.springcloud.gray.server.configuration.properties.ClusterProperties;
-import cn.springlcoud.gray.event.server.GrayEventSender;
+import cn.springcloud.gray.event.server.GrayEventSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

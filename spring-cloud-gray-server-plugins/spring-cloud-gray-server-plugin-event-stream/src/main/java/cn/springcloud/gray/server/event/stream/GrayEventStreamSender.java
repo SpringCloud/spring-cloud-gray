@@ -1,7 +1,7 @@
 package cn.springcloud.gray.server.event.stream;
 
-import cn.springlcoud.gray.event.GrayEvent;
-import cn.springlcoud.gray.event.server.GrayEventSender;
+import cn.springcloud.gray.event.GrayEvent;
+import cn.springcloud.gray.event.server.GrayEventSender;
 import org.springframework.messaging.support.MessageBuilder;
 
 import java.util.concurrent.ScheduledExecutorService;

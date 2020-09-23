@@ -2,9 +2,9 @@ package cn.springcloud.gray.server;
 
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.utils.SpringApplicationContextUtils;
-import cn.springlcoud.gray.event.server.GrayEventObservable;
-import cn.springlcoud.gray.event.server.GrayEventObserver;
-import cn.springlcoud.gray.event.server.GrayEventTrigger;
+import cn.springcloud.gray.event.server.GrayEventObservable;
+import cn.springcloud.gray.event.server.GrayEventObserver;
+import cn.springcloud.gray.event.server.GrayEventTrigger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;

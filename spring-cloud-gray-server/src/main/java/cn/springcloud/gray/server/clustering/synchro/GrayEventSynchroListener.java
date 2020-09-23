@@ -1,8 +1,8 @@
 package cn.springcloud.gray.server.clustering.synchro;
 
 import cn.springcloud.gray.utils.JsonUtils;
-import cn.springlcoud.gray.event.GrayEvent;
-import cn.springlcoud.gray.event.server.GrayEventSender;
+import cn.springcloud.gray.event.GrayEvent;
+import cn.springcloud.gray.event.server.GrayEventSender;
 import lombok.extern.slf4j.Slf4j;
 
 /**

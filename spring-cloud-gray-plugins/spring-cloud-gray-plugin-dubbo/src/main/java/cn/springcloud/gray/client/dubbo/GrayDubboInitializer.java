@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.dubbo;
 
 import cn.springcloud.gray.client.dubbo.configuration.properties.GrayDubboProperties;
-import cn.springlcoud.gray.code.component.initializer.SpringInitializer;
+import cn.springcloud.gray.code.component.initializer.SpringInitializer;
 
 /**
  * @author saleson

@@ -7,8 +7,8 @@ import cn.springcloud.gray.client.plugin.event.longpolling.GrayRefreshedSortMark
 import cn.springcloud.gray.client.plugin.event.longpolling.configuration.properties.LongPollingProperties;
 import cn.springcloud.gray.communication.http.HttpAgent;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
-import cn.springlcoud.gray.event.client.GrayEventPublisher;
-import cn.springlcoud.gray.event.client.GrayEventReceiver;
+import cn.springcloud.gray.event.client.GrayEventPublisher;
+import cn.springcloud.gray.event.client.GrayEventReceiver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

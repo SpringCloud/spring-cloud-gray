@@ -3,7 +3,7 @@ package cn.springcloud.gray.event.listener;
 import cn.springcloud.gray.GrayClientHolder;
 import cn.springcloud.gray.handle.HandleRuleManager;
 import cn.springcloud.gray.local.InstanceLocalInfo;
-import cn.springlcoud.gray.event.HandleRuleEvent;
+import cn.springcloud.gray.event.HandleRuleEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 

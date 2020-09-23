@@ -1,7 +1,7 @@
 package cn.springcloud.gray.event.stream;
 
-import cn.springlcoud.gray.event.GrayEvent;
-import cn.springlcoud.gray.event.client.GrayEventPublisher;
+import cn.springcloud.gray.event.GrayEvent;
+import cn.springcloud.gray.event.client.GrayEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.stream.annotation.StreamListener;

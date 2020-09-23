@@ -2,8 +2,8 @@ package cn.springcloud.gray.client.plugin.event.longpolling;
 
 import cn.springcloud.gray.client.plugin.event.longpolling.configuration.properties.LongPollingProperties;
 import cn.springcloud.gray.local.InstanceLocalInfoObtainer;
-import cn.springlcoud.gray.event.client.BasicGrayEventReceiver;
-import cn.springlcoud.gray.event.client.GrayEventPublisher;
+import cn.springcloud.gray.event.client.BasicGrayEventReceiver;
+import cn.springcloud.gray.event.client.GrayEventPublisher;
 
 /**
  * @author saleson

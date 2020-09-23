@@ -11,8 +11,8 @@ import cn.springcloud.gray.server.module.route.policy.domain.RouteResourcePolici
 import cn.springcloud.gray.server.module.route.policy.domain.query.RoutePolicyQuery;
 import cn.springcloud.gray.server.module.user.AuthorityModule;
 import cn.springcloud.gray.server.service.RoutePolicyRecordService;
-import cn.springlcoud.gray.event.server.GrayEventTrigger;
-import cn.springlcoud.gray.event.server.TriggerType;
+import cn.springcloud.gray.event.server.GrayEventTrigger;
+import cn.springcloud.gray.event.server.TriggerType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

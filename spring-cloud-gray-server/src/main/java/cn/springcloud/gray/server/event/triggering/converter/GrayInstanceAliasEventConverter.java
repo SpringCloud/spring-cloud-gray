@@ -1,8 +1,8 @@
 package cn.springcloud.gray.server.event.triggering.converter;
 
 import cn.springcloud.gray.model.GrayInstanceAlias;
-import cn.springlcoud.gray.event.GrayInstanceAliasEvent;
-import cn.springlcoud.gray.event.server.AbstrctEventConverter;
+import cn.springcloud.gray.event.GrayInstanceAliasEvent;
+import cn.springcloud.gray.event.server.AbstrctEventConverter;
 
 /**
  * @author saleson

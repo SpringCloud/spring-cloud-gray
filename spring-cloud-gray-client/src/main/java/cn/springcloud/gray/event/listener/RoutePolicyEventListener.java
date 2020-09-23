@@ -8,7 +8,7 @@ import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayService;
 import cn.springcloud.gray.model.RoutePolicy;
 import cn.springcloud.gray.model.RoutePolicyType;
-import cn.springlcoud.gray.event.RoutePolicyEvent;
+import cn.springcloud.gray.event.RoutePolicyEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 

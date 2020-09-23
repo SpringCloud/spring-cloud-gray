@@ -17,7 +17,7 @@ import cn.springcloud.gray.server.module.route.policy.RoutePolicyModule;
 import cn.springcloud.gray.server.service.HandleActionService;
 import cn.springcloud.gray.server.service.HandleRuleService;
 import cn.springcloud.gray.server.service.HandleService;
-import cn.springlcoud.gray.event.server.GrayEventTrigger;
+import cn.springcloud.gray.event.server.GrayEventTrigger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
