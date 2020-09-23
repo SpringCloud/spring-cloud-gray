@@ -1,7 +1,5 @@
 package cn.springcloud.gray.event;
 
-import cn.springlcoud.gray.event.GrayEvent;
-
 /**
  * @author saleson
  * @date 2020-01-30 15:32

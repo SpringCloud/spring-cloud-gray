@@ -1,5 +1,7 @@
 package cn.springcloud.gray.server.module.jpa;
 
+import cn.springcloud.gray.event.server.GrayEventTrigger;
+import cn.springcloud.gray.event.server.TriggerType;
 import cn.springcloud.gray.server.module.HandleModule;
 import cn.springcloud.gray.server.module.domain.DelFlag;
 import cn.springcloud.gray.server.module.domain.Handle;
@@ -9,8 +11,6 @@ import cn.springcloud.gray.server.module.domain.query.HandleActionQuery;
 import cn.springcloud.gray.server.module.domain.query.HandleQuery;
 import cn.springcloud.gray.server.service.HandleActionService;
 import cn.springcloud.gray.server.service.HandleService;
-import cn.springlcoud.gray.event.server.GrayEventTrigger;
-import cn.springlcoud.gray.event.server.TriggerType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

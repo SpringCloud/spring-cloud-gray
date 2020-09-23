@@ -1,6 +1,5 @@
 package cn.springcloud.gray.event;
 
-import cn.springlcoud.gray.event.GrayEvent;
 import org.apache.commons.lang3.ClassUtils;
 import org.junit.Assert;
 import org.junit.Test;
