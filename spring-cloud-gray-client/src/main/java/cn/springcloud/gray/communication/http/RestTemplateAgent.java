@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author saleson
@@ -87,13 +84,16 @@ public class RestTemplateAgent implements HttpAgent {
     }
 
     private Map<String, String> getParams(HttpParams paramValues) {
+        if (Objects.isNull(paramValues)) {
+            return Collections.emptyMap();
+        }
         return paramValues.toValueMap();
     }
 
     private String getCompleteUrl(String path, HttpParams paramValues, String encoding) {
         StringBuilder url = new StringBuilder();
         url.append(baseUrl).append(path);
-        if (!Objects.isNull(paramValues)) {
+        if (Objects.nonNull(paramValues)) {
             String queryString = StringUtils.isEmpty(encoding) ? paramValues.toQueryString() : paramValues.encodingParams(encoding);
             url.append("?").append(queryString);
         }
