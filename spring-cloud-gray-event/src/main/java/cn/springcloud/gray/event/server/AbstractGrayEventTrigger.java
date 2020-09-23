@@ -25,7 +25,7 @@ public abstract class AbstractGrayEventTrigger implements GrayEventTrigger {
     private GenericRetriever<EventConverter> genericRetriever;
     private ListKeeper<GrayEventObserver> grayEventObservers = new SyncListKeeper<>();
     private ExecutorService executorService;
-    private long triggerDelayMills = 100;
+    private long triggerDelayMills = 20;
 
     public AbstractGrayEventTrigger(GrayEventSender grayEventSender) {
         this(grayEventSender, null,
