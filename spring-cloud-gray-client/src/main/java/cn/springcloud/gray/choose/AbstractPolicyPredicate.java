@@ -32,10 +32,10 @@ public abstract class AbstractPolicyPredicate implements PolicyPredicate {
             return false;
         }
         for (Policy policy : policies) {
-            if (!policy.predicateDecisions(decisionInputArgs)) {
-                return false;
+            if (policy.predicateDecisions(decisionInputArgs)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }
