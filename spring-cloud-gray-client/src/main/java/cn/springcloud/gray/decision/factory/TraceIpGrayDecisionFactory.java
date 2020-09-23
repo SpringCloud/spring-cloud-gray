@@ -41,7 +41,7 @@ public class TraceIpGrayDecisionFactory extends AbstractGrayDecisionFactory<Trac
             boolean b = mat.find();
             if (log.isDebugEnabled()) {
                 log.debug("[TraceIpGrayDecision] serviceId:{} config.ip:{}, traceIp:{}, testResult:{}",
-                        grayRequest.getServiceId(), configBean.getIp(), traceIp, false);
+                        grayRequest.getServiceId(), configBean.getIp(), traceIp, b);
             }
             return b;
         };

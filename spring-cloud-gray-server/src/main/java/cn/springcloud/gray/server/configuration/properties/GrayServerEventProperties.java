@@ -1,5 +1,6 @@
 package cn.springcloud.gray.server.configuration.properties;
 
+import cn.springcloud.gray.concurrent.ConcurrnetProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -22,6 +23,10 @@ public class GrayServerEventProperties {
     private String pushType = "long-polling";
 
     private EventTypeMapping eventTypeMapping = new EventTypeMapping();
+
+    private ConcurrnetProperties triggerThreadPool = new ConcurrnetProperties(5, 20, 30000, 100, "event-trigger");
+
+    private long triggerDelayMills = 20;
 
     @Data
     public static class EventTypeMapping {
