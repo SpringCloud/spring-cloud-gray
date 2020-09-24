@@ -5,6 +5,7 @@ import cn.springcloud.gray.choose.PolicyPredicate;
 import cn.springcloud.gray.model.DecisionDefinition;
 import cn.springcloud.gray.model.PolicyDefinition;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -90,6 +91,11 @@ public class DefaultCachePolicyDecisionManager implements PolicyDecisionManager 
     @Override
     public boolean testPolicyPredicate(String predicateType, DecisionInputArgs decisionInputArgs, boolean defaultResult) {
         return delegater.testPolicyPredicate(predicateType, decisionInputArgs, defaultResult);
+    }
+
+    @Override
+    public Map<String, PolicyInfo> getAllPolicyInfos() {
+        return delegater.getAllPolicyInfos();
     }
 
 
