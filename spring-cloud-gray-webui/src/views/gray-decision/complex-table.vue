@@ -104,7 +104,8 @@
           <HttpParameter v-if="temp.type === 'HttpParameter'" ref="HttpParameter" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
           <HttpTrackHeader v-if="temp.type === 'HttpTrackHeader'" ref="HttpTrackHeader" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
           <HttpTrackParameter v-if="temp.type === 'HttpTrackParameter'" ref="HttpTrackParameter" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
-          <TraceIp v-if="temp.type === 'TraceIp'" ref="TraceIp" :info="temp.info" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <TraceIp v-if="temp.type === 'TraceIp'" ref="TraceIp" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
+          <TraceIps v-if="temp.type === 'TraceIps'" ref="TraceIps" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
           <TrackAttribute v-if="temp.type === 'TrackAttribute'" ref="TrackAttribute" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
           <TrackAttributes v-if="temp.type === 'TrackAttributes'" ref="TrackAttributes" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
           <FlowRate v-if="temp.type === 'FlowRate'" ref="FlowRate" :info="temp.infos" @sendInfos="sendInfos" @sendDecisionName="sendDecisionName" />
@@ -154,6 +155,7 @@ export default {
     HttpTrackHeader: () => import('./components/HttpTrackHeader'),
     HttpTrackParameter: () => import('./components/HttpTrackParameter'),
     TraceIp: () => import('./components/TraceIp'),
+    TraceIps: () => import('./components/TraceIps'),
     TrackAttribute: () => import('./components/TrackAttribute'),
     TrackAttributes: () => import('./components/TrackAttributes'),
     Attribute: () => import('./components/Attribute'),
@@ -203,6 +205,9 @@ export default {
       }, {
         value: 'TraceIp',
         label: 'TraceIp'
+      }, {
+        value: 'TraceIps',
+        label: 'TraceIps'
       }, {
         value: 'TrackAttribute',
         label: 'TrackAttribute'

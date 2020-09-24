@@ -79,7 +79,7 @@ public class HandleRuleService extends AbstraceCRUDService<HandleRule, HandleRul
                 if (StringUtils.isNotEmpty(handleRuleQuery.getHandleOption())) {
                     predicates.add(cb.equal(root.get("handleOption").as(String.class), handleRuleQuery.getHandleOption()));
                 }
-                if (Objects.nonNull(handleRuleQuery.getDelFlag()) && !Objects.equals(handleRuleQuery.getDelFlag(), DelFlag.ALL)) {
+                if (Objects.nonNull(DelFlag.getDel(handleRuleQuery.getDelFlag()))) {
                     predicates.add(cb.equal(root.get("delFlag").as(Boolean.class), handleRuleQuery.getDelFlag().getDel()));
                 }
                 query.where(predicates.toArray(new Predicate[predicates.size()]));

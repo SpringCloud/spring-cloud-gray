@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "gray_track", indexes = {@Index(columnList = "serviceId"), @Index(columnList = "instanceId")})
+@Table(name = "gray_track", indexes = {@Index(columnList = "serviceId,name", unique = true), @Index(columnList = "instanceId")})
 public class GrayTrackDO {
 
     @Id

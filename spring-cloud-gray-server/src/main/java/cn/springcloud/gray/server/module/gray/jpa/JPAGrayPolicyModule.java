@@ -59,11 +59,6 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
         return grayPolicyService.listEnabledGrayPoliciesByNamespace(namespace);
     }
 
-    @Override
-    public Page<GrayDecision> listGrayDecisionsByPolicyId(Long policyId, Pageable pageable) {
-        return grayDecisionService.listGrayDecisionsByPolicyId(policyId, pageable);
-    }
-
     @Transactional
     @Override
     public GrayPolicy saveGrayPolicy(GrayPolicy grayPolicy) {
@@ -145,8 +140,8 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
     }
 
     @Override
-    public List<GrayDecision> listGrayDecisionsByPolicyId(Long policyId) {
-        return grayDecisionService.findByPolicyId(policyId);
+    public List<GrayDecision> listEnabledGrayDecisionsByPolicyId(Long policyId) {
+        return grayDecisionService.findAllEnabledByPolicyId(policyId);
     }
 
     @Transactional

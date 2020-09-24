@@ -1,15 +1,27 @@
 <template>
-  <div class="TraceIp">
+  <div class="TraceIps">
     <el-form
-      ref="TraceIp"
+      ref="TraceIps"
       :rules="rules"
       :model="infos"
       :inline="true"
     >
       <div class="selectBox">
-
-        <el-form-item label="ip" prop="ip" label-width="120px">
-          <el-input v-model="infos.ip" />
+        <el-form-item label="compareMode" prop="compareMode" label-width="120px">
+          <el-select
+            v-model="infos.compareMode"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="ips" prop="ips" label-width="120px">
+          <el-input v-model="infos.ips" />
         </el-form-item>
 
       </div>
@@ -36,7 +48,7 @@ export default {
   data() {
     const iprules = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('ip is required'))
+        callback(new Error('ips is required'))
       } else {
         if (!this.isValidIP(value)) {
           callback(new Error('Please enter the correct ip'))
@@ -47,39 +59,16 @@ export default {
     }
     return {
       infos: {
-        ip: '',
-        infos: '{"ip":""}'
+        compareMode: '',
+        ips: '',
+        infos: '{"compareMode":"","ips":""}'
       },
       options: [{
-        value: 'GT',
-        label: 'GT'
-      }, {
-        value: 'GTE',
-        label: 'GTE'
-      }, {
-        value: 'LT',
-        label: 'LT'
-      }, {
-        value: 'LTE',
-        label: 'LTE'
-      }, {
-        value: 'EQUAL',
-        label: 'EQUAL'
-      }, {
-        value: 'UNEQUAL',
-        label: 'UNEQUAL'
-      }, {
-        value: 'CONTAINS_ALL',
-        label: 'CONTAINS_ALL'
-      }, {
         value: 'CONTAINS_ANY',
         label: 'CONTAINS_ANY'
       }, {
         value: 'NOT_CONTAINS_ANY',
         label: 'NOT_CONTAINS_ANY'
-      }, {
-        value: 'NOT_CONTAINS_ALL',
-        label: 'NOT_CONTAINS_ALL'
       }],
       rules: {
         compareMode: [{ required: true, message: 'compareMode is required', trigger: 'change' }],
@@ -89,13 +78,21 @@ export default {
     }
   },
   computed: {
-    ip() {
-      return this.infos.ip
+    ips() {
+      return this.infos.ips
+    },
+    compareMode() {
+      return this.infos.compareMode
     }
 
   },
   watch: {
-    ip(a) {
+    ips(a) {
+      if (a) {
+        this.setInfos()
+      }
+    },
+    compareMode(a) {
       if (a) {
         this.setInfos()
       }
@@ -120,39 +117,42 @@ export default {
   },
   methods: {
     setInfos() {
-      this.infos.infos = '{"ip":"' + this.infos.ip + '"}'
+      this.infos.infos = '{"compareMode":"' + this.infos.compareMode + '","ips":"' + this.infos.ips + '"}'
       this.$emit('sendInfos', this.infos.infos)
     },
     clear() {
-      this.$refs.TraceIp.clearValidate()
+      this.$refs.TraceIps.clearValidate()
     },
     check() {
       let flag = false
-      this.$refs.TraceIp.validate((valid) => {
+      this.$refs.TraceIps.validate((valid) => {
         flag = valid
       })
       return flag
     },
-    isValidIP(ip) {
-      /**
-      const reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
-      return reg.test(ip)
-       */
+    isValidIP(ips) {
+      const ipList = ips.split(',')
+      for (const ip of ipList) {
+        const reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+        if (!reg.test(ip)) {
+          return false
+        }
+      }
       return true
     }
   }
 }
 </script>
 <style >
-.TraceIp .selectBox .el-form-item{
+.TraceIps .selectBox .el-form-item{
     margin-right: 0;
 
 }
 
-.TraceIp .infosBox{
+.TraceIps .infosBox{
     width: 100%;
 }
-.TraceIp .infosBox .el-form-item__content{
+.TraceIps .infosBox .el-form-item__content{
     width:80%;
 }
 </style>
