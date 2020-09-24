@@ -40,8 +40,8 @@ public class GrayDecisionService extends AbstraceCRUDService<GrayDecision, GrayD
         return grayDecisionMapper;
     }
 
-    public List<GrayDecision> findByPolicyId(Long policyId) {
-        return grayDecisionMapper.dos2models(repository.findByPolicyId(policyId));
+    public List<GrayDecision> findAllEnabledByPolicyId(Long policyId) {
+        return grayDecisionMapper.dos2models(repository.findByPolicyIdAndDelFlag(policyId, false));
 
     }
 
