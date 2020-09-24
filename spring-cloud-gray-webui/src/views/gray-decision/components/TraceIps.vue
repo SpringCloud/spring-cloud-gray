@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     setInfos() {
-      this.infos.infos = '{"compareMode":"' + this.infos.compareMode + ',"ips":"' + this.infos.ips + '"}'
+      this.infos.infos = '{"compareMode":"' + this.infos.compareMode + '","ips":"' + this.infos.ips + '"}'
       this.$emit('sendInfos', this.infos.infos)
     },
     clear() {
