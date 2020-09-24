@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @author saleson
  * @date 2020-09-09 00:01
@@ -13,7 +15,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GrayInstanceAlias {
+public class GrayInstanceAlias implements Serializable {
+    private static final long serialVersionUID = 8433446869828423603L;
     private String serviceId;
     private String instanceId;
     private String[] aliases;
