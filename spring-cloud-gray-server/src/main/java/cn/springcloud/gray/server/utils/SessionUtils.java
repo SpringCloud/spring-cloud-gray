@@ -14,7 +14,7 @@ import java.util.Objects;
 public class SessionUtils {
 
     public static String currentUserId() {
-        return GrayServerHolder.getUserModule().getCurrentUserId();
+        return GrayServerHolder.getOauth2Service().getUserPrincipal();
     }
 
     public static String currentNamespace() {

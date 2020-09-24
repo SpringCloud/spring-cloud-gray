@@ -21,7 +21,6 @@ import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.module.user.jpa.JPAAuthorityModule;
 import cn.springcloud.gray.server.module.user.jpa.JPAServiceManageModule;
 import cn.springcloud.gray.server.module.user.jpa.JPAUserModule;
-import cn.springcloud.gray.server.oauth2.Oauth2Service;
 import cn.springcloud.gray.server.service.*;
 import cn.springcloud.gray.event.server.GrayEventTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,8 +88,8 @@ public class DBStorageConfiguration {
 
         @Bean
         @ConditionalOnMissingBean
-        public UserModule userModule(UserService userService, Oauth2Service oauth2Service) {
-            return new JPAUserModule(userService, oauth2Service);
+        public UserModule userModule(UserService userService) {
+            return new JPAUserModule(userService);
         }
 
         @Bean
