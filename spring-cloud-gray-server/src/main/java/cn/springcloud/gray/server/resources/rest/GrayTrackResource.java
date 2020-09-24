@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static cn.springcloud.gray.api.ApiRes.CODE_SUCCESS;
 
@@ -114,6 +115,10 @@ public class GrayTrackResource {
     public ApiRes<GrayTrack> save(@RequestBody GrayTrack track) {
         if (!serviceManageModule.hasServiceAuthority(track.getServiceId())) {
             return ApiResHelper.notAuthority();
+        }
+        if (Objects.isNull(track.getId())
+                && Objects.nonNull(grayServerTrackModule.findFirstGrayTrack(track.getServiceId(), track.getName()))) {
+            return ApiResHelper.failed(String.format("service '%s' 已有'%s'类型的追踪", track.getServiceId(), track.getName()));
         }
         track.setOperator(userModule.getCurrentUserId());
         track.setOperateTime(new Date());
