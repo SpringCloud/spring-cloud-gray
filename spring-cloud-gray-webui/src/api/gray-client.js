@@ -20,3 +20,12 @@ export function getServiceAllInfos(serviceId, instanceId) {
     params: params
   })
 }
+
+export function getClientInfos(serviceId, instanceId, infoType) {
+  var params = { 'serviceId': serviceId, 'instanceId': instanceId, 'infoType': infoType }
+  return request({
+    url: '/gray/client/grayList/infos',
+    method: 'get',
+    params: params
+  })
+}
