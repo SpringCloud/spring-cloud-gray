@@ -136,6 +136,7 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item @click.native="showGrayInfos(row, 'SERVICES')">服务/实例</el-dropdown-item>
               <el-dropdown-item @click.native="showGrayInfos(row, 'TRACKS')">追踪</el-dropdown-item>
+              <el-dropdown-item @click.native="showGrayInfos(row, 'POLICY')">策略</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -204,7 +205,7 @@
 <script>
 import { fetchList, deleteInstance, createInstance, updateInstance, tryChangeInstanceStatus } from '@/api/gray-instance'
 import { putData } from '@/api/api-request'
-import { getServiceAllInfos, getAllDefinitions } from '@/api/gray-client'
+import { getServiceAllInfos, getAllDefinitions, getClientInfos } from '@/api/gray-client'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -516,6 +517,11 @@ export default {
         })
       } else if (this.grayInfo.type === 'TRACKS') {
         getAllDefinitions(this.listQuery.serviceId, this.grayInfo.instanceId).then(res => {
+          this.grayInfo.content = res.data
+          this.grayInfo.loading = false
+        })
+      } else {
+        getClientInfos(this.listQuery.serviceId, this.grayInfo.instanceId, this.grayInfo.type).then(res => {
           this.grayInfo.content = res.data
           this.grayInfo.loading = false
         })

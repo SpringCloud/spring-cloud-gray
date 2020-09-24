@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.Map;
@@ -38,11 +39,12 @@ public class GrayListResource {
      * @return
      */
     @GetMapping("/service/allInfos")
-    public ApiRes<Map<String, Collection<GrayInstance>>> getAllGrayServiceInfos() {
-        return ApiRes.<Map<String, Collection<GrayInstance>>>builder()
-                .code(ApiRes.CODE_SUCCESS)
-                .data(grayManager.getMapByAllGrayServices())
-                .build();
+    public Mono<ApiRes<Map<String, Collection<GrayInstance>>>> getAllGrayServiceInfos() {
+        return Mono.just(
+                ApiRes.<Map<String, Collection<GrayInstance>>>builder()
+                        .code(ApiRes.CODE_SUCCESS)
+                        .data(grayManager.getMapByAllGrayServices())
+                        .build());
     }
 
     /**
@@ -51,11 +53,12 @@ public class GrayListResource {
      * @return
      */
     @GetMapping("/policy/allInfos")
-    public ApiRes<Map<String, PolicyInfo>> getAllPolicyInfos() {
-        return ApiRes.<Map<String, PolicyInfo>>builder()
-                .code(ApiRes.CODE_SUCCESS)
-                .data(policyDecisionManager.getAllPolicyInfos())
-                .build();
+    public Mono<ApiRes<Map<String, PolicyInfo>>> getAllPolicyInfos() {
+        return Mono.just(
+                ApiRes.<Map<String, PolicyInfo>>builder()
+                        .code(ApiRes.CODE_SUCCESS)
+                        .data(policyDecisionManager.getAllPolicyInfos())
+                        .build());
     }
 
     /**
@@ -64,10 +67,11 @@ public class GrayListResource {
      * @return
      */
     @GetMapping("/track/allDefinitions")
-    public ApiRes<Collection<GrayTrackDefinition>> getAllGrayTracks() {
-        return ApiRes.<Collection<GrayTrackDefinition>>builder()
-                .code(ApiRes.CODE_SUCCESS)
-                .data(grayTrackHolder.getTrackDefinitions())
-                .build();
+    public Mono<ApiRes<Collection<GrayTrackDefinition>>> getAllGrayTracks() {
+        return Mono.just(
+                ApiRes.<Collection<GrayTrackDefinition>>builder()
+                        .code(ApiRes.CODE_SUCCESS)
+                        .data(grayTrackHolder.getTrackDefinitions())
+                        .build());
     }
 }
