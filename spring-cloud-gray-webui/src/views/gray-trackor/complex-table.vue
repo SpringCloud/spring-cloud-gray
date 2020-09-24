@@ -79,6 +79,7 @@
             <el-select
               v-model="temp.type"
               placeholder="请选择"
+              :disabled="dialogStatus=='update'"
             >
               <el-option
                 v-for="item in options"
@@ -289,7 +290,6 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
           this.temp.author = 'vue-element-admin'
           if (this.temp.type !== '自定义名称') {
             this.temp.name = this.temp.type

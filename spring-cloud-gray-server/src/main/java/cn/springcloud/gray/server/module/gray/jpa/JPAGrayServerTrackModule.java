@@ -24,6 +24,11 @@ public class JPAGrayServerTrackModule implements GrayServerTrackModule {
     }
 
     @Override
+    public GrayTrack findFirstGrayTrack(String serviceId, String name) {
+        return grayTrackService.findFirstGrayTrack(serviceId, name);
+    }
+
+    @Override
     public Page<GrayTrack> listGrayTracks(String serviceId, Pageable pageable) {
         return grayTrackService.listGrayTracks(serviceId, pageable);
     }

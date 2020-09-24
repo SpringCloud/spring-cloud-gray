@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface GrayTrackRepository extends JpaRepository<GrayTrackDO, Long> {
 
+    GrayTrackDO findFirstByServiceIdAndNameOrderById(String serviceId, String name);
 
     Page<GrayTrackDO> findAllByInstanceId(String instanceId, Pageable pageable);
 

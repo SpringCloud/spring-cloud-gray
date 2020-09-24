@@ -9,6 +9,8 @@ import java.util.List;
 public interface GrayServerTrackModule {
 
 
+    GrayTrack findFirstGrayTrack(String serviceId, String name);
+
     Page<GrayTrack> listGrayTracks(String serviceId, Pageable pageable);
 
     Page<GrayTrack> listGrayTracks(Pageable pageable);
