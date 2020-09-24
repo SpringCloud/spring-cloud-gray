@@ -4,10 +4,7 @@ import cn.springcloud.gray.choose.PolicyPredicate;
 import cn.springcloud.gray.model.DecisionDefinition;
 import cn.springcloud.gray.model.PolicyDefinition;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -105,6 +102,11 @@ public class DefaultPolicyDecisionManager implements PolicyDecisionManager {
             return defaultResult;
         }
         return policyPredicate.test(decisionInputArgs);
+    }
+
+    @Override
+    public Map<String, PolicyInfo> getAllPolicyInfos() {
+        return Collections.unmodifiableMap(policyInfos);
     }
 
     private PolicyInfo getExistingPolicyInfo(String policyId) {
