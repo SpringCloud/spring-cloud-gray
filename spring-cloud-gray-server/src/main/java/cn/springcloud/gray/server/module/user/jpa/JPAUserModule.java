@@ -3,8 +3,8 @@ package cn.springcloud.gray.server.module.user.jpa;
 import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.module.user.domain.UserInfo;
 import cn.springcloud.gray.server.module.user.domain.UserQuery;
-import cn.springcloud.gray.server.oauth2.Oauth2Service;
 import cn.springcloud.gray.server.service.UserService;
+import cn.springcloud.gray.server.utils.SessionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,11 +13,9 @@ import java.util.Objects;
 
 public class JPAUserModule implements UserModule {
 
-    private Oauth2Service oauth2Service;
     private UserService userService;
 
-    public JPAUserModule(UserService userService, Oauth2Service oauth2Service) {
-        this.oauth2Service = oauth2Service;
+    public JPAUserModule(UserService userService) {
         this.userService = userService;
     }
 
@@ -68,7 +66,7 @@ public class JPAUserModule implements UserModule {
 
     @Override
     public String getCurrentUserId() {
-        return oauth2Service.getUserPrincipal();
+        return SessionUtils.currentUserId();
     }
 
     @Override
