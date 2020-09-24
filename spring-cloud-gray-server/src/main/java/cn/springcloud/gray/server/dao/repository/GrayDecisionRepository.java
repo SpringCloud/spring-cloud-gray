@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface GrayDecisionRepository extends JpaRepository<GrayDecisionDO, Long>, JpaSpecificationExecutor<GrayDecisionDO> {
-    List<GrayDecisionDO> findByPolicyId(Long policyId);
+    List<GrayDecisionDO> findByPolicyIdAndDelFlag(Long policyId, boolean delFlag);
 
     void deleteAllByPolicyId(Long id);
 

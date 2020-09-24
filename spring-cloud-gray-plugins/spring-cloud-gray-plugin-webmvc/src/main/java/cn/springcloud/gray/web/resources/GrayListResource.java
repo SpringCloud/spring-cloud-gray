@@ -2,6 +2,8 @@ package cn.springcloud.gray.web.resources;
 
 import cn.springcloud.gray.GrayManager;
 import cn.springcloud.gray.api.ApiRes;
+import cn.springcloud.gray.decision.PolicyDecisionManager;
+import cn.springcloud.gray.decision.PolicyInfo;
 import cn.springcloud.gray.model.GrayInstance;
 import cn.springcloud.gray.model.GrayTrackDefinition;
 import cn.springcloud.gray.request.track.GrayTrackHolder;
@@ -24,7 +26,8 @@ public class GrayListResource {
 
     @Autowired
     private GrayTrackHolder grayTrackHolder;
-
+    @Autowired
+    private PolicyDecisionManager policyDecisionManager;
 
     @Autowired
     private GrayManager grayManager;
@@ -39,6 +42,19 @@ public class GrayListResource {
         return ApiRes.<Map<String, Collection<GrayInstance>>>builder()
                 .code(ApiRes.CODE_SUCCESS)
                 .data(grayManager.getMapByAllGrayServices())
+                .build();
+    }
+
+    /**
+     * 返回维护的所有策略信息
+     *
+     * @return
+     */
+    @GetMapping("/policy/allInfos")
+    public ApiRes<Map<String, PolicyInfo>> getAllPolicyInfos() {
+        return ApiRes.<Map<String, PolicyInfo>>builder()
+                .code(ApiRes.CODE_SUCCESS)
+                .data(policyDecisionManager.getAllPolicyInfos())
                 .build();
     }
 

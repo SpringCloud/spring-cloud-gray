@@ -6,6 +6,7 @@ import cn.springcloud.gray.model.PolicyDefinition;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -60,4 +61,6 @@ public interface PolicyDecisionManager {
     }
 
     boolean testPolicyPredicate(String predicateType, DecisionInputArgs decisionInputArgs, boolean defaultResult);
+
+    Map<String, PolicyInfo> getAllPolicyInfos();
 }
