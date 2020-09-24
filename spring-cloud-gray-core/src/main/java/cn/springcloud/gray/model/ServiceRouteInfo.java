@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +17,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ServiceRouteInfo {
+public class ServiceRouteInfo implements Serializable {
+    private static final long serialVersionUID = -7647007838310505000L;
     private String serviceId;
     private Set<String> routePolicies;
     private Map<String, Set<String>> multiVersionRoutePolicies;
