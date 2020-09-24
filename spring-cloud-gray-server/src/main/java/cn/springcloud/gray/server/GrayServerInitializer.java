@@ -1,10 +1,11 @@
 package cn.springcloud.gray.server;
 
-import cn.springcloud.gray.server.module.user.UserModule;
-import cn.springcloud.gray.utils.SpringApplicationContextUtils;
 import cn.springcloud.gray.event.server.GrayEventObservable;
 import cn.springcloud.gray.event.server.GrayEventObserver;
 import cn.springcloud.gray.event.server.GrayEventTrigger;
+import cn.springcloud.gray.server.module.user.UserModule;
+import cn.springcloud.gray.server.oauth2.Oauth2Service;
+import cn.springcloud.gray.utils.SpringApplicationContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -21,6 +22,7 @@ public class GrayServerInitializer implements ApplicationContextAware, Initializ
     @Override
     public void afterPropertiesSet() throws Exception {
         GrayServerHolder.setUserModule(SpringApplicationContextUtils.getBean("userModule", UserModule.class));
+        GrayServerHolder.setOauth2Service(SpringApplicationContextUtils.getBean("oauth2Service", Oauth2Service.class));
 
         bindGrayEventObservers();
     }
