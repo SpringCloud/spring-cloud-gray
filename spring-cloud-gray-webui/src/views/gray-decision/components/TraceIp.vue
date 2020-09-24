@@ -127,9 +127,9 @@ export default {
       this.$refs.TraceIp.clearValidate()
     },
     check() {
-      const flag = false
+      let flag = false
       this.$refs.TraceIp.validate((valid) => {
-        return valid
+        flag = valid
       })
       return flag
     },
