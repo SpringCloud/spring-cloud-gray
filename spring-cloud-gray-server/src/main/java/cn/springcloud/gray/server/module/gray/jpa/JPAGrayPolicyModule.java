@@ -1,5 +1,7 @@
 package cn.springcloud.gray.server.module.gray.jpa;
 
+import cn.springcloud.gray.event.server.GrayEventTrigger;
+import cn.springcloud.gray.event.server.TriggerType;
 import cn.springcloud.gray.server.module.gray.GrayPolicyModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
 import cn.springcloud.gray.server.module.gray.domain.GrayPolicy;
@@ -8,8 +10,6 @@ import cn.springcloud.gray.server.module.gray.domain.query.GrayDecisionQuery;
 import cn.springcloud.gray.server.module.gray.domain.query.GrayPolicyQuery;
 import cn.springcloud.gray.server.service.GrayDecisionService;
 import cn.springcloud.gray.server.service.GrayPolicyService;
-import cn.springcloud.gray.event.server.GrayEventTrigger;
-import cn.springcloud.gray.event.server.TriggerType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,11 +57,6 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
     @Override
     public List<GrayPolicy> listEnabledGrayPoliciesByNamespace(String namespace) {
         return grayPolicyService.listEnabledGrayPoliciesByNamespace(namespace);
-    }
-
-    @Override
-    public Page<GrayDecision> listGrayDecisionsByPolicyId(Long policyId, Pageable pageable) {
-        return grayDecisionService.listGrayDecisionsByPolicyId(policyId, pageable);
     }
 
     @Transactional
@@ -145,8 +140,8 @@ public class JPAGrayPolicyModule implements GrayPolicyModule {
     }
 
     @Override
-    public List<GrayDecision> listGrayDecisionsByPolicyId(Long policyId) {
-        return grayDecisionService.findByPolicyId(policyId);
+    public List<GrayDecision> listEnabledGrayDecisionsByPolicyId(Long policyId) {
+        return grayDecisionService.findAllEnabledByPolicyId(policyId);
     }
 
     @Transactional

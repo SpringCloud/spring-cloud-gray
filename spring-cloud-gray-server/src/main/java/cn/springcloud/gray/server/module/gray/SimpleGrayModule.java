@@ -220,7 +220,7 @@ public class SimpleGrayModule implements GrayModule {
 
     @Override
     public List<DecisionDefinition> ofGrayDecisionByPolicyId(Long policyId) {
-        List<GrayDecision> grayDecisions = grayPolicyModule.listGrayDecisionsByPolicyId(policyId);
+        List<GrayDecision> grayDecisions = grayPolicyModule.listEnabledGrayDecisionsByPolicyId(policyId);
         List<DecisionDefinition> decisionDefinitions = new ArrayList<>(grayDecisions.size());
         grayDecisions.forEach(grayDecision -> {
             try {
