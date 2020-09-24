@@ -1,10 +1,10 @@
 package cn.springcloud.gray.server.module.gray.jpa;
 
+import cn.springcloud.gray.event.server.GrayEventTrigger;
+import cn.springcloud.gray.event.server.TriggerType;
 import cn.springcloud.gray.server.module.gray.GrayServerTrackModule;
 import cn.springcloud.gray.server.module.gray.domain.GrayTrack;
 import cn.springcloud.gray.server.service.GrayTrackService;
-import cn.springcloud.gray.event.server.GrayEventTrigger;
-import cn.springcloud.gray.event.server.TriggerType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +21,11 @@ public class JPAGrayServerTrackModule implements GrayServerTrackModule {
             GrayTrackService grayTrackService) {
         this.grayEventTrigger = grayEventTrigger;
         this.grayTrackService = grayTrackService;
+    }
+
+    @Override
+    public GrayTrack findFirstGrayTrack(String serviceId, String name) {
+        return grayTrackService.findFirstGrayTrack(serviceId, name);
     }
 
     @Override
