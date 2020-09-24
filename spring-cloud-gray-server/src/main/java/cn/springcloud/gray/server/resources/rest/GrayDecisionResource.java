@@ -49,7 +49,7 @@ public class GrayDecisionResource {
         }
         return ApiRes.<List<GrayDecision>>builder()
                 .code(CODE_SUCCESS)
-                .data(grayPolicyModule.listGrayDecisionsByPolicyId(policyId))
+                .data(grayPolicyModule.listEnabledGrayDecisionsByPolicyId(policyId))
                 .build();
     }
 

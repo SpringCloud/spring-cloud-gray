@@ -25,8 +25,6 @@ public interface GrayPolicyModule {
 
     List<GrayPolicy> listEnabledGrayPoliciesByNamespace(String namespace);
 
-    Page<GrayDecision> listGrayDecisionsByPolicyId(Long policyId, Pageable pageable);
-
     GrayPolicy saveGrayPolicy(GrayPolicy grayPolicy);
 
     void deleteGrayPolicy(Long policyId, String userId);
@@ -43,7 +41,7 @@ public interface GrayPolicyModule {
 
     GrayDecision getGrayDecision(Long id);
 
-    List<GrayDecision> listGrayDecisionsByPolicyId(Long policyId);
+    List<GrayDecision> listEnabledGrayDecisionsByPolicyId(Long policyId);
 
     GrayPolicyDecision newGrayPolicy(GrayPolicyDecision policyDecision);
 
