@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
  * Created by saleson on 2017/7/5.
@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @ComponentScan({"cn.springcloud.gray.server.resources"})
 @Import(Swagger2Configuration.class)
-public class WebConfiguration implements WebMvcConfigurer {
+public class WebConfiguration extends WebMvcConfigurerAdapter {
 
 
     @Autowired
