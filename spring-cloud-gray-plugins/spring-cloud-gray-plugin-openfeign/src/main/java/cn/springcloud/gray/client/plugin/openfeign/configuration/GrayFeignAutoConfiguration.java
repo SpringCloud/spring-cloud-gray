@@ -1,9 +1,8 @@
-package cn.springcloud.gray.client.netflix.feign.configuration;
+package cn.springcloud.gray.client.plugin.openfeign.configuration;
 
 import cn.springcloud.gray.GrayManager;
-import cn.springcloud.gray.client.netflix.feign.GrayTrackFeignRequestInterceptor;
+import cn.springcloud.gray.client.plugin.openfeign.GrayTrackFeignRequestInterceptor;
 import cn.springcloud.gray.request.RequestLocalStorage;
-import com.netflix.loadbalancer.ILoadBalancer;
 import feign.Feign;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -17,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConditionalOnBean(GrayManager.class)
-@ConditionalOnClass(value = {ILoadBalancer.class, Feign.class})
+@ConditionalOnClass(value = {Feign.class})
 @EnableFeignClients(defaultConfiguration = {GrayFeignClientsConfiguration.class})
 public class GrayFeignAutoConfiguration {
 

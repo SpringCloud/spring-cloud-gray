@@ -2,4 +2,4 @@
 #cn.springcloud.gray.client.EnableGrayClient=\
 #  cn.springcloud.gray.client.config.GrayClientImportSelector
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  cn.springcloud.gray.client.netflix.feign.configuration.GrayFeignAutoConfiguration
+  cn.springcloud.gray.client.plugin.openfeign.configuration.GrayFeignAutoConfiguration

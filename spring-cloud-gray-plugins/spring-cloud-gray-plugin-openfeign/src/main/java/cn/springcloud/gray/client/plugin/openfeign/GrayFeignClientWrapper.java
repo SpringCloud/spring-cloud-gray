@@ -1,8 +1,8 @@
-package cn.springcloud.gray.client.netflix.feign;
+package cn.springcloud.gray.client.plugin.openfeign;
 
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
 import cn.springcloud.gray.commons.GrayRequestHelper;
+import cn.springcloud.gray.constants.RequestInterceptorConstants;
 import cn.springcloud.gray.request.GrayHttpRequest;
 import cn.springcloud.gray.response.http.HttpResponseMessage;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectPointContext;
@@ -47,7 +47,7 @@ class GrayFeignClientWrapper implements Client {
         grayRequest.setAttachment(GrayFeignClient.GRAY_REQUEST_ATTRIBUTE_NAME_FEIGN_REQUEST, request);
         grayRequest.setAttachment(GrayFeignClient.GRAY_REQUEST_ATTRIBUTE_NAME_FEIGN_REQUEST_OPTIONS, options);
         RoutingConnectPointContext connectPointContext = RoutingConnectPointContext.builder()
-                .interceptroType(GrayNetflixClientConstants.INTERCEPTRO_TYPE_FEIGN)
+                .interceptroType(RequestInterceptorConstants.INTERCEPTRO_TYPE_FEIGN)
                 .grayRequest(grayRequest).build();
 
         GrayRequestHelper.setPreviousServerInfoToHttpHeaderByInstanceLocalInfo(grayRequest);

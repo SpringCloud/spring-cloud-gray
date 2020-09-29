@@ -1,4 +1,4 @@
-package cn.springcloud.gray.client.netflix.feign;
+package cn.springcloud.gray.client.plugin.openfeign;
 
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
