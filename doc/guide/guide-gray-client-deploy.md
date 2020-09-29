@@ -12,7 +12,7 @@ maven工程在pom.xml中添加依赖
 </dependency>
 <dependency>
     <groupId>cn.springcloud.gray</groupId>
-    <artifactId>spring-cloud-gray-plugin-feign</artifactId>
+    <artifactId>spring-cloud-gray-plugin-openfeign</artifactId>
     <version>A.1.1.2</version>
 </dependency>
 

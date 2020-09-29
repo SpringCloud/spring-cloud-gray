@@ -181,7 +181,7 @@ spring-cloud-gray-client-netflix | 灰度客户端与spring cloud netflix集成�
 spring-cloud-gray-plugin-webmvc | 支撑灰度客户端在spring mvc运行的插件
 spring-cloud-gray-plugin-webflux | 支撑灰度客户端在spring webfulx运行的插件(B版及以上)
 spring-cloud-gray-plugin-eureka | 灰度客户端与注册中心eureka集成的插件
-spring-cloud-gray-plugin-feign | 灰度客户端与openFiegn集成的插件
+spring-cloud-gray-plugin-openfeign | 灰度客户端与openFiegn集成的插件
 spring-cloud-gray-plugin-zuul | 灰度客户端与zuul 1.0集成的插件
 spring-cloud-gray-plugin-gateway | 灰度客户端与spring cloud gateway集成的插件(B版及以上)
 spring-cloud-gray-plugin-event-stream | 灰度客户端与spring cloud stream(rabbitmq)集成的插件

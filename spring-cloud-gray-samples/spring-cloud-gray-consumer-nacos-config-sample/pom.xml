@@ -55,7 +55,7 @@
 
         <dependency>
             <groupId>cn.springcloud.gray</groupId>
-            <artifactId>spring-cloud-gray-plugin-feign</artifactId>
+            <artifactId>spring-cloud-gray-plugin-openfeign</artifactId>
             <version>${project.version}</version>
         </dependency>
 
