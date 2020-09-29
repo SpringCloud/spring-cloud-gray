@@ -1,8 +1,8 @@
 package cn.springcloud.gray.client.netflix.zuul;
 
 import cn.springcloud.gray.client.config.properties.GrayRequestProperties;
-import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
 import cn.springcloud.gray.commons.GrayRequestHelper;
+import cn.springcloud.gray.constants.RequestInterceptorConstants;
 import cn.springcloud.gray.request.GrayHttpRequest;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectPointContext;
 import cn.springcloud.gray.routing.connectionpoint.RoutingConnectionPoint;
@@ -90,7 +90,7 @@ public class GrayPreZuulFilter extends ZuulFilter {
         //context.getZuulRequestHeaders().get(FilterConstants.X_FORWARDED_FOR_HEADER.toLowerCase())
 
         RoutingConnectPointContext connectPointContext = RoutingConnectPointContext.builder()
-                .interceptroType(GrayNetflixClientConstants.INTERCEPTRO_TYPE_ZUUL)
+                .interceptroType(RequestInterceptorConstants.INTERCEPTRO_TYPE_ZUUL)
                 .grayRequest(grayRequest).build();
 
         GrayRequestHelper.setPreviousServerInfoToHttpHeaderByInstanceLocalInfo(grayRequest);

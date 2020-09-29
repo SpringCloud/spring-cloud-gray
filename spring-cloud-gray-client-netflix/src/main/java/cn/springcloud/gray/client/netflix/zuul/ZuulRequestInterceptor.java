@@ -1,7 +1,7 @@
 package cn.springcloud.gray.client.netflix.zuul;
 
 import cn.springcloud.gray.RequestInterceptor;
-import cn.springcloud.gray.client.netflix.constants.GrayNetflixClientConstants;
+import cn.springcloud.gray.constants.RequestInterceptorConstants;
 import cn.springcloud.gray.request.GrayRequest;
 import cn.springcloud.gray.request.GrayTrackInfo;
 import cn.springcloud.gray.request.GrayTrackRecordDevice;
@@ -14,7 +14,7 @@ import java.util.List;
 public class ZuulRequestInterceptor implements RequestInterceptor {
     @Override
     public String interceptroType() {
-        return GrayNetflixClientConstants.INTERCEPTRO_TYPE_ZUUL;
+        return RequestInterceptorConstants.INTERCEPTRO_TYPE_ZUUL;
     }
 
     @Override
