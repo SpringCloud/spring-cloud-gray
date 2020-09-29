@@ -24,6 +24,7 @@
         <module>spring-cloud-gray-plugin-refresher</module>
         <module>spring-cloud-gray-plugin-event-longpolling</module>
         <module>spring-cloud-gray-plugin-dubbo</module>
+        <module>spring-cloud-gray-plugin-rest</module>
     </modules>
 
 </project>
