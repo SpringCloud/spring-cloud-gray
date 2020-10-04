@@ -1,6 +1,7 @@
 package cn.springcloud.gray.client.plugin.ribbon.nacos;
 
 import cn.springcloud.gray.servernode.ServerExplainer;
+import cn.springcloud.gray.servernode.ServerSpec;
 import cn.springcloud.gray.servernode.VersionExtractor;
 import com.netflix.loadbalancer.Server;
 import org.apache.commons.lang3.StringUtils;
@@ -20,16 +21,17 @@ public class NacosServerExplainer implements ServerExplainer<Server> {
         this.versionExtractor = versionExtractor;
     }
 
-//    @Override
-//    public ServerSpec<Server> apply(Server server) {
-//        String seviceId = getInstaceId(server);
-//        Map metadata = getServerMetadata(seviceId, server);
-//        return ServerSpec.<Server>builder()
-//                .server(server)
-//                .instanceId(server.getMetaInfo().getInstanceId())
-//                .serviceId(seviceId)
-//                .metadata(metadata).build();
-//    }
+    @Override
+    public ServerSpec<Server> apply(Server server) {
+        String seviceId = getInstaceId(server);
+        Map metadata = getServerMetadata(seviceId, server);
+        return ServerSpec.<Server>builder()
+                .server(server)
+                .instanceId(server.getMetaInfo().getInstanceId())
+                .serviceId(seviceId)
+                .metadata(metadata)
+                .build();
+    }
 
     @Override
     public VersionExtractor getVersionExtractor() {
