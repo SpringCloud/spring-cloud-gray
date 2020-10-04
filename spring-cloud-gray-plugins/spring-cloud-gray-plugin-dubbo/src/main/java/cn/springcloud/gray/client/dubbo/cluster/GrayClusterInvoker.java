@@ -57,7 +57,7 @@ public class GrayClusterInvoker<T> implements ClusterInvoker<T> {
     @Override
     public Result invoke(Invocation invocation) throws RpcException {
         RoutingConnectionPoint routingConnectionPoint = GrayClientHolder.getRoutingConnectionPoint();
-        if (ignoreGrayscale(invocation) || Objects.isNull(routingConnectionPoint)) {
+        if (ignoreGrayScale(invocation) || Objects.isNull(routingConnectionPoint)) {
             return this.invoker.invoke(invocation);
         }
 
@@ -112,7 +112,7 @@ public class GrayClusterInvoker<T> implements ClusterInvoker<T> {
         return grayRequest;
     }
 
-    protected boolean ignoreGrayscale(Invocation invocation) {
+    protected boolean ignoreGrayScale(Invocation invocation) {
         String serviceName = invocation.getServiceName();
         if (ignoreGrayServiceNames.contains(serviceName)) {
             return true;

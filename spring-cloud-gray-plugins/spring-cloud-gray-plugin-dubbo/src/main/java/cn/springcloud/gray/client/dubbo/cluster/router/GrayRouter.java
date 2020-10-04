@@ -24,7 +24,6 @@ public class GrayRouter extends AbstractRouter {
 
 
     public GrayRouter() {
-        this.setPriority(100000);
     }
 
     @Override

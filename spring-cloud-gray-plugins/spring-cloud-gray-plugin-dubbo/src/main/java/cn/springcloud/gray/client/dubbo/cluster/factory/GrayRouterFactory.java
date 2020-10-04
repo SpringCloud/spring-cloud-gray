@@ -17,7 +17,9 @@ public class GrayRouterFactory extends CacheableRouterFactory {
 
     @Override
     protected Router createRouter(URL url) {
-        return new GrayRouter();
+        GrayRouter grayRouter = new GrayRouter();
+        grayRouter.setPriority(100000);
+        return grayRouter;
     }
 
 //    private ServerDistinguisher getServerDistinguisher() {
