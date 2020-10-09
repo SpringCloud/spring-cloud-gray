@@ -1,6 +1,6 @@
 package cn.springcloud.gray.utils;
 
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 
 import java.lang.reflect.Constructor;
@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 public class ClassUtils {
 
 
-    public static final ParameterNameDiscoverer localVariableTableParameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+    public static final ParameterNameDiscoverer localVariableTableParameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
     public static String[] getParameterNames(Method method) {
         return getParameterNames(localVariableTableParameterNameDiscoverer, method);
