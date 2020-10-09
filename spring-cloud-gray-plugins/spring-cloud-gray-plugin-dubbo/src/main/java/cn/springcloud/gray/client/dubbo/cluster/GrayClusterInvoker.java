@@ -100,19 +100,19 @@ public class GrayClusterInvoker<T> implements ClusterInvoker<T> {
 
         String serviceName = invocation.getServiceName();
         String methodName = invocation.getMethodName();
-        grayRequest.setAttribute("serviceName", serviceName);
-        grayRequest.setAttribute("methodName", methodName);
-        grayRequest.setAttachment("arguments", invocation.getArguments());
-        grayRequest.setAttachment("args", getMethodArguments(invocation));
+        grayRequest.setAttribute(GrayDubboConstants.DUBBO_INVOCATION_KEY_SERVICE_NAME, serviceName);
+        grayRequest.setAttribute(GrayDubboConstants.DUBBO_INVOCATION_KEY_METHOD_NAME, methodName);
+        grayRequest.setAttachment(GrayDubboConstants.DUBBO_INVOCATION_KEY_ARGUMENTS, invocation.getArguments());
+        grayRequest.setAttachment(GrayDubboConstants.DUBBO_INVOCATION__KEY_METHOD_ARGUMENTS, getMethodArguments(invocation));
 
-        grayRequest.setAttachment("parameterTypes", invocation.getParameterTypes());
+        grayRequest.setAttachment(GrayDubboConstants.DUBBO_INVOCATION__KEY_PARAMETER_TYPES, invocation.getParameterTypes());
         if (invocation instanceof RpcInvocation) {
             RpcInvocation rpcInvocation = (RpcInvocation) invocation;
-            grayRequest.setAttachment("returnType", rpcInvocation.getReturnType());
-            grayRequest.setAttribute("parameterTypesDesc", rpcInvocation.getParameterTypesDesc());
+            grayRequest.setAttachment(GrayDubboConstants.DUBBO_INVOCATION__KEY_RETURN_TYPE, rpcInvocation.getReturnType());
+            grayRequest.setAttribute(GrayDubboConstants.DUBBO_INVOCATION__KEY_PARAMETER_TYPES_DESC, rpcInvocation.getParameterTypesDesc());
         }
 
-        grayRequest.setUri(URI.create(serviceName + "#" + methodName));
+        grayRequest.setUri(URI.create(serviceName + GrayDubboConstants.DUBBO_INVOCATION__KEY_SERVICE_METHOD_SPLIT_JOINT + methodName));
         GrayRequestHelper.setPreviousServerInfoByInstanceLocalInfo(grayRequest);
         return grayRequest;
     }
