@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-cloud-starter-gray-client</artifactId>
+    <name>spring-cloud-starter-gray-client</name>
 
 
     <dependencies>

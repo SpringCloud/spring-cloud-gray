@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-cloud-gray-server</artifactId>
+    <name>spring-cloud-gray-server</name>
 
     <properties>
         <querydsl.version>4.2.1</querydsl.version>

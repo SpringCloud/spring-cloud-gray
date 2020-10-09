@@ -11,6 +11,7 @@
 
     <artifactId>spring-cloud-gray-starter-dependencies</artifactId>
     <packaging>pom</packaging>
+    <name>spring-cloud-gray-starter-dependencies</name>
 
     <licenses>
         <license>

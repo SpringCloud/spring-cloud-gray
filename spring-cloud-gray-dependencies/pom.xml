@@ -19,6 +19,7 @@
     <artifactId>spring-cloud-gray-dependencies</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
+    <name>spring-cloud-gray-dependencies</name>
 
     <licenses>
         <license>

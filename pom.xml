@@ -14,6 +14,7 @@
     <packaging>pom</packaging>
     <version>${revision}</version>
     <url>https://github.com/SpringCloud/spring-cloud-gray</url>
+    <name>Spring Cloud Gray</name>
     <organization>
         <name>Spring Cloud中国社区</name>
         <url>http://springcloud.cn/</url>
@@ -415,7 +416,7 @@
                 <version>${maven_flatten_version}</version>
                 <configuration>
                     <updatePomFile>true</updatePomFile>
-                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                    <flattenMode>oss</flattenMode>
                     <pomElements>
                         <dependencies>expand</dependencies>
                     </pomElements>

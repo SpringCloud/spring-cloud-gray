@@ -11,6 +11,7 @@
 
     <artifactId>spring-cloud-gray-plugins</artifactId>
     <packaging>pom</packaging>
+    <name>spring-cloud-gray-plugins</name>
     <modules>
         <module>spring-cloud-gray-plugin-event-stream</module>
         <module>spring-cloud-gray-plugin-eureka</module>
