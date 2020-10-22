@@ -19,6 +19,9 @@ public class Policy {
 
 
     public boolean predicateDecisions(DecisionInputArgs args) {
+        if (decisions.isEmpty()) {
+            return false;
+        }
         for (GrayDecision decision : decisions) {
             if (!decision.test(args)) {
                 return false;
