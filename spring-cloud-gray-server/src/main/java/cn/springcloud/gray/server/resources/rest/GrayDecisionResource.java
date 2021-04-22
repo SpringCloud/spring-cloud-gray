@@ -2,6 +2,7 @@ package cn.springcloud.gray.server.resources.rest;
 
 import cn.springcloud.gray.api.ApiRes;
 import cn.springcloud.gray.server.module.gray.GrayModelType;
+import cn.springcloud.gray.server.module.gray.GrayModule;
 import cn.springcloud.gray.server.module.gray.GrayServerModule;
 import cn.springcloud.gray.server.module.gray.GrayServiceIdFinder;
 import cn.springcloud.gray.server.module.gray.domain.GrayDecision;
@@ -10,6 +11,7 @@ import cn.springcloud.gray.server.module.user.UserModule;
 import cn.springcloud.gray.server.utils.ApiResHelper;
 import cn.springcloud.gray.server.utils.PaginationUtils;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,7 @@ import static cn.springcloud.gray.api.ApiRes.CODE_SUCCESS;
 
 @RestController
 @RequestMapping("/gray/decision")
+@Slf4j
 public class GrayDecisionResource {
 
 
@@ -38,6 +41,8 @@ public class GrayDecisionResource {
     private GrayServiceIdFinder grayServiceIdFinder;
     @Autowired
     private UserModule userModule;
+    @Autowired
+    private GrayModule grayModule;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, params = {"policyId"})
     public ApiRes<List<GrayDecision>> list(@RequestParam("policyId") Long policyId) {
@@ -85,6 +90,13 @@ public class GrayDecisionResource {
         if (!serviceManageModule.hasServiceAuthority(
                 grayServiceIdFinder.getServiceId(GrayModelType.POLICY, grayDecision.getPolicyId()))) {
             return ApiResHelper.notAuthority();
+        }
+
+        try {
+            grayModule.ofGrayDecision(grayDecision);
+        } catch (Exception e) {
+            log.warn("灰度略策的条件格式异常, source:{}, \nerrorMessage:{}", grayDecision, e.getMessage());
+            return ApiResHelper.failed("灰度略策的条件格式异常，请确认后重试");
         }
         grayDecision.setOperator(userModule.getCurrentUserId());
         grayDecision.setOperateTime(new Date());
