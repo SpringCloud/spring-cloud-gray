@@ -228,7 +228,7 @@ public class SimpleGrayModule implements GrayModule {
                     decisionDefinitions.add(definition);
                 }
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                log.error("转换DecisionDefinition失败, decision:{}\nerrorMessage:{}", grayDecision, e.getMessage(), e);
             }
         });
         return decisionDefinitions;
