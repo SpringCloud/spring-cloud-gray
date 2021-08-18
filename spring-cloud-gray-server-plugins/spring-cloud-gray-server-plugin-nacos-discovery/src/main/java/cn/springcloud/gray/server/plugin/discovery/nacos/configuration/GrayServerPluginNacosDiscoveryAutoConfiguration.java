@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class GrayServerPluginNacosDiscoveryAutoConfiguration {
 
     @Bean
-    public NacosServiceDiscovery nacosServiceDiscovery(NacosDiscoveryProperties discoveryProperties){
+    public NacosServiceDiscovery grayNacosServiceDiscovery(NacosDiscoveryProperties discoveryProperties){
         return new NacosServiceDiscovery(discoveryProperties);
     }
 }
